@@ -1,6 +1,7 @@
 import { HeroSection } from '@/components/home/hero-section';
 import { ProblemsSection } from '@/components/home/problems-section';
 import { ServicesSection } from '@/components/home/services-section';
+import { AIShowcaseSection } from '@/components/home/ai-showcase-section';
 import { SectorsSection } from '@/components/home/sectors-section';
 import { WhyChooseUsSection } from '@/components/home/why-choose-us-section';
 import { ProcessSection } from '@/components/home/process-section';
@@ -14,6 +15,7 @@ export default function HomePage() {
       <HeroSection />
       <ProblemsSection />
       <ServicesSection />
+      <AIShowcaseSection />
       <SectorsSection />
       <WhyChooseUsSection />
       <ProcessSection />

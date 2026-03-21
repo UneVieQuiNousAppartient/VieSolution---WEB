@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { estimateurSchema, type EstimateurFormData } from '@/lib/validations/schemas';
 import { submitEstimateurRequest } from '@/lib/supabase/actions';
+import { checkRateLimit } from '@/lib/utils/security';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
@@ -17,6 +18,8 @@ const typeProjetOptions = [
   { value: 'ecommerce', label: 'E-commerce' },
   { value: 'application-web', label: 'Application web' },
   { value: 'automatisation', label: 'Automatisation' },
+  { value: 'integration-ia', label: 'Intégration IA' },
+  { value: 'chatbot-ia', label: 'Chatbot IA' },
   { value: 'outil-interne', label: 'Outil interne' },
   { value: 'integration-api', label: 'Intégration API' },
 ];
@@ -53,7 +56,9 @@ const fonctionnalitesOptions = [
   'Tableau de bord',
   'Automatisation e-mails',
   'Intégration CRM',
-  'Gestion d\'inventaire',
+  'Chatbot IA',
+  'Analyse de documents IA',
+  'Rapports automatisés',
   'API externe',
   'Application mobile',
 ];
@@ -65,6 +70,8 @@ function getEstimation(data: EstimateurFormData): string {
     'ecommerce': 5000,
     'application-web': 7000,
     'automatisation': 3000,
+    'integration-ia': 5000,
+    'chatbot-ia': 4000,
     'outil-interne': 5000,
     'integration-api': 3500,
   };
@@ -83,6 +90,7 @@ export function EstimateurForm() {
   const [estimation, setEstimation] = useState('');
   const [error, setError] = useState('');
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, trigger, getValues } = useForm<EstimateurFormData>({
     resolver: zodResolver(estimateurSchema),
@@ -105,6 +113,13 @@ export function EstimateurForm() {
   };
 
   const onSubmit = async (data: EstimateurFormData) => {
+    if (honeypotRef.current?.value) return;
+
+    if (!checkRateLimit('estimateur', 3, 300000)) {
+      setError('Trop de tentatives. Veuillez patienter quelques minutes.');
+      return;
+    }
+
     try {
       setError('');
       const est = getEstimation(data);
@@ -119,10 +134,10 @@ export function EstimateurForm() {
   if (submitted) {
     return (
       <div className="text-center py-12">
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900">Estimation envoyée !</h3>
-        <p className="text-3xl font-bold text-blue-600 mt-4">{estimation}</p>
-        <p className="text-gray-600 mt-2 text-sm">Cette estimation est indicative. Nous vous contacterons pour affiner votre projet.</p>
+        <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-white">Estimation envoyée !</h3>
+        <p className="text-3xl font-bold gradient-text mt-4">{estimation}</p>
+        <p className="text-gray-400 mt-2 text-sm">Cette estimation est indicative. Nous vous contacterons pour affiner votre projet.</p>
       </div>
     );
   }
@@ -131,17 +146,17 @@ export function EstimateurForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex items-center gap-2 mb-6">
         {[1, 2, 3].map((s) => (
-          <div key={s} className={`h-1.5 flex-1 rounded-full ${s <= step ? 'bg-blue-600' : 'bg-gray-200'}`} />
+          <div key={s} className={`h-1.5 flex-1 rounded-full ${s <= step ? 'bg-blue-500' : 'bg-white/10'}`} />
         ))}
       </div>
 
       {step === 1 && (
         <div className="space-y-5">
-          <h3 className="text-lg font-semibold">Votre projet</h3>
+          <h3 className="text-lg font-semibold text-white">Votre projet</h3>
           <Select label="Type de projet *" id="type_projet" placeholder="Sélectionnez" options={typeProjetOptions} error={errors.type_projet?.message} {...register('type_projet')} />
           <Select label="Vous êtes" id="type_client" placeholder="Sélectionnez" options={typeClientOptions} {...register('type_client')} />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Fonctionnalités souhaitées</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Fonctionnalités souhaitées</label>
             <div className="flex flex-wrap gap-2">
               {fonctionnalitesOptions.map((f) => (
                 <button
@@ -150,8 +165,8 @@ export function EstimateurForm() {
                   onClick={() => toggleFeature(f)}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                     selectedFeatures.includes(f)
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
+                      ? 'bg-blue-500 text-white border-blue-500'
+                      : 'bg-transparent text-gray-400 border-white/10 hover:border-blue-400/50'
                   }`}
                 >
                   {f}
@@ -167,7 +182,7 @@ export function EstimateurForm() {
 
       {step === 2 && (
         <div className="space-y-5">
-          <h3 className="text-lg font-semibold">Budget et délai</h3>
+          <h3 className="text-lg font-semibold text-white">Budget et délai</h3>
           <Select label="Budget" id="budget" placeholder="Sélectionnez" options={budgetOptions} {...register('budget')} />
           <Select label="Délai souhaité" id="delai" placeholder="Sélectionnez" options={delaiOptions} {...register('delai')} />
           <Textarea label="Description du projet (optionnel)" id="description" placeholder="Décrivez votre projet..." {...register('description')} />
@@ -184,11 +199,15 @@ export function EstimateurForm() {
 
       {step === 3 && (
         <div className="space-y-5">
-          <h3 className="text-lg font-semibold">Vos coordonnées</h3>
+          <h3 className="text-lg font-semibold text-white">Vos coordonnées</h3>
           <Input label="Nom *" id="nom" placeholder="Votre nom" error={errors.nom?.message} {...register('nom')} />
           <Input label="E-mail *" id="email" type="email" placeholder="votre@email.com" error={errors.email?.message} {...register('email')} />
           <Input label="Téléphone" id="telephone" type="tel" placeholder="514-000-0000" {...register('telephone')} />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {/* Honeypot */}
+          <div className="hp-field" aria-hidden="true">
+            <input type="text" name="fax_number" ref={honeypotRef} tabIndex={-1} autoComplete="off" />
+          </div>
+          {error && <p className="text-sm text-red-400">{error}</p>}
           <div className="flex gap-3">
             <Button type="button" onClick={() => setStep(2)} variant="outline" size="lg" className="flex-1 gap-2">
               <ArrowLeft className="w-4 h-4" /> Retour

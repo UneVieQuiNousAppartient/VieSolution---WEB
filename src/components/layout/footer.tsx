@@ -4,9 +4,9 @@ const footerLinks = {
   services: [
     { label: 'Développement web', href: '/services/developpement-web' },
     { label: 'Automatisation', href: '/services/automatisation' },
-    { label: 'Intégration API', href: '/services/integration-api' },
+    { label: 'Intégration IA', href: '/services/integration-ia' },
     { label: 'Applications web', href: '/services/applications-web' },
-    { label: 'Outils internes', href: '/services/outils-internes' },
+    { label: 'Diagnostic gratuit', href: '/diagnostic' },
   ],
   solutions: [
     { label: 'PME', href: '/solutions/pme' },
@@ -30,15 +30,15 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-[#080810] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-white font-semibold mb-4">Services</h3>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Services</h3>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-sm text-gray-500 hover:text-blue-400 transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -46,11 +46,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold mb-4">Solutions</h3>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Solutions</h3>
             <ul className="space-y-2">
               {footerLinks.solutions.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-sm text-gray-500 hover:text-blue-400 transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -58,11 +58,11 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold mb-4">Entreprise</h3>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Entreprise</h3>
             <ul className="space-y-2">
               {footerLinks.entreprise.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-sm text-gray-500 hover:text-blue-400 transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -70,14 +70,19 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold mb-4">VieSolution Web</h3>
-            <p className="text-sm mb-4">
-              Développement web et automatisation pour simplifier vos opérations et accélérer votre croissance.
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <span className="text-white font-bold text-xs">V</span>
+              </div>
+              <span className="text-white font-bold">VieSolution</span>
+            </div>
+            <p className="text-sm text-gray-500 mb-4">
+              Développement web, automatisation et solutions IA pour simplifier vos opérations.
             </p>
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                  <Link href={link.href} className="text-sm text-gray-500 hover:text-blue-400 transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -85,7 +90,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-sm">
+        <div className="mt-12 pt-8 border-t border-white/5 text-center text-sm text-gray-600">
           <p>&copy; {new Date().getFullYear()} VieSolution Web. Tous droits réservés.</p>
         </div>
       </div>

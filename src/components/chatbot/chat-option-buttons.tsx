@@ -12,7 +12,7 @@ export function ChatOptionButtons({ options, onSelect }: ChatOptionButtonsProps)
         <button
           key={option.value}
           onClick={() => onSelect(option)}
-          className="text-left text-sm px-4 py-2 rounded-xl border border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-colors"
+          className="text-left text-sm px-4 py-2 rounded-xl border border-white/10 text-blue-400 hover:bg-white/5 hover:border-blue-400/50 transition-colors"
         >
           {option.label}
         </button>

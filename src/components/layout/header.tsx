@@ -11,11 +11,14 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+    <header className="sticky top-0 z-50 bg-[#0a0a0f]/90 backdrop-blur-xl border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-blue-600">
-            VieSolution<span className="text-gray-900"> Web</span>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">V</span>
+            </div>
+            <span className="text-lg font-bold text-white">Vie<span className="gradient-text">Solution</span></span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
@@ -28,18 +31,18 @@ export function Header() {
               >
                 <Link
                   href={item.href}
-                  className="flex items-center gap-1 px-3 py-2 text-sm text-gray-700 hover:text-blue-600 rounded-lg transition-colors"
+                  className="flex items-center gap-1 px-3 py-2 text-sm text-gray-400 hover:text-white rounded-lg transition-colors"
                 >
                   {item.label}
                   {item.children && <ChevronDown className="w-3.5 h-3.5" />}
                 </Link>
                 {item.children && openDropdown === item.href && (
-                  <div className="absolute top-full left-0 mt-0 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+                  <div className="absolute top-full left-0 mt-0 w-56 bg-[#111118] rounded-xl shadow-2xl border border-white/10 py-2 z-50">
                     {item.children.map((child) => (
                       <Link
                         key={child.href}
                         href={child.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
                       >
                         {child.label}
                       </Link>
@@ -51,8 +54,8 @@ export function Header() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="/audit-gratuit">
-              <Button variant="outline" size="sm">Audit gratuit</Button>
+            <Link href="/diagnostic">
+              <Button variant="outline" size="sm">Diagnostic gratuit</Button>
             </Link>
             <Link href="/contact">
               <Button size="sm">Nous contacter</Button>
@@ -60,7 +63,7 @@ export function Header() {
           </div>
 
           <button
-            className="lg:hidden p-2 text-gray-700"
+            className="lg:hidden p-2 text-gray-400 hover:text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
           >
@@ -70,12 +73,12 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 px-4 py-4">
+        <div className="lg:hidden bg-[#111118] border-t border-white/5 px-4 py-4">
           {NAV_ITEMS.map((item) => (
             <div key={item.href}>
               <Link
                 href={item.href}
-                className="block py-2 text-gray-700 hover:text-blue-600"
+                className="block py-2 text-gray-300 hover:text-white"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -86,7 +89,7 @@ export function Header() {
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block py-1.5 text-sm text-gray-500 hover:text-blue-600"
+                      className="block py-1.5 text-sm text-gray-500 hover:text-blue-400"
                       onClick={() => setMobileOpen(false)}
                     >
                       {child.label}
@@ -96,9 +99,9 @@ export function Header() {
               )}
             </div>
           ))}
-          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-gray-100">
-            <Link href="/audit-gratuit" onClick={() => setMobileOpen(false)}>
-              <Button variant="outline" size="sm" className="w-full">Audit gratuit</Button>
+          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/5">
+            <Link href="/diagnostic" onClick={() => setMobileOpen(false)}>
+              <Button variant="outline" size="sm" className="w-full">Diagnostic gratuit</Button>
             </Link>
             <Link href="/contact" onClick={() => setMobileOpen(false)}>
               <Button size="sm" className="w-full">Nous contacter</Button>

@@ -7,14 +7,17 @@ interface SectionTitleProps {
   subtitle?: string;
   centered?: boolean;
   className?: string;
+  gradient?: boolean;
 }
 
-export function SectionTitle({ title, subtitle, centered = true, className }: SectionTitleProps) {
+export function SectionTitle({ title, subtitle, centered = true, className, gradient = false }: SectionTitleProps) {
   return (
     <div className={cn('mb-12', centered && 'text-center', className)}>
-      <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">{title}</h2>
+      <h2 className={cn('text-3xl font-bold sm:text-4xl', gradient ? 'gradient-text' : 'text-white')}>
+        {title}
+      </h2>
       {subtitle && (
-        <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">{subtitle}</p>
+        <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">{subtitle}</p>
       )}
     </div>
   );

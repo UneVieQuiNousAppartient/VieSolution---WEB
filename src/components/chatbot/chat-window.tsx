@@ -132,8 +132,8 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
   const showInput = currentFlowStep?.inputType && !isSubmitted;
 
   return (
-    <div className="fixed bottom-20 right-4 sm:right-6 w-[340px] sm:w-[380px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50 max-h-[500px]">
-      <div className="flex items-center justify-between px-4 py-3 bg-blue-600 rounded-t-2xl">
+    <div className="fixed bottom-20 right-4 sm:right-6 w-[340px] sm:w-[380px] glass rounded-2xl shadow-2xl flex flex-col z-50 max-h-[500px] border-white/10">
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-t-2xl">
         <span className="text-white font-medium text-sm">Assistant VieSolution</span>
         <button onClick={onClose} className="text-white/80 hover:text-white" aria-label="Fermer">
           <X className="w-5 h-5" />
@@ -152,18 +152,18 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
       </div>
 
       {showInput && (
-        <div className="border-t border-gray-100 p-3 flex gap-2">
+        <div className="border-t border-white/5 p-3 flex gap-2">
           <input
             type={currentFlowStep.inputType}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleInputSubmit()}
             placeholder="Votre réponse..."
-            className="flex-1 text-sm border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:border-blue-500"
+            className="flex-1 text-sm bg-[#111118] border border-white/10 rounded-xl px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500"
           />
           <button
             onClick={handleInputSubmit}
-            className="bg-blue-600 text-white p-2 rounded-xl hover:bg-blue-700 transition-colors"
+            className="bg-blue-500 text-white p-2 rounded-xl hover:bg-blue-600 transition-colors"
             aria-label="Envoyer"
           >
             <Send className="w-4 h-4" />

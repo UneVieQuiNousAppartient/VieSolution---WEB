@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function PolitiqueConfidentialitePage() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-3xl mx-auto px-4 prose prose-gray">
+    <section className="py-20 bg-[#0a0a0f]">
+      <div className="max-w-3xl mx-auto px-4 prose prose-invert">
         <h1>Politique de confidentialité</h1>
         <p><strong>Dernière mise à jour :</strong> Janvier 2025</p>
 
@@ -24,7 +24,7 @@ export default function PolitiqueConfidentialitePage() {
         <ul>
           <li>Répondre à vos demandes de contact</li>
           <li>Vous fournir des estimations de projet</li>
-          <li>Réaliser des audits gratuits</li>
+          <li>Réaliser des audits et diagnostics gratuits</li>
           <li>Vous contacter au sujet de nos services</li>
           <li>Améliorer nos services</li>
         </ul>

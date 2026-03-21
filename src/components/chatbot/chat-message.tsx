@@ -12,8 +12,8 @@ export function ChatMessage({ type, content }: ChatMessageProps) {
         className={cn(
           'max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
           type === 'bot'
-            ? 'bg-blue-50 text-gray-800 rounded-bl-md'
-            : 'bg-blue-600 text-white rounded-br-md'
+            ? 'bg-white/5 text-gray-300 rounded-bl-md'
+            : 'bg-blue-500 text-white rounded-br-md'
         )}
       >
         {content}

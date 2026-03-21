@@ -11,16 +11,16 @@ function FAQItemComponent({ item }: { item: FAQItem }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden">
+    <div className="glass rounded-xl overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/5 transition-colors"
       >
-        <span className="font-medium text-gray-900 pr-4">{item.question}</span>
-        <ChevronDown className={cn('w-5 h-5 text-gray-400 shrink-0 transition-transform', open && 'rotate-180')} />
+        <span className="font-medium text-gray-200 pr-4 text-sm">{item.question}</span>
+        <ChevronDown className={cn('w-4 h-4 text-gray-500 shrink-0 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <div className="px-6 pb-4 text-sm text-gray-600 leading-relaxed">
+        <div className="px-6 pb-4 text-sm text-gray-400 leading-relaxed">
           {item.answer}
         </div>
       )}
@@ -30,7 +30,7 @@ function FAQItemComponent({ item }: { item: FAQItem }) {
 
 export function FAQSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[#0a0a0f]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle
           title="Questions fréquentes"

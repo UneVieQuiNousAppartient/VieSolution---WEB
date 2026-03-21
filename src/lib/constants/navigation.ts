@@ -8,6 +8,8 @@ export const NAV_ITEMS = [
       { label: 'Intégration API', href: '/services/integration-api' },
       { label: 'Applications web', href: '/services/applications-web' },
       { label: 'Outils internes', href: '/services/outils-internes' },
+      { label: 'Intégration IA', href: '/services/integration-ia' },
+      { label: 'Chatbots IA', href: '/services/chatbots-ia' },
     ],
   },
   {
@@ -38,7 +40,8 @@ export const NAV_ITEMS = [
 ];
 
 export const CTA_LINKS = {
-  auditGratuit: '/audit-gratuit',
+  diagnostic: '/diagnostic',
   estimateur: '/estimateur',
   contact: '/contact',
+  auditGratuit: '/audit-gratuit',
 };

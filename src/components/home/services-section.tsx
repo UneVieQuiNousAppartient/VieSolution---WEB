@@ -1,40 +1,44 @@
 import Link from 'next/link';
-import { Globe, Zap, Link as LinkIcon, Layout, Settings, User } from 'lucide-react';
+import { Globe, Zap, Link as LinkIcon, Layout, Settings, Brain, MessageSquare, Search, ArrowRight } from 'lucide-react';
 import { SectionTitle } from '@/components/ui/section-title';
 import { SERVICES } from '@/lib/constants/content';
-import { ArrowRight } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
-  Globe: <Globe className="w-7 h-7" />,
-  Zap: <Zap className="w-7 h-7" />,
-  Link: <LinkIcon className="w-7 h-7" />,
-  Layout: <Layout className="w-7 h-7" />,
-  Settings: <Settings className="w-7 h-7" />,
-  User: <User className="w-7 h-7" />,
+  Globe: <Globe className="w-6 h-6" />,
+  Zap: <Zap className="w-6 h-6" />,
+  Link: <LinkIcon className="w-6 h-6" />,
+  Layout: <Layout className="w-6 h-6" />,
+  Settings: <Settings className="w-6 h-6" />,
+  Brain: <Brain className="w-6 h-6" />,
+  MessageSquare: <MessageSquare className="w-6 h-6" />,
+  Search: <Search className="w-6 h-6" />,
 };
 
 export function ServicesSection() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-[#0d0d14]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle
           title="Nos services"
-          subtitle="Des solutions complètes pour digitaliser et automatiser votre activité."
+          subtitle="Du site web à l'intégration IA complète — tout ce qu'il faut pour transformer votre entreprise."
+          gradient
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {SERVICES.map((service) => (
             <Link
               key={service.title}
               href={service.href}
-              className="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
+              className="group glass rounded-xl p-5 card-hover"
             >
-              <div className="text-blue-600 mb-4">{iconMap[service.icon]}</div>
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                {iconMap[service.icon]}
+              </div>
+              <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">
                 {service.title}
               </h3>
-              <p className="text-sm text-gray-600 mt-2">{service.description}</p>
-              <span className="inline-flex items-center gap-1 text-sm text-blue-600 mt-4 font-medium">
-                En savoir plus <ArrowRight className="w-3.5 h-3.5" />
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">{service.description}</p>
+              <span className="inline-flex items-center gap-1 text-xs text-blue-400 mt-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                En savoir plus <ArrowRight className="w-3 h-3" />
               </span>
             </Link>
           ))}

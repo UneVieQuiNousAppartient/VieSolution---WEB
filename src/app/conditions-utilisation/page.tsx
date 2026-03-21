@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function ConditionsUtilisationPage() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-3xl mx-auto px-4 prose prose-gray">
+    <section className="py-20 bg-[#0a0a0f]">
+      <div className="max-w-3xl mx-auto px-4 prose prose-invert">
         <h1>Conditions d&apos;utilisation</h1>
         <p><strong>Dernière mise à jour :</strong> Janvier 2025</p>
 
@@ -21,7 +21,7 @@ export default function ConditionsUtilisationPage() {
         <h2>2. Services</h2>
         <p>
           VieSolution Web offre des services de développement web, d&apos;automatisation des processus,
-          d&apos;intégration API et de création d&apos;outils internes. Les détails spécifiques de chaque
+          d&apos;intégration API, d&apos;intelligence artificielle et de création d&apos;outils internes. Les détails spécifiques de chaque
           projet sont définis dans des ententes séparées entre VieSolution Web et le client.
         </p>
 

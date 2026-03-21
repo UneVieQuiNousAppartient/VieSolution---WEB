@@ -1,44 +1,46 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, ClipboardCheck, Calculator } from 'lucide-react';
+import { Brain, Search, Calculator } from 'lucide-react';
 
 export function CTABlockSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[#0a0a0f]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-blue-50 rounded-2xl p-8 text-center">
-            <MessageCircle className="w-10 h-10 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900">Discutez avec nous</h3>
-            <p className="text-sm text-gray-600 mt-2 mb-4">
-              Notre assistant est disponible pour répondre à vos questions en temps réel.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="glass rounded-2xl p-8 text-center border-gradient card-hover">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mx-auto mb-4">
+              <Search className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Diagnostic gratuit</h3>
+            <p className="text-sm text-gray-500 mt-2 mb-5">
+              Évaluez votre site web, vos processus et vos opportunités IA en 5 minutes.
             </p>
-            <p className="text-sm text-blue-600 font-medium">
-              Cliquez sur le bouton de chat en bas à droite
-            </p>
-          </div>
-          <div className="bg-green-50 rounded-2xl p-8 text-center">
-            <ClipboardCheck className="w-10 h-10 text-green-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900">Audit gratuit</h3>
-            <p className="text-sm text-gray-600 mt-2 mb-4">
-              Recevez une analyse personnalisée de vos besoins numériques.
-            </p>
-            <Link href="/audit-gratuit">
-              <Button variant="primary" size="sm" className="bg-green-600 hover:bg-green-700">
-                Demander un audit
-              </Button>
+            <Link href="/diagnostic">
+              <Button variant="outline" size="sm">Lancer le diagnostic</Button>
             </Link>
           </div>
-          <div className="bg-purple-50 rounded-2xl p-8 text-center">
-            <Calculator className="w-10 h-10 text-purple-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900">Estimez votre projet</h3>
-            <p className="text-sm text-gray-600 mt-2 mb-4">
+          <div className="glass rounded-2xl p-8 text-center border-gradient card-hover">
+            <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto mb-4">
+              <Brain className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Solutions IA</h3>
+            <p className="text-sm text-gray-500 mt-2 mb-5">
+              Découvrez comment l&apos;IA peut transformer vos opérations au quotidien.
+            </p>
+            <Link href="/services/integration-ia">
+              <Button variant="outline" size="sm" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">Découvrir l&apos;IA</Button>
+            </Link>
+          </div>
+          <div className="glass rounded-2xl p-8 text-center border-gradient card-hover">
+            <div className="w-12 h-12 rounded-xl bg-green-500/10 text-green-400 flex items-center justify-center mx-auto mb-4">
+              <Calculator className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Estimez votre projet</h3>
+            <p className="text-sm text-gray-500 mt-2 mb-5">
               Obtenez une estimation indicative en quelques minutes.
             </p>
             <Link href="/estimateur">
-              <Button variant="primary" size="sm" className="bg-purple-600 hover:bg-purple-700">
-                Estimer mon projet
-              </Button>
+              <Button variant="outline" size="sm" className="border-green-500/30 text-green-400 hover:bg-green-500/10">Estimer mon projet</Button>
             </Link>
           </div>
         </div>
