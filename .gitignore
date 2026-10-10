@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# handoff Claude Design (référence locale, non versionné)
+/VieSolution_Web-handoff/
+/VieSolution_Web-handoff.zip

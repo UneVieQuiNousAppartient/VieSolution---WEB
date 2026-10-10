@@ -1,25 +1,25 @@
-import { HeroSection } from '@/components/home/hero-section';
-import { ProblemsSection } from '@/components/home/problems-section';
-import { ServicesSection } from '@/components/home/services-section';
-import { AIShowcaseSection } from '@/components/home/ai-showcase-section';
-import { SectorsSection } from '@/components/home/sectors-section';
-import { WhyChooseUsSection } from '@/components/home/why-choose-us-section';
-import { ProcessSection } from '@/components/home/process-section';
-import { CTABlockSection } from '@/components/home/cta-block-section';
-import { FAQSection } from '@/components/home/faq-section';
-import { CTASection } from '@/components/home/cta-section';
+import { RevealInit } from '@/components/vsw/reveal-init';
+import { Hero } from '@/components/vsw/hero';
+import { Services } from '@/components/vsw/services';
+import { BenefitsSection } from '@/components/vsw/benefits-section';
+import { ComparisonSection } from '@/components/vsw/comparison-section';
+import { ProcessSection } from '@/components/vsw/process-section';
+import { Testimonials } from '@/components/vsw/testimonials';
+import { InternsSection } from '@/components/vsw/interns-section';
+import { FAQSection } from '@/components/vsw/faq-section';
+import { CTASection } from '@/components/vsw/cta-section';
 
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
-      <ProblemsSection />
-      <ServicesSection />
-      <AIShowcaseSection />
-      <SectorsSection />
-      <WhyChooseUsSection />
+      <RevealInit />
+      <Hero />
+      <Services />
+      <BenefitsSection />
       <ProcessSection />
-      <CTABlockSection />
+      <ComparisonSection />
+      <Testimonials />
+      <InternsSection />
       <FAQSection />
       <CTASection />
     </>

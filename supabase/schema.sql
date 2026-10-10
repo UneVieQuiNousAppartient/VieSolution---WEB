@@ -1,13 +1,10 @@
--- VieSolution Web - Supabase Schema
--- Execute this SQL in your Supabase SQL Editor
+-- VieSolution Web — Schéma Supabase du site (appliqué le 2026-10-03 sur le projet VieSolutionCSF)
+-- Tables : contact_requests, chatbot_leads, estimateur_requests, audit_requests,
+--          site_testimonials (témoignages gérés par l'admin), site_page_views (analytics légères)
+-- Voir la migration "viesolution_web_site_tables" dans Supabase pour la version exécutée.
 
--- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- =============================================
--- Table: contact_requests
--- Stores contact form submissions
--- =============================================
 CREATE TABLE IF NOT EXISTS contact_requests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   nom TEXT NOT NULL,
@@ -20,10 +17,6 @@ CREATE TABLE IF NOT EXISTS contact_requests (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- =============================================
--- Table: chatbot_leads
--- Stores leads captured via the chatbot widget
--- =============================================
 CREATE TABLE IF NOT EXISTS chatbot_leads (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   nom TEXT NOT NULL,
@@ -37,10 +30,6 @@ CREATE TABLE IF NOT EXISTS chatbot_leads (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- =============================================
--- Table: estimateur_requests
--- Stores project estimation requests
--- =============================================
 CREATE TABLE IF NOT EXISTS estimateur_requests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   nom TEXT NOT NULL,
@@ -56,10 +45,6 @@ CREATE TABLE IF NOT EXISTS estimateur_requests (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- =============================================
--- Table: audit_requests
--- Stores free audit requests
--- =============================================
 CREATE TABLE IF NOT EXISTS audit_requests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   nom TEXT NOT NULL,
@@ -71,64 +56,25 @@ CREATE TABLE IF NOT EXISTS audit_requests (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- =============================================
--- Row Level Security (RLS)
--- =============================================
+CREATE TABLE IF NOT EXISTS site_testimonials (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  auteur TEXT NOT NULL,
+  role TEXT,
+  citation TEXT NOT NULL,
+  note SMALLINT CHECK (note BETWEEN 1 AND 5),
+  publie BOOLEAN DEFAULT TRUE,
+  ordre INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Enable RLS on all tables
-ALTER TABLE contact_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE chatbot_leads ENABLE ROW LEVEL SECURITY;
-ALTER TABLE estimateur_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE audit_requests ENABLE ROW LEVEL SECURITY;
+CREATE TABLE IF NOT EXISTS site_page_views (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  path TEXT NOT NULL,
+  referrer TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Allow anonymous inserts (for public forms)
-CREATE POLICY "Allow anonymous inserts on contact_requests"
-  ON contact_requests FOR INSERT
-  TO anon
-  WITH CHECK (true);
-
-CREATE POLICY "Allow anonymous inserts on chatbot_leads"
-  ON chatbot_leads FOR INSERT
-  TO anon
-  WITH CHECK (true);
-
-CREATE POLICY "Allow anonymous inserts on estimateur_requests"
-  ON estimateur_requests FOR INSERT
-  TO anon
-  WITH CHECK (true);
-
-CREATE POLICY "Allow anonymous inserts on audit_requests"
-  ON audit_requests FOR INSERT
-  TO anon
-  WITH CHECK (true);
-
--- Allow authenticated users (admin) to read all data
-CREATE POLICY "Allow authenticated read on contact_requests"
-  ON contact_requests FOR SELECT
-  TO authenticated
-  USING (true);
-
-CREATE POLICY "Allow authenticated read on chatbot_leads"
-  ON chatbot_leads FOR SELECT
-  TO authenticated
-  USING (true);
-
-CREATE POLICY "Allow authenticated read on estimateur_requests"
-  ON estimateur_requests FOR SELECT
-  TO authenticated
-  USING (true);
-
-CREATE POLICY "Allow authenticated read on audit_requests"
-  ON audit_requests FOR SELECT
-  TO authenticated
-  USING (true);
-
--- =============================================
--- Indexes for performance
--- =============================================
-CREATE INDEX idx_contact_requests_created_at ON contact_requests (created_at DESC);
-CREATE INDEX idx_chatbot_leads_created_at ON chatbot_leads (created_at DESC);
-CREATE INDEX idx_estimateur_requests_created_at ON estimateur_requests (created_at DESC);
-CREATE INDEX idx_audit_requests_created_at ON audit_requests (created_at DESC);
-CREATE INDEX idx_contact_requests_email ON contact_requests (email);
-CREATE INDEX idx_chatbot_leads_email ON chatbot_leads (email);
+-- RLS : inserts anonymes pour les formulaires publics et le tracking,
+-- lecture anonyme des témoignages publiés seulement, lecture complète pour authenticated.
+-- (Politiques détaillées dans la migration.)

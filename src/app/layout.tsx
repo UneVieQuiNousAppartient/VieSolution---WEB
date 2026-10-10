@@ -1,29 +1,55 @@
 import type { Metadata } from 'next';
+import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
-import { ChatWidget } from '@/components/chatbot/chat-widget';
+import './vsw.css';
+import { VswNav } from '@/components/vsw/nav';
+import { VswFooter } from '@/components/vsw/footer';
+import { VswChatbot } from '@/components/vsw/chatbot';
+import { TrackPageview } from '@/components/vsw/track-pageview';
+
+const fontDisplay = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sg',
+  display: 'swap',
+});
+
+const fontBody = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jbm',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
-    default: 'VieSolution Web | Développement web et automatisation',
-    template: '%s | VieSolution Web',
+    default: 'Vie Solution Web — IA, automatisation & Zoho · Québec',
+    template: '%s | Vie Solution Web',
   },
   description:
-    'VieSolution Web conçoit des sites web, applications et automatisations pour simplifier vos opérations et accélérer votre croissance.',
+    "Automatisation des processus, agents IA, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui nous appartient dans la gestion de votre entreprise.",
   keywords: [
-    'développement web',
     'automatisation',
-    'application web',
+    'intelligence artificielle',
+    'agents IA',
+    'Zoho',
+    'implantation Zoho',
+    'formation IA',
     'PME',
-    'intégration API',
-    'site web professionnel',
+    'Québec',
     'VieSolution',
   ],
   openGraph: {
     type: 'website',
     locale: 'fr_CA',
-    siteName: 'VieSolution Web',
+    siteName: 'Vie Solution Web',
   },
 };
 
@@ -33,12 +59,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className="font-sans antialiased">
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <ChatWidget />
+    <html
+      lang="fr-CA"
+      className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
+    >
+      <body>
+        <TrackPageview />
+        <VswNav />
+        <main>{children}</main>
+        <VswFooter />
+        <VswChatbot />
       </body>
     </html>
   );
