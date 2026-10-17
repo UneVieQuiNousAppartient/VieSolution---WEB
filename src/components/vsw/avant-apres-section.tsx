@@ -23,7 +23,7 @@ const ROWS: [string, string][] = [
 
 export function AvantApresSection() {
   return (
-    <section id="avant-apres" className="section">
+    <section id="avant-apres" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>

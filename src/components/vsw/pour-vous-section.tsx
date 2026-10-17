@@ -26,10 +26,10 @@ export function PourVousSection() {
         </div>
         <div className="benefits-grid reveal">
           {SITUATIONS.map((s) => (
-            <div className="benefit" key={s}>
-              <div className="benefit-icon">
-                <Icon name="check" size={20} />
-              </div>
+            <div className="benefit pv-card" key={s}>
+              <span className="pv-check" aria-hidden="true">
+                <Icon name="check" size={18} />
+              </span>
               <p className="pv-situation">{s}</p>
             </div>
           ))}

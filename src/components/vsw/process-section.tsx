@@ -23,7 +23,7 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <section id="processus" className="section">
+    <section id="processus" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>

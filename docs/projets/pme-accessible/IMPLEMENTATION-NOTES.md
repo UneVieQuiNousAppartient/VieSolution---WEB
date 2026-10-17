@@ -345,3 +345,95 @@ Plan approuvé par Camille (« Sobre et premium »). Trace : `PRD-ANIMATIONS.md`
 - **Téléphone** : le défilement horizontal des pastilles en cachait 7 sur 9 → retour à la ligne (2 par rangée, compactes). Le sélecteur descend à ≈ 1 150 px (2ᵉ écran) ; à raccourcir dans le lot « finition premium » (hero mobile).
 - **QA** : bloquant corrigé (`min-height: 40px` sur les pastilles, mesuré 40 px) ; pulsation déplacée sur `::after` (plus de relance de la cascade quand on passe d'une carte à l'autre : opacité de la carte A = 1 pendant le changement) ; délai 500 ms / durée 1,6 s ; critère 1 du PRD réécrit.
 - Captures : `js2-telephone-selecteur.png`, `js2-cible.png`, `js-ordinateur-hero.png`.
+
+## Round 7 — Finition premium (ux-agent, Opus, 2026-10-17, `PRD-PREMIUM.md`, cahier `AUDIT-PREMIUM.md`)
+
+Progression consignée groupe par groupe (reprise possible en cas de coupure).
+
+### Groupe 1 — Jetons et fond : FAIT
+- `:root` : jetons §5 ajoutés (`--fs-*`, `--measure`, `--section-y`, `--head-gap`, `--grid-gap`, `--surface`, `--bg-band`,
+  `--shadow-xs/sm`, `--accent-hover`, `--btn-h(-lg)`, `--field-h`) ; rayons ramenés à 8 / 12 / 16 px (`--radius-xl` 28 px inchangé).
+- Fond blanc cassé chaud : `--bg-0: oklch(0.985 0.005 85)` ; `--bg-1/2/3`, `--line`, `--line-soft` sur la teinte 85, mêmes luminosités
+  (chroma réduite à 0,008-0,014 pour éviter le jaune).
+- `html[data-theme="dark"]` : `--surface` et `--bg-band` = `var(--bg-1)`, ombres plus marquées, `--accent-hover` éclairci (mélange avec blanc).
+- Couleurs en dur hors bloc de jetons : 11 cyan + 3 violet convertis par script en `color-mix(in oklch, var(--accent|--accent-2) X%, transparent)`
+  (les 9 de l'audit + halo du hero + bulle utilisateur du clavardage).
+
+### Groupe 2 — Typographie et rythme : FAIT
+- `.section` : `padding-block: var(--section-y)`, filet supprimé ; `.section--band` (fond `--bg-band`) sur « Avant / après », « Processus », « FAQ ».
+  Règle mobile `.section { padding: 80px 0 }` retirée (le `clamp` donne 72 px).
+- Vide avant les partenaires : la section « Témoignages » qui suit renvoie `null` (aucun témoignage publié) ; le vide venait de deux
+  marges de 120 px empilées. Correctif : `#partenaires.section { padding-top: clamp(48px, 6vw, 72px) }`.
+- `.section-head` empilé (flex colonne, gap 20 px, paragraphe 18 px / 60ch) ; `.section-head--split` (2 colonnes) posé sur `services.tsx`
+  et `benefits-section.tsx` seulement ; la règle ≤ 1024 px vise maintenant `--split`.
+- Titres : h1 du hero `--fs-h1`/lh 1 ; h2 (`.section-head`, `.ai-top`, `.about-content`) `--fs-h2`, lh 1.08, ls -0.025em, `text-wrap: balance`,
+  18ch ; titres de cartes (`.service h3`, `.benefit h4`, `.ai-pillar h4`, `.process-step h4`) `--fs-h3`, lh 1.25.
+- Texte des cartes : 15 px (`--fs-card`) en `--fg-1` (services, bénéfices, piliers, processus, forfaits, comparatif, témoignages) ;
+  notes métiers 13 px `--fg-2`.
+- Mono retirée (Inter 13-14 px, 500, sans capitales forcées) : étiquettes de champs, pastilles (`.service-tag`, `.zoho-app`, `.pricing-badge`),
+  étiquettes métiers, descriptions partenaires, légendes du hero, titres et bas du pied de page (13 px), notes (`.compare-note`, `.pricing-note`),
+  `.ai-pillar li`, `.ai-pillar-link`, `.contact-item .txt`, `.about-stat span`, légendes des témoignages, `.booking-meta`.
+  Mono conservée : surtitres `// …`, numéros (`.service-num`, `.step-num`, `.ai-pillar-num`), calendrier de `/rdv`, bandeau défilant, `.logo small`.
+
+### Groupe 3 — Cartes et grilles : FAIT
+- `.services-grid`, `.benefits-grid` (donc `.metiers-grid`), `.process-grid` (donc les 3 étapes de `/devis`, `cols-3`) : `gap: var(--grid-gap)`,
+  sans fond ni bordure ni `overflow: hidden`. Cartes `.service`, `.benefit`, `.process-step` : `--surface`, bordure `--line-soft`, rayon 16 px,
+  `--shadow-xs`. Survol (bloc round 5 modifié sur place) : montée 3 px, bordure `--accent-40`, `--shadow-sm` ; fond de survol `--bg-2` retiré.
+  `.ai-pillar` (mosaïque dans `.ai-wrap`) garde son survol sans montée. Règle globale de mouvement réduit : `transform: none` étendu aux 3 cartes.
+- Forfaits, témoignages, colonnes du comparatif : fond `--surface` + `--shadow-xs`.
+- Métiers : 1 colonne, 2 à ≥ 700 px, 3 à ≥ 1100 px (anciennes règles 4 col / ≤ 900 / ≤ 560 retirées) ; `.metier-titres` a un `min-height`
+  (titre + ligne de précision) pour aligner « Ce qui vous gruge » ; remis à 0 sous 560 px. Icônes : déjà une par métier, rien changé.
+- « C'est pour vous si… » (`pour-vous-section.tsx`) : carré `.benefit-icon` remplacé par `.pv-check` (coche 18 px en ligne, `--accent`, `aria-hidden`) ;
+  carte en rangée (`.benefit.pv-card`). Texte inchangé.
+- Halos retirés en clair : `.btn-primary:hover` = fond/bordure `--accent-hover` ; `.logo-mark` et son point sans lueur, dégradé du logo
+  `--accent-hover → --accent` (plus de violet) ; carte en vedette et colonne « nous » = bordure accent seule ; point des piliers sans lueur ;
+  bulle de clavardage en `--shadow-sm`. Halos rétablis sous `html[data-theme="dark"]` (bouton, logo, carte en vedette, bulle).
+- Violet : seulement dans le h1 du hero (`.highlight`) et `#demarrer .ai-top h2 .glow` (« On commence petit »). `.glow` de `/ia` et `/zoho`
+  = `--accent` plein ; fonds de `.ai-wrap`/`.zoho-wrap` et halo du hero en `--accent` ; surcharges violettes de `.zoho-wrap` supprimées ;
+  avatar du clavardage `--accent → --accent-hover`.
+
+### Groupe 4 — Nav et menu mobile : FAIT
+- `.nav` : `color-mix(in oklch, var(--bg-0) 94%, transparent)` (sombre : 90 %), flou de 20 px conservé.
+- `nav.tsx` : `NAV_LINKS` (8 liens) et le type `NavLinkItem` exportés ; la barre fait un `map` dessus ; `<NavMenu links={NAV_LINKS} />` ajouté
+  après le bouton RDV (qui reçoit la classe `nav-cta`). Pas d'import circulaire : `nav-menu.tsx` n'importe que le type.
+- Nouveau `src/components/vsw/nav-menu.tsx` (client) : bouton 44 × 44 (`aria-label="Menu"`, `aria-expanded`, `aria-controls`), icône 3 traits → croix
+  (CSS, 220 ms) ; panneau `hidden` quand fermé, sous la nav (`position: absolute; top: 100%; height: calc(100dvh - 100%)`, la nav étant
+  le bloc conteneur à cause de `backdrop-filter`) ; 8 liens 20 px / 56 px + « Prendre un RDV » pleine largeur ; fermeture par le bouton,
+  Échap, clic sur un lien, ou passage au-delà de 640 px ; `body { overflow: hidden }` pendant l'ouverture (valeur précédente rétablie) ;
+  focus rendu au bouton à la fermeture. Entrée 220 ms (`vsw-menu-in`), coupée sous `prefers-reduced-motion`.
+- **Écart** : à ≤ 640 px, le bouton « Prendre un RDV » de la barre est masqué (logo + bouton + menu dépassaient 350 px de largeur utile) ;
+  il reste en bas du panneau du menu et dans le hero.
+
+### Groupe 5 — Formulaires, forfaits, FAQ, partenaires, mobile : FAIT
+- Boutons : `min-height: var(--btn-h)` (44 px), `.btn-lg` `var(--btn-h-lg)` (52 px) ; police des boutons inchangée (14/15 px, 500) pour ne pas
+  élargir la nav entre 1024 et 1280 px (**écart** mineur avec « Inter 15 px / 600 » de §5).
+- Champs `.form-field` (devis, contact, stagiaires) : `--surface`, 48 px, 16 px ; `select` sans flèche native + chevron SVG (data URI, `%23667`) ;
+  `[aria-invalid="true"]` : bordure `--danger` + fond `color-mix(--danger 4 %, --surface)` ; message d'erreur 13 px.
+- `/devis` : `situation-form.tsx` enveloppe le formulaire dans `.situation-layout` (7fr / 5fr, empilé ≤ 1024 px) avec une colonne `<aside>`
+  qui reprend `ETAPES` (exporté de `comment-prix-section.tsx`) : « Étape 0X », titre, phrase — textes identiques, aucune ligne nouvelle.
+  `comment-prix-section.tsx` : tailles en ligne 19/20 px → `var(--fs-h3)`.
+- Forfaits : « Sur mesure » 28 px ; `.period` en bloc, Inter 14 px `--fg-2`.
+- FAQ : liste sans boîtes (filet haut de liste + `border-bottom` par question), questions 18 px, chevron SVG 16 px en `mask` (couleur `--accent`,
+  rotation 180° à l'ouverture), réponses 16 px `--fg-1` limitées à `--measure`, `max-width: 760px` ; `focus-visible` ajouté.
+- Partenaires : grille `minmax(220px, 1fr)` sur toute la largeur, cartes `--surface` ; logos 40 px, `grayscale(1)` + opacité .75, couleur au survol
+  et au focus (bloc round 5 modifié sur place) ; descriptions Inter 13 px.
+- Téléphone (≤ 640 px) : hero 40/56 px, surtitre centré sans tiret, lede 17 px, boutons du hero pleine largeur empilés, `hero-meta` en 2 colonnes
+  (chiffres 22 px), bulle de clavardage à `bottom: 88px` (panneau à 156 px).
+
+### Vérifications (round 7)
+- Accolades de `vsw.css` : 502 `{` / 502 `}`.
+- `grep -nE "oklch\(0\.85 0\.18 200|oklch\(0\.72 0\.22 305" src/app/vsw.css` : seulement les lignes 75-83 (bloc de jetons `html[data-theme="dark"]`).
+- `grep -n "prefers-reduced-motion" src/app/vsw.css` : 2112 (partenaires), 2409 (je suis), 2486 (menu mobile), 2537 (globale, dernière du fichier) ;
+  CSS compilé : la règle globale ferme bien le fichier.
+- `npm run typecheck` : 0 erreur. `npm run lint` : 0 erreur, 10 avertissements (préexistants ; aucun dans les fichiers touchés hors `react-hooks/refs`
+  déjà présent sur `handleSubmit`).
+- `npx next build` : terminé, toutes les pages générées. `check-rules` : aucune violation. `check-secrets-suivis` : aucun fichier sensible.
+- Non vérifié : rendu dans le navigateur — **à tester** (agent principal / Camille).
+
+### Complément de l'agent principal (round 7, après captures et `qa-agent`)
+
+- `.ai-pillars` (volets IA / Zoho / Démarrer) : passé en cartes détachées comme les autres grilles (critère 6 — l'`ux-agent` l'avait laissé en mosaïque sans le déclarer) ; survol aligné.
+- Libellé `// Je suis…` en `--fg-2` (contraste AA) ; ombre du panneau de clavardage en `--shadow-sm` (couleur en dur retirée).
+- `/devis` : les 3 étapes s'affichaient deux fois (section « Comment on établit un prix » + colonne à côté du formulaire). Décision : la section garde l'en-tête, « Ce qui fait varier le prix » et la phrase de conclusion ; les 3 étapes ne restent que dans la colonne du formulaire, là où elles rassurent au moment d'écrire.
+- Correction des notes : l'avertissement `react-hooks/refs` restant est dans `contact.tsx` (fichier non touché), pas dans un fichier du lot.
+- Vérifié dans le navigateur (Playwright, voir `pr-*.png`) : sections 112 px à 1280, grilles 20 px, cartes blanches r16, métiers 3 colonnes, champs 48 px / 16 px avec cadre rouge, bouton menu 44×44, panneau 9 liens × 56 px, Échap → focus sur le bouton, bulle à 88 px, sélecteur « Je suis… » à 655 px sur téléphone (< 900), aucune erreur de page.

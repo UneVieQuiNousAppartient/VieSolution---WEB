@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 7.
+**Dernière mise à jour : 2026-10-17** — dernière section : 8.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -92,3 +92,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `qa-agent` (Opus, 62 k) ROUGE → un bloquant (cible tactile 37 px) corrigé, 3 à trancher traités, textes des 8 cartes vérifiés identiques au PRD (56 chaînes) ; `npm run verify` vert ; navigateur : sélecteur dans le premier écran sur ordinateur (bas à 855 px / 900), section métiers 1,4 écran (ordinateur) et 3,1 (téléphone, contre ≈ 5,4), clic → carte à 76 px sous le haut, passage d'une carte à l'autre sans disparition, ouverture des cartes, thème sombre.
 
 **Non fait dans ce round** : hero trop long sur téléphone (sélecteur au 2ᵉ écran) → lot « finition premium » ; AUDIT-PREMIUM.md (18 correctifs) à implémenter ; issue #3 (menu mobile).
+
+## 8. ✅ Finition premium (2026-10-17)
+
+**Contexte / demande** : « Ça doit être un site premium. » Audit par un directeur artistique (agent Opus, 126 k) sur 13 captures → `docs/projets/pme-accessible/AUDIT-PREMIUM.md` (18 correctifs classés, jetons recommandés, références Wealthsimple / Mercury / Pilot). Accord de Camille : tout le lot, menu mobile inclus (issue #3), fond blanc cassé chaud.
+
+**Ce qui a été fait** : `PRD-PREMIUM.md` (19 critères) ; `ux-agent` (Opus, 136 k) : jetons (`--fs-*`, `--section-y`, `--grid-gap`, `--surface`, `--bg-band`, ombres, `--accent-hover`, hauteurs de boutons et de champs) en clair et en sombre, fond teinte 85, 9 couleurs en dur converties ; sections sans filet avec bandes de fond (avant/après, processus, FAQ) ; en-têtes empilés ; échelle typographique ; texte des cartes ≥ 15 px ; mono réservée aux surtitres et numéros ; grilles détachées (cartes blanches, r16, 20 px, montée au survol), métiers 3 colonnes ; coches en ligne ; halos retirés en clair, violet réservé à deux titres ; nav opaque à 94 % et **menu mobile** (`nav-menu.tsx`, `NAV_LINKS` partagé) ; formulaires (champs 48 px / 16 px, erreur encadrée, liste stylée), `/devis` en 7/12 + colonne ; forfaits et FAQ allégés ; partenaires en gris doux ; mobile (hero plus court, boutons pleine largeur, bulle à 88 px). Agent principal : volets IA/Zoho/Démarrer en cartes détachées (oubli), libellé « Je suis… » en `--fg-2`, ombre du clavardage en jeton, colonne de `/devis` = « Ce qui fait varier le prix » (les 3 étapes ne sont plus affichées deux fois).
+
+**Vérification technique** : `qa-agent` (Opus, 100 k, repris une fois) VERT avec 2 points à trancher (traités) ; contrastes estimés `--fg-1` 11:1, `--fg-2` 5,7:1, accent 4,8:1 ; `npm run verify` vert ; navigateur (Playwright) : sections 112 px, grilles 20 px, cartes r16 blanches, métiers 3 colonnes, champs 48 px / 16 px avec cadre rouge, bouton menu 44×44, panneau 9 liens × 56 px, Échap → focus bouton, défilement bloqué pendant l'ouverture, bulle à 88 px, sélecteur « Je suis… » à 655 px sur téléphone, thème sombre, aucune erreur de page.
+
+**Non fait dans ce round** : en sombre, `--surface` = `--bg-band` (cartes distinguées par la bordure seulement) ; pas de piège de focus dans le menu (non modal, acceptable) ; `body { overflow: hidden }` imparfait sur très vieux iOS ; éléments de Camille toujours attendus pour la dernière marche « premium » : logo définitif, photos de vraies personnes, vrai témoignage.

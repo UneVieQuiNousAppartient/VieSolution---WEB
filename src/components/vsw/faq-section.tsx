@@ -51,7 +51,7 @@ const FAQS = [
 
 export function FAQSection() {
   return (
-    <section id="faq" className="section">
+    <section id="faq" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>

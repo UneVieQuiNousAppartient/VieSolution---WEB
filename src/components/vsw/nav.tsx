@@ -1,5 +1,20 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { NavMenu } from './nav-menu';
+
+export type NavLinkItem = { href: string; label: string };
+
+/** Liens de la nav : barre (> 640 px) et menu mobile (nav-menu.tsx) partagent cette liste. */
+export const NAV_LINKS: readonly NavLinkItem[] = [
+  { href: '/#demarrer', label: 'Démarrer' },
+  { href: '/#metiers', label: 'Métiers' },
+  { href: '/ia', label: 'IA' },
+  { href: '/zoho', label: 'Zoho' },
+  { href: '/devis', label: 'Devis' },
+  { href: '/realisations', label: 'Réalisations' },
+  { href: '/a-propos', label: 'À propos' },
+  { href: '/contact', label: 'Contact' },
+];
 
 export function VswNav() {
   return (
@@ -14,18 +29,16 @@ export function VswNav() {
           </div>
         </Link>
         <div className="nav-links">
-          <Link href="/#demarrer">Démarrer</Link>
-          <Link href="/#metiers">Métiers</Link>
-          <Link href="/ia">IA</Link>
-          <Link href="/zoho">Zoho</Link>
-          <Link href="/devis">Devis</Link>
-          <Link href="/realisations">Réalisations</Link>
-          <Link href="/a-propos">À propos</Link>
-          <Link href="/contact">Contact</Link>
+          {NAV_LINKS.map((l) => (
+            <Link key={l.href} href={l.href}>
+              {l.label}
+            </Link>
+          ))}
         </div>
-        <Link href="/rdv" className="btn btn-primary">
+        <Link href="/rdv" className="btn btn-primary nav-cta">
           Prendre un RDV <Icon name="arrow" size={14} />
         </Link>
+        <NavMenu links={NAV_LINKS} />
       </div>
     </nav>
   );

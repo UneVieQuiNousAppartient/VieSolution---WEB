@@ -1,5 +1,5 @@
 /* « Combien ça coûte ? » — démarche de prix, sans aucun montant (décision de Camille, 2026-10-17). */
-const ETAPES = [
+export const ETAPES = [
   {
     num: '01',
     title: 'Un appel gratuit de 30 minutes',
@@ -17,7 +17,11 @@ const ETAPES = [
   },
 ];
 
-const FACTEURS = [
+/* Phrase de conclusion, affichée à côté du formulaire de situation (round 7). */
+export const CONCLUSION_PRIX =
+  'On commence souvent petit : un premier pas, un prix clair, puis on décide de la suite ensemble.';
+
+export const FACTEURS = [
   'L’ampleur du premier pas (une tâche ou plusieurs)',
   'Les logiciels à relier entre eux',
   'Le transfert de vos données existantes',
@@ -42,30 +46,13 @@ export function CommentPrixSection() {
           {ETAPES.map((e) => (
             <li className="process-step" key={e.num}>
               <div className="step-num">Étape {e.num}</div>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 19, color: 'var(--fg-0)', margin: 0, fontWeight: 500, letterSpacing: '-0.01em' }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--fs-h3)', lineHeight: 1.25, color: 'var(--fg-0)', margin: 0, fontWeight: 500, letterSpacing: '-0.01em' }}>
                 {e.title}
               </h3>
               <p>{e.desc}</p>
             </li>
           ))}
         </ol>
-        <div
-          className="ai-pillar reveal"
-          style={{ marginTop: 24, border: '1px solid var(--line-soft)', borderRadius: 'var(--radius-lg)' }}
-        >
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, color: 'var(--fg-0)', margin: 0, fontWeight: 500, letterSpacing: '-0.01em' }}>
-            Ce qui fait varier le prix
-          </h3>
-          <ul>
-            {FACTEURS.map((f) => (
-              <li key={f}>{f}</li>
-            ))}
-          </ul>
-          <p style={{ marginTop: 8 }}>
-            On commence souvent petit : un premier pas, un prix clair, puis on décide de la suite
-            ensemble.
-          </p>
-        </div>
       </div>
     </section>
   );

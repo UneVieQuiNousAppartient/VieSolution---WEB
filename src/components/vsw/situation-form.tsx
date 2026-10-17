@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { submitEstimateurRequest } from '@/lib/supabase/actions';
 import { checkRateLimit } from '@/lib/utils/security';
 import { Icon } from './icon';
+import { FACTEURS, CONCLUSION_PRIX } from './comment-prix-section';
 
 /* Les 8 métiers de metiers-section.tsx (titres des cartes), + « Autre ». */
 const METIERS = [
@@ -88,76 +89,88 @@ export function SituationForm() {
             premier pas.
           </p>
         </div>
-        <div className="reveal" style={{ maxWidth: 760 }}>
-          {sent ? (
-            <div className="form-success" role="status">
-              <div className="form-success-icon">
-                <Icon name="check" size={24} />
+        <div className="situation-layout">
+          <div className="reveal">
+            {sent ? (
+              <div className="form-success" role="status">
+                <div className="form-success-icon">
+                  <Icon name="check" size={24} />
+                </div>
+                <h3>Merci !</h3>
+                <p>On vous revient sous 24h ouvrables.</p>
               </div>
-              <h3>Merci !</h3>
-              <p>On vous revient sous 24h ouvrables.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
-              <div className="form-field">
-                <label htmlFor="s-metier">Votre métier</label>
-                <select id="s-metier" aria-invalid={!!errors.metier} {...register('metier')}>
-                  <option value="" disabled>
-                    Choisissez votre métier
-                  </option>
-                  {METIERS.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <div className="form-field">
+                  <label htmlFor="s-metier">Votre métier</label>
+                  <select id="s-metier" aria-invalid={!!errors.metier} {...register('metier')}>
+                    <option value="" disabled>
+                      Choisissez votre métier
                     </option>
-                  ))}
-                </select>
-                {errors.metier && <span className="field-error">{errors.metier.message}</span>}
-              </div>
-              <div className="form-field">
-                <label htmlFor="s-desc">Ce qui vous prend le plus de temps</label>
-                <textarea
-                  id="s-desc"
-                  placeholder="Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine…"
-                  aria-invalid={!!errors.description}
-                  {...register('description')}
-                ></textarea>
-                {errors.description && <span className="field-error">{errors.description.message}</span>}
-              </div>
-              <div className="form-row">
-                <div className="form-field">
-                  <label htmlFor="s-nom">Nom</label>
-                  <input id="s-nom" type="text" autoComplete="name" aria-invalid={!!errors.nom} {...register('nom')} />
-                  {errors.nom && <span className="field-error">{errors.nom.message}</span>}
+                    {METIERS.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.metier && <span className="field-error">{errors.metier.message}</span>}
                 </div>
                 <div className="form-field">
-                  <label htmlFor="s-email">Courriel</label>
-                  <input id="s-email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
-                  {errors.email && <span className="field-error">{errors.email.message}</span>}
+                  <label htmlFor="s-desc">Ce qui vous prend le plus de temps</label>
+                  <textarea
+                    id="s-desc"
+                    placeholder="Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine…"
+                    aria-invalid={!!errors.description}
+                    {...register('description')}
+                  ></textarea>
+                  {errors.description && <span className="field-error">{errors.description.message}</span>}
                 </div>
-              </div>
-              <div className="form-field">
-                <label htmlFor="s-tel">Téléphone (facultatif)</label>
-                <input id="s-tel" type="tel" autoComplete="tel" {...register('telephone')} />
-              </div>
-              {/* Honeypot */}
-              <div className="hp-field" aria-hidden="true">
-                <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-              </div>
-              {error && (
-                <p role="alert" style={{ color: 'var(--danger)', fontSize: 13, margin: '0 0 12px' }}>
-                  {error}
-                </p>
-              )}
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
-                  {isSubmitting ? 'Envoi…' : 'Envoyer ma situation'} <Icon name="send" size={14} />
-                </button>
-                <Link href="/rdv" className="btn btn-ghost btn-lg">
-                  Je préfère réserver un appel
-                </Link>
-              </div>
-            </form>
-          )}
+                <div className="form-row">
+                  <div className="form-field">
+                    <label htmlFor="s-nom">Nom</label>
+                    <input id="s-nom" type="text" autoComplete="name" aria-invalid={!!errors.nom} {...register('nom')} />
+                    {errors.nom && <span className="field-error">{errors.nom.message}</span>}
+                  </div>
+                  <div className="form-field">
+                    <label htmlFor="s-email">Courriel</label>
+                    <input id="s-email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
+                    {errors.email && <span className="field-error">{errors.email.message}</span>}
+                  </div>
+                </div>
+                <div className="form-field">
+                  <label htmlFor="s-tel">Téléphone (facultatif)</label>
+                  <input id="s-tel" type="tel" autoComplete="tel" {...register('telephone')} />
+                </div>
+                {/* Honeypot */}
+                <div className="hp-field" aria-hidden="true">
+                  <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                </div>
+                {error && (
+                  <p role="alert" style={{ color: 'var(--danger)', fontSize: 13, margin: '0 0 12px' }}>
+                    {error}
+                  </p>
+                )}
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                    {isSubmitting ? 'Envoi…' : 'Envoyer ma situation'} <Icon name="send" size={14} />
+                  </button>
+                  <Link href="/rdv" className="btn btn-ghost btn-lg">
+                    Je préfère réserver un appel
+                  </Link>
+                </div>
+              </form>
+            )}
+          </div>
+          {/* Réassurance : les 3 étapes de « Comment on établit un prix » (textes existants, round 7) */}
+          <aside className="situation-aside reveal">
+            <h3 className="situation-aside-title">Ce qui fait varier le prix</h3>
+            <ul className="situation-facteurs">
+              {FACTEURS.map((x) => (
+                <li key={x}>{x}</li>
+              ))}
+            </ul>
+            <p className="situation-aside-note">{CONCLUSION_PRIX}</p>
+          </aside>
         </div>
       </div>
     </section>

@@ -32,7 +32,7 @@ export function BenefitsSection() {
   return (
     <section id="benefices" className="section">
       <div className="container">
-        <div className="section-head reveal">
+        <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Pourquoi nous choisir</div>
             <h2>Ce que vous y gagnez,<br />concrètement.</h2>

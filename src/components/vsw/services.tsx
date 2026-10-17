@@ -47,7 +47,7 @@ export function Services() {
   return (
     <section id="services" className="section">
       <div className="container">
-        <div className="section-head reveal">
+        <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Services</div>
             <h2>Quatre façons<br />de vous simplifier la vie.</h2>
