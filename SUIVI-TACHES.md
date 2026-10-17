@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 5.
+**Dernière mise à jour : 2026-10-17** — dernière section : 6.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -72,3 +72,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `ux-agent` : typecheck 0 erreur, lint 0 erreur, build 41/41, `grep` des montants vide dans le nouveau design (7 lignes restantes dans l'ancien design, redirigé en 308). `qa-agent` (Opus, 70 k) : VERT, aucun bloquant ; 3 points à trancher et 5 mineurs, corrigés dans la foulée (« Deux minutes suffisent » retiré, formulation de l'étape 03 adoucie, « Décrivez-nous », couleur d'erreur de `contact.tsx` en `--danger`, notes et suivi corrigés). `npm run verify` vert (typecheck, lint 0 erreur, build 41/41, règles, secrets). Captures `/devis` clair / sombre / mobile et messages d'erreur du formulaire. **À tester par Camille** : un envoi réel du formulaire de situation (table `estimateur_requests`, projet Supabase partagé — pas de test automatique pour ne pas créer de fausses demandes).
 
 **Non fait dans ce round** : classes CSS `calc-*` : `.calc-option` sert encore à `/admin`, les autres sont à nettoyer avec précaution ; le brouillon IA de l'Edge Function `vsw-lead-followup` (hors périmètre, non déployée) libelle encore « Estimation en ligne » / « Service visé » — à ajuster quand elle sera déployée ; montants dans les pages de l'ancien design (redirigées) ; l'admin `/admin` affiche toujours `resultat_estimation` tel quel (« Sur mesure… »), à revoir si Camille veut un champ « métier » distinct.
+
+## 6. ✅ Animations sobres et premium (2026-10-17)
+
+**Contexte / demande** : Camille veut des animations pour rendre le site plus haut de gamme ; choix « Sobre et premium » (6 effets, CSS pur, désactivés sous « réduire les animations »).
+
+**Ce qui a été fait** : `docs/projets/pme-accessible/PRD-ANIMATIONS.md` ; `ux-agent` (Opus, 83 k) : bloc `/* pme-accessible — animations */` en fin de `vsw.css` (entrée du hero en séquence, reflet lent sur « nous appartient », halo qui respire, cascade des cartes dans 9 grilles, survols, défilement doux, FAQ fluide, bandeau en pause, règle globale `prefers-reduced-motion`), `nav-scroll.tsx` (nav compacte dès 24 px) monté dans `layout.tsx`. Agent principal : `:where()` sur le hero (bloquant du QA), `data-scroll-behavior="smooth"`, lueur de la carte « Populaire » au survol.
+
+**Vérification technique** : `qa-agent` (Opus, 61 k) ROUGE → un bloquant (délai du h1 écrasé par la spécificité) corrigé, 2 à trancher (tranchés : transitions de la nav gardées ; attribut Next ajouté), 3 mineurs traités ; `npm run verify` vert ; navigateur (Playwright) : hero à 60 / 900 ms, cascade des métiers, nav 72 → 61 px, survol +3 px, bandeau en pause, FAQ, mouvement réduit, thème sombre.
+
+**Non fait dans ce round** : issue #2 (sections invisibles sans JavaScript, bug préexistant : `.reveal { opacity: 0 }` sans repli) — correctif proposé dans l'issue, ≈ 30 k ; les tuiles collées (`.benefit`, `.service`, `.process-step`) n'ont pas de montée au survol (grilles à joints de 1 px qui rogneraient la rangée du haut) ; pas de vidéo de contrôle, seulement des captures à instants fixes.

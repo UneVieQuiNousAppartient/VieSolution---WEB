@@ -2062,3 +2062,154 @@ html[data-theme="dark"] .hero-glow { opacity: 1; }
 .partner-logo img.logo-sombre:has(+ img.logo-clair) { display: none; }
 html[data-theme="dark"] .partner-logo img.logo-sombre { display: block; }
 html[data-theme="dark"] .partner-logo img.logo-clair { display: none; }
+
+/* ============================================================
+   pme-accessible — animations (round 5, 2026-10-17 — PRD-ANIMATIONS.md)
+   Mouvements fins, ≤ 600 ms (sauf ambiance du hero). Tout est neutralisé
+   par la règle prefers-reduced-motion en toute fin de fichier.
+   ============================================================ */
+:root {
+  --vsw-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --accent-40: color-mix(in oklch, var(--accent) 40%, transparent);
+  --shine: oklch(1 0 0 / 0.55);
+  --shadow-nav: 0 8px 24px -16px oklch(0.2 0.04 260 / 0.25);
+}
+html[data-theme="dark"] {
+  --shine: oklch(1 0 0 / 0.4);
+  --shadow-nav: 0 8px 24px -16px oklch(0 0 0 / 0.6);
+}
+@keyframes vsw-rise {
+  from { opacity: 0; translate: 0 12px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* 1. Hero en séquence + reflet + halo qui respire */
+.hero .hero-inner > :where(.eyebrow, h1, .lede, .hero-ctas, .hero-meta) {
+  animation: vsw-rise 560ms var(--vsw-ease) backwards;
+}
+.hero .hero-inner > h1 { animation-delay: 80ms; }
+.hero .hero-inner > .lede { animation-delay: 160ms; }
+.hero .hero-inner > .hero-ctas { animation-delay: 240ms; }
+.hero .hero-inner > .hero-meta { animation-delay: 320ms; }
+.hero h1 .highlight {
+  background-image:
+    linear-gradient(100deg, transparent 40%, var(--shine) 50%, transparent 60%),
+    linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  background-size: 250% 100%, 100% 100%;
+  background-position: 150% 0, 0 0;
+  background-repeat: no-repeat;
+  animation: vsw-shine 8s var(--vsw-ease) 1.2s infinite;
+}
+@keyframes vsw-shine {
+  0% { background-position: 150% 0, 0 0; }
+  22% { background-position: -50% 0, 0 0; }
+  100% { background-position: -50% 0, 0 0; }
+}
+.hero-glow { animation: vsw-breathe 9s ease-in-out infinite alternate; }
+@keyframes vsw-breathe {
+  from { scale: 1; }
+  to { scale: 1.04; }
+}
+
+/* 2. Cascade : les enfants d'une grille arrivent l'un après l'autre quand le .reveal passe .in.
+   Rien n'est caché sans .in : l'animation (remplissage « backwards ») ne démarre qu'à ce moment. */
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars):is(.reveal.in, .reveal.in *) > *,
+.reveal.in .compare-col > * {
+  animation: vsw-rise 500ms var(--vsw-ease) backwards;
+  animation-delay: calc(var(--vsw-i, 7) * 70ms);
+}
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(1) { --vsw-i: 0; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(2) { --vsw-i: 1; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(3) { --vsw-i: 2; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(4) { --vsw-i: 3; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(5) { --vsw-i: 4; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(6) { --vsw-i: 5; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(7) { --vsw-i: 6; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(8) { --vsw-i: 7; }
+
+/* 3. Survols soignés */
+/* Tuiles en mosaïque (grille à joints de 1 px, overflow: hidden) : contour + ombre, sans montée
+   (une montée serait rognée par la grille sur la rangée du haut). */
+.benefit, .service, .ai-pillar, .process-step {
+  transition: background-color 220ms var(--vsw-ease), box-shadow 220ms var(--vsw-ease);
+}
+.benefit:hover, .service:hover, .ai-pillar:hover, .process-step:hover {
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px var(--accent-40), var(--shadow-soft);
+}
+/* Cartes détachées : montée de 3 px + bordure accent + ombre douce */
+.partner-card, .pricing-card {
+  transition:
+    background-color 220ms var(--vsw-ease),
+    border-color 220ms var(--vsw-ease),
+    box-shadow 220ms var(--vsw-ease),
+    transform 220ms var(--vsw-ease);
+}
+.partner-card:hover, .pricing-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-40);
+  box-shadow: var(--shadow-soft);
+}
+.pricing-card.featured:hover { box-shadow: 0 0 40px -16px var(--accent-glow), var(--shadow-soft); }
+.pricing-card.featured:hover { border-color: var(--accent); }
+.btn svg { transition: translate 220ms var(--vsw-ease); }
+.btn:is(.btn-primary, .btn-ghost):hover svg:has(> path[d^="M5 12h14"]) { translate: 3px 0; }
+.partner-logo img {
+  filter: saturate(0.85);
+  transition: filter 220ms var(--vsw-ease);
+}
+.partner-card:hover .partner-logo img,
+.partner-logo:hover img { filter: none; }
+.faq-item summary::after { transition: transform 220ms var(--vsw-ease); }
+
+/* 4. Défilement doux (le décalage sous la nav est déjà assuré par section[id] { scroll-margin-top: 72px })
+   et FAQ fluide */
+html { scroll-behavior: smooth; }
+@keyframes vsw-faq-in {
+  from { opacity: 0; translate: 0 -4px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.faq-item[open] .faq-body { animation: vsw-faq-in 320ms var(--vsw-ease) backwards; }
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  .faq-item { interpolate-size: allow-keywords; }
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 320ms var(--vsw-ease),
+      content-visibility 320ms var(--vsw-ease) allow-discrete;
+  }
+  .faq-item[open]::details-content { block-size: auto; }
+}
+
+/* 5. Nav compacte au défilement (classe .scrolled posée par nav-scroll.tsx).
+   La marge du bas compense la hauteur perdue : le contenu sous la nav ne saute pas. */
+.nav {
+  transition:
+    box-shadow 240ms var(--vsw-ease),
+    margin-bottom 240ms var(--vsw-ease);
+}
+.nav-inner { transition: height 240ms var(--vsw-ease); }
+.nav.scrolled {
+  box-shadow: var(--shadow-nav);
+  margin-bottom: 12px;
+}
+.nav.scrolled .nav-inner { height: 60px; }
+
+/* 6. Bandeau défilant : pause au survol */
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* Réduction des animations (réglage du système) : règle globale, en dernier. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  .faq-item::details-content { transition: none !important; }
+  .partner-card:hover, .pricing-card:hover { transform: none !important; }
+  .btn svg { translate: none !important; }
+}

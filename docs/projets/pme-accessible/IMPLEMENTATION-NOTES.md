@@ -221,3 +221,69 @@ Décision de Camille : plus aucun montant en dollars sur le site public. Trace :
 - Pied de page (« Combien ça coûte ? ») et pages légales (`conditions-utilisation` §5 « Prix et propositions », `politique-confidentialite`) **ont été modifiés** par l'agent principal — la ligne « Non touchés » ci-dessus est périmée.
 - Les classes `calc-*` ne sont **pas** toutes inutilisées : `src/app/admin/page.tsx` utilise `.calc-option`. Ne pas les supprimer sans vérifier.
 - Révision après QA : « Deux minutes suffisent » retiré (durée non validée) ; « ce qui est convenu est ce qui est facturé » remplacé par « si quelque chose doit changer, on en parle avant, jamais après » ; « Décrivez-moi » → « Décrivez-nous » ; couleur d'erreur de `contact.tsx` passée en `var(--danger)`.
+
+## Round 5 — Animations (2026-10-17, `ux-agent`, Opus)
+
+Plan approuvé par Camille (« Sobre et premium »). Trace : `PRD-ANIMATIONS.md`.
+
+### Fichiers
+
+- Créés : `docs/projets/pme-accessible/PRD-ANIMATIONS.md`, `src/components/vsw/nav-scroll.tsx` (client, sans état React,
+  écouteur `scroll` passif, seuil 24 px, nettoyage au démontage).
+- Modifiés : `src/app/vsw.css` (bloc ajouté en fin de fichier, `/* pme-accessible — animations */`, aucune règle
+  existante réécrite : surcharges placées après), `src/app/layout.tsx` (import + `<NavScroll />` sous `<TrackPageview />`).
+- Non touchés : `hero.tsx`, `nav.tsx`, `reveal-init.tsx`, aucun texte du site.
+
+### Écarts et choix
+
+- **Survols des tuiles en mosaïque** (`.benefit`, `.service`, `.ai-pillar`, `.process-step`) : contour accent 40 % (ombre
+  intérieure de 1 px, ces tuiles n'ont pas de bordure) + `--shadow-soft`, **sans la montée de 3 px** : leurs grilles ont
+  des joints de 1 px et `overflow: hidden`, une montée serait rognée en haut sur la première rangée et laisserait une
+  bande grise dessous. Montée de 3 px gardée pour les cartes détachées (`.partner-card`, `.pricing-card`). Pour la
+  remettre partout : ajouter `transform: translateY(-3px)` à la règle `.benefit:hover, …`.
+- `.pricing-card.featured` garde sa bordure accent pleine au survol (sinon elle pâlissait à 40 %).
+- **`scroll-padding-top` non ajouté** : `section[id] { scroll-margin-top: 72px; }` existe déjà (ligne ~74) ; les deux
+  s'additionnent, l'ancre se serait arrêtée 144 px trop bas. `scroll-behavior: smooth` existait déjà dans `globals.css`,
+  redéclaré dans `vsw.css` pour ne pas dépendre de l'ancien design.
+- Nav compacte : hauteur de `.nav-inner` 72 → 60 px ; `margin-bottom: 12px` sur `.nav.scrolled` compense, pour que le
+  contenu sous la nav (collante, donc dans le flux) ne saute pas de 12 px au passage du seuil. Ombre : jeton `--shadow-nav`.
+- Nouveaux jetons (fin de `vsw.css`, variantes sombres) : `--vsw-ease`, `--accent-40`, `--shine`, `--shadow-nav`.
+- Déplacements de la cascade, du hero et de la FAQ via la propriété `translate` (pas `transform`) : ne combat pas les
+  `transform` des survols. Remplissage `backwards` : les enfants ne sont cachés que pendant leur délai, après le passage
+  du parent en `.in` ; aucune règle nouvelle ne cache quoi que ce soit avant.
+- Cascade : délai `(rang − 1) × 70 ms`, plafonné au 8ᵉ (490 ms) ; avant/après et comparatif : pas de classe propre, couverts
+  par `.reveal.in .compare-col > *` (les lignes de chaque colonne).
+- Flèche des boutons : visée par `svg:has(> path[d^="M5 12h14"])` (tracé de l'icône `arrow`), car l'icône « check » est
+  elle aussi le seul élément enfant du bouton ; navigateur sans `:has()` : pas de glissement, rien d'autre.
+- FAQ : hauteur animée par `::details-content` + `interpolate-size` (Chrome/Edge récents), sous `@supports` ; ailleurs,
+  fondu + 4 px du `.faq-body` à l'ouverture.
+- `prefers-reduced-motion` : règle universelle (`*`, `::before`, `::after`) — elle neutralise aussi des animations
+  **antérieures** au round : le bandeau défilant s'arrête, l'apparition `.reveal` et la bulle du chatbot deviennent
+  instantanées (comportement voulu pour l'accessibilité, plus large que les seuls ajouts).
+
+### Constat préexistant (non corrigé, hors périmètre)
+
+- `.reveal { opacity: 0 }` n'a **aucun repli sans JavaScript** : si `RevealInit` ne s'exécute pas (JS bloqué, erreur
+  d'hydratation), les sections marquées `.reveal` restent invisibles. Toutes les pages actuelles montent `RevealInit`.
+  À ouvrir en issue (`bug`) par l'agent principal.
+
+### Vérifications (round 5, 2026-10-17)
+
+- Accolades de `vsw.css` : 407 `{` / 407 `}`.
+- `grep -n "prefers-reduced-motion" src/app/vsw.css` : ligne 2044 (règle partenaires préexistante) et ligne ~2202
+  (règle globale, dernière du fichier).
+- `npm run typecheck` : 0 erreur. `npm run lint` : 0 erreur, 10 avertissements (préexistants, même nombre qu'au round 3).
+- `npx next build` : build terminé, toutes les pages statiques générées ; CSS compilé contrôlé (`vsw-rise`, `@supports`
+  de `::details-content`, sélecteur `:has()`, règle `prefers-reduced-motion` présents).
+- `node scripts/check-rules.mjs` : aucune violation. `node scripts/check-secrets-suivis.mjs` : aucun fichier sensible.
+- Non vérifié : rendu réel dans le navigateur — **à tester par Camille** (voir le rapport de l'agent).
+
+### Complément de l'agent principal (round 5, après le `qa-agent`)
+
+- Bloquant corrigé : `:is(` → `:where(` sur la règle d'entrée du hero (la spécificité de `:is(.eyebrow…)` écrasait le délai de 80 ms du `h1`) ; les 5 délais s'appliquent maintenant.
+- `data-scroll-behavior="smooth"` ajouté sur `<html>` (`layout.tsx`) : Next 16 coupe ainsi le défilement doux lors d'un changement de page (sinon remontée animée à chaque navigation + avertissement en dev).
+- `.pricing-card.featured:hover` garde sa lueur accent.
+- Décision : les transitions `height` / `margin-bottom` de la nav compacte sont **gardées** (une seule transition de 240 ms au passage du seuil, compensation exacte, aucun saut mesuré dans le navigateur).
+- Correction des notes : `.ai-pillars` n'a ni `overflow: hidden` ni bordure ; le choix « sans montée » sur les tuiles collées reste valable pour `.benefit`, `.service`, `.process-step`.
+- Vérifié dans le navigateur par l'agent principal (Playwright) : séquence du hero, cascade des métiers, nav 72 → 61 px avec ombre, survol +3 px, bandeau en pause, FAQ, mouvement réduit (tout visible, immobile), thème sombre.
+- Bug préexistant ouvert en issue : UneVieQuiNousAppartient/VieSolution---WEB#2 (sections invisibles sans JavaScript).

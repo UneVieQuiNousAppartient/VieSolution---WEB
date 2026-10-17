@@ -6,6 +6,7 @@ import { VswNav } from '@/components/vsw/nav';
 import { VswFooter } from '@/components/vsw/footer';
 import { VswChatbot } from '@/components/vsw/chatbot';
 import { TrackPageview } from '@/components/vsw/track-pageview';
+import { NavScroll } from '@/components/vsw/nav-scroll';
 
 const fontDisplay = Space_Grotesk({
   subsets: ['latin'],
@@ -60,11 +61,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      data-scroll-behavior="smooth"
       lang="fr-CA"
       className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
     >
       <body>
         <TrackPageview />
+        <NavScroll />
         <VswNav />
         <main>{children}</main>
         <VswFooter />
