@@ -38,11 +38,11 @@ export default function ConditionsUtilisationPage() {
           des informations présentées.
         </p>
 
-        <h2>5. Estimations</h2>
+        <h2>5. Prix et propositions</h2>
         <p>
-          Les estimations fournies via notre outil d&apos;estimation en ligne sont indicatives et
-          ne constituent pas un engagement contractuel. Le prix final sera déterminé après une
-          analyse détaillée de vos besoins.
+          Aucun prix affiché ou mentionné sur ce site (chatbot compris) ne constitue un engagement
+          contractuel. Chaque prix est établi sur mesure et vous est transmis par écrit, après un
+          appel découverte, avant tout engagement.
         </p>
 
         <h2>6. Confidentialité</h2>

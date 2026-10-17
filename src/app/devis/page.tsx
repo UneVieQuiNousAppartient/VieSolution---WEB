@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { PageHeader } from '@/components/vsw/page-header';
-import { QuoteCalculator } from '@/components/vsw/quote-calculator';
+import { CommentPrixSection } from '@/components/vsw/comment-prix-section';
+import { SituationForm } from '@/components/vsw/situation-form';
 import { PricingSection } from '@/components/vsw/pricing-section';
 import { CTASection } from '@/components/vsw/cta-section';
 
 export const metadata: Metadata = {
-  title: 'Devis en ligne',
+  title: 'Combien ça coûte ?',
   description:
-    "Estimez votre projet d'automatisation, d'agent IA, d'implantation Zoho ou de formation en 30 secondes. Fourchette indicative, tarif confirmé lors d'un appel découverte.",
+    'Un prix clair avant de commencer, sans frais cachés : on regarde votre situation, on propose un premier pas, vous décidez.',
 };
 
 export default function DevisPage() {
@@ -16,23 +17,25 @@ export default function DevisPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Devis en ligne"
+        eyebrow="// Combien ça coûte ?"
         title={
           <>
-            Combien ça coûte ?<br />Voyez par vous-même.
+            Un prix clair,<br />avant de commencer.
           </>
         }
-        lede="Un outil transparent pour obtenir une fourchette indicative en 30 secondes. Le tarif final est toujours confirmé lors d'un appel découverte gratuit."
+        lede="Chaque entreprise est différente, alors chaque prix l'est aussi. On regarde votre situation, on vous propose un premier pas, et vous connaissez le prix avant de dire oui. Pas de frais cachés."
       />
-      <QuoteCalculator showHead={false} />
+      <CommentPrixSection />
+      <SituationForm />
       <PricingSection />
       <CTASection
         text={
           <>
-            Votre estimation vous convient ? <em>Confirmez-la</em> lors d&apos;un appel
+            Une question sur le prix ? On y répond <em>franchement</em>, à l&apos;appel
             découverte gratuit.
           </>
         }
+        primaryLabel="Réserver un appel"
       />
     </>
   );

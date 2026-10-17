@@ -170,3 +170,54 @@ Corrige les lignes périmées ci-dessus (section « Mission B » et « À confir
 - `npm run verify` relancé par l'agent principal après ces ajouts (résultat dans `SUIVI-TACHES.md` §3).
 - Reste à confirmer par Camille : l'accord des trois entreprises pour l'affichage de leur logo ; VieSolution est sa
   propre plateforme (le `qa-agent` demande si elle compte comme « client »).
+
+## Round 3 — Prix sur mesure (2026-10-17, `ux-agent`, Opus)
+
+Décision de Camille : plus aucun montant en dollars sur le site public. Trace : `PRD-PRIX.md`.
+
+### Fichiers (au fil de l'eau)
+
+- Créé : `docs/projets/pme-accessible/PRD-PRIX.md`.
+- Créés : `src/components/vsw/comment-prix-section.tsx` (serveur), `src/components/vsw/situation-form.tsx` (client).
+- Modifiés : `src/app/devis/page.tsx`, `src/components/vsw/pricing-section.tsx`, `src/components/vsw/chatbot.tsx`,
+  `src/components/vsw/comparison-section.tsx`, `src/components/vsw/faq-section.tsx`, `CLAUDE.md`.
+- Supprimé : `src/components/vsw/quote-calculator.tsx` (aucun import restant).
+
+### Écarts et choix
+
+- Étapes et bloc « Ce qui fait varier le prix » en `h3` (pas `h4` comme `process-section.tsx`) pour garder l'ordre des
+  titres h1 → h2 → h3 ; style recopié en ligne avec les jetons. Étapes dans un `ol` (liste ordonnée lue par les lecteurs
+  d'écran), classes `process-grid cols-3` / `process-step`. Bloc des facteurs : `ai-pillar` bordé (flèches `→`).
+- `SituationForm` : schéma zod local au composant (pas de modification de `src/lib/**`) ; métier obligatoire (le champ
+  `type_projet` de `estimateur_requests` est requis) ; erreur générale en `var(--danger)` (le `contact.tsx` d'origine a
+  une couleur en dur, non corrigée ici) ; `role="alert"` / `role="status"`, `aria-invalid`, `autoComplete`.
+- Chatbot : en plus des chips demandés, le chip « Estimer une implantation » (nœud `zoho`) devient aussi
+  « Combien ça coûte ? » — « estimer » promettait un chiffre que le nœud ne donne plus.
+- FAQ : le premier « sur mesure » de la réponse est retiré pour éviter la répétition avec la nouvelle phrase.
+- `CTASection` : bouton principal « Réserver un appel » via `primaryLabel` ; le bouton « Nous écrire » du composant reste.
+- Non touchés, à décider par Camille : libellé du pied de page « Devis en ligne » (`footer.tsx`, lien conservé comme
+  demandé) ; pages légales `conditions-utilisation` (§5 « outil d'estimation en ligne ») et `politique-confidentialite`
+  (« notre estimateur de projet ») — texte juridique, hors périmètre ; classes CSS `calc-*` de `vsw.css` désormais inutilisées.
+- `SituationForm` : pot de miel lu sur le formulaire soumis (`event.target.elements`) plutôt qu'avec une `ref`, pour ne
+  pas ajouter l'avertissement `react-hooks/refs` que porte `contact.tsx`.
+
+### Vérifications (round 3, 2026-10-17)
+
+- `grep -rnE '[0-9][0-9 ]*\$|\$ ?[0-9]|CAD' src/components/vsw src/app --include=*.tsx` : **aucun résultat dans
+  `src/components/vsw`** ni dans les pages du nouveau design. Restent 7 lignes, toutes dans l'ancien design redirigé en
+  308 (hors périmètre) : `src/app/services/outils-internes/page.tsx:62`, `src/app/services/chatbots-ia/page.tsx:119`,
+  `src/app/services/developpement-web/page.tsx:59`, `src/app/particuliers/sites-personnels/page.tsx:21`,
+  `src/app/diagnostic/page.tsx:171-173` (redirections `/services/:path*`, `/particuliers/:path*`, `/diagnostic` vérifiées
+  dans `next.config.ts`).
+- `grep -rn "QuoteCalculator\|quote-calculator" src` : vide.
+- `npm run typecheck` : 0 erreur. `npm run lint` : 0 erreur, 10 avertissements (préexistants, même nombre qu'au round 2).
+- `npx next build` : « ✓ Compiled successfully », 41/41 pages générées, `/devis` statique.
+- `node scripts/check-rules.mjs` : 2 règles, aucune violation. `node scripts/check-secrets-suivis.mjs` : aucun fichier sensible.
+- Non vérifié : rendu à l'écran (thèmes clair et sombre, mobile) et envoi réel du formulaire de situation vers
+  `estimateur_requests` — **à tester par Camille**.
+
+### Complément de l'agent principal (round « Prix sur mesure », après le `qa-agent`)
+
+- Pied de page (« Combien ça coûte ? ») et pages légales (`conditions-utilisation` §5 « Prix et propositions », `politique-confidentialite`) **ont été modifiés** par l'agent principal — la ligne « Non touchés » ci-dessus est périmée.
+- Les classes `calc-*` ne sont **pas** toutes inutilisées : `src/app/admin/page.tsx` utilise `.calc-option`. Ne pas les supprimer sans vérifier.
+- Révision après QA : « Deux minutes suffisent » retiré (durée non validée) ; « ce qui est convenu est ce qui est facturé » remplacé par « si quelque chose doit changer, on en parle avant, jamais après » ; « Décrivez-moi » → « Décrivez-nous » ; couleur d'erreur de `contact.tsx` passée en `var(--danger)`.

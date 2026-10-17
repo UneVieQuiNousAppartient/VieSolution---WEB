@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 4.
+**Dernière mise à jour : 2026-10-17** — dernière section : 5.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -62,3 +62,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `qa-agent` (Opus) ROUGE au premier passage — un seul bloquant : la couleur des messages d'erreur de formulaire (`oklch(0.75 0.18 25)` en dur, illisible sur fond clair) → jeton `--danger` (clair 0.55 / sombre 0.75), corrigé ; tout le reste conforme (18 jetons présents dans les deux blocs, contrastes estimés AA, logos partenaires). `npm run verify` vert après correction ; captures clair (défaut) et sombre (`data-theme="dark"`) sur hero, métiers, partenaires, calculateur ; vue mobile 390 px.
 
 **Non fait dans ce round** : pas de bouton clair/sombre pour le visiteur (le sombre est une option technique) ; 22 couleurs en dur subsistent dans `vsw.css` (lueurs à faible opacité, acceptables sur les deux fonds — à passer en jetons à l'occasion) ; les pages de l'ancien design (redirigées) n'ont pas été revues ; contraste AA à mesurer avec un outil (estimé bon : texte `--fg-1` oklch 0.34 sur fond 0.985).
+
+## 5. ✅ Prix sur mesure : page « Combien ça coûte ? », retrait de tous les montants (2026-10-17)
+
+**Contexte / demande** : Camille juge que le calculateur de prix fait fuir les clients et que ses montants ne sont pas fiables : le prix est sur mesure. Décision (question posée, réponse « Tout sur mesure ») : plus aucun montant sur le site public. Chantier « argent » : accord explicite obtenu avant le code.
+
+**Ce qui a été fait** : `docs/projets/pme-accessible/PRD-PRIX.md` ; `ux-agent` (Opus, 86 k, repris une fois après sa limite de 25 tours) : `/devis` = `PageHeader` « Un prix clair, avant de commencer » → `comment-prix-section.tsx` (3 étapes, ce qui fait varier le prix) → `situation-form.tsx` (métier, ce qui gruge, nom, courriel, téléphone ; envoi par `submitEstimateurRequest` vers `estimateur_requests`, `resultat_estimation = « Sur mesure — à discuter à l'appel découverte »`) → forfaits sans montant → CTA ; `quote-calculator.tsx` supprimé ; chatbot, comparaison, FAQ sans montant ; `CLAUDE.md` (Pages, [à confirmer]). Agent principal : pied de page « Combien ça coûte ? », conditions d'utilisation §5 (« Prix et propositions »), politique de confidentialité (formulaire de situation), état et suivi.
+
+**Vérification technique** : `ux-agent` : typecheck 0 erreur, lint 0 erreur, build 41/41, `grep` des montants vide dans le nouveau design (7 lignes restantes dans l'ancien design, redirigé en 308). `qa-agent` (Opus, 70 k) : VERT, aucun bloquant ; 3 points à trancher et 5 mineurs, corrigés dans la foulée (« Deux minutes suffisent » retiré, formulation de l'étape 03 adoucie, « Décrivez-nous », couleur d'erreur de `contact.tsx` en `--danger`, notes et suivi corrigés). `npm run verify` vert (typecheck, lint 0 erreur, build 41/41, règles, secrets). Captures `/devis` clair / sombre / mobile et messages d'erreur du formulaire. **À tester par Camille** : un envoi réel du formulaire de situation (table `estimateur_requests`, projet Supabase partagé — pas de test automatique pour ne pas créer de fausses demandes).
+
+**Non fait dans ce round** : classes CSS `calc-*` : `.calc-option` sert encore à `/admin`, les autres sont à nettoyer avec précaution ; le brouillon IA de l'Edge Function `vsw-lead-followup` (hors périmètre, non déployée) libelle encore « Estimation en ligne » / « Service visé » — à ajuster quand elle sera déployée ; montants dans les pages de l'ancien design (redirigées) ; l'admin `/admin` affiche toujours `resultat_estimation` tel quel (« Sur mesure… »), à revoir si Camille veut un champ « métier » distinct.

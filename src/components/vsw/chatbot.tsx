@@ -8,13 +8,13 @@ type Chip = { text: string; next?: string; action?: 'goto-rdv' | 'goto-devis' | 
 type Node = { bot: string; chips?: Chip[] };
 type Msg = { from: 'bot' | 'user'; text: string; chips?: Chip[] };
 
-/* Tarifs mentionnés : indicatifs — [à confirmer] */
+/* Aucun montant (décision de Camille, 2026-10-17) : le prix est sur mesure, donné par écrit. */
 const BOT_FLOW: Record<string, Node> = {
   start: {
     bot: "Bonjour 👋 Je suis l'assistant de Vie Solution Web. Comment puis-je vous aider aujourd'hui ?",
     chips: [
       { text: 'Je ne sais pas par où commencer', next: 'debuter' },
-      { text: 'Estimer un projet', next: 'estimer' },
+      { text: 'Combien ça coûte ?', next: 'estimer' },
       { text: 'Voir les services', next: 'services' },
       { text: 'Parler de Zoho', next: 'zoho' },
       { text: 'Prendre un RDV', next: 'rdv' },
@@ -52,28 +52,28 @@ const BOT_FLOW: Record<string, Node> = {
     ],
   },
   auto: {
-    bot: "L'automatisation démarre autour de 1 800 $ CAD. On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps.",
+    bot: "On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
-      { text: 'Ouvrir le calculateur', action: 'goto-devis' },
+      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
       { text: 'Prendre un RDV', action: 'goto-rdv' },
     ],
   },
   agent: {
-    bot: "Un assistant IA sur mesure (clavardage client, assistant interne, tri de documents) démarre autour de 4 500 $ CAD selon les outils à brancher. On cadre ça ensemble lors d'un appel.",
+    bot: "Un assistant IA (clavardage client, assistant interne, tri de documents) dépend des outils à brancher : on le cadre ensemble lors d'un appel. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
       { text: 'Prendre un RDV', action: 'goto-rdv' },
-      { text: 'Ouvrir le calculateur', action: 'goto-devis' },
+      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
     ],
   },
   'zoho-estim': {
-    bot: "Une implantation Zoho démarre autour de 3 200 $ CAD (CRM + configuration de base). Le prix varie selon les modules (Books, Desk, Campaigns…) et le nombre d'utilisateurs.",
+    bot: "Une implantation Zoho dépend des modules (CRM, Books, Desk, Campaigns…) et du nombre d'utilisateurs. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
-      { text: 'Ouvrir le calculateur', action: 'goto-devis' },
+      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
       { text: 'Prendre un RDV', action: 'goto-rdv' },
     ],
   },
   formation: {
-    bot: "Nos formations IA et Zoho démarrent autour de 1 500 $ CAD : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe.",
+    bot: "Nos formations IA et Zoho : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [{ text: 'Prendre un RDV', action: 'goto-rdv' }],
   },
   services: {
@@ -88,7 +88,7 @@ const BOT_FLOW: Record<string, Node> = {
   zoho: {
     bot: "Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme.",
     chips: [
-      { text: 'Estimer une implantation', next: 'zoho-estim' },
+      { text: 'Combien ça coûte ?', next: 'zoho-estim' },
       { text: 'Prendre un RDV', action: 'goto-rdv' },
     ],
   },
@@ -100,7 +100,7 @@ const BOT_FLOW: Record<string, Node> = {
     bot: "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à bonjour@viesolutionweb.ca.",
     chips: [
       { text: 'Prendre un RDV', action: 'goto-rdv' },
-      { text: 'Estimer un projet', action: 'goto-devis' },
+      { text: 'Combien ça coûte ?', action: 'goto-devis' },
     ],
   },
 };

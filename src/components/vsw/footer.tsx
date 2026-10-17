@@ -20,7 +20,7 @@ export function VswFooter() {
             <Link href="/ia">Automatisation &amp; IA</Link>
             <Link href="/zoho">Implantation Zoho</Link>
             <Link href="/ia#formation">Formation IA &amp; Zoho</Link>
-            <Link href="/devis">Devis en ligne</Link>
+            <Link href="/devis">Combien ça coûte ?</Link>
           </div>
           <div>
             <h5>Entreprise</h5>

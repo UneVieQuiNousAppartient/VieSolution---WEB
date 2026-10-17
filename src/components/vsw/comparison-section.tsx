@@ -4,7 +4,7 @@ const ROWS: [string, string][] = [
   ['Outils imposés', 'Des outils que vous maîtrisez (IA + Zoho)'],
   ['Des résultats flous', 'Du temps et de l’argent réellement gagnés'],
   ['Projet livré, consultant parti', 'Formation et accompagnement continus'],
-  ['Coûts cachés', 'Tarification transparente, devis en ligne'],
+  ['Coûts cachés', 'Un prix clair avant de commencer, sans frais cachés'],
   ['Vous dépendez du consultant', 'Une vie qui vous appartient'],
 ];
 

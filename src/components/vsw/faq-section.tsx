@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: "Ça doit coûter une fortune ?",
-    a: "Pas nécessairement. On peut commencer par un premier pas simple, sur mesure, et en discuter à l'appel découverte gratuit. Le calculateur de la page Devis vous donne aussi une fourchette indicative pour les projets plus grands. Pas de frais cachés : le prix est confirmé avant de commencer.",
+    a: "Pas nécessairement. On peut commencer par un premier pas simple, et en discuter à l'appel découverte gratuit. Le prix est toujours sur mesure, donné par écrit avant de commencer, sans frais cachés.",
   },
   {
     q: "Combien de temps ça va me demander ?",

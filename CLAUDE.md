@@ -28,7 +28,7 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 
 ## Pages
 
-`/` (accueil), `/ia`, `/zoho`, `/devis` (calculateur + forfaits), `/realisations`,
+`/` (accueil), `/ia`, `/zoho`, `/devis` (« Combien ça coûte ? » : démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`,
 `/a-propos`, `/rdv`, `/contact`, `/postuler-stagiaire`, `/admin` (+ pages légales).
 Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 
@@ -69,8 +69,7 @@ ADMIN_ACCESS_CODE=<code d'accès admin>
 
 - Courriels `bonjour@viesolutionweb.ca` / `stages@viesolutionweb.ca` et téléphone
   `(418) 555-0143` : placeholders du design.
-- Tous les prix (calculateur `quote-calculator.tsx`, forfaits `pricing-section.tsx`,
-  chatbot) : indicatifs.
+- Aucun montant sur le site public (décision de Camille, 2026-10-17) : les prix sont donnés par écrit après l'appel découverte.
 - Témoignages `site_testimonials` : exemples non publiés (`publie = false`) —
   ne publier que de vrais témoignages.
 
