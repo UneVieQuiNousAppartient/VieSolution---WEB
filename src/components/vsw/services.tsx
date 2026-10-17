@@ -21,7 +21,7 @@ const SERVICES: {
     num: '02',
     icon: 'code',
     title: 'Assistants IA sur mesure',
-    desc: "Un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il répond aux questions de vos clients, trie vos documents, suit vos demandes. Jour et nuit.",
+    desc: "Un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses aux questions de vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part.",
     tags: ['ChatGPT', 'Claude', 'Clavardage client', 'Tri de documents'],
     href: '/ia',
   },
@@ -53,9 +53,9 @@ export function Services() {
             <h2>Quatre façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
-            On automatise vos tâches répétitives, on installe des outils simples et on vous
-            forme. Pour les travailleurs autonomes et les PME du Québec, avec un
-            accompagnement du début à la fin.
+            Un seul but : mieux servir vos clients et vous redonner du temps. Pour y arriver, on
+            automatise vos tâches répétitives, on installe des outils simples et on vous forme,
+            du début à la fin.
           </p>
         </div>
         <div className="services-grid reveal">

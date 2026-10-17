@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 2.
+**Dernière mise à jour : 2026-10-17** — dernière section : 3.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -32,3 +32,23 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - Les anciennes routes (`/services/*`, `/solutions/*`, `/prix`…) sont encore compilées comme pages bien que redirigées en 308 : nettoyage à prévoir, hors périmètre.
 - Footer et `realisations` non retouchés.
 - **Coût réel** : ≈ 430 k pour les agents + ≈ 450 k pour la session principale (installation de la méthode, relecture, navigateur, suivi, rapport) ≈ 0,9 M, pour 1 M estimé.
+
+## 3. ✅ Section « Pour votre métier », hero recentré, partenaires (2026-10-17)
+
+**Contexte / demande** : Camille veut que chaque corps de métier (conseiller financier, courtier hypothécaire, clinique dentaire, clinique de soins…) se reconnaisse, avec un message « on améliore votre service pour vous redonner du temps » plutôt que « on vend de l'IA » ; puis une section « Ils nous font confiance » avec les logos et liens de Ben's, KHI et VieSolution, et une courte description de leur domaine. Palier Moyen (≈ 450 k estimés).
+
+**Ce qui a été fait** :
+- `product-manager` (Opus, 62 k) : `docs/projets/pme-accessible/PRD-METIERS.md` (8 cartes avec textes, conformité AMF / Loi 25, hero, FAQ, critères).
+- `ux-agent` (Opus, 67 k) : `metiers-section.tsx` (8 cartes, ancre `#metiers`), `partners-section.tsx`, hero (eyebrow + lede « Mieux servir vos clients, et retrouver du temps… »), `desc` de services / bénéfices / CTA, carte « Assistants IA » (« vous validez ce qui part »), nav « Métiers », FAQ 12 questions, pied de page « Partenaires », CSS en fin de `vsw.css`.
+- Agent principal : recherche des sites des partenaires, logos (`public/partenaires/`), noms, liens et descriptions relevés sur leurs sites ; carte « même la nuit » alignée sur « vous validez ».
+- `qa-agent` (Opus, 56 k) : VERT, 24 critères prouvés ; a relevé les notes périmées (corrigées) et les descriptions partenaires (réduites au domaine de chacun).
+
+**Vérification technique** : `npm run verify` (voir ligne ci-dessous) ; navigateur : grille 4 / 2 / 1 colonnes, lien « Métiers » depuis `/ia` (ancre à 72 px sous la nav), 3 cartes partenaires cliquables (`_blank`), aucune erreur de page.
+
+**Non fait dans ce round** :
+- Accord écrit des trois partenaires pour l'affichage de leur logo : **à obtenir par Camille**.
+- Texte « ce qu'on a fait pour eux » sous chaque logo : non affiché (à rédiger par Camille si souhaité).
+- Questions du PRD-METIERS §7 : formulation AMF exacte, autres ordres (OACIQ, CPA), page par métier, lien « Métiers » dans le pied de page.
+- « 24/7 » subsiste dans les pages de l'ancien design (redirigées en 308) : nettoyage de l'ancien design toujours à prévoir.
+- Design sombre : Camille se demande s'il convient à la clientèle visée ; comparaison avec une variante claire proposée (chantier séparé, ≈ 150-200 k).
+- **Coût réel du round 2** : ≈ 185 k agents + ≈ 250 k session principale ≈ 0,45 M (estimé 0,45 M).

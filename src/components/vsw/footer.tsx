@@ -26,6 +26,7 @@ export function VswFooter() {
             <h5>Entreprise</h5>
             <Link href="/a-propos">À propos</Link>
             <Link href="/realisations">Cas d&apos;usage</Link>
+            <Link href="/#partenaires">Partenaires</Link>
             <Link href="/postuler-stagiaire">Stagiaires</Link>
             <Link href="/rdv">Prendre un RDV</Link>
             <Link href="/contact">Contact</Link>

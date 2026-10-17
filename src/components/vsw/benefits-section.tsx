@@ -9,7 +9,7 @@ const BENEFITS: { icon: IconName; title: string; desc: string }[] = [
   {
     icon: 'clock',
     title: 'Votre entreprise avance, même la nuit',
-    desc: "Relances, suivis, réponses aux clients potentiels : les tâches automatiques ne dorment jamais.",
+    desc: "Rappels, suivis, réponses préparées d'avance : les tâches automatiques ne dorment jamais — et vous validez ce qui part.",
   },
   {
     icon: 'grid',
@@ -38,8 +38,8 @@ export function BenefitsSection() {
             <h2>Ce que vous y gagnez,<br />concrètement.</h2>
           </div>
           <p className="desc">
-            Ce que nos clients gagnent concrètement en travaillant avec nous — au-delà de
-            la technologie.
+            Des clients mieux servis, du temps qui vous revient : voilà ce que vous y gagnez. La
+            technologie, elle, reste en coulisses.
           </p>
         </div>
         <div className="benefits-grid reveal">

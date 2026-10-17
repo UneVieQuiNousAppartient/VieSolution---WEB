@@ -32,15 +32,16 @@ export function Hero() {
       <div className="hero-grid"></div>
       <div className="hero-glow"></div>
       <div className="container hero-inner">
-        <div className="eyebrow">{'// Pour les travailleurs autonomes et les PME du Québec'}</div>
+        <div className="eyebrow">{'// Pour les professionnels, les travailleurs autonomes et les PME du Québec'}</div>
         <h1>
           Une vie qui<br />
           <span className="highlight">nous appartient.</span>
         </h1>
         <p className="lede">
-          Moins de paperasse, plus de temps pour votre vrai métier. On met en place des
-          outils simples — l&apos;IA, Zoho, des tâches qui se font toutes seules — et on vous
-          montre comment vous en servir. Pas besoin d&apos;être techno.
+          Mieux servir vos clients, et retrouver du temps pour votre vrai métier. On améliore
+          votre service au quotidien — rappels, suivis, réponses, paperasse — avec des outils
+          simples comme l&apos;IA et Zoho, et on vous montre comment vous en servir. Pas besoin
+          d&apos;être techno.
         </p>
         <div className="hero-ctas">
           <Link href="/rdv" className="btn btn-primary btn-lg">

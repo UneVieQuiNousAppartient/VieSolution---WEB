@@ -1,5 +1,13 @@
 const FAQS = [
   {
+    q: "Est-ce que ça convient à un cabinet réglementé (finance, santé) ?",
+    a: "Oui. On tient compte de vos obligations dès le départ : la conformité de votre secteur (par exemple l'AMF en finance) et la Loi 25 pour les renseignements personnels de vos clients. Ce qui engage votre jugement professionnel — un conseil, une réponse personnalisée, une note au dossier — n'est jamais envoyé sans votre validation. Vous décidez de ce qui peut partir seul, comme un simple rappel de rendez-vous.",
+  },
+  {
+    q: "Mes clients vont-ils parler à un robot ?",
+    a: "Non. L'outil prépare le travail : un brouillon de réponse, un rappel, un résumé de dossier. Vous relisez, vous ajustez, vous envoyez. Vos clients gardent le contact avec vous — simplement plus vite, et sans oubli.",
+  },
+  {
     q: "Je ne suis pas techno. Est-ce que c'est pour moi ?",
     a: "Oui. C'est justement pour vous. On s'occupe de la partie technique, et on vous explique le reste en mots simples. Si vous savez envoyer un courriel, vous êtes capable. On avance à votre rythme, et on reste là si vous bloquez.",
   },

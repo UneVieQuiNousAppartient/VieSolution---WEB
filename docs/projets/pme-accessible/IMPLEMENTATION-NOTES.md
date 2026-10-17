@@ -84,3 +84,89 @@ et des en-têtes `PageHeader` de `APP-FLOW.md` §3.
   `next build` laissé à l'agent principal.
 - Non vérifié visuellement (pas de navigateur) : rendu mobile, défilement des ancres `#demarrer` — **à tester
   par le qa-agent / Camille**.
+
+## Round 2 — Métiers et partenaires (2026-10-17, `ux-agent`)
+
+Source : `PRD-METIERS.md` (§4.1 à §4.5, contraintes §5) + demande de Camille pour « Ils nous font confiance ».
+
+### Mission A — « Pour votre métier » (fait)
+
+- **Créé** `src/components/vsw/metiers-section.tsx` (`MetiersSection`, `id="metiers"`, 8 cartes dans l'ordre du PRD,
+  type `Metier`, textes copiés du PRD). Icônes `users`, `grid`, `calendar`, `clock`, `check`, `bolt`, `chat`, `check` :
+  toutes présentes dans `icon.tsx`.
+- **CSS** (fin de `src/app/vsw.css`, bloc `/* pme-accessible — métiers */`) : `metiers-grid`, `metier-label`,
+  `metier-note`, `metier-precision`. Cartes = `benefits-grid` + `benefit` ; étiquettes = `service-tags` / `service-tag`.
+- **Modifiés** : `src/app/page.tsx` (après `PourVousSection`, avant `AvantApresSection`) ; `hero.tsx` (eyebrow + lede) ;
+  `services.tsx` (desc d'en-tête + carte 02 sans « Jour et nuit », texte décidé par l'agent principal) ;
+  `benefits-section.tsx` (desc) ; `cta-section.tsx` (texte par défaut) ; `nav.tsx` (« Métiers » → `/#metiers`
+  entre « Démarrer » et « IA ») ; `faq-section.tsx` (2 questions en tête, 12 au total).
+
+### Écarts (mission A)
+
+- Seuils de la grille : **900 px → 2 colonnes, 560 px → 1 colonne** (consigne de l'agent principal), et non
+  1024 / 640 px comme le dit le PRD §5.
+- Phrase de fin : réutilise la classe existante `pv-outro` (même mise en page que « C'est pour vous si… ») — aucune
+  classe nouvelle hors des quatre prévues.
+- Contradiction interne du PRD : « aucun chiffre » dans les textes de la section, mais les notes 1 à 4 doivent
+  contenir « Loi 25 ». Le grep `[0-9$]` sur `metiers-section.tsx` remonte donc les tailles d'icône **et** les lignes
+  « Loi 25 » ; aucun autre chiffre ni `$`.
+
+### Mission B — « Ils nous font confiance » (fait)
+
+- **Créé** `src/components/vsw/partners-section.tsx` (`PartnersSection`, `id="partenaires"`, composant serveur, sans JS).
+  Tableau `PARTNERS` à deux entrées (`name`, `url`, `logo`, `hasLogo`, `description`). Carte = `<a target="_blank"
+  rel="noopener noreferrer">` si `url` non vide, sinon `<div>` ; logo `<img loading="lazy">` seulement si
+  `hasLogo: true`, sinon le nom en grand (`partner-name`) dans un cadre de même hauteur. `next/image` n'est pas
+  utilisé dans `src/components/vsw/` : `<img>` simple + `eslint-disable-next-line @next/next/no-img-element`.
+- **Créé** `public/partenaires/.gitkeep` (dossier où déposer les logos).
+- **CSS** (fin de `vsw.css`, bloc `/* pme-accessible — partenaires */`) : `partners-grid` (cartes centrées,
+  `auto-fit` 220-280 px, soit 1 à 4 par rangée), `partner-card` (hauteur min. 120 px, bordure `--line-soft`, fond
+  `--bg-1`, montée de 2 px au survol, désactivée si « réduire les animations »), `partner-logo`, `partner-name`,
+  `partner-desc`. Classe `partner-logo` ajoutée (cadre du logo) en plus des quatre demandées.
+- **Modifiés** : `src/app/page.tsx` (après `ComparisonSection`, avant `Testimonials`) ; `footer.tsx` (colonne
+  « Entreprise » : « Partenaires » → `/#partenaires`, après « Cas d'usage »). Nav non touchée.
+
+### À confirmer par Camille
+
+- **Noms exacts** des deux partenaires (« Les Jus Naturels Ben's », « KHI Succès académique ») et leurs
+  **descriptions**.
+- **Adresses des sites** : `url: ''` pour les deux, donc aucune carte n'est cliquable aujourd'hui, alors que la
+  description de section dit « Cliquez pour visiter leur site ». Remplir les URL (ou retirer cette phrase).
+- **Logos** : déposer `public/partenaires/jus-naturels-bens.svg` et `public/partenaires/khi-succes-academique.svg`,
+  puis passer `hasLogo` à `true`. Vérifier l'accord des deux entreprises pour l'affichage de leur logo.
+- Reste du PRD-METIERS §7 (mention AMF, autres métiers réglementés, « Rappels automatiques », eyebrow du hero,
+  libellé « Ce qui vous gruge », accueil désormais à 14 sections).
+- Tension résiduelle hors périmètre : `benefits-section.tsx`, carte « Votre entreprise avance, même la nuit »
+  (« réponses aux clients potentiels : les tâches automatiques ne dorment jamais ») face à la FAQ 2 (« l'outil
+  prépare, vous validez »). Non modifiée.
+
+### Vérifications (round 2, 2026-10-17)
+
+- `npm run typecheck` : OK, 0 erreur.
+- `npm run lint` : 0 erreur, 10 avertissements (préexistants) ; `eslint --report-unused-disable-directives` sur les
+  10 fichiers touchés : aucun message.
+- `node scripts/check-rules.mjs` : 2 règles, aucune violation.
+- `npx next build` : « Compiled successfully », 41/41 pages générées.
+- `grep -rc 'id="metiers"' src` → 1 (seul `metiers-section.tsx`). `grep -c "q:" faq-section.tsx` → 12.
+- `grep -nE '[0-9$]' metiers-section.tsx` → commentaires du type, `h2`/`h4`, `size={20}`/`size={14}`, et les trois
+  lignes « Loi 25 » (exigées par le PRD). Aucun `$`, aucun autre chiffre dans les textes.
+- `grep -n "Jour et nuit" services.tsx` → vide. Mots « rendement / placement / garanti / diagnostic » → absents.
+- Non vérifié à l'écran (pas de navigateur) : rendu des 8 cartes à 4 / 2 / 1 colonnes, `service-tag` hors `.service`,
+  ancre `/#metiers` depuis une autre page, nav à 8 liens, cartes partenaires — **à tester par Camille**.
+
+### Complément de l'agent principal (round 2, après l'`ux-agent` et le `qa-agent`)
+
+Corrige les lignes périmées ci-dessus (section « Mission B » et « À confirmer ») :
+- `PARTNERS` compte **3 entrées**, toutes avec lien et logo : Les Jus Naturels Ben's (https://lesjusnaturelsbens.com/,
+  `les-jus-naturels-bens.svg` = icône officielle du site), VieSolution (https://viesolution.ca/, `viesolution.svg` =
+  mot-symbole recréé d'après leur image de partage, « Vie » #FF7A00 / « Solution » blanc), Khí Succès Académique
+  (https://khisuccesacademique.com/, lien fourni par Camille ; `khi-succes-academique.png` = symbole officiel détouré +
+  nom sur deux lignes). `.gitkeep` retiré.
+- **Descriptions** : uniquement le domaine de chaque partenaire, relevé sur son propre site le 2026-10-17 (balise
+  description / page d'accueil). Ce que Vie Solution Web a réalisé pour eux n'est pas affiché : à rédiger par Camille
+  si elle le souhaite.
+- `benefits-section.tsx`, carte « Votre entreprise avance, même la nuit » : **modifiée** (« … et vous validez ce qui
+  part ») pour lever la tension avec la FAQ 2.
+- `npm run verify` relancé par l'agent principal après ces ajouts (résultat dans `SUIVI-TACHES.md` §3).
+- Reste à confirmer par Camille : l'accord des trois entreprises pour l'affichage de leur logo ; VieSolution est sa
+  propre plateforme (le `qa-agent` demande si elle compte comme « client »).

@@ -20,8 +20,8 @@ export function CTASection({
             <div className="ai-banner-text">
               {text ?? (
                 <>
-                  Prêt à <em>reprendre le contrôle</em> de votre gestion ? Un appel de
-                  30 minutes, gratuit et sans engagement.
+                  Prêt à <em>mieux servir vos clients</em> et à retrouver du temps ? Un appel
+                  de 30 minutes, gratuit et sans engagement.
                 </>
               )}
             </div>

@@ -15,6 +15,7 @@ export function VswNav() {
         </Link>
         <div className="nav-links">
           <Link href="/#demarrer">Démarrer</Link>
+          <Link href="/#metiers">Métiers</Link>
           <Link href="/ia">IA</Link>
           <Link href="/zoho">Zoho</Link>
           <Link href="/devis">Devis</Link>
