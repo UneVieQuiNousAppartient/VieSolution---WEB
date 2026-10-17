@@ -71,7 +71,10 @@ body {
 }
 
 /* Décalage des ancres sous la nav sticky */
-section[id] { scroll-margin-top: 72px; }
+/* Décalage sous la barre de navigation fixe pour toutes les ancres (sections et cartes).
+   scroll-padding-top sur <html> : scroll-margin-top sur les cartes de la grille était ignoré
+   par Chrome lors d'un clic sur une ancre (vérifié le 2026-10-17). */
+html { scroll-padding-top: 96px; }
 
 /* ============ Typography ============ */
 .display {
@@ -2084,13 +2087,14 @@ html[data-theme="dark"] {
 }
 
 /* 1. Hero en séquence + reflet + halo qui respire */
-.hero .hero-inner > :where(.eyebrow, h1, .lede, .hero-ctas, .hero-meta) {
+.hero .hero-inner > :where(.eyebrow, h1, .lede, .hero-ctas, .hero-metiers, .hero-meta) {
   animation: vsw-rise 560ms var(--vsw-ease) backwards;
 }
 .hero .hero-inner > h1 { animation-delay: 80ms; }
 .hero .hero-inner > .lede { animation-delay: 160ms; }
 .hero .hero-inner > .hero-ctas { animation-delay: 240ms; }
-.hero .hero-inner > .hero-meta { animation-delay: 320ms; }
+.hero .hero-inner > .hero-metiers { animation-delay: 320ms; }
+.hero .hero-inner > .hero-meta { animation-delay: 400ms; }
 .hero h1 .highlight {
   background-image:
     linear-gradient(100deg, transparent 40%, var(--shine) 50%, transparent 60%),
@@ -2198,6 +2202,133 @@ html { scroll-behavior: smooth; }
 
 /* 6. Bandeau défilant : pause au survol */
 .marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* pme-accessible — je suis */
+/* Round 6, 2026-10-17 — PRD-JE-SUIS.md : sélecteur « Je suis… » du hero et cartes métiers repliables. */
+
+/* A. Sélecteur « Je suis… » (entrée en séquence : bloc round 5 ci-dessus, 320 ms) */
+.hero-metiers { margin-top: 36px; }
+.hero-metiers-label {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+}
+.hero-metiers-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.btn.hero-metier {
+  min-height: 40px; /* cible tactile (QA round 6) */
+  padding: 7px 14px;
+  font-size: 13.5px;
+  gap: 6px;
+  white-space: nowrap;
+}
+.hero-metier svg { color: var(--accent); flex-shrink: 0; }
+.hero-metier:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Téléphone : toutes les pastilles restent visibles (retour à la ligne, 2 par rangée), un peu plus compactes.
+   Un défilement horizontal en cachait 7 sur 9 : décision de l'agent principal après captures (2026-10-17). */
+@media (max-width: 640px) {
+  .hero-metiers { margin-top: 28px; }
+  .hero-metiers-list { gap: 8px 6px; }
+  .btn.hero-metier { padding: 7px 12px; font-size: 13px; }
+}
+
+/* B. Cartes métiers : l'essentiel visible, le reste dans un <details> natif */
+/* (scroll-margin-top retiré : voir html { scroll-padding-top } en tête de fichier) */
+.metier-plus {
+  margin-top: auto; /* « Voir ce qu'on améliore » aligné en bas : cartes repliées de hauteur homogène */
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+.metier-plus summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  border-radius: 4px;
+  transition: color 220ms var(--vsw-ease);
+}
+.metier-plus summary::-webkit-details-marker { display: none; }
+.metier-plus summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-right: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 220ms var(--vsw-ease);
+}
+.metier-plus[open] summary::after { transform: translateY(2px) rotate(-135deg); }
+.metier-plus summary:hover { color: var(--fg-0); }
+.metier-plus summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.metier-plus-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+}
+/* Ouverture fluide, même approche que la FAQ (round 5) */
+.metier-plus[open] .metier-plus-body { animation: vsw-faq-in 320ms var(--vsw-ease) backwards; }
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  .metier-plus { interpolate-size: allow-keywords; }
+  .metier-plus::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 320ms var(--vsw-ease),
+      content-visibility 320ms var(--vsw-ease) allow-discrete;
+  }
+  .metier-plus[open]::details-content { block-size: auto; }
+}
+/* Téléphone : icône à côté du titre, cartes plus courtes */
+@media (max-width: 560px) {
+  .metiers-grid .metier-card {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+    padding: 22px 20px;
+  }
+  .metier-card > :not(.benefit-icon, .metier-titres) { grid-column: 1 / -1; }
+  .metier-card .benefit-icon { width: 36px; height: 36px; }
+}
+
+/* Carte ciblée par le sélecteur (:target) : contour accent + lueur qui pulse, portés par un ::after
+   pour ne pas toucher à l'animation de cascade de la carte (sinon, passer d'une carte ciblée à une autre
+   relançait la cascade de la première — relevé par le qa-agent). La cascade (round 5, `backwards`)
+   ne cache pas la carte : reveal-init.tsx passe la grille en .in dès l'arrivée par l'ancre. */
+.metiers-grid > .metier-card { position: relative; }
+.metiers-grid > .metier-card:target { z-index: 2; }
+.metiers-grid > .metier-card:target::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  box-shadow: var(--shadow-glow);
+  animation: vsw-target-pulse 1.6s var(--vsw-ease) 500ms backwards;
+}
+@keyframes vsw-target-pulse {
+  0%, 40%, 80% { box-shadow: 0 0 0 0 transparent; }
+  20%, 60%, 100% { box-shadow: var(--shadow-glow); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .metiers-grid > .metier-card:target::after { box-shadow: none; animation: none; }
+  .metier-plus::details-content { transition: none !important; }
+}
 
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {

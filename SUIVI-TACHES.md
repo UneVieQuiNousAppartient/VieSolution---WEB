@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 6.
+**Dernière mise à jour : 2026-10-17** — dernière section : 7.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -82,3 +82,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `qa-agent` (Opus, 61 k) ROUGE → un bloquant (délai du h1 écrasé par la spécificité) corrigé, 2 à trancher (tranchés : transitions de la nav gardées ; attribut Next ajouté), 3 mineurs traités ; `npm run verify` vert ; navigateur (Playwright) : hero à 60 / 900 ms, cascade des métiers, nav 72 → 61 px, survol +3 px, bandeau en pause, FAQ, mouvement réduit, thème sombre.
 
 **Non fait dans ce round** : issue #2 (sections invisibles sans JavaScript, bug préexistant : `.reveal { opacity: 0 }` sans repli) — correctif proposé dans l'issue, ≈ 30 k ; les tuiles collées (`.benefit`, `.service`, `.process-step`) n'ont pas de montée au survol (grilles à joints de 1 px qui rogneraient la rangée du haut) ; pas de vidéo de contrôle, seulement des captures à instants fixes.
+
+## 7. ✅ Sélecteur « Je suis… » et cartes métiers repliées (2026-10-17)
+
+**Contexte / demande** : Camille demande si les métiers se reconnaissent facilement ; mesure : section métiers après 2,2 écrans (ordinateur) / 3,7 (téléphone), dernière carte au 9ᵉ écran, menu caché sur téléphone. Décision « A + B » (sélecteur dans le hero + cartes lisibles), en s'inspirant de la présentation par métier de sites reconnus (Jobber, Square, Jane ; les concurrents québécois Nuagix et Automiv étaient inaccessibles).
+
+**Ce qui a été fait** : `PRD-JE-SUIS.md` ; `ux-agent` (Opus, 85 k) : 9 pastilles « Je suis… » dans le hero avec icône par métier (8 nouvelles icônes dans `icon.tsx`), lien direct vers la carte (`id="metier-<slug>"`, mise en évidence `:target`), cartes repliées (icône + titre + « ce qui vous gruge » ; le reste sous `<details>` « Voir ce qu'on améliore pour vous »). Agent principal : `scroll-padding-top` sur `<html>` (Chrome ignorait `scroll-margin-top` sur les cartes), pastilles en retour à la ligne sur téléphone, `min-height: 40px`, pulsation sur `::after`.
+
+**Vérification technique** : `qa-agent` (Opus, 62 k) ROUGE → un bloquant (cible tactile 37 px) corrigé, 3 à trancher traités, textes des 8 cartes vérifiés identiques au PRD (56 chaînes) ; `npm run verify` vert ; navigateur : sélecteur dans le premier écran sur ordinateur (bas à 855 px / 900), section métiers 1,4 écran (ordinateur) et 3,1 (téléphone, contre ≈ 5,4), clic → carte à 76 px sous le haut, passage d'une carte à l'autre sans disparition, ouverture des cartes, thème sombre.
+
+**Non fait dans ce round** : hero trop long sur téléphone (sélecteur au 2ᵉ écran) → lot « finition premium » ; AUDIT-PREMIUM.md (18 correctifs) à implémenter ; issue #3 (menu mobile).

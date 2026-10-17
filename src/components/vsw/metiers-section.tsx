@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
 
-type Metier = {
+export type Metier = {
+  slug: string; // ancre de la carte : id="metier-<slug>" (sélecteur « Je suis… » du hero)
   titre: string; // nom court du métier (h4 de la carte)
   precision?: string; // sous-titre facultatif (cartes 1, 4, 5, 6, 8)
   gruge: string; // « Ce qui vous gruge »
@@ -9,14 +10,15 @@ type Metier = {
   temps: string; // « Le temps retrouvé »
   tags: string[]; // 2 ou 3 étiquettes
   note?: string; // mention conformité (cartes 1 à 4)
-  icon: IconName; // icône existante de icon.tsx
+  icon: IconName; // icône propre au métier (icon.tsx)
 };
 
 const NOTE_FINANCE =
   'Vos notes et vos suivis restent organisés dans le respect de vos obligations de conformité (AMF) et de la Loi 25. Vous validez tout.';
 
-const METIERS: Metier[] = [
+export const METIERS: Metier[] = [
   {
+    slug: 'conseiller-financier',
     titre: 'Conseiller financier',
     precision: 'Conseiller en sécurité financière',
     gruge: 'Les suivis annuels, les notes de rencontre et les documents de conformité vous prennent des soirées entières.',
@@ -24,27 +26,30 @@ const METIERS: Metier[] = [
     temps: 'Pour conseiller vos clients, au lieu de remplir des formulaires.',
     tags: ['Rappels de suivi', 'Notes de rencontre préparées', 'Dossier client unique'],
     note: NOTE_FINANCE,
-    icon: 'users',
+    icon: 'briefcase-chart',
   },
   {
+    slug: 'courtier-hypothecaire',
     titre: 'Courtier hypothécaire',
     gruge: 'Courir après les documents manquants et relancer les dossiers en attente vous occupe plus que le conseil lui-même.',
     ameliore: 'Vos clients savent exactement quoi fournir, et leur dossier est complet du premier coup.',
     temps: 'Pour accompagner vos clients, pas pour courir après les papiers.',
     tags: ['Liste de documents à fournir', 'Relances automatiques', 'Suivi des dossiers'],
     note: NOTE_FINANCE,
-    icon: 'grid',
+    icon: 'house-key',
   },
   {
+    slug: 'clinique-dentaire',
     titre: 'Clinique dentaire',
     gruge: 'Les rappels de rendez-vous, les confirmations et les formulaires de nouveaux patients occupent votre réception toute la journée.',
     ameliore: "Vos patients reçoivent leur rappel à temps et remplissent leur formulaire avant d'arriver.",
     temps: "Pour une équipe à la réception qui a enfin le temps d'accueillir.",
     tags: ['Rappels de rendez-vous', 'Formulaires en ligne', 'Réponses aux questions courantes'],
     note: "Les dossiers de vos patients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins.",
-    icon: 'calendar',
+    icon: 'tooth',
   },
   {
+    slug: 'clinique-de-soins',
     titre: 'Clinique de soins',
     precision: 'Physio, chiro, esthétique, massothérapie',
     gruge: 'Entre deux traitements, vous rappelez des clients, confirmez des plages libres et répondez aux mêmes questions.',
@@ -52,42 +57,46 @@ const METIERS: Metier[] = [
     temps: 'Pour vous consacrer à vos soins, pas à votre agenda.',
     tags: ['Prise de rendez-vous en ligne', 'Rappels automatiques', 'Suivi après la visite'],
     note: "Les dossiers de vos clients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins.",
-    icon: 'clock',
+    icon: 'heart-pulse',
   },
   {
+    slug: 'cabinet-comptable',
     titre: 'Cabinet comptable',
     precision: 'Comptabilité et tenue de livres',
     gruge: 'En période de pointe, vous passez vos journées à réclamer des pièces justificatives à vos clients.',
     ameliore: "Vos clients savent ce qu'il manque, l'envoient au bon endroit et ont des nouvelles de leur dossier.",
     temps: 'Pour analyser et conseiller, plutôt que trier des reçus.',
     tags: ['Collecte de documents', 'Relances des pièces manquantes', 'Facturation simplifiée'],
-    icon: 'check',
+    icon: 'calculator',
   },
   {
+    slug: 'construction',
     titre: 'Entrepreneur en construction',
     precision: 'Construction et rénovation',
     gruge: 'Les soumissions se tapent le soir, et les relances de clients ou de paiements passent entre les mailles.',
     ameliore: 'Vos clients reçoivent leur soumission plus vite et savent où en est leur chantier.',
     temps: 'Pour être sur le chantier le jour, et à la maison le soir.',
     tags: ['Soumissions plus rapides', 'Suivi des chantiers', 'Relances de paiement'],
-    icon: 'bolt',
+    icon: 'hammer',
   },
   {
+    slug: 'agent-immobilier',
     titre: 'Agent immobilier',
     gruge: "Les demandes d'information arrivent à toute heure, et le suivi de chaque acheteur ou vendeur repose sur votre mémoire.",
     ameliore: "Chaque demande reçoit une réponse rapide, et personne n'est oublié en cours de route.",
     temps: 'Pour les visites et les gens, pas pour la paperasse.',
     tags: ['Réponses aux demandes', 'Suivi des acheteurs et vendeurs', 'Dossier client unique'],
-    icon: 'chat',
+    icon: 'house-sign',
   },
   {
+    slug: 'commerce-restaurant',
     titre: 'Commerce ou restaurant',
     precision: 'Commerce de détail ou restauration',
     gruge: "Entre le comptoir et les fournisseurs, les courriels, les réservations et les avis en ligne s'accumulent.",
     ameliore: 'Vos clients ont une réponse rapide, une réservation confirmée et une bonne raison de revenir.',
     temps: 'Pour être avec vos clients et votre équipe, plutôt que derrière un écran.',
     tags: ['Réservations et commandes', 'Réponses aux courriels', 'Infolettre simple'],
-    icon: 'check',
+    icon: 'storefront',
   },
 ];
 
@@ -108,34 +117,39 @@ export function MetiersSection() {
         </div>
         <div className="benefits-grid metiers-grid reveal">
           {METIERS.map((m) => (
-            <div className="benefit" key={m.titre}>
+            <div className="benefit metier-card" id={`metier-${m.slug}`} key={m.slug}>
               <div className="benefit-icon">
                 <Icon name={m.icon} size={20} />
               </div>
-              <div>
+              <div className="metier-titres">
                 <h4>{m.titre}</h4>
                 {m.precision && <p className="metier-precision">{m.precision}</p>}
               </div>
-              <div>
+              <div className="metier-gruge">
                 <div className="metier-label">Ce qui vous gruge</div>
                 <p>{m.gruge}</p>
               </div>
-              <div>
-                <div className="metier-label">Pour vos clients</div>
-                <p>{m.ameliore}</p>
-              </div>
-              <div>
-                <div className="metier-label">Le temps retrouvé</div>
-                <p>{m.temps}</p>
-              </div>
-              <div className="service-tags">
-                {m.tags.map((t) => (
-                  <span className="service-tag" key={t}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-              {m.note && <p className="metier-note">{m.note}</p>}
+              <details className="metier-plus">
+                <summary>Voir ce qu&apos;on améliore pour vous</summary>
+                <div className="metier-plus-body">
+                  <div>
+                    <div className="metier-label">Pour vos clients</div>
+                    <p>{m.ameliore}</p>
+                  </div>
+                  <div>
+                    <div className="metier-label">Le temps retrouvé</div>
+                    <p>{m.temps}</p>
+                  </div>
+                  <div className="service-tags">
+                    {m.tags.map((t) => (
+                      <span className="service-tag" key={t}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  {m.note && <p className="metier-note">{m.note}</p>}
+                </div>
+              </details>
             </div>
           ))}
         </div>

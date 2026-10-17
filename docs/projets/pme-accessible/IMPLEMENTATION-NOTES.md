@@ -287,3 +287,61 @@ Plan approuvé par Camille (« Sobre et premium »). Trace : `PRD-ANIMATIONS.md`
 - Correction des notes : `.ai-pillars` n'a ni `overflow: hidden` ni bordure ; le choix « sans montée » sur les tuiles collées reste valable pour `.benefit`, `.service`, `.process-step`.
 - Vérifié dans le navigateur par l'agent principal (Playwright) : séquence du hero, cascade des métiers, nav 72 → 61 px avec ombre, survol +3 px, bandeau en pause, FAQ, mouvement réduit (tout visible, immobile), thème sombre.
 - Bug préexistant ouvert en issue : UneVieQuiNousAppartient/VieSolution---WEB#2 (sections invisibles sans JavaScript).
+
+## Round 6 — Je suis… (ux-agent, 2026-10-17, `PRD-JE-SUIS.md`)
+
+### Fichiers
+- Créé : `docs/projets/pme-accessible/PRD-JE-SUIS.md`.
+- `src/components/vsw/icon.tsx` : 8 icônes ajoutées au type `IconName` et au `switch` (`briefcase-chart`, `house-key`,
+  `tooth`, `heart-pulse`, `calculator`, `hammer`, `house-sign`, `storefront`) ; même `common` (24×24, `stroke-width` 1.6,
+  `fill="none"`), 1 à 4 tracés chacune.
+- `src/components/vsw/metiers-section.tsx` : champ `slug` ajouté, `METIERS` et `Metier` exportés (source unique pour le
+  hero), icônes remplacées par celles du métier, carte `benefit metier-card` avec `id={`metier-${slug}`}` ;
+  « Pour vos clients », « Le temps retrouvé », étiquettes et note passent dans `<details className="metier-plus">`.
+  **Aucun texte modifié** (seul l'ordre d'affichage dans la carte change).
+- `src/components/vsw/hero.tsx` : bloc `.hero-metiers` entre `.hero-ctas` et `.hero-meta` (8 pastilles tirées de
+  `METIERS` + « Autre métier » → `#metiers`).
+- `src/app/vsw.css` : liste `:where(…)` du round 5 complétée par `.hero-metiers` (320 ms) et `.hero-meta` décalé à 400 ms ;
+  nouveau bloc `/* pme-accessible — je suis */` juste avant la règle `prefers-reduced-motion` finale.
+
+### Décisions et écarts
+- **Ancres natives `<a href="#metier-…">` au lieu de `<Link>`** : vérifié dans `node_modules/next/dist/client/app-dir/link.js`
+  (Next 16.1.6) — `Link` fait `preventDefault()` puis `history.pushState`, qui **ne met pas à jour `:target`** ; la mise
+  en évidence de la carte n'aurait jamais eu lieu après un clic. Le hero n'est monté que sur `/` (`src/app/page.tsx`),
+  donc `#metier-…` équivaut à `/#metier-…`. Le retour arrière reste géré (`onPopState` de Next ignore une entrée sans état).
+- `grep -c 'id="metier-' metiers-section.tsx` renvoie **1** (le commentaire du type) : les ids sont générés par
+  `id={`metier-${m.slug}`}` à partir des 8 `slug`. Vérification équivalente faite sur le HTML compilé
+  (`.next/server/app/index.html`) : 8 `id="metier-…"` distincts.
+- Cascade vs carte ciblée : `reveal-init.tsx` passe le `.reveal` en `.in` à la première intersection (seuil 0,12) ; le
+  rappel initial de l'`IntersectionObserver` part dès l'observation, donc à l'arrivée par ancre (chargement ou clic) la
+  grille est révélée. De plus, la règle `.metiers-grid > .metier-card:target` (même spécificité 0,3,0 que la cascade,
+  placée après) **remplace** l'animation de cascade par `vsw-target-pulse` : la carte ciblée n'attend aucun délai.
+  `opacity: 1` ajouté par sûreté.
+- Pulsation : 1 s, 2 pulsations de `--shadow-glow`, délai 350 ms (pour qu'elle se voie après le défilement doux) ;
+  bordure par `outline` 1 px accent (indépendante de l'ombre animée). Mouvement réduit : outline seule.
+- `scroll-margin-top: 96px` sur `.metiers-grid .metier-card` (les cartes sont des `div`, la règle `section[id]` ne s'y
+  applique pas).
+- Hauteur homogène : `margin-top: auto` sur `.metier-plus` (le résumé s'aligne en bas de chaque carte d'une rangée).
+  Une carte ouverte agrandit sa rangée ; les autres cartes de la rangée s'étirent (fond continu de la mosaïque).
+- Téléphone (≤ 560 px) : la carte passe en grille 2 colonnes (icône 36 px à côté du titre), padding 22/20 px.
+- Sélecteur sur téléphone (≤ 640 px) : rangée `nowrap` qui défile, `scroll-snap-type: x mandatory`, barre masquée,
+  bord droit en fondu par `mask-image` (masque en alpha : indépendant du thème), débord jusqu'aux bords de l'écran
+  (`margin-inline: -20px`).
+- Le minifieur fusionne mon petit bloc `prefers-reduced-motion` avec la règle globale (adjacents) ; l'ordre est
+  conservé, la règle globale reste en dernier dans le CSS compilé.
+
+### Vérifications (round 6)
+- Accolades de `vsw.css` : 444 `{` / 444 `}`.
+- `grep -n "prefers-reduced-motion" src/app/vsw.css` : 2044 (partenaires), 2328 (bloc je suis), 2334 (globale, dernière du fichier).
+- `npm run typecheck` : 0 erreur. `npm run lint` : 0 erreur, 10 avertissements (préexistants, inchangés).
+- `npx next build` : terminé, pages statiques générées ; CSS compilé contrôlé (`vsw-target-pulse`, `.hero-metiers`
+  dans la séquence, délais 320/400 ms).
+- `node scripts/check-rules.mjs` : aucune violation. `node scripts/check-secrets-suivis.mjs` : aucun fichier sensible.
+- Non vérifié : rendu dans le navigateur — **à tester** (agent principal / Camille).
+
+### Complément de l'agent principal (round 6, après captures et `qa-agent`)
+
+- **Ancre des cartes** : `scroll-margin-top` sur les cartes était ignoré par Chrome lors d'un clic sur une pastille (carte sous la nav, mesuré à −20 px) ; remplacé par `html { scroll-padding-top: 96px }` (la règle `section[id] { scroll-margin-top }` est retirée, même décalage pour toutes les ancres). Mesures après : carte 76 px, sections 96 px, depuis une autre page 96 px.
+- **Téléphone** : le défilement horizontal des pastilles en cachait 7 sur 9 → retour à la ligne (2 par rangée, compactes). Le sélecteur descend à ≈ 1 150 px (2ᵉ écran) ; à raccourcir dans le lot « finition premium » (hero mobile).
+- **QA** : bloquant corrigé (`min-height: 40px` sur les pastilles, mesuré 40 px) ; pulsation déplacée sur `::after` (plus de relance de la cascade quand on passe d'une carte à l'autre : opacité de la carte A = 1 pendant le changement) ; délai 500 ms / durée 1,6 s ; critère 1 du PRD réécrit.
+- Captures : `js2-telephone-selecteur.png`, `js2-cible.png`, `js-ordinateur-hero.png`.

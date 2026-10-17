@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { METIERS } from './metiers-section';
 
 const MARQUEE_ITEMS = [
   'Moins de paperasse',
@@ -50,6 +51,21 @@ export function Hero() {
           <Link href="#demarrer" className="btn btn-ghost btn-lg">
             <Icon name="check" size={14} /> Par où commencer ?
           </Link>
+        </div>
+        {/* Sélecteur « Je suis… » (PRD-JE-SUIS.md). Ancres natives <a> et non <Link> : Link passe par
+            history.pushState, qui ne met pas à jour :target (mise en évidence de la carte ciblée). */}
+        <div className="hero-metiers" role="group" aria-labelledby="hero-metiers-label">
+          <p className="hero-metiers-label" id="hero-metiers-label">{'// Je suis…'}</p>
+          <div className="hero-metiers-list">
+            {METIERS.map((m) => (
+              <a key={m.slug} href={`#metier-${m.slug}`} className="btn btn-ghost hero-metier">
+                <Icon name={m.icon} size={14} aria-hidden="true" /> {m.titre}
+              </a>
+            ))}
+            <a href="#metiers" className="btn btn-ghost hero-metier">
+              Autre métier
+            </a>
+          </div>
         </div>
         <div className="hero-meta">
           <div><strong>IA + Zoho</strong>une seule équipe</div>
