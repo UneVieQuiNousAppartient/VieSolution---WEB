@@ -1882,3 +1882,49 @@ section { position: relative; }
   .calc-options { grid-template-columns: repeat(2, 1fr); }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* pme-accessible — section « C'est pour vous si… » */
+.benefit p.pv-situation {
+  color: var(--fg-0);
+  font-size: 15px;
+}
+.pv-outro {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.pv-outro p {
+  margin: 0;
+  color: var(--fg-1);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 620px;
+}
+
+/* pme-accessible — note sous le tableau « Avant / après » */
+.compare-note {
+  max-width: 980px;
+  margin: 20px auto 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg-2);
+  line-height: 1.6;
+}
+
+/* pme-accessible — lien « En savoir plus » dans une carte « Démarrer simplement » */
+.ai-pillar-link {
+  margin-top: auto;
+  padding-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+}
+.ai-pillar-link:hover { color: var(--fg-0); }
+.ai-pillar-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }

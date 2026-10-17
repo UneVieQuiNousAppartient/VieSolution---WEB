@@ -5,20 +5,20 @@ const AI_PILLARS = [
   {
     num: '01',
     title: "Formation à l'IA",
-    desc: "Nous formons vos équipes à utiliser concrètement les outils d'IA générative dans leur quotidien — ChatGPT, Claude, Copilot et bien d'autres.",
-    items: ['Ateliers personnalisés', "Cas d'usage métier", 'Bonnes pratiques & limites'],
+    desc: "Nous formons vos équipes à utiliser concrètement les outils d'IA (comme ChatGPT, Claude ou Copilot) dans leur quotidien.",
+    items: ['Ateliers personnalisés', 'Exemples tirés de votre métier', 'Bonnes pratiques & limites'],
   },
   {
     num: '02',
     title: "Comment l'IA améliore votre travail",
-    desc: "On audite vos processus actuels, on identifie où l'IA fait gagner du temps, et on vous accompagne dans son intégration progressive.",
-    items: ['Audit de processus', 'Identification des gains', "Plan d'intégration"],
+    desc: "On regarde comment vous travaillez, on repère où l'IA vous fait gagner du temps, et on vous accompagne pas à pas pour l'adopter.",
+    items: ['Portrait de vos façons de faire', 'Identification des gains', 'Plan étape par étape'],
   },
   {
     num: '03',
-    title: 'Construction de processus IA',
-    desc: "Nous bâtissons sur mesure les processus, agents et automatisations IA qui s'intègrent parfaitement à vos outils existants.",
-    items: ['Agents personnalisés', 'Workflows automatisés', 'Connexion à vos outils'],
+    title: 'Des outils IA bâtis pour vous',
+    desc: "On bâtit sur mesure des assistants et des tâches automatiques qui fonctionnent avec vos outils actuels.",
+    items: ['Assistants personnalisés', "Tâches qui s'enchaînent seules", 'Connexion à vos outils'],
   },
 ];
 
@@ -36,11 +36,10 @@ export function AISection() {
               </h2>
             </div>
             <p>
-              Au-delà de l&apos;automatisation classique, nous formons et accompagnons les
-              particuliers et les PME québécoises dans l&apos;intégration de l&apos;intelligence
-              artificielle. Comprendre, expérimenter, puis bâtir ensemble les processus qui
-              transformeront votre façon de travailler. Nous formons également des jeunes
-              en informatique et en IA au sein de notre studio.
+              On vous aide à utiliser l&apos;IA dans votre quotidien, que vous soyez seul ou en
+              équipe. D&apos;abord comprendre, ensuite essayer, puis bâtir ensemble des façons de
+              faire qui vous sauvent du temps. On forme aussi des jeunes en informatique et en
+              IA dans notre studio.
             </p>
           </div>
 
@@ -61,8 +60,8 @@ export function AISection() {
 
           <div className="ai-banner">
             <div className="ai-banner-text">
-              Nous sommes là pour <em>construire des processus</em> qui s&apos;appuient sur
-              l&apos;IA — adaptés à votre réalité, vos outils et votre équipe.
+              Nous sommes là pour <em>simplifier votre travail</em> avec l&apos;IA — à votre
+              mesure, avec vos outils et votre équipe.
             </div>
             <Link href="/rdv" className="btn btn-primary btn-lg">
               Discuter d&apos;un projet IA <Icon name="arrow" size={14} />

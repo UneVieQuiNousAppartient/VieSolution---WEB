@@ -8,8 +8,8 @@ const BENEFITS: { icon: IconName; title: string; desc: string }[] = [
   },
   {
     icon: 'clock',
-    title: 'Votre entreprise travaille 24/7',
-    desc: "Relances, suivis, réponses aux leads : l'automatisation et les agents IA ne dorment jamais.",
+    title: 'Votre entreprise avance, même la nuit',
+    desc: "Relances, suivis, réponses aux clients potentiels : les tâches automatiques ne dorment jamais.",
   },
   {
     icon: 'grid',
@@ -35,7 +35,7 @@ export function BenefitsSection() {
         <div className="section-head reveal">
           <div>
             <div className="eyebrow">Pourquoi nous choisir</div>
-            <h2>Le choix le plus<br />payant pour votre PME.</h2>
+            <h2>Ce que vous y gagnez,<br />concrètement.</h2>
           </div>
           <p className="desc">
             Ce que nos clients gagnent concrètement en travaillant avec nous — au-delà de

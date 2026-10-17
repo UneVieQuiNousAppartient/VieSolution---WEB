@@ -14,10 +14,11 @@ export function VswNav() {
           </div>
         </Link>
         <div className="nav-links">
+          <Link href="/#demarrer">Démarrer</Link>
           <Link href="/ia">IA</Link>
           <Link href="/zoho">Zoho</Link>
           <Link href="/devis">Devis</Link>
-          <Link href="/realisations">Cas d&apos;usage</Link>
+          <Link href="/realisations">Réalisations</Link>
           <Link href="/a-propos">À propos</Link>
           <Link href="/contact">Contact</Link>
         </div>

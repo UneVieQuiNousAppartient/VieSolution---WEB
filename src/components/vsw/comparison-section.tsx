@@ -2,10 +2,10 @@ const ROWS: [string, string][] = [
   ['Solutions génériques', 'Plans personnalisés à votre réalité'],
   ['Jargon technique', 'Des explications claires, en français'],
   ['Outils imposés', 'Des outils que vous maîtrisez (IA + Zoho)'],
-  ['Métriques floues', 'Du temps et de l’argent réellement gagnés'],
+  ['Des résultats flous', 'Du temps et de l’argent réellement gagnés'],
   ['Projet livré, consultant parti', 'Formation et accompagnement continus'],
   ['Coûts cachés', 'Tarification transparente, devis en ligne'],
-  ['Dépendance au fournisseur', 'Une vie qui vous appartient'],
+  ['Vous dépendez du consultant', 'Une vie qui vous appartient'],
 ];
 
 export function ComparisonSection() {

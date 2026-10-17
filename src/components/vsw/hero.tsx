@@ -2,15 +2,15 @@ import Link from 'next/link';
 import { Icon } from './icon';
 
 const MARQUEE_ITEMS = [
-  'Automatisation IA',
-  'Agents IA',
-  'Formation IA',
-  'Implantation Zoho',
+  'Moins de paperasse',
+  'Factures automatiques',
+  'Relances sans oubli',
+  'Assistant IA',
   'Zoho CRM',
   'Zoho Books',
-  'Zoho Desk',
-  'Intégrations',
-  'Audit de processus',
+  'Formation simple',
+  'Service en français',
+  'Premier pas accompagné',
 ];
 
 function MarqueeContent() {
@@ -32,22 +32,22 @@ export function Hero() {
       <div className="hero-grid"></div>
       <div className="hero-glow"></div>
       <div className="container hero-inner">
-        <div className="eyebrow">{'// Studio IA & Zoho · Québec, Canada'}</div>
+        <div className="eyebrow">{'// Pour les travailleurs autonomes et les PME du Québec'}</div>
         <h1>
           Une vie qui<br />
           <span className="highlight">nous appartient.</span>
         </h1>
         <p className="lede">
-          Automatisation, intelligence artificielle et implantation Zoho pour reprendre
-          le contrôle de la gestion de votre entreprise — pensé pour les PME et
-          travailleurs autonomes québécois.
+          Moins de paperasse, plus de temps pour votre vrai métier. On met en place des
+          outils simples — l&apos;IA, Zoho, des tâches qui se font toutes seules — et on vous
+          montre comment vous en servir. Pas besoin d&apos;être techno.
         </p>
         <div className="hero-ctas">
           <Link href="/rdv" className="btn btn-primary btn-lg">
             Prendre un RDV <Icon name="arrow" size={14} />
           </Link>
-          <Link href="/devis" className="btn btn-ghost btn-lg">
-            <Icon name="bolt" size={14} /> Estimer mon projet
+          <Link href="#demarrer" className="btn btn-ghost btn-lg">
+            <Icon name="check" size={14} /> Par où commencer ?
           </Link>
         </div>
         <div className="hero-meta">

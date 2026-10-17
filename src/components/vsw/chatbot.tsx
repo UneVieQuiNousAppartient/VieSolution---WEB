@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, Fragment } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from './icon';
 
-type Chip = { text: string; next?: string; action?: 'goto-rdv' | 'goto-devis' };
+type Chip = { text: string; next?: string; action?: 'goto-rdv' | 'goto-devis' | 'goto-zoho' | 'goto-ia' };
 type Node = { bot: string; chips?: Chip[] };
 type Msg = { from: 'bot' | 'user'; text: string; chips?: Chip[] };
 
@@ -13,30 +13,53 @@ const BOT_FLOW: Record<string, Node> = {
   start: {
     bot: "Bonjour 👋 Je suis l'assistant de Vie Solution Web. Comment puis-je vous aider aujourd'hui ?",
     chips: [
+      { text: 'Je ne sais pas par où commencer', next: 'debuter' },
       { text: 'Estimer un projet', next: 'estimer' },
       { text: 'Voir les services', next: 'services' },
       { text: 'Parler de Zoho', next: 'zoho' },
       { text: 'Prendre un RDV', next: 'rdv' },
     ],
   },
+  debuter: {
+    bot: "Bonne nouvelle : c'est la question qu'on préfère ! 😊 Pas besoin d'être techno. On commence souvent par une seule chose. Qu'est-ce qui vous prend le plus de temps ?",
+    chips: [
+      { text: 'Mes factures et mes clients', next: 'debut-zoho' },
+      { text: 'Mes courriels et mes textes', next: 'debut-ia' },
+      { text: 'Je préfère en parler', action: 'goto-rdv' },
+    ],
+  },
+  'debut-zoho': {
+    bot: 'On peut mettre en place Zoho pour vos clients et vos factures, tout au même endroit. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
+    chips: [
+      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Voir Zoho', action: 'goto-zoho' },
+    ],
+  },
+  'debut-ia': {
+    bot: 'On peut configurer un assistant IA pour votre entreprise et vous montrer comment vous en servir. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
+    chips: [
+      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Voir l\'IA', action: 'goto-ia' },
+    ],
+  },
   estimer: {
     bot: 'Parfait ! Quel type de projet avez-vous en tête ?',
     chips: [
-      { text: 'Automatisation IA', next: 'auto' },
-      { text: 'Agent IA', next: 'agent' },
+      { text: 'Tâches automatiques (IA)', next: 'auto' },
+      { text: 'Assistant IA sur mesure', next: 'agent' },
       { text: 'Implantation Zoho', next: 'zoho-estim' },
       { text: 'Formation', next: 'formation' },
     ],
   },
   auto: {
-    bot: "L'automatisation démarre autour de 1 800 $ CAD. On audite vos processus actuels, puis on automatise d'abord les tâches qui vous grugent le plus de temps.",
+    bot: "L'automatisation démarre autour de 1 800 $ CAD. On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps.",
     chips: [
       { text: 'Ouvrir le calculateur', action: 'goto-devis' },
       { text: 'Prendre un RDV', action: 'goto-rdv' },
     ],
   },
   agent: {
-    bot: "Un agent IA sur mesure (chatbot, assistant interne, traitement de documents) démarre autour de 4 500 $ CAD selon les intégrations. On cadre ça ensemble lors d'un appel.",
+    bot: "Un assistant IA sur mesure (clavardage client, assistant interne, tri de documents) démarre autour de 4 500 $ CAD selon les outils à brancher. On cadre ça ensemble lors d'un appel.",
     chips: [
       { text: 'Prendre un RDV', action: 'goto-rdv' },
       { text: 'Ouvrir le calculateur', action: 'goto-devis' },
@@ -54,16 +77,16 @@ const BOT_FLOW: Record<string, Node> = {
     chips: [{ text: 'Prendre un RDV', action: 'goto-rdv' }],
   },
   services: {
-    bot: 'Nous avons quatre expertises : automatisation des processus, agents et intégrations IA, implantation Zoho, et formation IA & Zoho. Laquelle vous intéresse ?',
+    bot: "On peut vous aider de quatre façons : rendre vos tâches automatiques, créer un assistant IA, installer Zoho pour vos clients et vos factures, ou vous former. Qu'est-ce qui vous intéresse ?",
     chips: [
-      { text: 'Automatisation', next: 'auto' },
-      { text: 'Agents IA', next: 'agent' },
+      { text: 'Tâches automatiques', next: 'auto' },
+      { text: 'Assistant IA', next: 'agent' },
       { text: 'Zoho', next: 'zoho' },
       { text: 'Formation', next: 'formation' },
     ],
   },
   zoho: {
-    bot: "Zoho réunit CRM, facturation, soutien client et marketing dans un seul écosystème. On l'installe chez vous, on le configure selon vos processus et on forme votre équipe. Une vie qui vous appartient dans la gestion de votre business !",
+    bot: "Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme.",
     chips: [
       { text: 'Estimer une implantation', next: 'zoho-estim' },
       { text: 'Prendre un RDV', action: 'goto-rdv' },
@@ -121,6 +144,10 @@ export function VswChatbot() {
       goToPage('/rdv');
     } else if (chip.action === 'goto-devis') {
       goToPage('/devis');
+    } else if (chip.action === 'goto-zoho') {
+      goToPage('/zoho#demarrer');
+    } else if (chip.action === 'goto-ia') {
+      goToPage('/ia#demarrer');
     }
   };
 

@@ -8,8 +8,10 @@ import { checkRateLimit } from '@/lib/utils/security';
 
 /* Tarifs indicatifs — [à confirmer] par VieSolution avant mise en ligne */
 const PROJECT_TYPES = [
-  { id: 'auto', label: 'Automatisation IA', base: 1800, unit: null as string | null, units: 0 },
-  { id: 'agent', label: 'Agent IA', base: 4500, unit: null, units: 0 },
+  // « Je débute » : sur mesure, aucun montant affiché (PRD pme-accessible 5.1). base inutilisée.
+  { id: 'debut', label: 'Je débute — premier pas', base: 0, unit: null as string | null, units: 0, surMesure: true },
+  { id: 'auto', label: 'Tâches automatiques (IA)', base: 1800, unit: null, units: 0 },
+  { id: 'agent', label: 'Assistant IA sur mesure', base: 4500, unit: null, units: 0 },
   { id: 'zoho', label: 'Implantation Zoho', base: 3200, unit: 'Utilisateurs Zoho', units: 5 },
   { id: 'formation', label: 'Formation IA / Zoho', base: 1500, unit: 'Personnes à former', units: 5 },
   { id: 'site', label: 'Site web', base: 2400, unit: 'Nombre de pages', units: 5 },
@@ -18,11 +20,11 @@ const PROJECT_TYPES = [
 
 const FEATURES = [
   { id: 'crm', label: 'Zoho CRM', price: 700 },
-  { id: 'books', label: 'Zoho Books', price: 700 },
-  { id: 'desk', label: 'Zoho Desk', price: 600 },
-  { id: 'flow', label: 'Automatisations inter-apps', price: 900 },
-  { id: 'agent', label: 'Agent IA intégré', price: 1600 },
-  { id: 'api', label: 'Intégrations API', price: 1100 },
+  { id: 'books', label: 'Zoho Books (factures)', price: 700 },
+  { id: 'desk', label: 'Zoho Desk (soutien client)', price: 600 },
+  { id: 'flow', label: 'Liens automatiques entre vos logiciels', price: 900 },
+  { id: 'agent', label: 'Assistant IA branché sur vos outils', price: 1600 },
+  { id: 'api', label: 'Connexion à vos autres logiciels', price: 1100 },
   { id: 'dashboard', label: 'Tableau de bord', price: 1400 },
   { id: 'formation', label: 'Formation incluse', price: 800 },
 ];
@@ -47,6 +49,7 @@ export function QuoteCalculator({ showHead = true }: { showHead?: boolean }) {
   const [leadError, setLeadError] = useState('');
 
   const proj = PROJECT_TYPES.find((p) => p.id === type)!;
+  const surMesure = proj.surMesure === true;
 
   const estimate = useMemo(() => {
     const tl = TIMELINES.find((t) => t.id === timeline)!;
@@ -79,6 +82,16 @@ export function QuoteCalculator({ showHead = true }: { showHead?: boolean }) {
     try {
       setLeadError('');
       setLeadSending(true);
+      if (surMesure) {
+        await submitEstimateurRequest({
+          nom: leadNom.trim(),
+          email: leadEmail.trim(),
+          type_projet: 'Je débute — premier pas',
+          resultat_estimation: 'Sur mesure — à discuter à l\'appel découverte',
+        });
+        setLeadSent(true);
+        return;
+      }
       await submitEstimateurRequest({
         nom: leadNom.trim(),
         email: leadEmail.trim(),
@@ -154,83 +167,102 @@ export function QuoteCalculator({ showHead = true }: { showHead?: boolean }) {
               </div>
             )}
 
-            <div className="calc-group">
-              <label className="calc-label">Fonctionnalités</label>
-              <div className="calc-options" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                {FEATURES.map((f) => (
-                  <button
-                    key={f.id}
-                    type="button"
-                    className={'calc-option' + (features.includes(f.id) ? ' active' : '')}
-                    onClick={() => toggleFeat(f.id)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
+            {!surMesure && (
+              <>
+              <div className="calc-group">
+                <label className="calc-label">Fonctionnalités</label>
+                <div className="calc-options" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                  {FEATURES.map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      className={'calc-option' + (features.includes(f.id) ? ' active' : '')}
+                      onClick={() => toggleFeat(f.id)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="calc-group">
-              <label className="calc-label">Échéancier</label>
-              <div className="calc-options">
-                {TIMELINES.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    className={'calc-option' + (timeline === t.id ? ' active' : '')}
-                    onClick={() => setTimeline(t.id)}
-                  >
-                    {t.label}
-                  </button>
-                ))}
+              <div className="calc-group">
+                <label className="calc-label">Échéancier</label>
+                <div className="calc-options">
+                  {TIMELINES.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      className={'calc-option' + (timeline === t.id ? ' active' : '')}
+                      onClick={() => setTimeline(t.id)}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+              </>
+            )}
           </div>
 
           <div className="calc-preview">
-            <div className="estimate-label">Estimation indicative</div>
-            <div className="estimate-amount">
-              <span className="currency">$</span>
-              {fmt(estimate.total)}
-            </div>
-            <div className="estimate-range">
-              Fourchette : {fmt(low)} — {fmt(high)} CAD · taxes en sus
-            </div>
-
-            <div className="estimate-breakdown">
-              <div className="estimate-line">
-                <span>Base — {proj.label}</span>
-                <span>${fmt(estimate.base)}</span>
+            {surMesure ? (
+              <>
+                <div className="estimate-label">Premier pas</div>
+                <div className="estimate-amount">Sur mesure</div>
+                <p className="estimate-range" style={{ lineHeight: 1.6 }}>
+                  Un premier pas simple : configuration IA de base, mise en place de Zoho ou
+                  formation courte. On en discute à l&apos;appel découverte gratuit.
+                </p>
+              </>
+            ) : (
+              <>
+              <div className="estimate-label">Estimation indicative</div>
+              <div className="estimate-amount">
+                <span className="currency">$</span>
+                {fmt(estimate.total)}
               </div>
-              {estimate.unitPrice > 0 && (
+              <div className="estimate-range">
+                Fourchette : {fmt(low)} — {fmt(high)} CAD · taxes en sus
+              </div>
+
+              <div className="estimate-breakdown">
                 <div className="estimate-line">
-                  <span>{proj.unit} supplémentaires</span>
-                  <span>+ ${fmt(estimate.unitPrice)}</span>
+                  <span>Base — {proj.label}</span>
+                  <span>${fmt(estimate.base)}</span>
                 </div>
-              )}
-              {estimate.featPrice > 0 && (
-                <div className="estimate-line">
-                  <span>Fonctionnalités ({features.length})</span>
-                  <span>+ ${fmt(estimate.featPrice)}</span>
-                </div>
-              )}
-              {estimate.tl.mult !== 1 && (
-                <div className="estimate-line muted">
-                  <span>Ajustement délai — {estimate.tl.label}</span>
-                  <span>× {estimate.tl.mult}</span>
-                </div>
-              )}
-            </div>
+                {estimate.unitPrice > 0 && (
+                  <div className="estimate-line">
+                    <span>{proj.unit} supplémentaires</span>
+                    <span>+ ${fmt(estimate.unitPrice)}</span>
+                  </div>
+                )}
+                {estimate.featPrice > 0 && (
+                  <div className="estimate-line">
+                    <span>Fonctionnalités ({features.length})</span>
+                    <span>+ ${fmt(estimate.featPrice)}</span>
+                  </div>
+                )}
+                {estimate.tl.mult !== 1 && (
+                  <div className="estimate-line muted">
+                    <span>Ajustement délai — {estimate.tl.label}</span>
+                    <span>× {estimate.tl.mult}</span>
+                  </div>
+                )}
+              </div>
+              </>
+            )}
 
             {leadSent ? (
               <div className="booking-confirm" style={{ marginTop: 32 }}>
-                <Icon name="check" size={16} /> Estimation envoyée ! On vous revient sous
-                24h ouvrables avec une soumission détaillée.
+                <Icon name="check" size={16} />{' '}
+                {surMesure
+                  ? 'Demande envoyée ! On vous revient sous 24h ouvrables pour en discuter.'
+                  : 'Estimation envoyée ! On vous revient sous 24h ouvrables avec une soumission détaillée.'}
               </div>
             ) : (
               <div style={{ marginTop: 32 }}>
                 <div className="calc-label" style={{ marginBottom: 10 }}>
-                  Recevoir cette estimation
+                  {surMesure ? 'Être contacté pour mon premier pas' : 'Recevoir cette estimation'}
                 </div>
                 <div className="form-row">
                   <div className="form-field" style={{ marginBottom: 12 }}>
@@ -264,7 +296,7 @@ export function QuoteCalculator({ showHead = true }: { showHead?: boolean }) {
                   disabled={leadSending}
                   onClick={sendEstimate}
                 >
-                  {leadSending ? 'Envoi…' : 'Recevoir ma soumission'} <Icon name="send" size={14} />
+                  {leadSending ? 'Envoi…' : surMesure ? 'Envoyer ma demande' : 'Recevoir ma soumission'} <Icon name="send" size={14} />
                 </button>
               </div>
             )}

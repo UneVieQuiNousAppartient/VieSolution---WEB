@@ -1,5 +1,8 @@
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { Hero } from '@/components/vsw/hero';
+import { PourVousSection } from '@/components/vsw/pour-vous-section';
+import { AvantApresSection } from '@/components/vsw/avant-apres-section';
+import { DemarrerSection } from '@/components/vsw/demarrer-section';
 import { Services } from '@/components/vsw/services';
 import { BenefitsSection } from '@/components/vsw/benefits-section';
 import { ComparisonSection } from '@/components/vsw/comparison-section';
@@ -14,9 +17,12 @@ export default function HomePage() {
     <>
       <RevealInit />
       <Hero />
+      <PourVousSection />
+      <AvantApresSection />
+      <DemarrerSection variant="accueil" />
       <Services />
-      <BenefitsSection />
       <ProcessSection />
+      <BenefitsSection />
       <ComparisonSection />
       <Testimonials />
       <InternsSection />
