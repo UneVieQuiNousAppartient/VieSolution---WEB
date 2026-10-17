@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 3.
+**Dernière mise à jour : 2026-10-17** — dernière section : 4.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -52,3 +52,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - « 24/7 » subsiste dans les pages de l'ancien design (redirigées en 308) : nettoyage de l'ancien design toujours à prévoir.
 - Design sombre : Camille se demande s'il convient à la clientèle visée ; comparaison avec une variante claire proposée (chantier séparé, ≈ 150-200 k).
 - **Coût réel du round 2** : ≈ 185 k agents + ≈ 250 k session principale ≈ 0,45 M (estimé 0,45 M).
+
+## 4. ✅ Thème clair par défaut (2026-10-17)
+
+**Contexte / demande** : Camille doute que le design sombre convienne à la clientèle visée (dentistes, conseillers financiers, comptables). Comparaison sombre / clair sur 7 vues (captures Playwright, mêmes composants, seuls les jetons changent) ; Camille choisit « clair par défaut ».
+
+**Ce qui a été fait** (agent principal, palier petit) : dans `src/app/vsw.css`, les jetons clairs deviennent la valeur de `:root` (`color-scheme: light`) ; les jetons sombres et les surcharges de composants (`.nav`, `.hero-grid`, `.hero-glow`, logos partenaires) passent sous `html[data-theme="dark"]`. Logos partenaires : variantes à texte foncé (`viesolution-fonce.svg`, `khi-succes-academique-fonce.png`) affichées sur fond clair, variantes blanches sur fond sombre (`logoClair` dans `partners-section.tsx`). `CLAUDE.md` (section Design) mis à jour.
+
+**Vérification technique** : `qa-agent` (Opus) ROUGE au premier passage — un seul bloquant : la couleur des messages d'erreur de formulaire (`oklch(0.75 0.18 25)` en dur, illisible sur fond clair) → jeton `--danger` (clair 0.55 / sombre 0.75), corrigé ; tout le reste conforme (18 jetons présents dans les deux blocs, contrastes estimés AA, logos partenaires). `npm run verify` vert après correction ; captures clair (défaut) et sombre (`data-theme="dark"`) sur hero, métiers, partenaires, calculateur ; vue mobile 390 px.
+
+**Non fait dans ce round** : pas de bouton clair/sombre pour le visiteur (le sombre est une option technique) ; 22 couleurs en dur subsistent dans `vsw.css` (lueurs à faible opacité, acceptables sur les deux fonds — à passer en jetons à l'occasion) ; les pages de l'ancien design (redirigées) n'ont pas été revues ; contraste AA à mesurer avec un outil (estimé bon : texte `--fg-1` oklch 0.34 sur fond 0.985).

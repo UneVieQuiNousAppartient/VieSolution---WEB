@@ -15,8 +15,12 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 ## Design
 
 - Design system dans `src/app/vsw.css` (porté d'un handoff Claude Design, structure
-  inspirée du template Framer « Agenium ») : fond sombre oklch bleu nuit, accents
-  néon cyan (`--accent`) et violet (`--accent-2`), eyebrows mono `// …`, grilles fines.
+  inspirée du template Framer « Agenium ») : jetons oklch, eyebrows mono `// …`, grilles fines.
+  **Thème clair par défaut depuis le 2026-10-17** (choix de Camille : plus chaleureux pour
+  dentistes, conseillers, comptables) — fond blanc cassé, accent bleu-sarcelle (`--accent`) et
+  violet assombri (`--accent-2`). L'ancien thème sombre bleu nuit / néon reste disponible avec
+  `<html data-theme="dark">` (jetons et surcharges en fin de `vsw.css`). Tout nouveau style passe
+  par les jetons : jamais une couleur en dur qui ne tient que sur un des deux fonds.
 - NE PAS utiliser les classes de `globals.css` (ancien design) pour du nouveau contenu.
 - Composants du site : `src/components/vsw/*` uniquement.
   `src/components/{home,landing,chatbot,forms,layout}` + `_archive_old_design/` = ancien

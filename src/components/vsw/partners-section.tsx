@@ -2,6 +2,7 @@ type Partner = {
   name: string;
   url: string; // vide = pas de lien (adresse à confirmer)
   logo: string; // fichier dans public/partenaires/
+  logoClair?: string; // variante pour fond clair (texte foncé), si le logo a du texte blanc
   hasLogo: boolean; // false = le nom s'affiche en texte tant que le fichier n'est pas déposé
   description: string;
 };
@@ -20,6 +21,7 @@ const PARTNERS: Partner[] = [
     name: 'VieSolution',
     url: 'https://viesolution.ca/',
     logo: '/partenaires/viesolution.svg',
+    logoClair: '/partenaires/viesolution-fonce.svg',
     hasLogo: true,
     description: 'Éducation financière indépendante pour les familles du Québec (Longueuil).',
   },
@@ -28,6 +30,7 @@ const PARTNERS: Partner[] = [
     name: 'Khí Succès Académique',
     url: 'https://khisuccesacademique.com/',
     logo: '/partenaires/khi-succes-academique.png',
+    logoClair: '/partenaires/khi-succes-academique-fonce.png',
     hasLogo: true,
     description: 'Tutorat individuel en ligne, du primaire au secondaire, partout au Québec.',
   },
@@ -38,8 +41,14 @@ function PartnerContent({ p }: { p: Partner }) {
     <>
       <div className="partner-logo">
         {p.hasLogo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.logo} alt={p.name} loading="lazy" />
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={p.logo} alt={p.name} loading="lazy" className="logo-sombre" />
+            {p.logoClair && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={p.logoClair} alt="" aria-hidden="true" loading="lazy" className="logo-clair" />
+            )}
+          </>
         ) : (
           <span className="partner-name">{p.name}</span>
         )}
