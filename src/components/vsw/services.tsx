@@ -13,31 +13,31 @@ const SERVICES: {
     num: '01',
     icon: 'bolt',
     title: 'Automatisation des processus',
-    desc: "Éliminez les tâches répétitives qui grugent vos journées. Audit de vos processus, automatisation de vos workflows, connexions entre vos outils, rapports et relances automatiques — propulsés par l'IA.",
-    tags: ['Workflows', 'Agents IA', 'Intégrations', 'Rapports'],
+    desc: "Fini les tâches répétitives qui grugent vos journées. On regarde comment vous travaillez, puis on fait en sorte que les relances, les rapports et les copier-coller se fassent tout seuls.",
+    tags: ['Tâches automatiques', 'Relances', 'Liens entre vos outils', 'Rapports'],
     href: '/ia',
   },
   {
     num: '02',
     icon: 'code',
-    title: 'Agents & intégrations IA',
-    desc: "Des agents IA sur mesure branchés sur vos outils : assistants internes, chatbots clients, traitement de documents, suivi de leads. L'IA qui travaille pour vous, 24/7.",
-    tags: ['Claude', 'ChatGPT', 'Chatbots', 'API'],
+    title: 'Assistants IA sur mesure',
+    desc: "Un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses aux questions de vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part.",
+    tags: ['ChatGPT', 'Claude', 'Clavardage client', 'Tri de documents'],
     href: '/ia',
   },
   {
     num: '03',
     icon: 'grid',
     title: 'Implantation Zoho',
-    desc: "On installe et configure Zoho chez vous : CRM, facturation, soutien client, marketing. Vos données centralisées, vos processus connectés — une entreprise qui roule dans un seul écosystème.",
-    tags: ['Zoho CRM', 'Books', 'Desk', 'Campaigns'],
+    desc: "On installe et règle Zoho chez vous : clients, factures, soutien, infolettres. Tout au même endroit, au lieu d'éparpillé dans plusieurs outils.",
+    tags: ['Zoho CRM (clients)', 'Books (factures)', 'Desk (soutien)', 'Campaigns (infolettres)'],
     href: '/zoho',
   },
   {
     num: '04',
     icon: 'users',
     title: 'Formation IA & Zoho',
-    desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, cas d'usage réels, autonomie durable.",
+    desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite.",
     tags: ['Ateliers', 'Équipes', 'Relève', 'Coaching'],
     href: '/ia#formation',
   },
@@ -47,16 +47,15 @@ export function Services() {
   return (
     <section id="services" className="section">
       <div className="container">
-        <div className="section-head reveal">
+        <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Services</div>
-            <h2>Quatre expertises<br />pour un même objectif.</h2>
+            <h2>Quatre façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
-            Automatiser, outiller et former : nous aidons les entreprises québécoises à
-            reprendre la main sur leur gestion grâce à l&apos;IA et à l&apos;écosystème Zoho.
-            Chaque mandat est traité avec rigueur, transparence et un accompagnement de
-            bout en bout.
+            Un seul but : mieux servir vos clients et vous redonner du temps. Pour y arriver, on
+            automatise vos tâches répétitives, on installe des outils simples et on vous forme,
+            du début à la fin.
           </p>
         </div>
         <div className="services-grid reveal">

@@ -131,7 +131,7 @@ export function Contact({ showIntro = true }: { showIntro?: boolean }) {
                   <input type="text" name="website" ref={honeypotRef} tabIndex={-1} autoComplete="off" />
                 </div>
                 {error && (
-                  <p style={{ color: 'oklch(0.75 0.18 25)', fontSize: 13, margin: '0 0 12px' }}>{error}</p>
+                  <p style={{ color: 'var(--danger)', fontSize: 13, margin: '0 0 12px' }}>{error}</p>
                 )}
                 <button
                   type="submit"

@@ -5,8 +5,8 @@ const ZOHO_PILLARS = [
   {
     num: '01',
     title: 'Implantation sur mesure',
-    desc: "On installe et configure Zoho directement chez vous : migration de vos données, paramétrage selon vos processus, connexions avec vos outils existants.",
-    items: ['Analyse de vos besoins', 'Configuration & migration', 'Automatisations entre apps'],
+    desc: "On installe et configure Zoho directement chez vous : transfert de vos données, réglages selon votre façon de travailler, connexions avec vos outils existants.",
+    items: ['Analyse de vos besoins', 'Réglages et transfert de données', 'Tâches automatiques entre logiciels'],
   },
   {
     num: '02',
@@ -17,8 +17,8 @@ const ZOHO_PILLARS = [
   {
     num: '03',
     title: 'Accompagnement continu',
-    desc: "Après l'implantation, on reste là : support, optimisation des processus, nouveaux modules et automatisations à mesure que votre entreprise grandit.",
-    items: ['Support continu', 'Optimisation des processus', 'Évolution par étapes'],
+    desc: "Après l'implantation, on reste là : support, amélioration continue, nouvelles fonctions et tâches automatiques à mesure que votre entreprise grandit.",
+    items: ['Support continu', 'Amélioration continue', 'Évolution par étapes'],
   },
 ];
 
@@ -40,7 +40,7 @@ export function ZohoSection() {
         <div className="zoho-wrap reveal">
           <div className="ai-top">
             <div>
-              <div className="eyebrow">{'// Écosystème Zoho'}</div>
+              <div className="eyebrow">{'// Les outils Zoho'}</div>
               <h2>
                 Votre gestion, centralisée.<br />
                 <span className="glow">Zoho, implanté chez vous.</span>
@@ -48,9 +48,10 @@ export function ZohoSection() {
             </div>
             <div>
               <p>
-                CRM, facturation, soutien client, marketing, inventaire : Zoho réunit la
-                gestion complète de votre entreprise dans un seul écosystème abordable.
-                Nous l&apos;implantons chez nos clients, nous l&apos;adaptons à leurs processus et
+                CRM, facturation, soutien client, marketing, inventaire : Zoho réunit toute la
+                gestion de votre entreprise dans une seule plateforme abordable (des logiciels
+                qui se parlent). Nous l&apos;implantons chez nos clients, nous l&apos;adaptons à leur
+                façon de travailler et
                 nous formons leurs équipes pour qu&apos;elles en gardent le contrôle.
               </p>
               <div className="zoho-apps">
@@ -79,7 +80,7 @@ export function ZohoSection() {
           <div className="ai-banner">
             <div className="ai-banner-text">
               <em>Une vie qui nous appartient</em> — reprenez la main sur la gestion de
-              votre business, avec des outils que vous maîtrisez.
+              votre entreprise, avec des outils que vous maîtrisez.
             </div>
             <Link href="/rdv" className="btn btn-primary btn-lg">
               Discuter d&apos;un projet Zoho <Icon name="arrow" size={14} />

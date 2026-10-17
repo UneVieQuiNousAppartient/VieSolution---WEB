@@ -15,7 +15,7 @@ export default function PolitiqueConfidentialitePage() {
         <h2>1. Collecte des informations</h2>
         <p>
           Nous collectons les informations que vous nous fournissez directement via nos formulaires
-          de contact, notre chatbot, notre estimateur de projet et nos demandes d&apos;audit. Ces informations
+          de contact, notre chatbot, notre formulaire « Décrivez-nous votre situation » et nos demandes d&apos;audit. Ces informations
           peuvent inclure votre nom, adresse e-mail, numéro de téléphone, nom d&apos;entreprise et description de votre projet.
         </p>
 
@@ -23,7 +23,7 @@ export default function PolitiqueConfidentialitePage() {
         <p>Les informations collectées sont utilisées pour :</p>
         <ul>
           <li>Répondre à vos demandes de contact</li>
-          <li>Vous fournir des estimations de projet</li>
+          <li>Vous proposer un premier pas et un prix sur mesure</li>
           <li>Réaliser des audits et diagnostics gratuits</li>
           <li>Vous contacter au sujet de nos services</li>
           <li>Améliorer nos services</li>

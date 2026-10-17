@@ -15,7 +15,7 @@ export function About() {
             </p>
             <p>
               Notre conviction est simple : les outils d&apos;aujourd&apos;hui — l&apos;intelligence
-              artificielle et l&apos;écosystème Zoho — permettent à n&apos;importe quelle
+              artificielle et les logiciels Zoho — permettent à n&apos;importe quelle
               entreprise de reprendre le contrôle de sa gestion, sans armée de
               consultants ni budgets démesurés.
             </p>
