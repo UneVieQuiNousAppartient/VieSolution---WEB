@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 18.
+**Dernière mise à jour : 2026-10-21** — dernière section : 19.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -253,4 +253,17 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm test` 28/28 (vecteurs officiels RFC 6238 ; anti-rejeu cassé une fois → test rouge ; jeton forgé avec le seul code d'accès refusé ; chiffrement) ; SQL rejoué dans un Postgres 16 local (compteur, anti-rejeu, code de secours unique, activation atomique, droits `anon` refusés) ; parcours d'écran dans Chromium à 390 px (réponses du serveur simulées). `qa-agent` (Opus, ≈ 74 k) **VERT** avec 3 points ; `securite` (Opus, ≈ 129 k) **NON** : session forgeable avec le seul code d'accès (critique, prouvé par un script), activation non atomique, blocage de Camille par le compteur global, secret TOTP en clair dans une base partagée avec CSF → tout corrigé dans la révision unique, puis re-vérifié par `securite` (≈ 30 k) : **OK pour la mise en ligne** une fois `ADMIN_SECRET` saisi et le SQL exécuté (secret serveur `ADMIN_SECRET`, `vsw_mfa_enroll`, compteur global limité aux échecs du second facteur, chiffrement, empreintes HMAC, messages de refus identiques, `x-real-ip`, purge, journal et alertes). Dépendances : `next` 16.1.6 vulnérable (critique) → issue [#4](https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/issues/4). Non testé contre un vrai Supabase : **à tester par Camille** après exécution du SQL.
 
 **Non fait dans ce round** : « se souvenir de cet appareil » (KHI : 30 jours) ; plusieurs téléphones ; code QR (il faudrait une dépendance : lien `otpauth://` sur téléphone ou clé à taper) ; aucun écran pour régénérer les codes de secours ou changer de téléphone (l'API le permet avec une session complète) ; révocation des sessions côté serveur (un cookie volé reste valable jusqu'à 8 h ; changer `ADMIN_ACCESS_CODE` ou `ADMIN_SECRET` les coupe toutes) ; mise à jour de Next.js (issue #4). `.env.local.example` non complété (fichiers `.env*` protégés par le hook du projet : liste des variables dans `CLAUDE.md`).
+
+## 19. ✅ Suivi des demandes — lot 2 : page « Aujourd'hui », boutons de contact, réglage des relances (2026-10-21)
+
+**Contexte / demande** : lot 2 du plan du §16 (« cœur du suivi » : page « Aujourd'hui », séquence de relance réglable, contact humain qui arrête tout), feu vert de Camille : « oui fais la MFA puis le lot 2 » (≈ 450 k annoncé).
+
+**Ce qui a été fait** (agent principal) :
+- `src/lib/crm/aujourdhui.ts` (pur, sans import) : `construireAujourdhui` — tâches en retard, tâches du jour (fin de journée à l'heure de Montréal), demandes sans contact depuis 24 h, dossiers « À relancer », brouillons à approuver, alertes ; `validerReglage` (marche/arrêt, délai en jours entiers de 1 à 90).
+- `/api/admin/data` : renvoie aussi `aujourdhui` et `regles` (200 fiches, 200 tâches). `/api/admin/regles` (POST, accès complet exigé) : règle connue seulement, validation, surcharge dans `vsw_automation_rules`, journal. `moteur.ts` : `listerRegles`, `reglerRegle`.
+- `/admin` : onglet **« Aujourd'hui »** par défaut (compteur dans l'onglet ; message quand il n'y a rien à faire) ; sur chaque fiche, boutons **« Appel fait », « Courriel envoyé », « RDV pris »** (action `contact` du lot 1 : arrête les relances, fait avancer l'étape) et **« Désabonner »** (confirmation, désabonnement LCAP de toute l'adresse) ; liens `mailto:` et `tel:` ; « Fait » sur les tâches, « Lu » sur les alertes ; onglet **« Relances »** : chaque règle avec sa description, marche/arrêt et nouveau délai en jours.
+
+**Vérification technique** : `npm test` 32/32 (fin de journée été/hiver, classement de la page, validation des réglages) ; `npm run verify` vert ; parcours dans Chromium à 1280 et 390 px avec des données simulées : sections affichées, chaque bouton envoie la bonne action (`contact`/`appel`, `opt_out`, réglage marche/arrêt et délai), aucun débordement ni erreur. `qa-agent` (Opus, ≈ 70 k) **VERT** ; révision unique : la relance 2 ne peut plus être réglée avant la relance 1, « Désabonnement enregistré » (sans genre). Coût réel du lot ≈ 170 k (session ≈ 100 k + QA 70 k). Non testé contre un vrai Supabase : **à tester par Camille**.
+
+**Non fait dans ce round** : `finDeJournee` décalée d'une heure les deux jours de changement d'heure ; seules les 200 fiches les plus récentes sont chargées (une tâche d'une fiche plus ancienne s'affiche sans nom) ; réglage du texte des courriels depuis l'admin (les gabarits restent dans le SQL) ; tableau en colonnes (kanban) et courriel du matin (non retenus par Camille) ; bouton « Envoyer tel quel » (non retenu) ; historique (timeline) d'une fiche à l'écran.
 

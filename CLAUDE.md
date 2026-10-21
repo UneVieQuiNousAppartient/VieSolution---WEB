@@ -43,7 +43,10 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   `/api/cron/tick` (Vercel Cron, `vercel.json`, Bearer `CRON_SECRET`) → moteur
   `src/lib/crm/moteur.ts` (repris de KHI `lib/automations.js`) : brouillon `first_reply`
   à approuver, alerte 24 h, relances 1 et 2 (J2, J5), « À relancer » + tâche d'appel (J7),
-  « Reprendre contact » (30 jours). Tout s'arrête dès un contact humain noté dans `/admin`.
+  « Reprendre contact » (30 jours). Tout s'arrête dès un contact humain noté dans `/admin`
+  (boutons « Appel fait », « Courriel envoyé », « RDV pris »). `/admin` s'ouvre sur
+  « Aujourd'hui » (`src/lib/crm/aujourdhui.ts`) ; onglet « Relances » : marche/arrêt et délai
+  de chaque règle (`/api/admin/regles`, surcharge dans `vsw_automation_rules`).
 - **Courriels automatiques** : seules les relances 1 et 2 (textes approuvés et activées par
   Camille le 2026-10-21) partent seules ; la première réponse reste un brouillon à
   approuver. Envoi par Resend (`src/lib/crm/envoi.ts`). Loi anti-pourriel (LCAP,

@@ -266,7 +266,7 @@ export const REGLES: Record<string, Regle> = {
 
   new_lead_j2: {
     libelle: 'Relance 1 : demande sans contact',
-    description: "Courriel au prospect si sa demande n'a reçu aucun contact humain après le délai. Texte approuvé et activée par Camille le 2026-10-21.",
+    description: "Courriel au prospect si sa demande n'a reçu aucun contact humain après le délai. Texte approuvé par Camille le 2026-10-21.",
     enabled: true,
     delay_hours: 48,
     params: { template: 'followup_new_1' },
@@ -287,7 +287,7 @@ export const REGLES: Record<string, Regle> = {
 
   new_lead_j5: {
     libelle: 'Relance 2 : toujours sans contact',
-    description: "Second et dernier courriel si la demande n'a toujours reçu aucun contact humain. Texte approuvé et activée par Camille le 2026-10-21.",
+    description: "Second et dernier courriel si la demande n'a toujours reçu aucun contact humain. Texte approuvé par Camille le 2026-10-21.",
     enabled: true,
     delay_hours: 120,
     params: { template: 'followup_new_2' },
@@ -387,6 +387,51 @@ export function configEffective(cle: string, s: Map<string, Surcharge>): Config 
   // Seuls les paramètres connus et du bon type sont surchargés (un gabarit vidé ne désarme pas une règle).
   for (const [k, v] of Object.entries(o?.params || {})) if (k in def.params && typeof v === 'string' && v.trim()) params[k] = v;
   return { key: cle, enabled: o?.enabled ?? def.enabled, delay_hours: o?.delay_hours ?? def.delay_hours, params };
+}
+
+export type RegleAffichee = {
+  key: string;
+  libelle: string;
+  description: string;
+  enabled: boolean;
+  delay_hours: number;
+  delai_reglable: boolean;
+  ecrit_au_prospect: boolean;
+  personnalisee: boolean;
+};
+
+/** Règles et leur réglage effectif, pour l'onglet « Relances » de /admin. */
+export async function listerRegles(db: SupabaseClient): Promise<RegleAffichee[]> {
+  const ov = await surcharges(db);
+  return Object.keys(REGLES).map((key) => {
+    const def = REGLES[key];
+    const cfg = configEffective(key, ov);
+    return {
+      key,
+      libelle: def.libelle,
+      description: def.description,
+      enabled: cfg.enabled,
+      delay_hours: cfg.delay_hours,
+      delai_reglable: def.delay_hours > 0,
+      ecrit_au_prospect: Boolean(def.ecritAuProspect),
+      personnalisee: ov.has(key),
+    };
+  });
+}
+
+/** Écrit un réglage (déjà validé) dans vsw_automation_rules, en gardant les autres champs. */
+export async function reglerRegle(db: SupabaseClient, key: string, patch: { enabled?: boolean; delay_hours?: number }) {
+  const ov = await surcharges(db);
+  const actuel = ov.get(key);
+  const { error } = await db.from('vsw_automation_rules').upsert({
+    key,
+    enabled: patch.enabled ?? actuel?.enabled ?? null,
+    delay_hours: patch.delay_hours ?? actuel?.delay_hours ?? null,
+    params: actuel?.params ?? {},
+    updated_at: new Date().toISOString(),
+    updated_by: 'admin',
+  });
+  if (error) throw new Error(error.message);
 }
 
 async function lireReglages(db: SupabaseClient): Promise<Reglages> {
