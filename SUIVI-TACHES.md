@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 9.
+**Dernière mise à jour : 2026-10-21** — dernière section : 10.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -116,4 +116,20 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 
 **Vérification technique** : `npm run verify` vert (0 erreur, avertissements préexistants). Navigateur (Playwright, captures `l21-*.png`) : 5 rangées avec `top` et hauteur identiques ; bascule absente à 1280, visible à 390 (boutons 81×40 / 82×40), clic Avant → AAAAA, Après → BBBBB ; sans JavaScript : bascule absente, 10 cellules visibles, ordre AAAAAABBBBBB ; 4 pastilles 40×40 ; pas de défilement horizontal ; thème sombre ; aucune erreur de page. `qa-agent` (Opus, 65 k) VERT, aucun correctif exigé ; 2 points mineurs corrigés (`role="group"` sur le panneau, marge basse de la dernière cellule en vue « Avant ») ; contrastes calculés ≥ 4,77:1 en clair, 4,97:1 en sombre. Coût réel du lot ≈ 250 k (session principale ≈ 185 k + QA 65 k).
 
-**Non fait dans ce round** : surtitre « // Prochaine étape » ajouté dans la carte d'appel à l'action (6 pages) — **à valider par Camille** ; « La différence » (`comparison-section.tsx`, 7 lignes) garde l'ancien tableau à deux colonnes séparées — à passer sur `.compare-panel` si Camille le souhaite (≈ 30 k) ; aucun composant 21st.dev installé tel quel (le site n'est pas sur shadcn/ui : tout est porté sur `vsw.css`) ; second téléchargement 21st.dev possible dès demain (quota 2 / jour).
+**Non fait dans ce round** : surtitre « // Prochaine étape » ajouté dans la carte d'appel à l'action (6 pages) — **gardé par Camille le 2026-10-21** ; « La différence » (`comparison-section.tsx`, 7 lignes) garde l'ancien tableau à deux colonnes séparées — à passer sur `.compare-panel` si Camille le souhaite (≈ 30 k) ; aucun composant 21st.dev installé tel quel (le site n'est pas sur shadcn/ui : tout est porté sur `vsw.css`) ; second téléchargement 21st.dev possible dès demain (quota 2 / jour).
+
+## 10. ✅ CRM et outils sur mesure, formation IA, logo ampoule (2026-10-21)
+
+**Contexte / demande** : Camille : « on peut aussi faire des CRM maison sur mesure, installer plusieurs outils sur mesure » ; « il me faut un logo » ; « on offre des formations sur l'utilisation de l'IA, j'ai reçu un certificat récemment sur Claude » (PDF du badge fourni) ; « la gestion des réseaux sociaux et les vidéos, ce sera pour plus tard ». Réponses de Camille : lancer les points 1 (CRM / outils) et 2 (formation IA) ; son nom peut paraître ; **pas de date** pour le badge ; aucun contrat avec Zoho ; logo = **variante de l'ampoule de viesolution.ca** aux couleurs du site. Surtitre « // Prochaine étape » gardé.
+
+**Ce qui a été fait** (agent principal) :
+- **Services** : 5ᵉ carte « CRM et outils sur mesure » (CRM maison, outils internes, tableaux de suivi, liens avec vos outils → `/devis#situation`), pleine largeur sous les quatre autres ; titre « Cinq façons de vous simplifier la vie » ; numéros « 0X / 05 » calculés.
+- **FAQ** : « J'ai déjà un logiciel pour mes clients. Faut-il tout changer ? » — on part de ce que vous avez ; Zoho ou outil maison. Aucune autre marque de CRM nommée.
+- **Formulaire de situation** : le texte d'aide demande aussi les outils déjà utilisés (même champ, aucune donnée ni colonne nouvelle).
+- **Formation à l'IA** (volet 01, `/ia`) : « Formation à l'IA pour petites entreprises » (courriels, documents, suivi des clients ; ce qu'on ne confie pas à une IA) + mention : « Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic). » Titre recopié du PDF ; « a suivi le cours » et non « certifiée » (le PDF est un *course completion badge*) ; date et lien de vérification omis (la page de vérification affiche la date).
+- **Marques** : ligne en pied de page « Zoho, Claude, ChatGPT et Copilot sont des marques de leurs propriétaires respectifs. Vie Solution Web n'est affiliée à aucune de ces entreprises. »
+- **Logo** : `logo-mark.tsx` — l'ampoule de viesolution.ca (tracé repris du SVG du site) en variante : corps et socle `--accent`, halo, rayons et dernier anneau `--accent-2`, personne en `--logo-on` (nouveau jeton) ; suit le thème ; menu et pied de page. Onglet du navigateur : `src/app/icon.svg` (couleurs du thème clair figées) ; `favicon.ico` par défaut de Next supprimé.
+
+**Vérification technique** : `npm run verify` vert. Navigateur (Playwright, captures `l10-*.png`) : 5 cartes « 01 / 05 … 05 / 05 », logo 28×28 dans le menu (clair, sombre, téléphone), note du badge sur `/ia`, nouvelle question de FAQ, texte d'aide du formulaire, mention des marques, `/icon.svg` servi (200, `image/svg+xml`) et seule icône déclarée, pas de défilement horizontal à 390 px, aucune erreur de page. `qa-agent` (Opus, 70 k) ROUGE sur un point : le style de `.ai-pillar-note` était écrasé par `.ai-pillar p` (15 px `--fg-1` au lieu de 13 px `--fg-2`) — corrigé par un sélecteur doublé, mesuré 13 px après correction ; point à trancher corrigé aussi : à 1024 et 820 px la carte 4 laissait un trou (carte 3 seule sur sa ligne) → grille 1-2 / 3-4 / 5 pleine largeur, mesurée. Contrastes calculés ≥ 5,25:1 (note, mentions), logo 4,83:1 en clair. Coût réel du lot ≈ 210 k (session principale ≈ 140 k + QA 70 k).
+
+**Non fait dans ce round** : **gestion des réseaux sociaux et vidéos** — reporté par Camille (« plus tard, aussitôt que j'aurai fait les miens ») ; image de partage (`og-image`) et icône Apple non refaites ; le logo de Vie Solution Assurance n'est pas modifié ; ampoule à faire valider par la personne responsable de la conformité du cabinet d'assurance (même famille de logo, entreprises distinctes) — **à confirmer par Camille**.

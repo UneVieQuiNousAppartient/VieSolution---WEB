@@ -7,6 +7,7 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 ## Chantiers en cours
 - **Site plus accessible aux PME et travailleurs autonomes** : livré sur la branche `claude/brave-euler-68e7pl`, PR #1 en brouillon (https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/pull/1), `qa-agent` VERT, `npm run verify` vert. Livré : métiers et partenaires (§3), thème clair (§4), prix sur mesure (§5), animations (§6), sélecteur « Je suis… » (§7). Issues #2 (sections invisibles sans JS) et #3 (menu mobile) ouvertes.
 - **Finition premium** livrée (§8 ; issue #3 fermée) et **lot design 21st.dev** livré (§9 : panneau « Avant / après » aligné + bascule mobile, frise du processus, carte d'appel à l'action, hero en deux tons). Restent les éléments de Camille : logo définitif, photos, témoignage. Option : passer « La différence » sur le même panneau (≈ 30 k).
+- **Offre élargie** livrée (§10) : 5ᵉ service « CRM et outils sur mesure », FAQ « J'ai déjà un logiciel… », formation IA pour petites entreprises avec le badge Claude Academy de Camille (sans date), mention des marques, **logo ampoule** (variante de viesolution.ca). **Plus tard** (demande de Camille) : gestion des réseaux sociaux et vidéos.
 - **Intégration de CRM existants** (demande de Camille) : petit lot de textes, en attente de la liste des CRM qu'elle accepte. Attend la relecture de Camille et son mot pour fusionner.
 - **Mise en ligne** : SQL `supabase/setup-crm-vsw.sql` non exécuté, Edge Function `vsw-lead-followup` non déployée, cron non planifié, projet Vercel non créé.
 
@@ -24,4 +25,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**10**
+**11**

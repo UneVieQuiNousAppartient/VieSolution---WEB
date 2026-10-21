@@ -41,6 +41,14 @@ const SERVICES: {
     tags: ['Ateliers', 'Équipes', 'Relève', 'Coaching'],
     href: '/ia#formation',
   },
+  {
+    num: '05',
+    icon: 'layout',
+    title: 'CRM et outils sur mesure',
+    desc: "Quand aucun logiciel tout fait ne colle à votre façon de travailler, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels.",
+    tags: ['CRM maison', 'Outils internes', 'Tableaux de suivi', 'Liens avec vos outils'],
+    href: '/devis#situation',
+  },
 ];
 
 export function Services() {
@@ -50,18 +58,18 @@ export function Services() {
         <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Services</div>
-            <h2>Quatre façons<br />de vous simplifier la vie.</h2>
+            <h2>Cinq façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
             Un seul but : mieux servir vos clients et vous redonner du temps. Pour y arriver, on
-            automatise vos tâches répétitives, on installe des outils simples et on vous forme,
-            du début à la fin.
+            automatise vos tâches répétitives, on installe des outils simples ou on vous en bâtit
+            sur mesure, et on vous forme, du début à la fin.
           </p>
         </div>
         <div className="services-grid reveal">
           {SERVICES.map((s) => (
             <Link href={s.href} className="service" key={s.num} style={{ textDecoration: 'none' }}>
-              <div className="service-num">{s.num} / 04</div>
+              <div className="service-num">{s.num} / {String(SERVICES.length).padStart(2, '0')}</div>
               <div className="service-icon">
                 <Icon name={s.icon} size={22} />
               </div>

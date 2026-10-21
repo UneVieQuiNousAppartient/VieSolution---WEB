@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { Icon } from './icon';
 
-const AI_PILLARS = [
+const AI_PILLARS: { num: string; title: string; desc: string; items: string[]; note?: string }[] = [
   {
     num: '01',
-    title: "Formation à l'IA",
-    desc: "Nous formons vos équipes à utiliser concrètement les outils d'IA (comme ChatGPT, Claude ou Copilot) dans leur quotidien.",
-    items: ['Ateliers personnalisés', 'Exemples tirés de votre métier', 'Bonnes pratiques & limites'],
+    title: "Formation à l'IA pour petites entreprises",
+    desc: "Des ateliers concrets pour utiliser l'IA (comme Claude, ChatGPT ou Copilot) au quotidien : courriels, documents, suivi des clients. Avec vos vrais dossiers, sans jargon, et en sachant ce qu'on ne confie pas à une IA.",
+    items: ['Pour vous seul ou votre équipe', 'Exemples tirés de votre métier', 'Bonnes pratiques & limites'],
+    // Badge fourni par Camille (PDF, 2026-10-21). Titre recopié tel quel ; date volontairement omise (demande de Camille).
+    note: "Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic).",
   },
   {
     num: '02',
@@ -54,6 +56,7 @@ export function AISection() {
                     <li key={it}>{it}</li>
                   ))}
                 </ul>
+                {p.note && <p className="ai-pillar-note">{p.note}</p>}
               </div>
             ))}
           </div>

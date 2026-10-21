@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LogoMark } from './logo-mark';
 
 export function VswFooter() {
   return (
@@ -7,7 +8,7 @@ export function VswFooter() {
         <div className="footer-inner">
           <div>
             <div className="logo" style={{ marginBottom: 16 }}>
-              <div className="logo-mark"></div>
+              <LogoMark />
               <div>Vie Solution Web<br /><small>Québec · Canada</small></div>
             </div>
             <p style={{ color: 'var(--fg-2)', fontSize: 14, maxWidth: 300, margin: 0 }}>
@@ -47,6 +48,10 @@ export function VswFooter() {
           </div>
           <div>{'// FAIT AU QUÉBEC AVEC RIGUEUR'}</div>
         </div>
+        <p className="footer-marques">
+          Zoho, Claude, ChatGPT et Copilot sont des marques de leurs propriétaires respectifs.
+          Vie Solution Web n&apos;est affiliée à aucune de ces entreprises.
+        </p>
       </div>
     </footer>
   );

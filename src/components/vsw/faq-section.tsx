@@ -36,6 +36,10 @@ const FAQS = [
     a: "Zoho couvre la gestion complète d'une entreprise (CRM, comptabilité, soutien client, marketing, RH) au même endroit, à une fraction du prix des grandes suites. Pour une PME québécoise, c'est souvent le meilleur rapport puissance-prix — et tout est relié, donc plus facile à automatiser.",
   },
   {
+    q: "J'ai déjà un logiciel pour mes clients. Faut-il tout changer ?",
+    a: "Non. On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on peut installer Zoho, ou vous bâtir un outil maison sur mesure. On choisit ensemble, selon votre façon de travailler et votre budget.",
+  },
+  {
     q: "L'IA, c'est vraiment utile pour une petite entreprise ?",
     a: "Oui — c'est même là que les gains sont les plus rapides : réponses aux courriels, relances clients, traitement de documents, soumissions, rapports. On commence par regarder comment vous travaillez pour repérer les tâches qui vous grugent le plus de temps, puis on automatise celles-là en premier.",
   },

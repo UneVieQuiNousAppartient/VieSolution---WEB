@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Icon } from './icon';
 import { NavMenu } from './nav-menu';
+import { LogoMark } from './logo-mark';
 
 export type NavLinkItem = { href: string; label: string };
 
@@ -21,7 +22,7 @@ export function VswNav() {
     <nav className="nav">
       <div className="container nav-inner">
         <Link href="/" className="logo" style={{ textDecoration: 'none' }}>
-          <div className="logo-mark"></div>
+          <LogoMark />
           <div>
             Vie Solution Web
             <br />

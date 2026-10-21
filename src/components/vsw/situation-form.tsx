@@ -119,7 +119,7 @@ export function SituationForm() {
                   <label htmlFor="s-desc">Ce qui vous prend le plus de temps</label>
                   <textarea
                     id="s-desc"
-                    placeholder="Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine…"
+                    placeholder="Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine… Dites-nous aussi quels outils vous utilisez déjà (Excel, Zoho, un autre logiciel)."
                     aria-invalid={!!errors.description}
                     {...register('description')}
                   ></textarea>
