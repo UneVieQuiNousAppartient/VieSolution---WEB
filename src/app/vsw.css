@@ -456,6 +456,8 @@ section { position: relative; }
    dernière rangée, la 5 sur deux colonnes comme la 4, la 6 sur une. */
 .services-grid .service:nth-child(5) { grid-column: span 2; }
 .services-grid .service:nth-child(5) p { max-width: 520px; }
+.services-grid .service:nth-child(7) { grid-column: 1 / -1; }   /* SEO et AEO : rangée complète */
+.services-grid .service:nth-child(7) p { max-width: 640px; }
 .service {
   background: var(--surface);
   border: 1px solid var(--line-soft);

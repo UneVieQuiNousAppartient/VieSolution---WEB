@@ -1,3 +1,5 @@
+import { JsonLd } from './json-ld';
+
 const FAQS = [
   {
     q: "Est-ce que ça convient à un cabinet réglementé (finance, santé) ?",
@@ -40,6 +42,10 @@ const FAQS = [
     a: "Non. On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on peut installer Zoho, ou vous bâtir un outil maison sur mesure. On choisit ensemble, selon votre façon de travailler et votre budget.",
   },
   {
+    q: "C'est quoi l'AEO ?",
+    a: "L'AEO (optimisation pour les moteurs de réponses) aide votre entreprise à être citée quand quelqu'un pose une question à un assistant IA comme ChatGPT, Claude ou Perplexity, ou dans les réponses IA de Google. C'est le prolongement du SEO, qui vous aide à être trouvé sur Google. On travaille les deux : un site clair, des réponses aux vraies questions de vos clients et des informations que les machines savent lire.",
+  },
+  {
     q: "L'IA, c'est vraiment utile pour une petite entreprise ?",
     a: "Oui — c'est même là que les gains sont les plus rapides : réponses aux courriels, relances clients, traitement de documents, soumissions, rapports. On commence par regarder comment vous travaillez pour repérer les tâches qui vous grugent le plus de temps, puis on automatise celles-là en premier.",
   },
@@ -67,6 +73,18 @@ export function FAQSection() {
             sous 24h ouvrables.
           </p>
         </div>
+        {/* Mêmes questions et réponses que la liste visible (exigence de Google pour FAQPage). */}
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: FAQS.map((f) => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+          }}
+        />
         <div className="faq-list reveal">
           {FAQS.map((f, i) => (
             <details key={i} className="faq-item">

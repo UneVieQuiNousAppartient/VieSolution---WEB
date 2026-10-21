@@ -57,6 +57,14 @@ const SERVICES: {
     tags: ['CRM maison', 'Outils internes', 'Tableaux de suivi', 'Liens avec vos outils'],
     href: '/devis#situation',
   },
+  {
+    num: '07',
+    icon: 'chat',
+    title: 'Être trouvé sur Google et par les IA',
+    desc: "Quand un client cherche votre métier, il demande à Google, mais aussi à ChatGPT, Claude ou Perplexity. On rend votre site clair pour les deux : des réponses aux vraies questions de vos clients, une fiche d'entreprise et des informations que les machines savent lire.",
+    tags: ['SEO (Google)', 'AEO (assistants IA)', 'Questions de vos clients', 'Fiche d’entreprise'],
+    href: '/contact',
+  },
 ];
 
 export function Services() {
@@ -66,7 +74,7 @@ export function Services() {
         <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Services</div>
-            <h2>Six façons<br />de vous simplifier la vie.</h2>
+            <h2>Sept façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
             Les logiciels existent déjà : Zoho, Claude et bien d&apos;autres. Nous, on choisit les

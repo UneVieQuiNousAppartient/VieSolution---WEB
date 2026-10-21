@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 12.
+**Dernière mise à jour : 2026-10-21** — dernière section : 13.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -164,3 +164,19 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1280 / 1024 / 820 / 390 px : catalogue Zoho 10 cartes en 5 / 2 / 2 / 1 colonnes, engagements 4 cartes en 4 / 2 / 2 / 1 colonnes, 0 chevauchement, pas de défilement horizontal, aucune erreur de page. `qa-agent` (Opus, 45 k) VERT ; engagements comparés mot à mot aux textes publiés ; contrastes ≥ 5,04:1. Suite au QA : « avec des règles d'utilisation claires » retiré du volet 03 (promesse absente du reste du site) ; titres « Vos besoins d'abord » et « Vous gardez le dernier mot » (plus fidèles à la FAQ que « Les bons outils, pas les nôtres » et « Rien ne part sans vous »). Coût réel du lot ≈ 150 k (session principale ≈ 105 k + QA 45 k). Incident en route : `.next/dev/types/validator.ts` tronqué par l'arrêt du serveur de test → registre E02.
 
 **Non fait dans ce round** : programme de partenaires Zoho non étudié (conditions à vérifier par Camille avant toute mention « partenaire ») ; outil Zoho de gestion des réseaux sociaux non vérifié (pour le chantier « réseaux sociaux », plus tard) ; accueil passé à 16 sections — à alléger si Camille le trouve long.
+
+## 13. ✅ Site prêt pour Google et les IA (SEO / AEO) ; service « SEO et AEO » (2026-10-21)
+
+**Contexte / demande** : Camille : « Il y a AEO, SEO etc. » + modèle Framer « Agnos » comme inspiration visuelle. Accord de Camille sur trois lots : A (site prêt SEO/AEO), B (service SEO et AEO), C (design inspiré d'Agnos — **maquettes demandées avant tout code**, voir §14). Domaine confirmé par Camille : **viesolutionweb.ca**. Surtitres : style Agnos (pour le lot C).
+
+**Ce qui a été fait** (agent principal) :
+- `src/lib/site.ts` : `SITE_URL` (seul endroit où le domaine est écrit) et liste des pages publiques.
+- `src/app/sitemap.ts` → `/sitemap.xml` (11 pages publiques ; anciennes URL redirigées et `/admin` exclues) ; `src/app/robots.ts` → `/robots.txt` (tout ouvert, y compris aux robots des assistants IA ; `/admin` et `/api/` fermés).
+- `layout.tsx` : `metadataBase`, `og:url` ; fiche **ProfessionalService** (schema.org) sans coordonnées (courriel et téléphone encore [à confirmer]). `json-ld.tsx` : `<script type="application/ld+json">` avec `<` échappé.
+- FAQ : données **FAQPage** générées depuis les mêmes questions que la liste affichée.
+- `public/llms.txt` : résumé du site pour les assistants IA (services, engagements, pages, aucune affiliation).
+- **Service 07 « Être trouvé sur Google et par les IA »** (SEO + AEO), « Sept façons… », provisoirement en rangée complète (mise en page à deux colonnes au lot C) ; FAQ « C'est quoi l'AEO ? » ; pied de page « SEO et AEO » ; description et mots-clés du site.
+
+**Vérification technique** : `npm run verify` vert. Navigateur : `/sitemap.xml` 200 `application/xml`, `/robots.txt` 200, `/llms.txt` 200 ; accueil : JSON-LD `ProfessionalService` + `FAQPage` (14 questions = 14 visibles) ; `og:url` = https://viesolutionweb.ca ; 7 cartes de services sans trou ; aucune erreur de page. Incident en route : E03 (cache Turbopack) → registre. `qa-agent` (Opus, 50 k) ROUGE sur un point : la fiche schema.org nommait Camille « fondatrice », fait absent du site (son nom n'y paraît que comme formatrice) → ligne `founder` retirée ; à remettre si Camille confirme. Tout le reste vert (11 URL du plan du site en 200, FAQPage 14 = 14 visibles, domaine écrit seulement dans `site.ts` et `llms.txt`). Coût réel du lot ≈ 130 k (session principale ≈ 80 k + QA 50 k).
+
+**Non fait dans ce round** : image de partage (`og:image`) non créée ; Google Search Console et fiche Google d'entreprise à créer par Camille **après la mise en ligne** ; scores Lighthouse à mesurer sur le site en ligne seulement (aucun score affiché sur le site).

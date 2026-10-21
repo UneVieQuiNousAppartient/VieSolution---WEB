@@ -64,6 +64,7 @@ ADMIN_ACCESS_CODE=<code d'accès admin>
   Supabase, l'Edge Function n'est PAS déployée, le cron n'est PAS planifié
   (bloc commenté en fin de fichier SQL).
 - Pas encore déployé en ligne (Vercel à créer après un git push).
+- Domaine : **viesolutionweb.ca** (confirmé par Camille le 2026-10-21) — écrit une seule fois, dans `src/lib/site.ts`.
 
 ## [à confirmer] avant mise en ligne — ne pas inventer, demander à Camille
 
