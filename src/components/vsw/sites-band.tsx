@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 /*
  * Bande « Des sites qu'on a bâtis » (bas du hero, lot design Agnos, 2026-10-21).
@@ -9,7 +10,7 @@ import Image from 'next/image';
  * La liste est rendue trois fois pour une boucle sans trou ; les copies 2 et 3 sont cachées
  * aux lecteurs d'écran et sorties de l'ordre de tabulation.
  */
-const SITES = [
+export const SITES = [
   {
     nom: "Les Jus Naturels Ben's",
     domaine: 'lesjusnaturelsbens.com',
@@ -79,6 +80,9 @@ export function SitesBand() {
           )}
         </ul>
       </div>
+      <p className="sites-band-lien">
+        <Link href="/sites-web">Nos sites et applications web <span aria-hidden="true">→</span></Link>
+      </p>
     </div>
   );
 }

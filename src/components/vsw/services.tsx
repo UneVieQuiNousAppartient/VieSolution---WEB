@@ -47,7 +47,7 @@ const SERVICES: {
     title: 'Sites et applications web',
     desc: "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils : formulaires, rendez-vous, carnet de clients.",
     tags: ['Sites vitrines', 'Pages de destination', 'Applications web', 'Formulaires reliés à vos outils'],
-    href: '/contact',
+    href: '/sites-web',
   },
   {
     num: '06',
@@ -55,7 +55,7 @@ const SERVICES: {
     title: 'CRM et outils sur mesure',
     desc: "Quand aucun logiciel tout fait ne colle à votre façon de travailler, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels.",
     tags: ['CRM maison', 'Outils internes', 'Tableaux de suivi', 'Liens avec vos outils'],
-    href: '/devis#situation',
+    href: '/crm-sur-mesure',
   },
   {
     num: '07',
@@ -63,7 +63,7 @@ const SERVICES: {
     title: 'Être trouvé sur Google et par les IA',
     desc: "Quand un client cherche votre métier, il demande à Google, mais aussi à ChatGPT, Claude ou Perplexity. On rend votre site clair pour les deux : des réponses aux vraies questions de vos clients, une fiche d'entreprise et des informations que les machines savent lire.",
     tags: ['SEO (Google)', 'AEO (assistants IA)', 'Questions de vos clients', 'Fiche d’entreprise'],
-    href: '/contact',
+    href: '/referencement',
   },
 ];
 

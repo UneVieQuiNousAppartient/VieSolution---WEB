@@ -11,6 +11,7 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - **Sites et applications web** ajoutés aux services (§11) ; mention « Québec · IA & Zoho » retirée sous le logo. À prévoir : exemples de sites dans « Cas d'usage » quand Camille en aura.
 - **Inspiration zoho.com** (§12) : positionnement « on choisit, on installe, on relie, on forme ; sinon on bâtit », installation de Claude, logiciels Zoho par besoin (Bigin, Creator), « Nos engagements ». Aucun élément de marque Zoho. À vérifier par Camille : programme de partenaires Zoho.
 - **SEO / AEO** (§13) : plan du site, robots.txt, llms.txt, fiches schema.org, service 07 « Être trouvé sur Google et par les IA ». Domaine **viesolutionweb.ca** (confirmé). **Lot design Agnos** livré (§14) : menu flottant, surtitres encadrés, hero à arcs, bande « Des sites qu'on a bâtis » (Ben's, VieSolution, Khí), services en deux colonnes, mosaïque des engagements. À obtenir par Camille : accord des 3 clients pour leurs captures. Proposé : pages de réalisation (défi / solution / résultat), quand Camille donnera les faits.
+- **Pages de service** (§15) : `/sites-web`, `/crm-sur-mesure`, `/referencement` — accessibles par les cartes 05-07 de l'accueil, le pied de page et le lien sous la bande des sites.
 - **Intégration de CRM existants** (demande de Camille) : petit lot de textes, en attente de la liste des CRM qu'elle accepte. Attend la relecture de Camille et son mot pour fusionner.
 - **Mise en ligne** : SQL `supabase/setup-crm-vsw.sql` non exécuté, Edge Function `vsw-lead-followup` non déployée, cron non planifié, projet Vercel non créé.
 
@@ -28,4 +29,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**15**
+**16**

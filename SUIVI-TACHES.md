@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 14.
+**Dernière mise à jour : 2026-10-21** — dernière section : 15.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -197,3 +197,20 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1440 / 1280 / 1024 / 820 / 390 px : menu 1200 / 992 / 788 / 366 px de large, pas de défilement horizontal, 7 cartes de services et 6 cases d'engagements sans chevauchement, 9 cartes de sites dont 3 atteignables au clavier, tuiles cachées sous 1100 px ; 0 surtitre « // » restant ; « mouvement réduit » : animation de la bande `none`, défilement manuel `auto` ; thème sombre vérifié ; aucune erreur de page ni d'hydratation. `qa-agent` (Opus, 73 k) VERT, aucun correctif ; contrastes ≥ 4,83:1 (clair et sombre), menu mobile, colonne fixe, défilement, mouvement réduit vérifiés. Suite à ses remarques : décors « › ‹ » et « ✦ » rendus muets pour les lecteurs d'écran (`content: … / ""`) ; **bouton Pause / Lecture** sur la bande (case à cocher, sans JavaScript, WCAG 2.2.2 sur écran tactile). Laissé à Camille : « // FAIT AU QUÉBEC AVEC RIGUEUR » en pied de page (pas un surtitre). Coût réel du lot ≈ 300 k avec les maquettes (session principale ≈ 225 k + QA 73 k).
 
 **Non fait dans ce round** : accord des trois clients pour l'affichage de leur page d'accueil (comme pour leurs logos) — **à obtenir par Camille** ; captures à refaire si leurs sites changent ; processus « en arc » et pages de réalisation (« Le défi / La solution / Le résultat ») non faits — attendent les informations de Camille ; anciennes règles CSS `.services-grid` / `.service` laissées en place (plus utilisées par l'accueil).
+
+## 15. ✅ Trois pages de service : sites web, CRM sur mesure, référencement (2026-10-21)
+
+**Contexte / demande** : Camille : « c'est une landing page ou multi pages ? » → site de 11 pages publiques, mais 3 services sans page à eux ; « oui, crée les trois pages » (≈ 150 k). Skill `nouvelle-page` suivie. Pas de maquette séparée : gabarit déjà validé des pages `/ia` et `/zoho`.
+
+**Ce qui a été fait** (agent principal) :
+- `src/app/sites-web/page.tsx` (« Un site qui travaille pour votre entreprise ») : 3 volets (sites vitrines, pages de destination, applications web), bandeau vers `/referencement`, **grille « Des sites qu'on a bâtis »** (`realisations-grid.tsx`, mêmes données et captures que la bande de l'accueil, `SITES` exporté de `sites-band.tsx`).
+- `src/app/crm-sur-mesure/page.tsx` (« Un outil fait pour votre façon de travailler ») : on part de ce que vous avez (votre logiciel, Zoho, un outil maison), CRM maison, outils internes et tableaux de suivi ; bandeau Loi 25 ; bouton vers `/devis#situation`.
+- `src/app/referencement/page.tsx` (« Être trouvé sur Google et par les IA ») : SEO, AEO, fiche d'entreprise ; aucune promesse de classement ; bandeau « le même travail que sur notre propre site ».
+- `service-detail-section.tsx` : section « trois volets » commune (styles `.ai-wrap` existants).
+- Textes repris (après QA) des cartes de services, de « Avant / après », de la FAQ (« J'ai déjà un logiciel… », « C'est quoi l'AEO ? », « Et mes données… ») et de `llms.txt` ; aucun prix, aucun chiffre.
+
+**Par où les pages sont accessibles** : cartes de services 05, 06 et 07 de l'accueil (`services.tsx`) ; pied de page, colonne « Services » (3 liens) ; lien « Nos sites et applications web → » sous la bande de l'accueil (vers `/sites-web`) ; `/sites-web` → `/referencement`. **Pas** dans la barre de navigation (déjà 8 liens). Plan du site : 3 routes ajoutées à `PUBLIC_ROUTES` (`src/lib/site.ts`) ; `public/llms.txt` mis à jour. Langue : FR seul. Pages statiques : aucun état de chargement, vide ou erreur à prévoir.
+
+**Vérification technique** : `npm run verify` vert. Les 3 routes répondent 200 et figurent dans `/sitemap.xml` ; atteintes **en cliquant** depuis l'accueil (3 cartes, lien du pied de page, lien sous la bande) avec le bon `h1` ; 1 seul `h1` par page ; aucun débordement à 375 px ; aucune erreur de page. Pas de test e2e automatisé (le projet n'en a pas encore : « Tests ciblés : — »). `qa-agent` (Opus, 70 k) ROUGE : (1) capacités non sourcées sur `/sites-web` (« portail client », « boutique en ligne », « suivi de dossiers », « adapté au téléphone ») et `/referencement` (« région servie ») → remplacées par des formulations déjà publiées (carte 05, « Avant / après », FAQ) ; (2) saut de titre h2 → h4 dans les volets → `h3` (styles identiques). Coût réel du lot ≈ 175 k (session principale ≈ 105 k + QA 70 k).
+
+**Non fait dans ce round** : pages de réalisation détaillées (défi / solution / résultat) — attendent les faits de Camille ; données structurées `Service` par page non ajoutées ; liens dans la barre de navigation non ajoutés (à décider par Camille si elle les veut).

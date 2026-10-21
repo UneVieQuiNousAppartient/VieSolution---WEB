@@ -807,7 +807,7 @@ section { position: relative; }
   border-radius: 50%;
   background: var(--accent);
 }
-.ai-pillar h4 {
+.ai-pillar h4, .ai-pillar h3 {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
   line-height: 1.25;
@@ -3311,6 +3311,23 @@ html { scroll-behavior: smooth; }
 @media (max-width: 640px) {
   .engagements-bento { grid-template-columns: 1fr; grid-template-areas: "a" "b" "c" "d" "e" "m"; }
 }
+
+/* Pages de service (2026-10-21) : grille fixe des sites bâtis (/sites-web), lien sous la bande */
+.realisations-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+.realisations-grid .site-card { width: 100%; }
+@media (max-width: 1024px) { .realisations-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .realisations-grid { grid-template-columns: 1fr; } }
+.sites-band-lien { margin: 18px 0 0; text-align: center; font-size: 14px; }
+.sites-band-lien a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.sites-band-lien a:hover { text-decoration: underline; }
+.sites-band-viewport + .sites-band-lien { margin-top: 18px; }
 
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
