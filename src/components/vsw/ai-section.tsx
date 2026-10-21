@@ -18,9 +18,9 @@ const AI_PILLARS: { num: string; title: string; desc: string; items: string[]; n
   },
   {
     num: '03',
-    title: 'Des outils IA bâtis pour vous',
-    desc: "On bâtit sur mesure des assistants et des tâches automatiques qui fonctionnent avec vos outils actuels.",
-    items: ['Assistants personnalisés', "Tâches qui s'enchaînent seules", 'Connexion à vos outils'],
+    title: 'Des outils IA installés et bâtis pour vous',
+    desc: "On installe et règle pour votre équipe des outils d'IA comme Claude ou ChatGPT. Et on bâtit sur mesure des assistants et des tâches automatiques qui fonctionnent avec vos outils actuels.",
+    items: ['Installation de Claude ou ChatGPT pour votre équipe', 'Assistants personnalisés', "Tâches qui s'enchaînent seules", 'Connexion à vos outils'],
   },
 ];
 

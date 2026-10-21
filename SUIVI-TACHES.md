@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 11.
+**Dernière mise à jour : 2026-10-21** — dernière section : 12.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -149,3 +149,18 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1280 / 1024 / 820 / 390 px : 6 cartes aux positions attendues, aucune étiquette sous la flèche, pas de défilement horizontal, mention absente sous le logo, aucune erreur de page. `qa-agent` (Opus, 45 k) VERT, aucun correctif ; la valeur « Site web » n'est validée nulle part côté serveur (`sujet` : `z.string().min(1)`), le renommage est sans risque. Coût réel du lot ≈ 110 k (session principale ≈ 65 k + QA 45 k).
 
 **Non fait dans ce round** : pas de page dédiée « Sites web » ni d'exemples de sites dans « Cas d'usage » (les exemples actuels sont IA et Zoho) — à prévoir quand Camille aura des réalisations web à montrer ; chatbot non mis à jour (pas de choix « site web »).
+
+## 12. ✅ Inspiration zoho.com : positionnement, logiciels par besoin, engagements, installation de Claude (2026-10-21)
+
+**Contexte / demande** : Camille : « https://www.zoho.com/ prends ce qui est bon, notamment le branding de Zoho » ; puis « regarder avec ce que j'essaie d'offrir » ; accord sur la proposition, avec précision : « je peux aussi installer des affaires comme Claude, faire des CRM ; je veux offrir tout ce dont les PME peuvent avoir besoin ». **Décision** : aucun élément de l'identité de Zoho (logo, carrés de couleur, chiffres, logos de leurs clients) — confusion possible et aucun contrat avec Zoho ; seulement des idées de structure.
+
+**Ce qui a été fait** (agent principal) :
+- **Accueil, intro des services** : « Les logiciels existent déjà : Zoho, Claude et bien d'autres. Nous, on choisit les bons pour vous, on les installe, on les relie et on vous forme. Et quand rien n'existe, on le bâtit : votre site, votre CRM, vos outils. »
+- **Service 02** : « On installe Claude ou ChatGPT pour votre équipe, prêts à l'emploi, ou on bâtit un assistant IA… » ; étiquette « Installation de Claude ».
+- **/ia, volet 03** : « Des outils IA installés et bâtis pour vous » (installation et réglage de Claude ou ChatGPT, règles d'utilisation claires).
+- **/zoho** : phrase « Zoho fait les logiciels. Nous, on les fait marcher chez vous » ; les 8 noms en pastilles deviennent **10 cartes par besoin** (Clients, Clients en simple = **Bigin**, Facturation, Service client, Marketing, Stock, Équipe, Projets, Sur mesure = **Zoho Creator**, Liens) — idée de la section « Featured apps » de zoho.com ; descriptions de Bigin et Creator d'après zoho.com.
+- **Accueil, « Nos engagements »** (`engagements-section.tsx`, après « La différence ») : 4 cartes — vos besoins d'abord ; vous gardez le dernier mot ; vos données vous appartiennent (Loi 25) ; on reste après. Chaque engagement reprend un texte déjà publié (FAQ, « La différence ») : aucune promesse nouvelle.
+
+**Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1280 / 1024 / 820 / 390 px : catalogue Zoho 10 cartes en 5 / 2 / 2 / 1 colonnes, engagements 4 cartes en 4 / 2 / 2 / 1 colonnes, 0 chevauchement, pas de défilement horizontal, aucune erreur de page. `qa-agent` (Opus, 45 k) VERT ; engagements comparés mot à mot aux textes publiés ; contrastes ≥ 5,04:1. Suite au QA : « avec des règles d'utilisation claires » retiré du volet 03 (promesse absente du reste du site) ; titres « Vos besoins d'abord » et « Vous gardez le dernier mot » (plus fidèles à la FAQ que « Les bons outils, pas les nôtres » et « Rien ne part sans vous »). Coût réel du lot ≈ 150 k (session principale ≈ 105 k + QA 45 k). Incident en route : `.next/dev/types/validator.ts` tronqué par l'arrêt du serveur de test → registre E02.
+
+**Non fait dans ce round** : programme de partenaires Zoho non étudié (conditions à vérifier par Camille avant toute mention « partenaire ») ; outil Zoho de gestion des réseaux sociaux non vérifié (pour le chantier « réseaux sociaux », plus tard) ; accueil passé à 16 sections — à alléger si Camille le trouve long.

@@ -22,15 +22,20 @@ const ZOHO_PILLARS = [
   },
 ];
 
-const ZOHO_APPS = [
-  'Zoho CRM',
-  'Zoho Books',
-  'Zoho Desk',
-  'Zoho Campaigns',
-  'Zoho Inventory',
-  'Zoho People',
-  'Zoho Projects',
-  'Zoho Flow',
+/* Logiciels Zoho présentés par besoin (idée reprise de zoho.com, « Featured apps »).
+   Descriptions en mots simples ; Bigin et Creator : d'après leur présentation sur zoho.com
+   (« CRM pour les petites entreprises », « applications sur mesure »). Aucun logo Zoho. */
+const ZOHO_APPS: { besoin: string; nom: string; desc: string }[] = [
+  { besoin: 'Clients', nom: 'Zoho CRM', desc: 'Vos clients, vos ventes et vos suivis au même endroit.' },
+  { besoin: 'Clients, en simple', nom: 'Bigin', desc: 'Un carnet de clients léger, pensé pour les petites entreprises.' },
+  { besoin: 'Facturation', nom: 'Zoho Books', desc: 'Vos factures, vos dépenses et votre comptabilité.' },
+  { besoin: 'Service client', nom: 'Zoho Desk', desc: 'Les demandes de vos clients, sans qu’aucune ne se perde.' },
+  { besoin: 'Marketing', nom: 'Zoho Campaigns', desc: 'Vos infolettres et vos courriels à toute votre clientèle.' },
+  { besoin: 'Stock', nom: 'Zoho Inventory', desc: 'Votre inventaire et vos commandes, à jour.' },
+  { besoin: 'Équipe', nom: 'Zoho People', desc: 'Vos employés : congés, horaires et dossiers.' },
+  { besoin: 'Projets', nom: 'Zoho Projects', desc: 'Vos projets, vos tâches et vos échéances.' },
+  { besoin: 'Sur mesure', nom: 'Zoho Creator', desc: 'Une application faite pour vous, sans tout programmer.' },
+  { besoin: 'Liens', nom: 'Zoho Flow', desc: 'Vos logiciels qui se parlent, tout seuls.' },
 ];
 
 export function ZohoSection() {
@@ -50,16 +55,24 @@ export function ZohoSection() {
               <p>
                 CRM, facturation, soutien client, marketing, inventaire : Zoho réunit toute la
                 gestion de votre entreprise dans une seule plateforme abordable (des logiciels
-                qui se parlent). Nous l&apos;implantons chez nos clients, nous l&apos;adaptons à leur
-                façon de travailler et
-                nous formons leurs équipes pour qu&apos;elles en gardent le contrôle.
+                qui se parlent).
               </p>
-              <div className="zoho-apps">
-                {ZOHO_APPS.map((a) => (
-                  <span key={a} className="zoho-app">{a}</span>
-                ))}
-              </div>
+              <p className="zoho-positionnement">
+                <strong>Zoho fait les logiciels. Nous, on les fait marcher chez vous&nbsp;:</strong> on
+                choisit les bons, on les règle selon votre façon de travailler et on forme votre
+                équipe pour qu&apos;elle en garde le contrôle.
+              </p>
             </div>
+          </div>
+
+          <div className="zoho-catalog" aria-label="Les logiciels Zoho, par besoin">
+            {ZOHO_APPS.map((a) => (
+              <div className="zoho-card" key={a.nom}>
+                <div className="zoho-card-besoin">{a.besoin}</div>
+                <h3>{a.nom}</h3>
+                <p>{a.desc}</p>
+              </div>
+            ))}
           </div>
 
           <div className="ai-pillars">

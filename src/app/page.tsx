@@ -9,6 +9,7 @@ import { BenefitsSection } from '@/components/vsw/benefits-section';
 import { ComparisonSection } from '@/components/vsw/comparison-section';
 import { ProcessSection } from '@/components/vsw/process-section';
 import { PartnersSection } from '@/components/vsw/partners-section';
+import { EngagementsSection } from '@/components/vsw/engagements-section';
 import { Testimonials } from '@/components/vsw/testimonials';
 import { InternsSection } from '@/components/vsw/interns-section';
 import { FAQSection } from '@/components/vsw/faq-section';
@@ -27,6 +28,7 @@ export default function HomePage() {
       <ProcessSection />
       <BenefitsSection />
       <ComparisonSection />
+      <EngagementsSection />
       <PartnersSection />
       <Testimonials />
       <InternsSection />

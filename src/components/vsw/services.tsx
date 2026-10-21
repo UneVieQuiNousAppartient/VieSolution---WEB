@@ -21,8 +21,8 @@ const SERVICES: {
     num: '02',
     icon: 'code',
     title: 'Assistants IA sur mesure',
-    desc: "Un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses aux questions de vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part.",
-    tags: ['ChatGPT', 'Claude', 'Clavardage client', 'Tri de documents'],
+    desc: "On installe Claude ou ChatGPT pour votre équipe, prêts à l'emploi, ou on bâtit un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses à vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part.",
+    tags: ['Installation de Claude', 'ChatGPT', 'Clavardage client', 'Tri de documents'],
     href: '/ia',
   },
   {
@@ -69,9 +69,9 @@ export function Services() {
             <h2>Six façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
-            Un seul but : mieux servir vos clients et vous redonner du temps. Pour y arriver, on
-            automatise vos tâches répétitives, on crée votre site web, on installe des outils
-            simples ou on vous en bâtit sur mesure, et on vous forme, du début à la fin.
+            Les logiciels existent déjà : Zoho, Claude et bien d&apos;autres. Nous, on choisit les
+            bons pour vous, on les installe, on les relie et on vous forme. Et quand rien
+            n&apos;existe, on le bâtit&nbsp;: votre site, votre CRM, vos outils.
           </p>
         </div>
         <div className="services-grid reveal">

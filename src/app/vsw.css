@@ -1844,21 +1844,101 @@ section { position: relative; }
   opacity: 0.4;
   pointer-events: none;
 }
-.zoho-apps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+/* Logiciels Zoho par besoin (2026-10-21, remplace la liste de noms en pastilles) */
+.zoho-positionnement { margin-top: 14px; }
+.zoho-positionnement strong { color: var(--fg-0); font-weight: 600; }
+.zoho-catalog {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 28px;
 }
-.zoho-app {
-  font-family: var(--font-body);
-  font-size: 13px;
+.zoho-card {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.zoho-card-besoin {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.zoho-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 17px;
   font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--bg-2);
+  letter-spacing: -0.01em;
+  color: var(--fg-0);
+}
+.zoho-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--fg-1);
+}
+@media (max-width: 1024px) {
+  .zoho-catalog { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .zoho-catalog { grid-template-columns: 1fr; padding: 20px; }
+}
+
+/* Nos engagements (accueil, 2026-10-21) */
+.engagements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap);
+}
+.engagement {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.engagement-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 10%, var(--surface));
+  margin-bottom: 6px;
+}
+.engagement h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--fg-0);
+}
+.engagement p {
+  margin: 0;
+  font-size: var(--fs-card);
+  line-height: 1.6;
+  color: var(--fg-1);
+}
+@media (max-width: 1024px) {
+  .engagements-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .engagements-grid { grid-template-columns: 1fr; }
 }
 
 /* ============ Process ============ */
@@ -2208,19 +2288,19 @@ html[data-theme="dark"] {
 
 /* 2. Cascade : les enfants d'une grille arrivent l'un après l'autre quand le .reveal passe .in.
    Rien n'est caché sans .in : l'animation (remplissage « backwards ») ne démarre qu'à ce moment. */
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars):is(.reveal.in, .reveal.in *) > *,
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .engagements-grid, .zoho-catalog):is(.reveal.in, .reveal.in *) > *,
 .reveal.in .compare-col > * {
   animation: vsw-rise 500ms var(--vsw-ease) backwards;
   animation-delay: calc(var(--vsw-i, 7) * 70ms);
 }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(1) { --vsw-i: 0; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(2) { --vsw-i: 1; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(3) { --vsw-i: 2; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(4) { --vsw-i: 3; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(5) { --vsw-i: 4; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(6) { --vsw-i: 5; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(7) { --vsw-i: 6; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col) > :nth-child(8) { --vsw-i: 7; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(1) { --vsw-i: 0; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(2) { --vsw-i: 1; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(3) { --vsw-i: 2; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(4) { --vsw-i: 3; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(5) { --vsw-i: 4; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(6) { --vsw-i: 5; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(7) { --vsw-i: 6; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(8) { --vsw-i: 7; }
 
 /* 3. Survols soignés */
 /* Piliers (dans .ai-wrap) : cartes détachées depuis le round 7, même survol que les autres cartes. */
