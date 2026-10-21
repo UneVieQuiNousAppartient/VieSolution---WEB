@@ -44,8 +44,8 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   `src/lib/crm/moteur.ts` (repris de KHI `lib/automations.js`) : brouillon `first_reply`
   à approuver, alerte 24 h, relances 1 et 2 (J2, J5), « À relancer » + tâche d'appel (J7),
   « Reprendre contact » (30 jours). Tout s'arrête dès un contact humain noté dans `/admin`.
-- **Courriels automatiques** : seules les relances 1 et 2, quand Camille les a activées
-  (désactivées par défaut), partent seules ; la première réponse reste un brouillon à
+- **Courriels automatiques** : seules les relances 1 et 2 (textes approuvés et activées par
+  Camille le 2026-10-21) partent seules ; la première réponse reste un brouillon à
   approuver. Envoi par Resend (`src/lib/crm/envoi.ts`). Loi anti-pourriel (LCAP,
   `src/lib/crm/regles.ts`) : pied avec adresse postale (`vsw_settings.postal_address`) et
   lien de désabonnement (`/api/desabonnement`) — sans adresse postale, rien ne part.
@@ -71,9 +71,11 @@ EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 
 - Site : terminé, build OK (`npm run build`).
 - CRM : code livré ; le SQL `setup-crm-vsw.sql` n'a PAS encore été exécuté dans
-  Supabase ; le passage horaire (Vercel Cron) attend le projet Vercel — sur le plan
-  Hobby, crons probablement limités à un par jour (à vérifier) : voir la fin du fichier SQL (pg_cron en secours).
-- Pas encore déployé en ligne (Vercel à créer après un git push).
+  Supabase ; projet Vercel `vie-solution-web` créé le 2026-10-21 (équipe `viesolution`, relié
+  au dépôt ; KHI s'y déploie déjà avec un cron horaire dans son `vercel.json`) — variables d'environnement à
+  saisir par Camille ; secours pg_cron en fin de fichier SQL.
+- Pas encore en ligne : la branche de production Vercel est la branche par défaut du dépôt
+  (`claude/nextjs-web-project-RPcId`) ; aucun domaine branché.
 - Domaine : **viesolutionweb.ca** (confirmé par Camille le 2026-10-21) — écrit une seule fois, dans `src/lib/site.ts`.
 
 ## [à confirmer] avant mise en ligne — ne pas inventer, demander à Camille
@@ -106,13 +108,13 @@ EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 
 | Clé | Valeur |
 |---|---|
-| Pile | Next.js 16 (App Router, Turbopack), TypeScript, Tailwind 4 ; Supabase (projet partagé `gflkfwalfaeeknauxyig`, tables `vsw_*`) ; passage horaire Vercel Cron `/api/cron/tick` ; courriels Resend ; hébergement Vercel (projet à créer) ; brouillons CRM par gabarits (rédaction par Claude API à rebrancher) ; FR seul |
+| Pile | Next.js 16 (App Router, Turbopack), TypeScript, Tailwind 4 ; Supabase (projet partagé `gflkfwalfaeeknauxyig`, tables `vsw_*`) ; passage horaire Vercel Cron `/api/cron/tick` ; courriels Resend ; hébergement Vercel (projet `vie-solution-web`, équipe `viesolution`) ; brouillons CRM par gabarits (rédaction par Claude API à rebrancher) ; FR seul |
 | Dossiers de code | `src/`, `supabase/`, `tests/`, `.claude/`, `scripts/` |
 | Hors périmètre de Claude | — |
 | Vérification | `npm run verify` |
 | Tests ciblés | `npm test` (`tests/*.test.mjs` — règles du suivi des demandes) |
 | Serveur local | `npm run dev` → http://localhost:3000 |
-| Déploiement | fusion de la PR sur `main` → déploiement Vercel automatique (projet Vercel à créer, voir `docs/ETAT-ACTUEL.md`) |
+| Déploiement | fusion de la PR sur `main` → déploiement Vercel automatique (projet Vercel `vie-solution-web`, voir `docs/ETAT-ACTUEL.md`) |
 | Contrôle après déploiement | ouvrir `/`, `/ia`, `/zoho`, `/devis`, `/rdv`, `/contact`, `/admin` ; soumettre le formulaire de contact en test |
 | Routes publiques | `src/app/` |
 | Sitemap et navigation | `src/components/vsw/nav.tsx`, `src/components/vsw/footer.tsx` (pas de sitemap généré) |

@@ -494,16 +494,16 @@ FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 -- 4. DONNÉES INITIALES
 -- ============================================================================
 -- vsw_automation_rules : vide au départ (défauts dans src/lib/crm/moteur.ts). Les relances 1 et 2
--- (new_lead_j2, new_lead_j5) sont DÉSACTIVÉES par défaut : Camille relit leur texte, puis les active :
---   INSERT INTO vsw_automation_rules (key, enabled, updated_by) VALUES
---     ('new_lead_j2', true, 'Camille'), ('new_lead_j5', true, 'Camille')
---   ON CONFLICT (key) DO UPDATE SET enabled = true, updated_at = now(), updated_by = EXCLUDED.updated_by;
+-- (new_lead_j2, new_lead_j5) sont ACTIVES par défaut (textes approuvés par Camille le 2026-10-21).
+-- Pour en couper une sans changer le code :
+--   INSERT INTO vsw_automation_rules (key, enabled, updated_by) VALUES ('new_lead_j2', false, 'Camille')
+--   ON CONFLICT (key) DO UPDATE SET enabled = false, updated_at = now(), updated_by = EXCLUDED.updated_by;
 
 INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
   ('first_reply', 'fr', 'Votre demande chez Vie Solution Web — prochaine étape',
    E'Bonjour {{prenom}},\n\nMerci pour votre message — je l''ai bien reçu et je l''ai lu attentivement.\n\nPour bien comprendre votre contexte et vous proposer la bonne approche, le plus simple est un court appel découverte de 30 minutes, gratuit et sans engagement.\n\nQuelles sont vos disponibilités cette semaine ?\n\nAu plaisir,\nCamille — Vie Solution Web'),
-  -- Relances automatiques (moteur : new_lead_j2, new_lead_j5) — texte proposé le 2026-10-21, à relire
-  -- par Camille avant activation. Le pied « loi anti-pourriel » (adresse postale, désabonnement) est
+  -- Relances automatiques (moteur : new_lead_j2, new_lead_j5) — texte approuvé par Camille le
+  -- 2026-10-21 (« oui »). Le pied « loi anti-pourriel » (adresse postale, désabonnement) est
   -- ajouté par le code, pas ici.
   ('followup_new_1', 'fr', 'Votre demande — je pense encore à votre projet',
    E'Bonjour {{prenom}},\n\nMerci encore pour votre demande. Vous avez pris le temps de nous écrire, et j''aimerais vraiment comprendre ce qui vous ferait gagner du temps au quotidien.\n\nLe plus simple : un appel découverte de 30 minutes, gratuit et sans engagement. Vous pouvez choisir le moment qui vous convient ici : {{lien_rdv}}\n\nEt si ce n''est pas le bon moment, répondez simplement à ce courriel : je comprendrai très bien.\n\nAu plaisir de vous lire,\nCamille — Vie Solution Web'),
@@ -511,12 +511,13 @@ INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
    E'Bonjour {{prenom}},\n\nJe ne veux pas vous encombrer : c''est mon dernier courriel à ce sujet.\n\nSi votre projet est toujours d''actualité, je garde du temps pour vous. Un appel découverte de 30 minutes, gratuit et sans engagement, permet souvent d''y voir plus clair : {{lien_rdv}}\n\nSi les choses ont changé, aucun souci. Un simple « pas pour l''instant » en réponse me suffit.\n\nMerci pour votre confiance,\nCamille — Vie Solution Web')
 ON CONFLICT (key, lang) DO NOTHING;
 
--- postal_address : adresse postale du pied des relances (LCAP) — [à confirmer] par Camille ; tant
--- qu'elle est vide, AUCUNE relance automatique ne part. notify_email : adresse des alertes à l'équipe.
+-- postal_address : adresse postale du pied des relances (LCAP), donnée par Camille le 2026-10-21
+-- (« 40 rue de l'église J4G1H9 », ville « Longueuil ») ; vide = AUCUNE relance automatique ne part.
+-- notify_email : adresse des alertes à l'équipe.
 INSERT INTO vsw_settings (key, value) VALUES
   ('notify_email', to_jsonb(''::text)),
   ('sender_name', to_jsonb('Vie Solution Web'::text)),
-  ('postal_address', to_jsonb(''::text))
+  ('postal_address', to_jsonb('40 rue de l''église, Longueuil J4G1H9'::text))
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO vsw_availability_windows (weekday, start_minutes, end_minutes)
@@ -525,8 +526,9 @@ SELECT d, 540, 1020 FROM generate_series(1, 5) AS d;
 -- ============================================================================
 -- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
 --    « Authorization: Bearer <CRON_SECRET> » (variable d'environnement Vercel).
---    Plan gratuit Vercel (Hobby) : crons limités à un par jour (limite à vérifier à la création
---    du projet). Si c'est le cas, appeler la route chaque heure
+--    Projet Vercel « vie-solution-web » (équipe viesolution, où le cron horaire de KHI se déploie
+--    déjà). En secours (plan qui
+--    limiterait les crons à un par jour), appeler la route chaque heure
 --    depuis Supabase à la place (pg_cron + pg_net, à activer dans le projet), puis retirer
 --    vercel.json :
 -- ============================================================================

@@ -266,8 +266,8 @@ export const REGLES: Record<string, Regle> = {
 
   new_lead_j2: {
     libelle: 'Relance 1 : demande sans contact',
-    description: "Courriel au prospect si sa demande n'a reçu aucun contact humain après le délai. Désactivée tant que Camille n'a pas relu le texte.",
-    enabled: false,
+    description: "Courriel au prospect si sa demande n'a reçu aucun contact humain après le délai. Texte approuvé et activée par Camille le 2026-10-21.",
+    enabled: true,
     delay_hours: 48,
     params: { template: 'followup_new_1' },
     ecritAuProspect: true,
@@ -287,8 +287,8 @@ export const REGLES: Record<string, Regle> = {
 
   new_lead_j5: {
     libelle: 'Relance 2 : toujours sans contact',
-    description: "Second et dernier courriel si la demande n'a toujours reçu aucun contact humain. Désactivée tant que Camille n'a pas relu le texte.",
-    enabled: false,
+    description: "Second et dernier courriel si la demande n'a toujours reçu aucun contact humain. Texte approuvé et activée par Camille le 2026-10-21.",
+    enabled: true,
     delay_hours: 120,
     params: { template: 'followup_new_2' },
     ecritAuProspect: true,

@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 16.
+**Dernière mise à jour : 2026-10-21** — dernière section : 17.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -229,4 +229,14 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm test` 17/17 (règle cassée deux fois → les tests échouent, puis rétablie) ; `npm run verify` vert (10 avertissements eslint préexistants) ; SQL rejoué dans un Postgres 16 local avec tables factices : échéances du rappel (jour, soir, nuit, été, hiver, bornes 8 h / 20 h), dédoublonnage + passage en RDV, tâches, contraintes, verrou, droits `anon` refusés, clé unique. Routes : cron sans secret / mauvais secret → 401. `qa-agent` (Opus, ≈ 98 k) **VERT** ; révision unique : échec Resend définitif non réessayé, clé d'idempotence, gabarit absent ne consomme pas la relance, borne de 30 jours sur J7, journal sans contenu de Resend, phrase sans fondement retirée de la page de désabonnement, gabarits reformulés (« Merci encore pour votre demande », plus de promesse de « pistes concrètes »). Moteur **non testé contre un vrai Supabase** (pas de PostgREST ici) : **à tester par Camille** après exécution du SQL. Coût réel ≈ 310 k (session ≈ 210 k + QA 98 k).
 
 **Non fait dans ce round** : lot 2 (onglet « Aujourd'hui », boutons « Appel / Courriel / RDV » et « Désabonner » dans `/admin`, réglage des règles) ; adresse postale (Camille) ; plan Vercel (Hobby probablement limité à un cron par jour → pg_cron en secours) ; les réponses des prospects par courriel ne sont pas lues (pas de boîte synchronisée) : Camille doit noter le contact dans `/admin`, sinon J5 part ; rédaction des brouillons par Claude API retirée avec l'Edge Function (gabarits seulement ; à rebrancher avec `@anthropic-ai/sdk`, modèle Haiku, sur accord) ; `supabase/setup-complet-nouveau-projet.sql` (historique) mentionne encore l'Edge Function ; le fichier SQL n'est pas rejouable deux fois (`CREATE POLICY`, antérieur au lot).
+
+## 17. ✅ Suivi des demandes : adresse postale, relances activées, projet Vercel (2026-10-21)
+
+**Contexte / demande** : réponses de Camille aux questions du §16 : adresse postale « 40 rue de l'église J4G1H9 », puis ville « Longueuil » ; textes des deux relances : « oui » ; Vercel : « j'ai déjà un compte vercel », puis « oui crée le projet vercel » (projet séparé, recommandé).
+
+**Ce qui a été fait** (agent principal) : `vsw_settings.postal_address` amorcé avec « 40 rue de l'église, Longueuil J4G1H9 » (`supabase/setup-crm-vsw.sql`) ; relances J2 et J5 actives par défaut (`src/lib/crm/moteur.ts`), commentaires et `CLAUDE.md` à jour. Vercel (connecteur, lecture seule) : équipe `viesolution` avec les projets `khieduc`, `vie-solution-csf`, `jus-naturels-bens` ; les mises en production de KHI (cron horaire documenté dans son `CLAUDE.md`) sont « READY » → le cron horaire de VSW devrait passer dans la même équipe (le forfait n'est pas lisible par le connecteur). Projet **`vie-solution-web`** créé (connecteur Vercel), relié au dépôt GitHub ; branche de production = branche par défaut du dépôt (`claude/nextjs-web-project-RPcId`, ancien site) ; protection par défaut de l'équipe ; aucun domaine, aucune variable d'environnement.
+
+**Vérification technique** : `npm run verify` vert ; `npm test` 17/17 ; `qa-agent` (Opus, ≈ 30 k) **VERT** (adresse fidèle à ce que Camille a dit, garde d'envoi intacte, documents cohérents) ; à savoir : un formulaire de test soumis après la mise en ligne recevra une vraie relance 48 h plus tard si aucun contact n'est noté dans `/admin`. Première mise en ligne Vercel « READY » : la branche de production (ancien site) est publiée sur `vie-solution-web.vercel.app`. Coût réel ≈ 80 k (session ≈ 50 k + QA 30 k). Rien ne part encore : SQL non exécuté, Resend et variables non configurés.
+
+**Non fait dans ce round** : variables d'environnement Vercel (à saisir par Camille : clés Supabase, `ADMIN_ACCESS_CODE`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`) ; domaine viesolutionweb.ca ; branche de production à changer au moment de la fusion ; compte Resend ; exécution du SQL ; lot 2 (onglet « Aujourd'hui ») en attente du feu vert de Camille.
 
