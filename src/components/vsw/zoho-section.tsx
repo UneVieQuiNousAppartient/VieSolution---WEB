@@ -45,7 +45,7 @@ export function ZohoSection() {
         <div className="zoho-wrap reveal">
           <div className="ai-top">
             <div>
-              <div className="eyebrow">{'// Les outils Zoho'}</div>
+              <div className="eyebrow">{'Les outils Zoho'}</div>
               <h2>
                 Votre gestion, centralisée.<br />
                 <span className="glow">Zoho, implanté chez vous.</span>

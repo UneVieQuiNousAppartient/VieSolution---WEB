@@ -31,7 +31,7 @@ export function AISection() {
         <div className="ai-wrap reveal">
           <div className="ai-top">
             <div>
-              <div className="eyebrow">{'// Intelligence artificielle'}</div>
+              <div className="eyebrow">{'Intelligence artificielle'}</div>
               <h2>
                 L&apos;IA dans votre quotidien.<br />
                 <span className="glow">On vous montre comment.</span>

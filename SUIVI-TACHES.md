@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 13.
+**Dernière mise à jour : 2026-10-21** — dernière section : 14.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -180,3 +180,20 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Navigateur : `/sitemap.xml` 200 `application/xml`, `/robots.txt` 200, `/llms.txt` 200 ; accueil : JSON-LD `ProfessionalService` + `FAQPage` (14 questions = 14 visibles) ; `og:url` = https://viesolutionweb.ca ; 7 cartes de services sans trou ; aucune erreur de page. Incident en route : E03 (cache Turbopack) → registre. `qa-agent` (Opus, 50 k) ROUGE sur un point : la fiche schema.org nommait Camille « fondatrice », fait absent du site (son nom n'y paraît que comme formatrice) → ligne `founder` retirée ; à remettre si Camille confirme. Tout le reste vert (11 URL du plan du site en 200, FAQPage 14 = 14 visibles, domaine écrit seulement dans `site.ts` et `llms.txt`). Coût réel du lot ≈ 130 k (session principale ≈ 80 k + QA 50 k).
 
 **Non fait dans ce round** : image de partage (`og:image`) non créée ; Google Search Console et fiche Google d'entreprise à créer par Camille **après la mise en ligne** ; scores Lighthouse à mesurer sur le site en ligne seulement (aucun score affiché sur le site).
+
+## 14. ✅ Lot design inspiré d'Agnos, avec la bande « Des sites qu'on a bâtis » (2026-10-21)
+
+**Contexte / demande** : maquettes demandées par Camille (« je veux des mockups si possible ») sur le modèle Framer « Agnos » (sa copie publiée, camitest.framer.website, est identique au modèle) ; ajout demandé : « on peut mettre les pages des sites que l'on a déjà faits, les accueils » ; capture de Ben's « quand les produits sont affichés ». Accord : « oui, lance le lot design avec la bande des sites ». Maquettes : `scratchpad/maquettes/m1-m5` (hors dépôt).
+
+**Ce qui a été fait** (agent principal) :
+- **Surtitres** : petite étiquette encadrée « › … ‹ » (choix de Camille) ; les « // » retirés des 20 surtitres.
+- **Menu flottant** : barre détachée (12 px du haut, coins 16 px, ombre), « Prendre un RDV » ; panneau mobile en carte arrondie.
+- **Boutons** : coins 12 px (au lieu de pilules) ; nouveau `.btn-dark` (jetons `--ink` / `--on-ink`, clair et sombre). Les pastilles de métiers restent rondes.
+- **Hero** : arcs fins, 6 tuiles d'outils flottantes (décoratives, `aria-hidden`, cachées sous 1100 px, immobiles sous « mouvement réduit »), « appartient. » en couleur pleine, texte d'accroche élargi (IA, Zoho, sites web, CRM sur mesure), « Par où commencer ? » en bouton foncé, note manuscrite « appel gratuit de 30 min » (police Caveat via next/font), séparateur « Je suis… ». **Retirés** : les chiffres du hero (« IA + Zoho / 24h / 100 % / FR » — absents de la maquette validée ; « 24h » et « 100 % » restaient à confirmer) et le bandeau de mots défilants.
+- **Bande « Des sites qu'on a bâtis »** (`sites-band.tsx`) : Les Jus Naturels Ben's (produits affichés, promotion datée et barre d'inscription retirées de la capture), VieSolution, Khí Succès Académique ; captures du 2026-10-21 en WebP (≈ 40 Ko chacune) dans `public/realisations/` ; défilement CSS lent, pause au survol et au focus, arrêt + défilement manuel sous « mouvement réduit » ; liste rendue 3 fois pour une boucle sans trou, copies 2-3 cachées aux lecteurs d'écran et hors tabulation ; liens dans un nouvel onglet.
+- **Services** : deux colonnes — titre, texte, bouton « Décrire votre situation » et « 01 — 07 » fixes à gauche ; 7 cartes empilées dans un plateau (`--tray`), numéro, icône en haut à droite, étiquettes en pastilles.
+- **Nos engagements** : mosaïque dans un plateau — 4 engagements, carte « Un appel de 30 minutes » (« proposition écrite » reprend l'étape 02 de `/devis`) avec bouton foncé, liste des 8 métiers en pointillés (liens vers leurs cartes) ; titre centré.
+
+**Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1440 / 1280 / 1024 / 820 / 390 px : menu 1200 / 992 / 788 / 366 px de large, pas de défilement horizontal, 7 cartes de services et 6 cases d'engagements sans chevauchement, 9 cartes de sites dont 3 atteignables au clavier, tuiles cachées sous 1100 px ; 0 surtitre « // » restant ; « mouvement réduit » : animation de la bande `none`, défilement manuel `auto` ; thème sombre vérifié ; aucune erreur de page ni d'hydratation. `qa-agent` (Opus, 73 k) VERT, aucun correctif ; contrastes ≥ 4,83:1 (clair et sombre), menu mobile, colonne fixe, défilement, mouvement réduit vérifiés. Suite à ses remarques : décors « › ‹ » et « ✦ » rendus muets pour les lecteurs d'écran (`content: … / ""`) ; **bouton Pause / Lecture** sur la bande (case à cocher, sans JavaScript, WCAG 2.2.2 sur écran tactile). Laissé à Camille : « // FAIT AU QUÉBEC AVEC RIGUEUR » en pied de page (pas un surtitre). Coût réel du lot ≈ 300 k avec les maquettes (session principale ≈ 225 k + QA 73 k).
+
+**Non fait dans ce round** : accord des trois clients pour l'affichage de leur page d'accueil (comme pour leurs logos) — **à obtenir par Camille** ; captures à refaire si leurs sites changent ; processus « en arc » et pages de réalisation (« Le défi / La solution / Le résultat ») non faits — attendent les informations de Camille ; anciennes règles CSS `.services-grid` / `.service` laissées en place (plus utilisées par l'accueil).

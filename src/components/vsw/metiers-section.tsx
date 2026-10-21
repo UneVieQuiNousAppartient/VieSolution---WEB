@@ -106,7 +106,7 @@ export function MetiersSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// Pour votre métier'}</div>
+            <div className="eyebrow">{'Pour votre métier'}</div>
             <h2>Un meilleur service pour vos clients.<br />Plus de temps pour vous.</h2>
           </div>
           <p className="desc">

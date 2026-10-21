@@ -16,7 +16,7 @@ export default function ZohoPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Zoho, simplement"
+        eyebrow="Zoho, simplement"
         title={
           <>
             Toute votre gestion,<br />au même endroit.

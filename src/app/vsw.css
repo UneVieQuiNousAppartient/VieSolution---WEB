@@ -44,6 +44,10 @@
   --grid-gap: 20px;
   --surface: oklch(1 0 0);
   --logo-on: oklch(1 0 0);           /* personne dans le halo du logo */
+  --tray: oklch(0.935 0.01 85);       /* « plateau » qui porte les cartes (lot Agnos) */
+  --ink: oklch(0.21 0.025 260);       /* bouton foncé */
+  --on-ink: oklch(1 0 0);
+  --arc: color-mix(in oklch, var(--fg-0) 7%, transparent);
   --bg-band: oklch(0.97 0.006 85);
   --shadow-xs: 0 1px 2px oklch(0.25 0.03 260 / 0.06);
   --shadow-sm: 0 1px 2px oklch(0.25 0.03 260 / 0.05), 0 8px 24px -12px oklch(0.25 0.03 260 / 0.14);
@@ -55,6 +59,7 @@
   --font-display: var(--font-sg), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jbm), "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: var(--font-hand-src), "Caveat", cursive;
 
   --shadow-soft: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 16px 32px -20px oklch(0.3 0.04 260 / 0.25);
   --shadow-glow: 0 0 0 1px oklch(0.52 0.13 220 / 0.25), 0 0 32px -8px oklch(0.52 0.13 220 / 0.3);
@@ -85,6 +90,10 @@ html[data-theme="dark"] {
   /* pme-accessible — premium : versions sombres */
   --surface: var(--bg-1);
   --logo-on: oklch(1 0 0);
+  --tray: oklch(0.13 0.018 260);
+  --ink: oklch(0.95 0.008 260);
+  --on-ink: oklch(0.17 0.02 260);
+  --arc: color-mix(in oklch, var(--fg-0) 9%, transparent);
   --bg-band: var(--bg-1);
   --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.35);
   --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3), 0 10px 28px -12px oklch(0 0 0 / 0.6);
@@ -116,23 +125,31 @@ html { scroll-padding-top: 96px; }
   font-weight: 500;
 }
 .mono { font-family: var(--font-mono); }
+/* Surtitre : petite étiquette encadrée « › … ‹ » (style Agnos, choix de Camille le 2026-10-21 ;
+   remplace « // … » précédé d'un tiret). */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--fs-eyebrow);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--fg-1);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
 }
-.eyebrow::before {
-  content: "";
-  width: 24px;
-  height: 1px;
-  background: var(--accent);
-  display: inline-block;
+.eyebrow::before,
+.eyebrow::after {
+  color: var(--accent);
+  font-weight: 500;
+  flex: none;
 }
+.eyebrow::before { content: "›" / ""; }   /* décor muet pour les lecteurs d'écran */
+.eyebrow::after { content: "‹" / ""; }
 
 /* ============ Layout ============ */
 .container {
@@ -209,7 +226,7 @@ html { scroll-padding-top: 96px; }
   font-size: 14px;
   font-weight: 500;
   padding: 11px 20px;
-  border-radius: 999px;
+  border-radius: 12px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
@@ -228,6 +245,17 @@ html { scroll-padding-top: 96px; }
 .btn-primary:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn-dark {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--ink);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--on-ink) 14%, transparent);
+}
+.btn-dark:hover {
+  background: color-mix(in oklch, var(--ink) 86%, var(--accent));
+  border-color: color-mix(in oklch, var(--ink) 86%, var(--accent));
   transform: translateY(-1px);
 }
 .btn-ghost {
@@ -2290,19 +2318,19 @@ html[data-theme="dark"] {
 
 /* 2. Cascade : les enfants d'une grille arrivent l'un après l'autre quand le .reveal passe .in.
    Rien n'est caché sans .in : l'animation (remplissage « backwards ») ne démarre qu'à ce moment. */
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .engagements-grid, .zoho-catalog):is(.reveal.in, .reveal.in *) > *,
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .engagements-bento, .zoho-catalog, .services-stack):is(.reveal.in, .reveal.in *) > *,
 .reveal.in .compare-col > * {
   animation: vsw-rise 500ms var(--vsw-ease) backwards;
   animation-delay: calc(var(--vsw-i, 7) * 70ms);
 }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(1) { --vsw-i: 0; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(2) { --vsw-i: 1; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(3) { --vsw-i: 2; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(4) { --vsw-i: 3; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(5) { --vsw-i: 4; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(6) { --vsw-i: 5; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(7) { --vsw-i: 6; }
-:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-grid, .zoho-catalog) > :nth-child(8) { --vsw-i: 7; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(1) { --vsw-i: 0; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(2) { --vsw-i: 1; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(3) { --vsw-i: 2; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(4) { --vsw-i: 3; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(5) { --vsw-i: 4; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(6) { --vsw-i: 5; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(7) { --vsw-i: 6; }
+:is(.benefits-grid, .metiers-grid, .services-grid, .partners-grid, .process-grid, .pricing-grid, .faq-list, .ai-pillars, .compare-col, .engagements-bento, .zoho-catalog, .services-stack) > :nth-child(8) { --vsw-i: 7; }
 
 /* 3. Survols soignés */
 /* Piliers (dans .ai-wrap) : cartes détachées depuis le round 7, même survol que les autres cartes. */
@@ -2620,7 +2648,6 @@ html { scroll-behavior: smooth; }
 @media (max-width: 640px) {
   .hero { padding: 40px 0 56px; }
   .hero .eyebrow { justify-content: center; text-align: center; line-height: 1.5; }
-  .hero .eyebrow::before { display: none; } /* tiret orphelin quand le surtitre est centré */
   .hero h1 { margin: 16px 0; }
   .hero p.lede { font-size: 17px; margin-bottom: 28px; }
   .hero-ctas { flex-direction: column; align-items: stretch; }
@@ -2943,8 +2970,354 @@ html { scroll-behavior: smooth; }
 .compare-panel > :nth-child(n + 9):nth-child(-n + 10) { --vsw-i: 4; }
 .compare-panel > :nth-child(n + 11):nth-child(-n + 12) { --vsw-i: 5; }
 
+
+/* ============ Lot design Agnos (2026-10-21) ============
+   Maquettes validées par Camille : menu flottant, surtitres encadrés (plus haut), hero à arcs et
+   tuiles, bande « Des sites qu'on a bâtis », services en deux colonnes, engagements en mosaïque,
+   « plateaux » (--tray) qui portent les cartes. Jetons seulement. */
+
+/* Plateau et pastille */
+.tray {
+  background: var(--tray);
+  border: 1px solid var(--line-soft);
+  border-radius: 22px;
+  padding: 10px;
+}
+.pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-1);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 9px;
+  line-height: 1.2;
+}
+
+/* 1. Menu flottant : barre détachée, coins arrondis, ombre douce */
+.nav {
+  top: 12px;
+  width: min(1200px, calc(100% - 32px));
+  margin: 12px auto 0;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+.nav > .nav-inner { height: 64px; padding: 0 10px 0 18px; max-width: none; }
+.nav.scrolled { box-shadow: var(--shadow-nav), var(--shadow-sm); }
+.nav.scrolled .nav-inner { height: 56px; }
+.nav .nav-cta { min-height: 40px; padding: 8px 16px; }
+@media (max-width: 640px) {
+  .nav { width: calc(100% - 24px); margin-top: 10px; top: 10px; }
+  .nav > .nav-inner { padding: 0 8px 0 14px; }
+  .nav-menu-panel:not([hidden]) {
+    top: calc(100% + 8px);
+    height: calc(100dvh - 100% - 36px);
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* 2. Hero : arcs, tuiles flottantes, mot en couleur, note manuscrite, séparateurs */
+.hero { padding-top: 112px; padding-bottom: 0; }
+.hero-arcs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 42%, transparent 0 499px, var(--arc) 500px 501px, transparent 502px),
+    radial-gradient(circle at 50% 42%, transparent 0 639px, var(--arc) 640px 641px, transparent 642px);
+}
+.hero-tiles { position: absolute; inset: 0; pointer-events: none; }
+.hero-tile {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 10px 24px -12px color-mix(in oklch, var(--fg-0) 30%, transparent);
+  animation: vsw-flotte 7s var(--vsw-ease) infinite alternate;
+}
+.hero-tile.t1 { left: 9%;  top: 210px; rotate: -8deg; }
+.hero-tile.t2 { left: 7%;  top: 470px; rotate: 6deg;  animation-delay: -2s; }
+.hero-tile.t3 { right: 9%; top: 200px; rotate: 7deg;  animation-delay: -4s; }
+.hero-tile.t4 { right: 7%; top: 460px; rotate: -6deg; animation-delay: -1s; }
+.hero-tile.t5 { left: 3%;  top: 690px; rotate: 4deg;  animation-delay: -3s; }
+.hero-tile.t6 { right: 3%; top: 700px; rotate: -5deg; animation-delay: -5s; }
+@keyframes vsw-flotte {
+  from { translate: 0 0; }
+  to { translate: 0 -10px; }
+}
+@media (max-width: 1100px) { .hero-tiles { display: none; } }
+
+.hero h1 .highlight {                       /* « appartient. » en couleur pleine (maquette) */
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--accent);
+  animation: none;
+}
+.hero-ctas { position: relative; }
+.hero-note {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  translate: -290px 0;
+  rotate: -3deg;
+  font-family: var(--font-hand);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.hero-divider {
+  margin: 0 auto 14px;
+  max-width: 640px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.hero-divider::before,
+.hero-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.hero-metiers { margin-top: 64px; }
+.btn.hero-metier { border-radius: 999px; background: var(--surface); }
+@media (max-width: 640px) {
+  .hero { padding-top: 44px; }
+  .hero-note { position: static; translate: none; rotate: -2deg; align-self: center; font-size: 19px; }
+  .hero .eyebrow { font-size: 10px; letter-spacing: 0.08em; padding: 6px 8px; }
+  .hero-metiers { margin-top: 32px; }
+}
+
+/* 3. Bande « Des sites qu'on a bâtis » (sites-band.tsx) : défilement CSS, pause au survol */
+.sites-band {
+  position: relative;
+  margin-top: 72px;
+  padding: 34px 0 40px;
+  background: var(--tray);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.sites-band .hero-divider { margin-bottom: 24px; }
+.sites-band-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.sites-band-track {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 6px;
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: vsw-sites 60s linear infinite;
+}
+.sites-band:hover .sites-band-track,
+.sites-band:focus-within .sites-band-track,
+.sites-band:has(.sites-band-pause input:checked) .sites-band-track { animation-play-state: paused; }
+/* Bouton pause (case à cocher + étiquette : fonctionne sans JavaScript, au clavier et au toucher) */
+.sites-band-pause {
+  position: absolute;
+  top: 26px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--fg-1);
+  cursor: pointer;
+}
+.sites-band-pause input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.sites-band-pause:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sites-band-pause .lecture { display: none; }
+.sites-band-pause:has(input:checked) .pause { display: none; }
+.sites-band-pause:has(input:checked) .lecture { display: inline; }
+@keyframes vsw-sites {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% / 3 - 6px)); }   /* une copie sur trois + son espace */
+}
+.site-card {
+  display: block;
+  width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow: 0 14px 30px -20px color-mix(in oklch, var(--fg-0) 40%, transparent);
+  transition: transform 220ms var(--vsw-ease), border-color 220ms var(--vsw-ease);
+}
+.site-card:hover { transform: translateY(-3px); border-color: var(--accent-40); }
+.site-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.site-card-bar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--bg-1);
+}
+.site-card-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.site-card-bar span {
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--fg-2);
+  background: var(--bg-2);
+  border-radius: 6px;
+  padding: 3px 10px;
+}
+.site-card-img { display: block; width: 100%; height: auto; aspect-ratio: 960 / 555; object-fit: cover; object-position: top; }
+.site-card-nom { display: block; padding: 11px 14px 13px; font-size: 14px; font-weight: 500; color: var(--fg-0); }
+@media (max-width: 640px) {
+  .sites-band { margin-top: 48px; padding: 26px 0 30px; }
+  .site-card { width: 280px; }
+  .sites-band-pause { top: 18px; right: 12px; }
+  .sites-band .hero-divider { margin-top: 44px; }
+}
+
+/* 4. Services en deux colonnes : titre fixe à gauche, cartes empilées dans un plateau */
+.services-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 72px;
+  align-items: start;
+}
+.services-intro { position: sticky; top: 120px; }
+.services-intro h2 {                     /* mêmes réglages que .section-head h2 */
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: var(--fg-0);
+  font-weight: 500;
+  margin: 20px 0 18px;
+}
+.services-intro .desc { color: var(--fg-2); font-size: 17px; line-height: 1.6; margin: 0 0 28px; max-width: 460px; }
+.services-count {
+  margin-top: 36px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--fg-2);
+}
+.services-stack { display: flex; flex-direction: column; gap: 10px; }
+.svc-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 22px 22px 20px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 220ms var(--vsw-ease), box-shadow 220ms var(--vsw-ease), transform 220ms var(--vsw-ease);
+}
+.svc-card:hover { border-color: var(--accent-40); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.svc-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.svc-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.svc-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--fg-0);
+}
+.svc-card-num {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.svc-card-icon {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+.svc-card p { margin: 10px 0 14px; font-size: var(--fs-card); line-height: 1.6; color: var(--fg-1); max-width: 560px; }
+.svc-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (max-width: 1024px) {
+  .services-layout { grid-template-columns: 1fr; gap: 32px; }
+  .services-intro { position: static; }
+  .services-count { display: none; }
+}
+
+/* 5. Engagements : mosaïque dans un plateau (appel au centre en haut, métiers au centre en bas) */
+.section-head--center { align-items: center; text-align: center; }
+.section-head--center > div { display: flex; flex-direction: column; align-items: center; }
+.section-head--center h2 { margin: 18px auto 0; }
+.engagements-bento {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  grid-template-areas: "a b c" "d m e";
+  gap: 10px;
+}
+.engagements-bento .engagement { box-shadow: none; }
+.eg-a { grid-area: a; } .eg-b { grid-area: b; } .eg-c { grid-area: c; }
+.eg-d { grid-area: d; } .eg-m { grid-area: m; } .eg-e { grid-area: e; }
+.engagement--appel {
+  align-items: flex-start;
+  background:
+    linear-gradient(160deg, color-mix(in oklch, var(--accent) 12%, var(--surface)), color-mix(in oklch, var(--accent-2) 9%, var(--surface)));
+  border-color: color-mix(in oklch, var(--accent) 20%, var(--line-soft));
+}
+.engagement--appel .btn { margin-top: 6px; }
+.engagement--metiers h3 { text-align: center; margin-bottom: 6px; }
+.engagement--metiers ul { list-style: none; margin: 0; padding: 0; }
+.engagement--metiers li { border-bottom: 1px dashed var(--line); }
+.engagement--metiers a {
+  display: block;
+  padding: 9px 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+.engagement--metiers a::before { content: "✦  " / ""; }
+.engagement--metiers a::after { content: "  ✦" / ""; }
+.engagement--metiers a:hover { color: var(--fg-0); }
+@media (max-width: 1024px) {
+  .engagements-bento { grid-template-columns: 1fr 1fr; grid-template-areas: "a c" "b b" "d e" "m m"; }
+}
+@media (max-width: 640px) {
+  .engagements-bento { grid-template-columns: 1fr; grid-template-areas: "a" "b" "c" "d" "e" "m"; }
+}
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
+  .sites-band-track { animation: none !important; }
+  .sites-band-pause { display: none; }
+  .sites-band-viewport { overflow-x: auto; }
+  .hero-tile { animation: none !important; }
   html { scroll-behavior: auto !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -15,7 +15,7 @@ export default function RealisationsPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Cas d'usage"
+        eyebrow="Cas d'usage"
         title={
           <>
             Ce qu&apos;on peut<br />bâtir ensemble.

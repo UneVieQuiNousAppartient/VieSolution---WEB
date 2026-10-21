@@ -17,7 +17,7 @@ export default function DevisPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Combien ça coûte ?"
+        eyebrow="Combien ça coûte ?"
         title={
           <>
             Un prix clair,<br />avant de commencer.

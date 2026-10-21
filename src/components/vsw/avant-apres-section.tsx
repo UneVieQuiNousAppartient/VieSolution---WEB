@@ -55,7 +55,7 @@ export function AvantApresSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// Avant / après'}</div>
+            <div className="eyebrow">{'Avant / après'}</div>
             <h2>Ce qui change<br />dans votre semaine.</h2>
           </div>
           <p className="desc">

@@ -38,7 +38,7 @@ export default function PostulerStagiairePage() {
           >
             <Icon name="arrow" size={14} style={{ transform: 'rotate(180deg)' }} /> Retour au site
           </Link>
-          <div className="eyebrow">{'// Programme de stage'}</div>
+          <div className="eyebrow">{'Programme de stage'}</div>
           <h1
             className="display"
             style={{ fontSize: 'clamp(36px, 5vw, 60px)', margin: '24px 0 20px', maxWidth: 780 }}

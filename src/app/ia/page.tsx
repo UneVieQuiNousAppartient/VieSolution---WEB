@@ -16,7 +16,7 @@ export default function IAPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Intelligence artificielle"
+        eyebrow="Intelligence artificielle"
         title={
           <>
             L&apos;IA qui travaille<br />pour vous.

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
+import { Space_Grotesk, Inter, JetBrains_Mono, Caveat } from 'next/font/google';
 import './globals.css';
 import './vsw.css';
 import { VswNav } from '@/components/vsw/nav';
@@ -47,6 +47,14 @@ const fontBody = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+/* Écriture manuscrite de la note « appel gratuit de 30 min » du hero (lot design Agnos). */
+const fontHand = Caveat({
+  subsets: ['latin'],
+  weight: ['600'],
+  variable: '--font-hand-src',
   display: 'swap',
 });
 
@@ -98,7 +106,7 @@ export default function RootLayout({
     <html
       data-scroll-behavior="smooth"
       lang="fr-CA"
-      className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}
+      className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable} ${fontHand.variable}`}
     >
       <body>
         <JsonLd data={ORGANISATION} />

@@ -90,7 +90,7 @@ export default function AdminPage() {
     return (
       <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
         <div className="container" style={{ maxWidth: 420 }}>
-          <div className="eyebrow">{'// Admin'}</div>
+          <div className="eyebrow">{'Admin'}</div>
           <h1 className="display" style={{ fontSize: 36, margin: '20px 0 24px' }}>Espace admin</h1>
           <form onSubmit={login} style={box}>
             <div className="form-field">
@@ -116,7 +116,7 @@ export default function AdminPage() {
   return (
     <section className="section" style={{ borderTop: 'none' }}>
       <div className="container">
-        <div className="eyebrow">{'// Admin — suivi des leads'}</div>
+        <div className="eyebrow">{'Admin — suivi des leads'}</div>
         <h1 className="display" style={{ fontSize: 'clamp(28px,4vw,44px)', margin: '18px 0 24px' }}>
           Tableau de bord
         </h1>

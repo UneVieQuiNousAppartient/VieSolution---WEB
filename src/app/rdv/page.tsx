@@ -14,7 +14,7 @@ export default function RdvPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Prendre un RDV"
+        eyebrow="Prendre un RDV"
         title={
           <>
             Un appel découverte<br />gratuit, 30 minutes.

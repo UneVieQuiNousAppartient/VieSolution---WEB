@@ -76,7 +76,7 @@ export function DemarrerSection({ variant }: { variant: Variant }) {
         <div className="ai-wrap reveal">
           <div className="ai-top">
             <div>
-              <div className="eyebrow">{'// Démarrer simplement'}</div>
+              <div className="eyebrow">{'Démarrer simplement'}</div>
               <h2>
                 Pas besoin de tout changer.<br />
                 <span className="glow">On commence petit.</span>

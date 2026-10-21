@@ -77,7 +77,7 @@ export function SituationForm() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// Décrivez-nous votre situation'}</div>
+            <div className="eyebrow">{'Décrivez-nous votre situation'}</div>
             <h2>
               Dites-nous ce qui
               <br />

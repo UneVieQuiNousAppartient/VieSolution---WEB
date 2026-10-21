@@ -67,36 +67,44 @@ const SERVICES: {
   },
 ];
 
+/* Services en deux colonnes (lot design Agnos, 2026-10-21) : titre fixe à gauche, cartes
+   empilées à droite dans un « plateau », icône en haut à droite. */
 export function Services() {
+  const total = String(SERVICES.length).padStart(2, '0');
   return (
     <section id="services" className="section">
-      <div className="container">
-        <div className="section-head section-head--split reveal">
-          <div>
-            <div className="eyebrow">Services</div>
-            <h2>Sept façons<br />de vous simplifier la vie.</h2>
-          </div>
+      <div className="container services-layout">
+        <div className="services-intro reveal">
+          <div className="eyebrow">Services</div>
+          <h2>Sept façons de vous<br />simplifier la vie.</h2>
           <p className="desc">
             Les logiciels existent déjà : Zoho, Claude et bien d&apos;autres. Nous, on choisit les
             bons pour vous, on les installe, on les relie et on vous forme. Et quand rien
             n&apos;existe, on le bâtit&nbsp;: votre site, votre CRM, vos outils.
           </p>
+          <Link href="/devis#situation" className="btn btn-primary btn-lg">
+            Décrire votre situation <Icon name="arrow" size={14} />
+          </Link>
+          <div className="services-count" aria-hidden="true">01 — {total}</div>
         </div>
-        <div className="services-grid reveal">
+        <div className="tray services-stack reveal">
           {SERVICES.map((s) => (
-            <Link href={s.href} className="service" key={s.num} style={{ textDecoration: 'none' }}>
-              <div className="service-num">{s.num} / {String(SERVICES.length).padStart(2, '0')}</div>
-              <div className="service-icon">
-                <Icon name={s.icon} size={22} />
+            <Link href={s.href} className="svc-card" key={s.num}>
+              <div className="svc-card-head">
+                <h3>
+                  <span className="svc-card-num">{s.num}</span>
+                  {s.title}
+                </h3>
+                <span className="svc-card-icon" aria-hidden="true">
+                  <Icon name={s.icon} size={18} />
+                </span>
               </div>
-              <h3>{s.title}</h3>
               <p>{s.desc}</p>
-              <div className="service-tags">
+              <div className="svc-card-tags">
                 {s.tags.map((t) => (
-                  <span key={t} className="service-tag">{t}</span>
+                  <span key={t} className="pill">{t}</span>
                 ))}
               </div>
-              <div className="service-arrow"><Icon name="arrow" size={18} /></div>
             </Link>
           ))}
         </div>

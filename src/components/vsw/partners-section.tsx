@@ -64,7 +64,7 @@ export function PartnersSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// Ils nous font confiance'}</div>
+            <div className="eyebrow">{'Ils nous font confiance'}</div>
             <h2>Des entreprises d&apos;ici<br />nous ont fait confiance.</h2>
           </div>
           <p className="desc">

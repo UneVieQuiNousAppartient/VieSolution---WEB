@@ -16,7 +16,7 @@ export function PourVousSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// C’est pour vous si…'}</div>
+            <div className="eyebrow">{'C’est pour vous si…'}</div>
             <h2>Vous vous reconnaissez ?<br />On est là pour vous.</h2>
           </div>
           <p className="desc">

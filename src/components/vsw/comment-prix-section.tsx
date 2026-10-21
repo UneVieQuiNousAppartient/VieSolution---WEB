@@ -34,7 +34,7 @@ export function CommentPrixSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'// Comment on établit un prix'}</div>
+            <div className="eyebrow">{'Comment on établit un prix'}</div>
             <h2>
               Trois étapes,
               <br />
