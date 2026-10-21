@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 19.
+**Dernière mise à jour : 2026-10-21** — dernière section : 20.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -266,4 +266,14 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm test` 32/32 (fin de journée été/hiver, classement de la page, validation des réglages) ; `npm run verify` vert ; parcours dans Chromium à 1280 et 390 px avec des données simulées : sections affichées, chaque bouton envoie la bonne action (`contact`/`appel`, `opt_out`, réglage marche/arrêt et délai), aucun débordement ni erreur. `qa-agent` (Opus, ≈ 70 k) **VERT** ; révision unique : la relance 2 ne peut plus être réglée avant la relance 1, « Désabonnement enregistré » (sans genre). Coût réel du lot ≈ 170 k (session ≈ 100 k + QA 70 k). Non testé contre un vrai Supabase : **à tester par Camille**.
 
 **Non fait dans ce round** : `finDeJournee` décalée d'une heure les deux jours de changement d'heure ; seules les 200 fiches les plus récentes sont chargées (une tâche d'une fiche plus ancienne s'affiche sans nom) ; réglage du texte des courriels depuis l'admin (les gabarits restent dans le SQL) ; tableau en colonnes (kanban) et courriel du matin (non retenus par Camille) ; bouton « Envoyer tel quel » (non retenu) ; historique (timeline) d'une fiche à l'écran.
+
+## 20. ✅ Mise à jour de Next.js 16.1.6 → 16.4.2 (issue #4) (2026-10-21)
+
+**Contexte / demande** : la revue de sécurité du §18 a relevé `next` 16.1.6 vulnérable (critique : contrebande de requêtes dans les rewrites, cache `next/image` sans borne, etc.) et `nanoid` (élevé) — issue [#4](https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/issues/4). Camille : « oui fais la mise à jour de Next.js ».
+
+**Ce qui a été fait** (agent principal) : `next` et `eslint-config-next` 16.1.6 → **16.4.2** (dernière version stable, 15 oct. 2026), versions toujours figées ; `npm audit fix` (sans `--force`) pour les dépendances transitives (`nanoid`…). `package.json`, `package-lock.json`.
+
+**Vérification technique** : `npm audit --omit=dev` : **0 vulnérabilité** en production. `npm run verify` vert (32/32 tests, 0 erreur eslint, 10 avertissements préexistants, build). Build de production lancé (`next start`) : 15 routes répondent 200 (`/`, `/ia`, `/zoho`, `/devis`, `/rdv`, `/contact`, `/admin`, les 3 pages de service, `/realisations`, `/a-propos`, `sitemap.xml`, `robots.txt`, `llms.txt`), 404 sur une page inexistante, `/api/cron/tick` sans secret → 401 ; titres `h1` corrects ; aucune erreur de page (seules erreurs : ressources externes bloquées par le réseau de l'environnement, et le 401 attendu de `/admin` avant connexion) ; parcours de double vérification et page « Aujourd'hui » rejoués (données simulées) sans erreur ni débordement. `qa-agent` (Opus, ≈ 48 k) **VERT** : versions figées et cohérentes avec le verrou, diff du verrou sans surprise (sharp 0.35, postcss, nanoid, binaires facultatifs de sharp), aucun avertissement nouveau au build. Coût réel ≈ 90 k (session ≈ 40 k + QA 48 k).
+
+**Non fait dans ce round** : `braces` (via `micromatch`, outils de lint seulement, pas dans le site publié) reste signalé par `npm audit` : la seule « correction » proposée (`--force`) rétrograderait `eslint-config-next` en 14 — refusée.
 
