@@ -253,6 +253,85 @@ AS $$
   UPDATE vsw_job_locks SET locked_until = now(), updated_at = now() WHERE name = p_name;
 $$;
 
+-- Accès à /admin (double vérification, src/lib/admin/) ------------------------------------
+-- Compteur d'essais par fenêtre fixe (vsw_rate_limits) : renvoie le nombre d'essais de la fenêtre,
+-- celui-ci compris. Atomique : deux essais simultanés ne lisent jamais le même compte.
+CREATE OR REPLACE FUNCTION public.vsw_rate_limit_hit(p_key text, p_window_seconds integer)
+RETURNS integer
+LANGUAGE sql
+SET search_path = public
+AS $$
+  INSERT INTO vsw_rate_limits (key, window_start, count)
+  VALUES (p_key, to_timestamp(floor(extract(epoch FROM now()) / p_window_seconds) * p_window_seconds), 1)
+  ON CONFLICT (key, window_start) DO UPDATE SET count = vsw_rate_limits.count + 1
+  RETURNING count;
+$$;
+
+-- Anti-rejeu du code à 6 chiffres : n'accepte qu'un pas de 30 s plus récent que le dernier utilisé.
+CREATE OR REPLACE FUNCTION public.vsw_totp_accept(p_step bigint)
+RETURNS boolean
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
+DECLARE
+  v_ok boolean;
+BEGIN
+  INSERT INTO vsw_settings (key, value, updated_at, updated_by)
+  VALUES ('admin_totp_last_step', to_jsonb(p_step), now(), 'admin')
+  ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+    WHERE (vsw_settings.value #>> '{}')::bigint < p_step
+  RETURNING true INTO v_ok;
+  RETURN COALESCE(v_ok, false);
+END;
+$$;
+
+-- Activation de la double vérification (secret déjà chiffré par le serveur). p_replace = false
+-- (session « code d'accès seulement ») : n'écrit QUE s'il n'existe encore aucun secret — deux
+-- activations simultanées ne peuvent pas se remplacer l'une l'autre. p_replace = true (session
+-- complète, changement de téléphone) : remplace.
+CREATE OR REPLACE FUNCTION public.vsw_mfa_enroll(p_secret text, p_step bigint, p_hashes jsonb, p_replace boolean)
+RETURNS boolean
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
+DECLARE
+  v_ok boolean;
+BEGIN
+  IF p_replace THEN
+    INSERT INTO vsw_settings (key, value, updated_at, updated_by)
+    VALUES ('admin_totp_secret', to_jsonb(p_secret), now(), 'admin')
+    ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now();
+  ELSE
+    INSERT INTO vsw_settings (key, value, updated_at, updated_by)
+    VALUES ('admin_totp_secret', to_jsonb(p_secret), now(), 'admin')
+    ON CONFLICT (key) DO NOTHING
+    RETURNING true INTO v_ok;
+    IF v_ok IS NULL THEN RETURN false; END IF;
+  END IF;
+  INSERT INTO vsw_settings (key, value, updated_at, updated_by) VALUES
+    ('admin_totp_last_step', to_jsonb(p_step), now(), 'admin'),
+    ('admin_backup_codes', p_hashes, now(), 'admin')
+  ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now();
+  RETURN true;
+END;
+$$;
+
+-- Code de secours : usage unique (l'empreinte est retirée de la liste dans la même instruction).
+CREATE OR REPLACE FUNCTION public.vsw_use_backup_code(p_hash text)
+RETURNS boolean
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
+DECLARE
+  v_ok boolean;
+BEGIN
+  UPDATE vsw_settings SET value = value - p_hash, updated_at = now()
+  WHERE key = 'admin_backup_codes' AND jsonb_typeof(value) = 'array' AND value ? p_hash
+  RETURNING true INTO v_ok;
+  RETURN COALESCE(v_ok, false);
+END;
+$$;
+
 CREATE TABLE IF NOT EXISTS vsw_availability_windows (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   weekday INTEGER NOT NULL CHECK (weekday BETWEEN 0 AND 6),
@@ -358,11 +437,19 @@ CREATE POLICY "anon insert vsw_faq_suggestions" ON vsw_faq_suggestions FOR INSER
 CREATE POLICY "anon insert vsw_comments" ON vsw_comments FOR INSERT TO anon WITH CHECK (true);
 CREATE POLICY "anon read approved vsw_comments" ON vsw_comments FOR SELECT TO anon USING (status = 'Approuvé');
 
--- Fonctions du verrou : service_role seulement (jamais appelables depuis le site par la clé anon).
+-- Fonctions du verrou et de l'accès admin : service_role seulement (jamais appelables par la clé anon).
 REVOKE ALL ON FUNCTION public.vsw_claim_job_lock(text, integer, text) FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION public.vsw_release_job_lock(text) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.vsw_claim_job_lock(text, integer, text) TO service_role;
 GRANT EXECUTE ON FUNCTION public.vsw_release_job_lock(text) TO service_role;
+REVOKE ALL ON FUNCTION public.vsw_rate_limit_hit(text, integer) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.vsw_totp_accept(bigint) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.vsw_use_backup_code(text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.vsw_rate_limit_hit(text, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.vsw_totp_accept(bigint) TO service_role;
+GRANT EXECUTE ON FUNCTION public.vsw_use_backup_code(text) TO service_role;
+REVOKE ALL ON FUNCTION public.vsw_mfa_enroll(text, bigint, jsonb, boolean) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.vsw_mfa_enroll(text, bigint, jsonb, boolean) TO service_role;
 
 -- ============================================================================
 -- 3. INGESTION : formulaires du site -> vsw_leads (déduplication par courriel)

@@ -26,6 +26,8 @@ export async function lancerTick(source = 'cron'): Promise<ResultatTick> {
     } catch (e) {
       regles = { error: e instanceof Error ? e.message : String(e) };
     }
+    // Ménage : compteurs d'essais de connexion à /admin de plus d'un jour (vsw_rate_limits).
+    await db.from('vsw_rate_limits').delete().lt('window_start', new Date(Date.now() - 24 * 3600 * 1000).toISOString()).then(() => undefined, () => undefined);
     return { at, source, duree_ms: Date.now() - new Date(at).getTime(), regles };
   } finally {
     if (!error) await db.rpc('vsw_release_job_lock', { p_name: VERROU }).then(() => undefined, () => undefined);

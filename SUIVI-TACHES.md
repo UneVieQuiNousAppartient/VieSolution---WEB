@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 17.
+**Dernière mise à jour : 2026-10-21** — dernière section : 18.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -239,4 +239,18 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert ; `npm test` 17/17 ; `qa-agent` (Opus, ≈ 30 k) **VERT** (adresse fidèle à ce que Camille a dit, garde d'envoi intacte, documents cohérents) ; à savoir : un formulaire de test soumis après la mise en ligne recevra une vraie relance 48 h plus tard si aucun contact n'est noté dans `/admin`. Première mise en ligne Vercel « READY » : la branche de production (ancien site) est publiée sur `vie-solution-web.vercel.app`. Coût réel ≈ 80 k (session ≈ 50 k + QA 30 k). Rien ne part encore : SQL non exécuté, Resend et variables non configurés.
 
 **Non fait dans ce round** : variables d'environnement Vercel (à saisir par Camille : clés Supabase, `ADMIN_ACCESS_CODE`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`) ; domaine viesolutionweb.ca ; branche de production à changer au moment de la fusion ; compte Resend ; exécution du SQL ; lot 2 (onglet « Aujourd'hui ») en attente du feu vert de Camille.
+
+## 18. ✅ Double vérification (MFA) de /admin (2026-10-21)
+
+**Contexte / demande** : Camille, à propos de `ADMIN_ACCESS_CODE` : « je peux avoir MFA ? », puis « oui fais la MFA puis le lot 2 » (plan ≈ 200 k accepté). Constat avant : un seul code, aucune limite d'essais, jeton de session fixe (empreinte du code) réutilisable tant que le code ne change pas.
+
+**Ce qui a été fait** (agent principal) : KHI utilise le MFA de Supabase Auth (comptes) — inapplicable ici (pas de comptes) : TOTP RFC 6238 écrit sans dépendance.
+- `src/lib/admin/mfa.ts` (pur) : base32, HOTP/TOTP (±30 s, anti-rejeu par pas), secret de 160 bits, lien `otpauth://`, 8 codes de secours `XXXX-XXXX` (empreinte HMAC seulement), session `exp.m.signature` (HMAC, 8 h, clé = **`ADMIN_SECRET`** + empreinte du code d'accès), chiffrement AES-256-GCM du secret TOTP, comparaison du code en temps constant.
+- `src/lib/admin/mfa-store.ts` + SQL (`vsw_rate_limit_hit`, `vsw_totp_accept`, `vsw_use_backup_code`, `vsw_mfa_enroll`, service_role seulement) : secret chiffré, dernier pas, codes de secours dans `vsw_settings` ; compteurs dans `vsw_rate_limits` (purgés après un jour par le passage horaire).
+- Routes : `/api/admin/login` (code + code à 6 chiffres ou code de secours ; 8 essais par IP par 15 min ; 20 échecs du second facteur au total par 15 min, comptés seulement quand le code d'accès est juste ; échecs et connexions au journal ; alerte en cas de code de secours ou d'échecs répétés ; base injoignable ou `ADMIN_SECRET` absent = refus), `/api/admin/mfa` (activation atomique : sans session complète, seulement s'il n'existe aucun secret ; alerte à chaque activation), `/api/admin/logout`. `src/lib/admin-auth.ts` : `isAuthed` exige la double vérification — une session « code seulement » ne sert qu'à l'activer.
+- `/admin` : second champ à la connexion, écran d'activation en 3 étapes (application, clé ou lien, premier code), écran des codes de secours, bouton « Se déconnecter ».
+
+**Vérification technique** : `npm test` 28/28 (vecteurs officiels RFC 6238 ; anti-rejeu cassé une fois → test rouge ; jeton forgé avec le seul code d'accès refusé ; chiffrement) ; SQL rejoué dans un Postgres 16 local (compteur, anti-rejeu, code de secours unique, activation atomique, droits `anon` refusés) ; parcours d'écran dans Chromium à 390 px (réponses du serveur simulées). `qa-agent` (Opus, ≈ 74 k) **VERT** avec 3 points ; `securite` (Opus, ≈ 129 k) **NON** : session forgeable avec le seul code d'accès (critique, prouvé par un script), activation non atomique, blocage de Camille par le compteur global, secret TOTP en clair dans une base partagée avec CSF → tout corrigé dans la révision unique, puis re-vérifié par `securite` (≈ 30 k) : **OK pour la mise en ligne** une fois `ADMIN_SECRET` saisi et le SQL exécuté (secret serveur `ADMIN_SECRET`, `vsw_mfa_enroll`, compteur global limité aux échecs du second facteur, chiffrement, empreintes HMAC, messages de refus identiques, `x-real-ip`, purge, journal et alertes). Dépendances : `next` 16.1.6 vulnérable (critique) → issue [#4](https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/issues/4). Non testé contre un vrai Supabase : **à tester par Camille** après exécution du SQL.
+
+**Non fait dans ce round** : « se souvenir de cet appareil » (KHI : 30 jours) ; plusieurs téléphones ; code QR (il faudrait une dépendance : lien `otpauth://` sur téléphone ou clé à taper) ; aucun écran pour régénérer les codes de secours ou changer de téléphone (l'API le permet avec une session complète) ; révocation des sessions côté serveur (un cookie volé reste valable jusqu'à 8 h ; changer `ADMIN_ACCESS_CODE` ou `ADMIN_SECRET` les coupe toutes) ; mise à jour de Next.js (issue #4). `.env.local.example` non complété (fichiers `.env*` protégés par le hook du projet : liste des variables dans `CLAUDE.md`).
 

@@ -34,7 +34,14 @@ function fmtDate(s: string | null) {
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [code, setCode] = useState('');
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+  // Double vérification : 'activer' (session « code seulement »), puis 'codes' (codes de secours à noter)
+  const [mfaEtape, setMfaEtape] = useState<null | 'activer' | 'codes'>(null);
+  const [mfa, setMfa] = useState<{ secret: string; lisible: string; lien: string } | null>(null);
+  const [mfaCode, setMfaCode] = useState('');
+  const [codesSecours, setCodesSecours] = useState<string[]>([]);
   const [data, setData] = useState<Data | null>(null);
   const [tab, setTab] = useState<'leads' | 'drafts' | 'tasks'>('leads');
   const [busy, setBusy] = useState(false);
@@ -58,14 +65,54 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, otp }),
     });
     setBusy(false);
-    const json = await res.json();
+    const json = await res.json().catch(() => ({}));
     if (!res.ok) { setError(json.error || 'Erreur'); return; }
     setError('');
+    setOtp('');
+    if (json.activer_mfa) { setMfaEtape('activer'); return; }
+    if (json.code_secours_utilise) setInfo('Connexion faite avec un code de secours : il ne servira plus. S’il vous en reste peu, réactivez la double vérification avec votre nouveau téléphone.');
     setAuthed(true);
     load();
+  };
+
+  const mfaPost = async (payload: Record<string, string>) => {
+    setBusy(true);
+    const res = await fetch('/api/admin/mfa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setBusy(false);
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) { setError(json.error || 'Erreur'); return null; }
+    setError('');
+    return json;
+  };
+
+  const commencerMfa = async () => {
+    const json = await mfaPost({ etape: 'debut' });
+    if (json) setMfa(json);
+  };
+
+  const confirmerMfa = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mfa) return;
+    const json = await mfaPost({ etape: 'confirmer', secret: mfa.secret, otp: mfaCode });
+    if (!json) return;
+    setMfa(null);
+    setMfaCode('');
+    setCodesSecours(json.codes || []);
+    setMfaEtape('codes');
+  };
+
+  const logout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    setAuthed(false);
+    setData(null);
+    setCode('');
   };
 
   const act = async (type: string, id: string, value?: string) => {
@@ -85,6 +132,83 @@ export default function AdminPage() {
 
   const leadById = (id: string) => data?.leads.find((l) => l.id === id);
 
+  if (mfaEtape === 'activer') {
+    return (
+      <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
+        <div className="container" style={{ maxWidth: 520 }}>
+          <div className="eyebrow">{'Admin'}</div>
+          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 12px' }}>Activer la double vérification</h1>
+          <p style={{ color: 'var(--fg-2)', fontSize: 15, lineHeight: 1.6 }}>
+            En plus du code d&apos;accès, l&apos;admin demandera un code à 6 chiffres affiché par une application sur
+            votre téléphone. À faire une seule fois.
+          </p>
+          <div style={box}>
+            {!mfa ? (
+              <>
+                <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.6 }}>
+                  1. Installez une application d&apos;authentification gratuite : Google Authenticator, Microsoft
+                  Authenticator ou 1Password.
+                </p>
+                <button className="btn btn-primary" disabled={busy} onClick={commencerMfa}
+                  style={{ width: '100%', justifyContent: 'center' }}>
+                  {busy ? '…' : 'C’est fait, continuer'}
+                </button>
+              </>
+            ) : (
+              <form onSubmit={confirmerMfa}>
+                <p style={{ margin: '0 0 10px', fontSize: 14, lineHeight: 1.6 }}>
+                  2. Ajoutez Vie Solution Web à l&apos;application. Sur ce téléphone :{' '}
+                  <a href={mfa.lien} style={{ color: 'var(--accent)', fontWeight: 600 }}>ajouter à mon application</a>.
+                </p>
+                <p style={{ margin: '0 0 6px', fontSize: 14, lineHeight: 1.6 }}>
+                  Ou, dans l&apos;application, choisissez « Saisir une clé de configuration » et tapez cette clé :
+                </p>
+                <p className="mono" style={{ margin: '0 0 18px', fontSize: 15, letterSpacing: '0.06em', color: 'var(--fg-0)', wordBreak: 'break-word' }}>
+                  {mfa.lisible}
+                </p>
+                <div className="form-field">
+                  <label htmlFor="mfa-code">3. Entrez le code à 6 chiffres affiché</label>
+                  <input id="mfa-code" inputMode="numeric" autoComplete="one-time-code" value={mfaCode}
+                    onChange={(e) => setMfaCode(e.target.value)} autoFocus />
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={busy}
+                  style={{ width: '100%', justifyContent: 'center' }}>
+                  {busy ? '…' : 'Activer'}
+                </button>
+              </form>
+            )}
+            {error && <p role="alert" style={{ color: 'var(--danger)', fontSize: 13, marginTop: 12 }}>{error}</p>}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (mfaEtape === 'codes') {
+    return (
+      <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
+        <div className="container" style={{ maxWidth: 520 }}>
+          <div className="eyebrow">{'Admin'}</div>
+          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 12px' }}>Vos codes de secours</h1>
+          <p style={{ color: 'var(--fg-2)', fontSize: 15, lineHeight: 1.6 }}>
+            Si vous perdez votre téléphone, un de ces codes remplace le code à 6 chiffres. Chacun ne sert
+            qu&apos;une fois. Notez-les sur papier ou dans votre gestionnaire de mots de passe : ils ne
+            seront plus jamais affichés.
+          </p>
+          <div style={box}>
+            <ul className="mono" style={{ listStyle: 'none', padding: 0, margin: '0 0 18px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, fontSize: 15, color: 'var(--fg-0)' }}>
+              {codesSecours.map((c) => <li key={c}>{c}</li>)}
+            </ul>
+            <button className="btn btn-primary" onClick={() => { setMfaEtape(null); setCodesSecours([]); setAuthed(true); load(); }}
+              style={{ width: '100%', justifyContent: 'center' }}>
+              Je les ai notés — ouvrir le tableau de bord
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (!authed) {
     return (
       <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
@@ -98,6 +222,16 @@ export default function AdminPage() {
                 id="code" type="password" value={code}
                 onChange={(e) => setCode(e.target.value)} autoFocus
               />
+            </div>
+            <div className="form-field">
+              <label htmlFor="otp">Code à 6 chiffres de votre application</label>
+              <input
+                id="otp" inputMode="numeric" autoComplete="one-time-code" value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <span style={{ fontSize: 12, color: 'var(--fg-3)' }}>
+                Première connexion : laissez vide, on l&apos;active ensuite. Téléphone perdu : entrez un code de secours.
+              </span>
             </div>
             {error && <p style={{ color: 'oklch(0.75 0.18 25)', fontSize: 13 }}>{error}</p>}
             <button type="submit" className="btn btn-primary" disabled={busy}
@@ -119,6 +253,12 @@ export default function AdminPage() {
         <h1 className="display" style={{ fontSize: 'clamp(28px,4vw,44px)', margin: '18px 0 24px' }}>
           Tableau de bord
         </h1>
+
+        {info && (
+          <div style={{ ...box, marginBottom: 20 }}>
+            <p style={{ margin: 0, fontSize: 14 }}>{info}</p>
+          </div>
+        )}
 
         {error && (
           <div style={{ ...box, borderColor: 'oklch(0.6 0.15 25)', marginBottom: 20 }}>
@@ -142,7 +282,7 @@ export default function AdminPage() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
               {([['leads', 'Leads'], ['drafts', `Brouillons (${pending.length})`], ['tasks', 'Tâches']] as const).map(([k, label]) => (
                 <button key={k} className={'calc-option' + (tab === k ? ' active' : '')} onClick={() => setTab(k)}>
                   {label}
@@ -150,6 +290,9 @@ export default function AdminPage() {
               ))}
               <button className="calc-option" onClick={load} disabled={busy} style={{ marginLeft: 'auto' }}>
                 Rafraîchir
+              </button>
+              <button className="calc-option" onClick={logout}>
+                Se déconnecter
               </button>
             </div>
 

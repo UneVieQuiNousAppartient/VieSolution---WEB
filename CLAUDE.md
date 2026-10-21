@@ -50,8 +50,15 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   `src/lib/crm/regles.ts`) : pied avec adresse postale (`vsw_settings.postal_address`) et
   lien de désabonnement (`/api/desabonnement`) — sans adresse postale, rien ne part.
 - Règles pures testées : `npm test` (`tests/*.test.mjs`, Node retire les types).
-- Admin `/admin` : code d'accès (`ADMIN_ACCESS_CODE`) → cookie httpOnly ; routes
-  `/api/admin/*` utilisent `SUPABASE_SERVICE_ROLE_KEY` côté serveur.
+- Admin `/admin` : code d'accès (`ADMIN_ACCESS_CODE`) **+ double vérification** (code à 6
+  chiffres d'une application d'authentification, TOTP maison `src/lib/admin/mfa.ts`, sans
+  dépendance ; secret CHIFFRÉ et empreintes des codes de secours dans `vsw_settings`,
+  `src/lib/admin/mfa-store.ts`) → cookie httpOnly signé avec `ADMIN_SECRET` — jamais avec le
+  seul code d'accès —, 8 h (`src/lib/admin-auth.ts`). Essais limités : 8 par IP, et 20 échecs du
+  code à 6 chiffres au total par 15 min. Première connexion : activation obligatoire avant toute
+  donnée (à faire dès la mise en ligne). Téléphone et codes de secours perdus : supprimer la
+  ligne `admin_totp_secret` de `vsw_settings`, puis réactiver aussitôt. Routes
+  `/api/admin/*` : `SUPABASE_SERVICE_ROLE_KEY` côté serveur.
 
 ## .env.local attendu
 
@@ -59,7 +66,8 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 NEXT_PUBLIC_SUPABASE_URL=https://gflkfwalfaeeknauxyig.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<clé anon>
 SUPABASE_SERVICE_ROLE_KEY=<clé service_role — jamais côté client>
-ADMIN_ACCESS_CODE=<code d'accès admin>
+ADMIN_ACCESS_CODE=<code d'accès admin — une phrase longue>
+ADMIN_SECRET=<32 caractères au hasard — signe les sessions /admin et chiffre le secret de double vérification ; le changer déconnecte et oblige à réactiver la double vérification>
 CRON_SECRET=<32 caractères au hasard — Vercel l'envoie au passage horaire>
 UNSUBSCRIBE_SECRET=<32 caractères au hasard — signe les liens de désabonnement ; ne plus le changer>
 RESEND_API_KEY=<clé Resend>
