@@ -278,17 +278,23 @@ html { scroll-padding-top: 96px; }
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 0%, transparent 70%);
   opacity: 0.5;
 }
+/* Voile en deux tons (lot 21st.dev) : bleu-sarcelle à gauche, violet discret à droite —
+   un fond qui respire au lieu d'un seul halo centré. Jetons seulement, lisible sur les deux thèmes. */
 .hero-glow {
   position: absolute;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 600px;
-  background: radial-gradient(ellipse at center,
-    color-mix(in oklch, var(--accent) 25%, transparent) 0%,
-    color-mix(in oklch, var(--accent) 8%, transparent) 35%,
-    transparent 70%);
+  top: -160px;
+  left: 0;
+  right: 0;
+  height: 640px;
+  background:
+    radial-gradient(ellipse 42% 60% at 18% 40%,
+      color-mix(in oklch, var(--accent) 22%, transparent) 0%,
+      color-mix(in oklch, var(--accent) 7%, transparent) 45%,
+      transparent 72%),
+    radial-gradient(ellipse 42% 60% at 82% 45%,
+      color-mix(in oklch, var(--accent-2) 14%, transparent) 0%,
+      color-mix(in oklch, var(--accent-2) 5%, transparent) 45%,
+      transparent 72%);
   filter: blur(40px);
   pointer-events: none;
 }
@@ -2536,6 +2542,312 @@ html { scroll-behavior: smooth; }
   .chat-fab { bottom: 88px; }
   .chat-panel { bottom: 156px; max-height: calc(100dvh - 200px); }
 }
+
+/* ============ Lot 21st.dev (2026-10-21) ============
+   Trois blocs inspirés du catalogue 21st.dev, portés sur les jetons de vsw.css :
+   1. panneau « Avant / après » (Comparison 03, Hirael, MIT) ;
+   2. frise du processus (How it works 09) ;
+   3. carte d'appel à l'action (Gradient CTA Banner). */
+
+/* 1. Panneau « Avant / après » : une grille à deux colonnes, chaque ligne « avant » dans la même
+   rangée que sa ligne « après » — hauteurs alignées, un seul cadre, un filet entre les deux. */
+.compare-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  max-width: 980px;
+  margin: 0 auto;
+  background: var(--line-soft);           /* le 1 px de « gap » devient le filet */
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.compare-panel-avant { background: var(--surface); }
+.compare-panel-apres { background: color-mix(in oklch, var(--accent) 4%, var(--surface)); }
+.compare-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 28px 14px;
+}
+.compare-panel-head h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.compare-panel-apres.compare-panel-head h3 { color: var(--accent); }
+.compare-panel-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-2);
+  flex: none;
+}
+.compare-panel-apres .compare-panel-dot {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.compare-panel-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 28px;
+  font-size: var(--fs-card);
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+.compare-panel-cell.compare-panel-apres { color: var(--fg-0); }
+.compare-panel-cell .mark {
+  flex: none;
+  width: 16px;
+  display: inline-flex;
+  justify-content: center;
+  font-family: var(--font-mono);
+  color: var(--fg-3);
+  line-height: inherit;
+  padding-top: 0.1em;
+}
+.compare-panel-cell.compare-panel-apres .mark { color: var(--accent); }
+.compare-panel > :nth-last-child(-n + 2) { padding-bottom: 26px; }
+
+/* Bascule Avant / Après : visible seulement sur téléphone, et seulement avec JavaScript. */
+.compare-switch { display: none; }
+.compare-outcomes {
+  max-width: 980px;
+  margin: 28px auto 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px 32px;
+  flex-wrap: wrap;
+}
+.compare-outcomes-list {
+  margin: 0;
+  flex: 1 1 560px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 24px;
+}
+.compare-outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.compare-outcome dt {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg-0);
+}
+.compare-outcome dd {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fg-2);
+}
+.compare-note { margin-top: 16px; }
+@media (max-width: 640px) {
+  .compare-panel { grid-template-columns: 1fr; }
+  .compare-panel-head { padding: 18px 20px 10px; }
+  .compare-panel-cell { padding: 14px 20px; }
+  .compare-panel > :nth-last-child(-n + 2) { padding-bottom: 14px; }
+  .compare-panel > :last-child,
+  .compare-panel.is-switchable[data-view="avant"] > :nth-last-child(2) { padding-bottom: 22px; }
+  /* Sans bascule (pas de JavaScript) : l'ordre du DOM alterne avant/après ; on regroupe par colonne. */
+  .compare-panel:not(.is-switchable) .compare-panel-avant { order: 0; }
+  .compare-panel:not(.is-switchable) .compare-panel-apres { order: 1; }
+  /* Avec bascule : une seule colonne à la fois. */
+  .compare-panel.is-switchable[data-view="avant"] .compare-panel-apres,
+  .compare-panel.is-switchable[data-view="apres"] .compare-panel-avant { display: none; }
+  .compare-switch {                        /* rendu seulement côté client (voir le composant) */
+    display: inline-flex;
+    margin: 0 0 16px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--line-soft);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+  .compare-switch-btn {
+    appearance: none;
+    border: 0;
+    background: none;
+    border-radius: 999px;
+    min-height: 40px;
+    padding: 0 20px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg-2);
+    cursor: pointer;
+  }
+  .compare-switch-btn[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--surface);
+  }
+  .compare-outcomes { flex-direction: column; align-items: flex-start; }
+  .compare-outcomes-list { grid-template-columns: 1fr; flex-basis: auto; width: 100%; }
+}
+
+/* 2. Frise du processus : pastille numérotée au-dessus de chaque carte, reliée par une ligne fine. */
+.process-grid--timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.process-grid--timeline .process-step {
+  position: relative;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  min-height: 0;
+  gap: 0;
+  align-items: center;
+}
+.process-grid--timeline .process-step::before {
+  content: "";
+  position: absolute;
+  top: 20px;                              /* centre de la pastille (40 px) */
+  left: calc(var(--grid-gap) / -2);
+  right: calc(var(--grid-gap) / -2);
+  height: 1px;
+  background: var(--line);
+}
+.process-grid--timeline .process-step:first-child::before { left: 50%; }
+.process-grid--timeline .process-step:last-child::before { right: 50%; }
+.process-grid--timeline .step-dot {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 20px;
+  transition: border-color 220ms var(--vsw-ease), box-shadow 220ms var(--vsw-ease);
+}
+.process-grid--timeline .step-body {
+  position: relative;                     /* passe devant la ligne (::before absolu) */
+  z-index: 1;
+  width: 100%;
+  flex: 1;                                /* même hauteur de carte sur toute la rangée */
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 220px;
+  transition: border-color 220ms var(--vsw-ease), box-shadow 220ms var(--vsw-ease);
+}
+.process-grid--timeline .process-step:hover { transform: none; border-color: transparent; box-shadow: none; }
+.process-grid--timeline .process-step:hover .step-body {
+  border-color: var(--accent-40);
+  box-shadow: var(--shadow-sm);
+}
+.process-grid--timeline .process-step:hover .step-dot { border-color: var(--accent); }
+@media (max-width: 1024px) {
+  /* Deux colonnes : la ligne s'arrête aux bords de chaque rangée. */
+  .process-grid--timeline .process-step::before { left: calc(var(--grid-gap) / -2); right: calc(var(--grid-gap) / -2); }
+  .process-grid--timeline .process-step:nth-child(odd)::before { left: 50%; }
+  .process-grid--timeline .process-step:nth-child(even)::before { right: 50%; }
+}
+@media (max-width: 640px) {
+  /* Une colonne : la ligne devient verticale, le long des pastilles. */
+  .process-grid--timeline { position: relative; }
+  .process-grid--timeline .process-step::before,
+  .process-grid--timeline .process-step:nth-child(odd)::before,
+  .process-grid--timeline .process-step:nth-child(even)::before {
+    top: 40px;
+    bottom: calc(var(--grid-gap) * -1);
+    left: 50%;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .process-grid--timeline .process-step:last-child::before { display: none; }
+}
+
+/* 3. Carte d'appel à l'action : grand cadre arrondi, voile doux, contenu centré. */
+.cta-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-xl);
+  padding: 72px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background:
+    radial-gradient(ellipse 55% 80% at 8% 50%,
+      color-mix(in oklch, var(--accent) 12%, transparent), transparent 70%),
+    radial-gradient(ellipse 55% 80% at 92% 50%,
+      color-mix(in oklch, var(--accent-2) 9%, transparent), transparent 70%),
+    var(--surface);
+  box-shadow: var(--shadow-xs);
+}
+.cta-card-eyebrow { margin-bottom: 4px; }
+.cta-card-title {
+  margin: 0;
+  max-width: 720px;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--fg-0);
+}
+.cta-card-title em {
+  font-style: normal;
+  color: var(--accent);
+}
+.cta-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+@media (max-width: 640px) {
+  .cta-card { padding: 48px 22px; border-radius: var(--radius-lg); }
+  .cta-card-actions { flex-direction: column; width: 100%; }
+  .cta-card-actions .btn { width: 100%; justify-content: center; }
+}
+
+/* Cascade d'apparition pour le nouveau panneau (voir le bloc « Cascade » plus haut). */
+.reveal.in.compare-panel > * {
+  animation: vsw-rise 500ms var(--vsw-ease) backwards;
+  animation-delay: calc(var(--vsw-i, 7) * 50ms);
+}
+.compare-panel > :nth-child(-n + 2) { --vsw-i: 0; }
+.compare-panel > :nth-child(n + 3):nth-child(-n + 4) { --vsw-i: 1; }
+.compare-panel > :nth-child(n + 5):nth-child(-n + 6) { --vsw-i: 2; }
+.compare-panel > :nth-child(n + 7):nth-child(-n + 8) { --vsw-i: 3; }
+.compare-panel > :nth-child(n + 9):nth-child(-n + 10) { --vsw-i: 4; }
+.compare-panel > :nth-child(n + 11):nth-child(-n + 12) { --vsw-i: 5; }
 
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {

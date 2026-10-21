@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-17** — dernière section : 8.
+**Dernière mise à jour : 2026-10-21** — dernière section : 9.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -102,3 +102,18 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `qa-agent` (Opus, 100 k, repris une fois) VERT avec 2 points à trancher (traités) ; contrastes estimés `--fg-1` 11:1, `--fg-2` 5,7:1, accent 4,8:1 ; `npm run verify` vert ; navigateur (Playwright) : sections 112 px, grilles 20 px, cartes r16 blanches, métiers 3 colonnes, champs 48 px / 16 px avec cadre rouge, bouton menu 44×44, panneau 9 liens × 56 px, Échap → focus bouton, défilement bloqué pendant l'ouverture, bulle à 88 px, sélecteur « Je suis… » à 655 px sur téléphone, thème sombre, aucune erreur de page.
 
 **Non fait dans ce round** : en sombre, `--surface` = `--bg-band` (cartes distinguées par la bordure seulement) ; pas de piège de focus dans le menu (non modal, acceptable) ; `body { overflow: hidden }` imparfait sur très vieux iOS ; éléments de Camille toujours attendus pour la dernière marche « premium » : logo définitif, photos de vraies personnes, vrai témoignage.
+
+## 9. ✅ Lot design 21st.dev (2026-10-21)
+
+**Contexte / demande** : « Utilise le plugin 21st.dev pour ajuster et améliorer le design. » Compte 21st.dev en palier gratuit : recherches illimitées, 1 seul téléchargement de code restant ce jour, génération IA désactivée. Les aperçus ont servi d'inspiration ; un seul composant téléchargé (« Comparison 03 », Hirael, MIT). Accord de Camille : tout le lot (4 sections, ≈ 300 k estimés).
+
+**Ce qui a été fait** (agent principal, pas d'`ux-agent`) :
+- **Avant / après** (`avant-apres-section.tsx`, client) : un seul panneau `.compare-panel` en grille 2 colonnes ; chaque ligne « avant » partage la rangée (donc la hauteur) de sa ligne « après » — fini le décalage des deux colonnes ; colonne « après » légèrement teintée (`--accent` 4 %) ; marques « — » / coche ; bandeau de conclusion `.compare-outcomes` (3 résultats qualitatifs, aucun chiffre : « Moins de ressaisie », « Rien d'oublié », « Clients mieux servis » + bouton « Voir pour votre métier » → `#metiers`) ; note « Exemples illustratifs » conservée. Téléphone : bascule Avant / Après (`aria-pressed`, 40 px), rendue seulement côté client (`useSyncExternalStore`) ; sans JavaScript, colonnes empilées (`order`).
+- **Processus** (`process-section.tsx`, accueil et `/a-propos`) : `<ol class="process-grid process-grid--timeline">`, pastille 01-04 (40 px) reliée par une ligne fine au-dessus des cartes ; ligne par rangée en 2 colonnes, verticale derrière les cartes en 1 colonne ; cartes de même hauteur ; le modificateur ne touche pas `/devis` ni `/postuler-stagiaire`.
+- **Appel à l'action** (`cta-section.tsx`, 6 pages) : carte `.cta-card` arrondie (`--radius-xl`), voile `--accent` / `--accent-2`, surtitre, titre `<h2>` centré, boutons centrés (empilés pleine largeur ≤ 640 px). Props inchangées.
+- **Hero** : `.hero-glow` en deux tons (bleu-sarcelle à gauche, violet discret à droite) au lieu d'un halo centré.
+- `vsw.css` : bloc « Lot 21st.dev » (jetons seulement) inséré avant la règle `prefers-reduced-motion` finale, qui reste dernière.
+
+**Vérification technique** : `npm run verify` vert (0 erreur, avertissements préexistants). Navigateur (Playwright, captures `l21-*.png`) : 5 rangées avec `top` et hauteur identiques ; bascule absente à 1280, visible à 390 (boutons 81×40 / 82×40), clic Avant → AAAAA, Après → BBBBB ; sans JavaScript : bascule absente, 10 cellules visibles, ordre AAAAAABBBBBB ; 4 pastilles 40×40 ; pas de défilement horizontal ; thème sombre ; aucune erreur de page. `qa-agent` (Opus, 65 k) VERT, aucun correctif exigé ; 2 points mineurs corrigés (`role="group"` sur le panneau, marge basse de la dernière cellule en vue « Avant ») ; contrastes calculés ≥ 4,77:1 en clair, 4,97:1 en sombre. Coût réel du lot ≈ 250 k (session principale ≈ 185 k + QA 65 k).
+
+**Non fait dans ce round** : surtitre « // Prochaine étape » ajouté dans la carte d'appel à l'action (6 pages) — **à valider par Camille** ; « La différence » (`comparison-section.tsx`, 7 lignes) garde l'ancien tableau à deux colonnes séparées — à passer sur `.compare-panel` si Camille le souhaite (≈ 30 k) ; aucun composant 21st.dev installé tel quel (le site n'est pas sur shadcn/ui : tout est porté sur `vsw.css`) ; second téléchargement 21st.dev possible dès demain (quota 2 / jour).

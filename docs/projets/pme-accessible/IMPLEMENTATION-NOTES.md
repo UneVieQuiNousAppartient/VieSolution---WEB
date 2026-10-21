@@ -437,3 +437,21 @@ Progression consignée groupe par groupe (reprise possible en cas de coupure).
 - `/devis` : les 3 étapes s'affichaient deux fois (section « Comment on établit un prix » + colonne à côté du formulaire). Décision : la section garde l'en-tête, « Ce qui fait varier le prix » et la phrase de conclusion ; les 3 étapes ne restent que dans la colonne du formulaire, là où elles rassurent au moment d'écrire.
 - Correction des notes : l'avertissement `react-hooks/refs` restant est dans `contact.tsx` (fichier non touché), pas dans un fichier du lot.
 - Vérifié dans le navigateur (Playwright, voir `pr-*.png`) : sections 112 px à 1280, grilles 20 px, cartes blanches r16, métiers 3 colonnes, champs 48 px / 16 px avec cadre rouge, bouton menu 44×44, panneau 9 liens × 56 px, Échap → focus sur le bouton, bulle à 88 px, sélecteur « Je suis… » à 655 px sur téléphone (< 900), aucune erreur de page.
+
+## Round 8 — lot design 21st.dev (2026-10-21, agent principal)
+
+### Ce que le plugin 21st.dev permet vraiment (à retenir pour les autres projets)
+- Palier gratuit : recherche du catalogue illimitée (noms, descriptions, **aperçus PNG**), **2 téléchargements de code par jour**, génération IA désactivée.
+- Les composants sont en React + Tailwind + shadcn/ui. Le site n'utilise ni Tailwind pour ses composants ni shadcn : on n'installe rien tel quel, on **reprend la structure** et on **porte les styles sur les jetons de `vsw.css`**. Les aperçus suffisent souvent ; le code téléchargé a servi pour les détails (bascule mobile, bandeau de conclusion, grille à 1 px de « gap » qui fait office de filet).
+- Méthode : `search` (plusieurs requêtes courtes) → télécharger les aperçus (`curl`) et les regarder → choisir **un** composant pour le téléchargement du jour → adapter.
+
+### Décisions de design
+- **Avant / après** : grille unique `grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-soft)` — le gap devient le filet, et chaque paire de cellules est dans la même rangée (hauteurs égales). Pas de texte barré (lisibilité pour la clientèle) : marque « — » grise à gauche, coche accent à droite, colonne « après » teintée à 4 % d'accent. Bandeau de conclusion **qualitatif** (aucun chiffre inventé) + bouton vers `#metiers`.
+- **Bascule mobile** : rendue seulement après hydratation (`useSyncExternalStore(subscribeNoop, () => true, () => false)` — aucun `setState` dans un effet, aucun avertissement ESLint). Sans JavaScript, `order` regroupe avant puis après (vérifié avec `javaScriptEnabled: false`).
+- **Processus** : `::before` de chaque `.process-step` dessine le segment de ligne (débordant de `--grid-gap / 2` de chaque côté pour franchir l'espace entre cartes) ; premier / dernier de rangée coupés à 50 % ; en 1 colonne, segment vertical derrière la carte (`.step-body { position: relative; z-index: 1 }`). `flex: 1` sur `.step-body` pour des cartes de même hauteur.
+- **CTA** : `h2` dans la carte (une seule par page ; la section n'a pas d'autre titre). Voile `radial-gradient` en `color-mix` sur `--accent` et `--accent-2`, donc correct en sombre sans règle dédiée.
+- **Hero** : deux ellipses au lieu d'un halo centré, `left: 0; right: 0` (plus de largeur fixe de 900 px).
+
+### Vérifications (round 8)
+- Script `lot21.cjs` : rangées `[top, top, h, h]` identiques par paire ; bascule `none` à 1280 / `inline-flex` à 390 ; boutons 81×40, 82×40 ; sans JS : 10 cellules, ordre `AAAAAABBBBBB` ; `scrollWidth <= clientWidth` à 390 ; 4 pastilles 40×40 ; aucune `pageerror`.
+- `npm run verify` vert. Captures : `l21-hero`, `l21-avantapres`, `l21-processus`, `l21-cta`, `l21-tab-*`, `l21-mob-*`, `l21-dark-*`.
