@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: '%s | Vie Solution Web',
   },
   description:
-    "Automatisation des processus, agents IA, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui nous appartient dans la gestion de votre entreprise.",
+    "Automatisation des processus, agents IA, sites et applications web, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui nous appartient dans la gestion de votre entreprise.",
   keywords: [
     'automatisation',
     'intelligence artificielle',
@@ -43,6 +43,8 @@ export const metadata: Metadata = {
     'Zoho',
     'implantation Zoho',
     'formation IA',
+    'site web',
+    'application web',
     'PME',
     'Québec',
     'VieSolution',

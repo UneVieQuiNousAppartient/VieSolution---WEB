@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 10.
+**Dernière mise à jour : 2026-10-21** — dernière section : 11.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -133,3 +133,19 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Navigateur (Playwright, captures `l10-*.png`) : 5 cartes « 01 / 05 … 05 / 05 », logo 28×28 dans le menu (clair, sombre, téléphone), note du badge sur `/ia`, nouvelle question de FAQ, texte d'aide du formulaire, mention des marques, `/icon.svg` servi (200, `image/svg+xml`) et seule icône déclarée, pas de défilement horizontal à 390 px, aucune erreur de page. `qa-agent` (Opus, 70 k) ROUGE sur un point : le style de `.ai-pillar-note` était écrasé par `.ai-pillar p` (15 px `--fg-1` au lieu de 13 px `--fg-2`) — corrigé par un sélecteur doublé, mesuré 13 px après correction ; point à trancher corrigé aussi : à 1024 et 820 px la carte 4 laissait un trou (carte 3 seule sur sa ligne) → grille 1-2 / 3-4 / 5 pleine largeur, mesurée. Contrastes calculés ≥ 5,25:1 (note, mentions), logo 4,83:1 en clair. Coût réel du lot ≈ 210 k (session principale ≈ 140 k + QA 70 k).
 
 **Non fait dans ce round** : **gestion des réseaux sociaux et vidéos** — reporté par Camille (« plus tard, aussitôt que j'aurai fait les miens ») ; image de partage (`og-image`) et icône Apple non refaites ; le logo de Vie Solution Assurance n'est pas modifié ; ampoule à faire valider par la personne responsable de la conformité du cabinet d'assurance (même famille de logo, entreprises distinctes) — **à confirmer par Camille**.
+
+## 11. ✅ Sites et applications web ; mention retirée sous le logo (2026-10-21)
+
+**Contexte / demande** : Camille : « enlève Québec IA Zoho en bas du logo ; on ne mentionne nulle part que nous faisons aussi des sites web, des applications web, des pages… »
+
+**Ce qui a été fait** (agent principal) :
+- Menu : « Québec · IA & Zoho » retiré sous le nom (le pied de page garde « Québec · Canada » sous le logo).
+- Services : nouvelle carte **05 « Sites et applications web »** (sites vitrines, pages de destination, applications web, formulaires reliés à vos outils → `/contact`), icône `globe` ajoutée ; « CRM et outils sur mesure » devient **06** ; « Six façons… » ; texte d'introduction : « on crée votre site web ». Grille : 1 | 2 | 3 / 4 (2 col.) / 5 (2 col.) | 6 ; en deux colonnes 1-2 / 3-4 / 5-6 ; place réservée à la flèche des cartes (`padding-right` des étiquettes).
+- Pied de page : « Automatisation, IA, sites web et implantation Zoho… » + lien « Sites et applications web ».
+- Formulaire de contact : le choix « Site web » devient « Site ou application web ».
+- Métadonnées : description du site et mots-clés « site web », « application web ».
+- Aucun lien vers les partenaires ni les réalisations : le site ne dit pas que Vie Solution Web a bâti leurs sites (texte « ce qu'on a fait pour eux » toujours en attente de Camille).
+
+**Vérification technique** : `npm run verify` vert. Navigateur (Playwright) à 1280 / 1024 / 820 / 390 px : 6 cartes aux positions attendues, aucune étiquette sous la flèche, pas de défilement horizontal, mention absente sous le logo, aucune erreur de page. `qa-agent` (Opus, 45 k) VERT, aucun correctif ; la valeur « Site web » n'est validée nulle part côté serveur (`sujet` : `z.string().min(1)`), le renommage est sans risque. Coût réel du lot ≈ 110 k (session principale ≈ 65 k + QA 45 k).
+
+**Non fait dans ce round** : pas de page dédiée « Sites web » ni d'exemples de sites dans « Cas d'usage » (les exemples actuels sont IA et Zoho) — à prévoir quand Camille aura des réalisations web à montrer ; chatbot non mis à jour (pas de choix « site web »).

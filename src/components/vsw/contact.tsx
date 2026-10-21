@@ -13,7 +13,7 @@ const PROJECT_OPTIONS = [
   'Agent IA',
   'Implantation Zoho',
   'Formation IA / Zoho',
-  'Site web',
+  'Site ou application web',
   'Autre',
 ];
 

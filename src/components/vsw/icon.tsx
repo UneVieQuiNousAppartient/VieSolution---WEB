@@ -3,7 +3,7 @@ import type { SVGProps } from 'react';
 export type IconName =
   | 'arrow' | 'play' | 'calendar' | 'chat' | 'close' | 'send' | 'code'
   | 'layout' | 'bolt' | 'mail' | 'phone' | 'pin' | 'chev-l' | 'chev-r'
-  | 'check' | 'clock' | 'vid' | 'logo' | 'grid' | 'users'
+  | 'check' | 'clock' | 'vid' | 'logo' | 'grid' | 'users' | 'globe'
   // Icônes propres aux métiers (metiers-section.tsx, sélecteur « Je suis… » du hero)
   | 'briefcase-chart' | 'house-key' | 'tooth' | 'heart-pulse' | 'calculator'
   | 'hammer' | 'house-sign' | 'storefront';
@@ -41,6 +41,7 @@ export function Icon({ name, size = 20, ...p }: IconProps) {
     case 'clock': return <svg {...common}><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>;
     case 'vid': return <svg {...common}><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>;
     case 'logo': return <svg {...common}><path d="M4 4h6l2 10 2-10h6M8 20h8"/></svg>;
+    case 'globe': return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>;
     case 'grid': return <svg {...common}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>;
     case 'users': return <svg {...common}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
     case 'briefcase-chart': return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><polyline points="7 16 10.5 12.5 13 14.5 17 10.5"/></svg>;

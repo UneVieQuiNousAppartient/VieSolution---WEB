@@ -23,11 +23,7 @@ export function VswNav() {
       <div className="container nav-inner">
         <Link href="/" className="logo" style={{ textDecoration: 'none' }}>
           <LogoMark />
-          <div>
-            Vie Solution Web
-            <br />
-            <small>Québec · IA &amp; Zoho</small>
-          </div>
+          <div>Vie Solution Web</div>
         </Link>
         <div className="nav-links">
           {NAV_LINKS.map((l) => (

@@ -452,9 +452,10 @@ section { position: relative; }
   grid-column: span 2;
 }
 .services-grid .service:nth-child(4) p { max-width: 520px; }
-/* 5e carte (CRM et outils sur mesure, 2026-10-21) : bande pleine largeur sous les quatre autres */
-.services-grid .service:nth-child(5) { grid-column: 1 / -1; }
-.services-grid .service:nth-child(5) p { max-width: 640px; }
+/* Cartes 5 (sites et applications web) et 6 (CRM et outils sur mesure), 2026-10-21 :
+   dernière rangée, la 5 sur deux colonnes comme la 4, la 6 sur une. */
+.services-grid .service:nth-child(5) { grid-column: span 2; }
+.services-grid .service:nth-child(5) p { max-width: 520px; }
 .service {
   background: var(--surface);
   border: 1px solid var(--line-soft);
@@ -510,6 +511,7 @@ section { position: relative; }
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 8px;
+  padding-right: 28px;   /* place de la flèche (.service-arrow, en bas à droite) */
 }
 .service-tag {
   font-family: var(--font-body);
@@ -1971,7 +1973,8 @@ section { position: relative; }
 /* ============ Responsive ============ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .services-grid .service:nth-child(4) { grid-column: auto; }   /* 2 colonnes : 1-2 / 3-4 / 5 pleine largeur */
+  .services-grid .service:nth-child(4),
+  .services-grid .service:nth-child(5) { grid-column: auto; }   /* 2 colonnes : 1-2 / 3-4 / 5-6 */
   .service:nth-child(1) { grid-row: auto; min-height: 320px; }
   .service:nth-child(1) h3 { font-size: 22px; }
   .calc-wrap, .contact-wrap, .booking, .about-wrap, .section-head--split {

@@ -43,6 +43,14 @@ const SERVICES: {
   },
   {
     num: '05',
+    icon: 'globe',
+    title: 'Sites et applications web',
+    desc: "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils : formulaires, rendez-vous, carnet de clients.",
+    tags: ['Sites vitrines', 'Pages de destination', 'Applications web', 'Formulaires reliés à vos outils'],
+    href: '/contact',
+  },
+  {
+    num: '06',
     icon: 'layout',
     title: 'CRM et outils sur mesure',
     desc: "Quand aucun logiciel tout fait ne colle à votre façon de travailler, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels.",
@@ -58,12 +66,12 @@ export function Services() {
         <div className="section-head section-head--split reveal">
           <div>
             <div className="eyebrow">Services</div>
-            <h2>Cinq façons<br />de vous simplifier la vie.</h2>
+            <h2>Six façons<br />de vous simplifier la vie.</h2>
           </div>
           <p className="desc">
             Un seul but : mieux servir vos clients et vous redonner du temps. Pour y arriver, on
-            automatise vos tâches répétitives, on installe des outils simples ou on vous en bâtit
-            sur mesure, et on vous forme, du début à la fin.
+            automatise vos tâches répétitives, on crée votre site web, on installe des outils
+            simples ou on vous en bâtit sur mesure, et on vous forme, du début à la fin.
           </p>
         </div>
         <div className="services-grid reveal">

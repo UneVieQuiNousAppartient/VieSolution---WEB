@@ -12,14 +12,15 @@ export function VswFooter() {
               <div>Vie Solution Web<br /><small>Québec · Canada</small></div>
             </div>
             <p style={{ color: 'var(--fg-2)', fontSize: 14, maxWidth: 300, margin: 0 }}>
-              Une vie qui nous appartient. Automatisation, IA et implantation Zoho pour
-              les entreprises québécoises.
+              Une vie qui nous appartient. Automatisation, IA, sites web et implantation Zoho
+              pour les entreprises québécoises.
             </p>
           </div>
           <div>
             <h5>Services</h5>
             <Link href="/ia">Automatisation &amp; IA</Link>
             <Link href="/zoho">Implantation Zoho</Link>
+            <Link href="/contact">Sites et applications web</Link>
             <Link href="/ia#formation">Formation IA &amp; Zoho</Link>
             <Link href="/devis">Combien ça coûte ?</Link>
           </div>
