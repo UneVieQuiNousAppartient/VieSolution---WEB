@@ -13,12 +13,14 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - **SEO / AEO** (§13) : plan du site, robots.txt, llms.txt, fiches schema.org, service 07 « Être trouvé sur Google et par les IA ». Domaine **viesolutionweb.ca** (confirmé). **Lot design Agnos** livré (§14) : menu flottant, surtitres encadrés, hero à arcs, bande « Des sites qu'on a bâtis » (Ben's, VieSolution, Khí), services en deux colonnes, mosaïque des engagements. À obtenir par Camille : accord des 3 clients pour leurs captures. Proposé : pages de réalisation (défi / solution / résultat), quand Camille donnera les faits.
 - **Pages de service** (§15) : `/sites-web`, `/crm-sur-mesure`, `/referencement` — accessibles par les cartes 05-07 de l'accueil, le pied de page et le lien sous la bande des sites.
 - **Intégration de CRM existants** (demande de Camille) : petit lot de textes, en attente de la liste des CRM qu'elle accepte. Attend la relecture de Camille et son mot pour fusionner.
-- **Mise en ligne** : SQL `supabase/setup-crm-vsw.sql` non exécuté, Edge Function `vsw-lead-followup` non déployée, cron non planifié, projet Vercel non créé.
+- **Suivi des demandes inspiré de KHI** (§16) : lot 1 livré (base, moteur horaire `/api/cron/tick`, relances J2/J5 désactivées par défaut, désabonnement LCAP). **Lot 2 à faire** : onglet « Aujourd'hui » et boutons de contact dans `/admin` (≈ 450 k, accord donné).
+- **Mise en ligne** : SQL `supabase/setup-crm-vsw.sql` non exécuté, projet Vercel non créé (cron horaire : plan à choisir), Resend à configurer (domaine viesolutionweb.ca), variables `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`.
 
 ## Décisions qui attendent Camille
 - Partenaires : accord de Ben's, VieSolution et Khí pour l'affichage de leur logo ; texte « ce qu'on a fait pour eux » à rédiger ou non.
 - Chantier PME : durée de la formation courte (« [à confirmer] » visible sur l'accueil) ; « Taxes du Québec configurées » (valider ou retirer) ; nom de l'offre d'entrée (« Démarrer simplement » / « Premier pas ») ; accueil à 14 sections.
 - Page prix : valider la phrase de l'étape 03 (« si quelque chose doit changer, on en parle avant, jamais après ») — engagement envers le client.
+- Suivi : **adresse postale** du pied des relances (vide = rien ne part) ; relire `followup_new_1` / `followup_new_2` puis activer J2/J5 ; plan Vercel (Hobby = un cron par jour, à vérifier) ; rebrancher Claude API pour les brouillons (nouvelle dépendance).
 - Courriels `bonjour@` / `stages@viesolutionweb.ca` et téléphone `(418) 555-0143` : placeholders à remplacer.
 - Prix : plus aucun montant sur le site (décision du 2026-10-17) ; les 3 niveaux d'accompagnement gardent leurs noms, sans montant.
 - Témoignages `site_testimonials` : exemples non publiés ; ne publier que de vrais témoignages.
@@ -29,4 +31,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**16**
+**17**

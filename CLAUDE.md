@@ -39,12 +39,17 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   ⚠️ Le projet Supabase est PARTAGÉ avec la plateforme CSF : ne JAMAIS toucher aux
   tables sans préfixe (`leads`, `settings`, `bookings`… appartiennent à CSF).
 - Flux : formulaires du site → triggers `fn_vsw_lead_intake` → `vsw_leads` (dédup
-  par courriel) → Edge Function `vsw-lead-followup` (brouillon IA `first_reply`,
-  relance 48h) → `vsw_outreach_drafts` en `pending` → approbation humaine dans `/admin`.
-  Aucun courriel n'est envoyé automatiquement.
-- Edge Function : `supabase/functions/vsw-lead-followup/index.ts` (Deno — exclu du
-  tsconfig). Auth : Bearer = `vsw_settings.cron_secret`. Claude API si
-  `ANTHROPIC_API_KEY` est défini, sinon gabarits de `vsw_email_templates`.
+  par courriel) + tâche « Rappeler » (dans l'heure, ou 9 h le lendemain) → passage horaire
+  `/api/cron/tick` (Vercel Cron, `vercel.json`, Bearer `CRON_SECRET`) → moteur
+  `src/lib/crm/moteur.ts` (repris de KHI `lib/automations.js`) : brouillon `first_reply`
+  à approuver, alerte 24 h, relances 1 et 2 (J2, J5), « À relancer » + tâche d'appel (J7),
+  « Reprendre contact » (30 jours). Tout s'arrête dès un contact humain noté dans `/admin`.
+- **Courriels automatiques** : seules les relances 1 et 2, quand Camille les a activées
+  (désactivées par défaut), partent seules ; la première réponse reste un brouillon à
+  approuver. Envoi par Resend (`src/lib/crm/envoi.ts`). Loi anti-pourriel (LCAP,
+  `src/lib/crm/regles.ts`) : pied avec adresse postale (`vsw_settings.postal_address`) et
+  lien de désabonnement (`/api/desabonnement`) — sans adresse postale, rien ne part.
+- Règles pures testées : `npm test` (`tests/*.test.mjs`, Node retire les types).
 - Admin `/admin` : code d'accès (`ADMIN_ACCESS_CODE`) → cookie httpOnly ; routes
   `/api/admin/*` utilisent `SUPABASE_SERVICE_ROLE_KEY` côté serveur.
 
@@ -55,14 +60,19 @@ NEXT_PUBLIC_SUPABASE_URL=https://gflkfwalfaeeknauxyig.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<clé anon>
 SUPABASE_SERVICE_ROLE_KEY=<clé service_role — jamais côté client>
 ADMIN_ACCESS_CODE=<code d'accès admin>
+CRON_SECRET=<32 caractères au hasard — Vercel l'envoie au passage horaire>
+UNSUBSCRIBE_SECRET=<32 caractères au hasard — signe les liens de désabonnement ; ne plus le changer>
+RESEND_API_KEY=<clé Resend>
+EMAIL_FROM=Vie Solution Web <adresse d'un domaine vérifié dans Resend>
+EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 ```
 
 ## État au 2026-10-10
 
 - Site : terminé, build OK (`npm run build`).
 - CRM : code livré ; le SQL `setup-crm-vsw.sql` n'a PAS encore été exécuté dans
-  Supabase, l'Edge Function n'est PAS déployée, le cron n'est PAS planifié
-  (bloc commenté en fin de fichier SQL).
+  Supabase ; le passage horaire (Vercel Cron) attend le projet Vercel — sur le plan
+  Hobby, crons probablement limités à un par jour (à vérifier) : voir la fin du fichier SQL (pg_cron en secours).
 - Pas encore déployé en ligne (Vercel à créer après un git push).
 - Domaine : **viesolutionweb.ca** (confirmé par Camille le 2026-10-21) — écrit une seule fois, dans `src/lib/site.ts`.
 
@@ -96,11 +106,11 @@ ADMIN_ACCESS_CODE=<code d'accès admin>
 
 | Clé | Valeur |
 |---|---|
-| Pile | Next.js 16 (App Router, Turbopack), TypeScript, Tailwind 4 ; Supabase (projet partagé `gflkfwalfaeeknauxyig`, tables `vsw_*`) ; Edge Function Deno `vsw-lead-followup` ; hébergement Vercel (projet à créer) ; IA : Claude API (brouillons CRM) ; FR seul |
-| Dossiers de code | `src/`, `supabase/`, `.claude/`, `scripts/` |
+| Pile | Next.js 16 (App Router, Turbopack), TypeScript, Tailwind 4 ; Supabase (projet partagé `gflkfwalfaeeknauxyig`, tables `vsw_*`) ; passage horaire Vercel Cron `/api/cron/tick` ; courriels Resend ; hébergement Vercel (projet à créer) ; brouillons CRM par gabarits (rédaction par Claude API à rebrancher) ; FR seul |
+| Dossiers de code | `src/`, `supabase/`, `tests/`, `.claude/`, `scripts/` |
 | Hors périmètre de Claude | — |
 | Vérification | `npm run verify` |
-| Tests ciblés | — (aucun test automatisé pour l'instant) |
+| Tests ciblés | `npm test` (`tests/*.test.mjs` — règles du suivi des demandes) |
 | Serveur local | `npm run dev` → http://localhost:3000 |
 | Déploiement | fusion de la PR sur `main` → déploiement Vercel automatique (projet Vercel à créer, voir `docs/ETAT-ACTUEL.md`) |
 | Contrôle après déploiement | ouvrir `/`, `/ia`, `/zoho`, `/devis`, `/rdv`, `/contact`, `/admin` ; soumettre le formulaire de contact en test |
@@ -109,4 +119,4 @@ ADMIN_ACCESS_CODE=<code d'accès admin>
 | Langues | FR (français québécois, vouvoiement) |
 | Valide les livraisons | Camille |
 
-Détail des étapes de `npm run verify` : `tsc --noEmit` · `eslint` · `next build` · `node scripts/check-rules.mjs` · `node scripts/check-secrets-suivis.mjs`.
+Détail des étapes de `npm run verify` : `tsc --noEmit` · `eslint` · `npm test` · `next build` · `node scripts/check-rules.mjs` · `node scripts/check-secrets-suivis.mjs`.

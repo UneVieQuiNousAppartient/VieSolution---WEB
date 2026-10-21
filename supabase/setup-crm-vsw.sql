@@ -8,6 +8,10 @@
 -- audit_requests, site_testimonials, site_page_views) existent déjà dans ce
 -- projet et ne sont pas recréées ici.
 -- Réplique du CRM KHI EDUC, domaine adapté IA/Zoho.
+-- Suivi automatique (2026-10-21) : moteur horaire côté Next.js (src/lib/crm/moteur.ts, route
+-- /api/cron/tick appelée par Vercel Cron) — remplace l'Edge Function vsw-lead-followup, jamais
+-- déployée. Les règles et leurs défauts sont dans le code ; vsw_automation_rules ne garde que
+-- les réglages changés dans l'admin.
 -- ============================================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -25,7 +29,7 @@ CREATE TABLE IF NOT EXISTS vsw_leads (
   need TEXT NOT NULL DEFAULT '',
   availability TEXT NOT NULL DEFAULT '',
   plan_interest TEXT DEFAULT '',
-  status TEXT NOT NULL DEFAULT 'Nouveau',       -- Nouveau | Contacté | RDV | Client | Perdu
+  status TEXT NOT NULL DEFAULT 'Nouveau',       -- étapes : src/lib/crm/regles.ts (STATUTS)
   note TEXT DEFAULT '',
   source TEXT NOT NULL DEFAULT 'site web',
   status_changed_at TIMESTAMPTZ,
@@ -49,7 +53,11 @@ CREATE TABLE IF NOT EXISTS vsw_leads (
   score_label TEXT,
   email_opt_out_at TIMESTAMPTZ,
   email_opt_out_source TEXT,
-  estimator JSONB
+  estimator JSONB,
+  CONSTRAINT vsw_leads_status_check
+    CHECK (status IN ('Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu')),
+  CONSTRAINT vsw_leads_email_opt_out_source_check
+    CHECK (email_opt_out_source IS NULL OR email_opt_out_source IN ('lien', 'one-click', 'admin'))
 );
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_status ON vsw_leads (status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_email ON vsw_leads (lower(email));
@@ -77,12 +85,13 @@ CREATE TABLE IF NOT EXISTS vsw_lead_tasks (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_vsw_lead_tasks_lead ON vsw_lead_tasks (lead_id, due_at);
+CREATE INDEX IF NOT EXISTS idx_vsw_lead_tasks_open ON vsw_lead_tasks (due_at) WHERE done_at IS NULL;
 
 CREATE TABLE IF NOT EXISTS vsw_outreach_drafts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   target_type TEXT NOT NULL DEFAULT 'lead',
   target_id UUID NOT NULL,
-  kind TEXT NOT NULL DEFAULT 'first_reply',     -- first_reply | relance
+  kind TEXT NOT NULL DEFAULT 'first_reply',     -- first_reply (brouillon à approuver)
   subject TEXT NOT NULL,
   body TEXT NOT NULL,
   slots JSONB NOT NULL DEFAULT '[]',
@@ -216,6 +225,34 @@ CREATE TABLE IF NOT EXISTS vsw_job_locks (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Verrou du passage horaire (src/lib/crm/tick.ts) : vrai si le verrou est pris par cet appel.
+-- Préfixe vsw_ : le projet est partagé avec CSF.
+CREATE OR REPLACE FUNCTION public.vsw_claim_job_lock(p_name text, p_minutes integer, p_by text)
+RETURNS boolean
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
+DECLARE
+  v_ok boolean;
+BEGIN
+  INSERT INTO vsw_job_locks (name, locked_until, locked_by, updated_at)
+  VALUES (p_name, now() + make_interval(mins => p_minutes), p_by, now())
+  ON CONFLICT (name) DO UPDATE
+    SET locked_until = EXCLUDED.locked_until, locked_by = EXCLUDED.locked_by, updated_at = now()
+    WHERE vsw_job_locks.locked_until < now()
+  RETURNING true INTO v_ok;
+  RETURN COALESCE(v_ok, false);
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.vsw_release_job_lock(p_name text)
+RETURNS void
+LANGUAGE sql
+SET search_path = public
+AS $$
+  UPDATE vsw_job_locks SET locked_until = now(), updated_at = now() WHERE name = p_name;
+$$;
+
 CREATE TABLE IF NOT EXISTS vsw_availability_windows (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   weekday INTEGER NOT NULL CHECK (weekday BETWEEN 0 AND 6),
@@ -321,9 +358,36 @@ CREATE POLICY "anon insert vsw_faq_suggestions" ON vsw_faq_suggestions FOR INSER
 CREATE POLICY "anon insert vsw_comments" ON vsw_comments FOR INSERT TO anon WITH CHECK (true);
 CREATE POLICY "anon read approved vsw_comments" ON vsw_comments FOR SELECT TO anon USING (status = 'Approuvé');
 
+-- Fonctions du verrou : service_role seulement (jamais appelables depuis le site par la clé anon).
+REVOKE ALL ON FUNCTION public.vsw_claim_job_lock(text, integer, text) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.vsw_release_job_lock(text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.vsw_claim_job_lock(text, integer, text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.vsw_release_job_lock(text) TO service_role;
+
 -- ============================================================================
 -- 3. INGESTION : formulaires du site -> vsw_leads (déduplication par courriel)
 -- ============================================================================
+-- Échéance de la tâche « Rappeler » (comme KHI, lib/speedToLead.js callbackDueAt) : dans l'heure
+-- de 8 h à 20 h (heure de Montréal), sinon le prochain matin à 9 h.
+CREATE OR REPLACE FUNCTION public.vsw_echeance_rappel(p_now timestamptz)
+RETURNS timestamptz
+LANGUAGE plpgsql
+STABLE
+SET search_path = public
+AS $$
+DECLARE
+  v_local timestamp := p_now AT TIME ZONE 'America/Toronto';
+  v_hour integer := extract(hour FROM v_local)::integer;
+BEGIN
+  IF v_hour >= 8 AND v_hour < 20 THEN
+    RETURN p_now + interval '1 hour';
+  END IF;
+  RETURN (date_trunc('day', v_local)
+          + CASE WHEN v_hour >= 20 THEN interval '1 day' ELSE interval '0' END
+          + interval '9 hours') AT TIME ZONE 'America/Toronto';
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION public.fn_vsw_lead_intake()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -337,13 +401,18 @@ DECLARE
   v_company text := NULL;
   v_service text := '';
   v_estimator jsonb := NULL;
+  v_is_rdv boolean := false;
+  v_due timestamptz := vsw_echeance_rappel(now());
 BEGIN
   IF TG_TABLE_NAME = 'contact_requests' THEN
     v_source := 'site web — contact';
     v_need := COALESCE(NEW.sujet, '') || ' — ' || COALESCE(NEW.message, '');
     v_company := NEW.entreprise;
     v_service := COALESCE(NEW.sujet, '');
-    IF NEW.sujet = 'rdv-decouverte' THEN v_source := 'site web — rdv'; END IF;
+    IF NEW.sujet = 'rdv-decouverte' THEN
+      v_source := 'site web — rdv';
+      v_is_rdv := true;   -- créneau choisi sur le site : l'étape passe à « RDV »
+    END IF;
   ELSIF TG_TABLE_NAME = 'chatbot_leads' THEN
     v_source := 'site web — chatbot';
     v_need := COALESCE(NEW.categorie, '') || COALESCE(' / ' || NEW.sous_categorie, '') || COALESCE(' — ' || NEW.message, '');
@@ -374,10 +443,11 @@ BEGIN
   LIMIT 1;
 
   IF v_lead_id IS NULL THEN
-    INSERT INTO vsw_leads (name, email, phone, company, service_interest, need, source,
-                           next_action_at, consent_at, consent_text, estimator)
+    INSERT INTO vsw_leads (name, email, phone, company, service_interest, need, source, status,
+                           status_changed_at, next_action_at, consent_at, consent_text, estimator)
     VALUES (NEW.nom, NEW.email, COALESCE(NEW.telephone, ''), v_company, v_service, v_need, v_source,
-            now() + interval '1 day', now(), 'Soumission volontaire via le site Vie Solution Web', v_estimator)
+            CASE WHEN v_is_rdv THEN 'RDV' ELSE 'Nouveau' END, now(),
+            v_due, now(), 'Soumission volontaire via le site Vie Solution Web', v_estimator)
     RETURNING id INTO v_lead_id;
     INSERT INTO vsw_lead_activities (lead_id, type, content, author)
     VALUES (v_lead_id, 'form', v_source || ' : ' || v_need, 'site-web');
@@ -386,11 +456,19 @@ BEGIN
     SET note = COALESCE(note, '') || E'\n[' || to_char(now(), 'YYYY-MM-DD HH24:MI') || '] ' || v_need,
         estimator = COALESCE(v_estimator, estimator),
         phone = CASE WHEN COALESCE(phone, '') = '' THEN COALESCE(NEW.telephone, '') ELSE phone END,
-        next_action_at = LEAST(COALESCE(next_action_at, now() + interval '1 day'), now() + interval '1 day')
+        next_action_at = LEAST(COALESCE(next_action_at, v_due), v_due),
+        status = CASE WHEN v_is_rdv AND status IN ('Nouveau', 'Contacté', 'À relancer') THEN 'RDV' ELSE status END,
+        status_changed_at = CASE WHEN v_is_rdv AND status IN ('Nouveau', 'Contacté', 'À relancer') THEN now() ELSE status_changed_at END
     WHERE id = v_lead_id;
     INSERT INTO vsw_lead_activities (lead_id, type, content, author)
     VALUES (v_lead_id, 'form', 'Nouvelle soumission — ' || v_source || ' : ' || v_need, 'site-web');
   END IF;
+
+  INSERT INTO vsw_lead_tasks (lead_id, title, due_at, created_by)
+  VALUES (v_lead_id,
+          CASE WHEN v_is_rdv THEN 'Confirmer l''appel découverte demandé par ' || NEW.nom
+               ELSE 'Rappeler ' || NEW.nom END,
+          v_due, 'système');
 
   RETURN NEW;
 END;
@@ -415,44 +493,50 @@ FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 -- ============================================================================
 -- 4. DONNÉES INITIALES
 -- ============================================================================
-INSERT INTO vsw_automation_rules (key, enabled, delay_hours, params) VALUES
-  ('first_reply', true, 0, '{"description": "Brouillon IA de première réponse, à approuver"}'),
-  ('relance', true, 48, '{"description": "Brouillon de relance si lead non contacté"}')
-ON CONFLICT (key) DO NOTHING;
+-- vsw_automation_rules : vide au départ (défauts dans src/lib/crm/moteur.ts). Les relances 1 et 2
+-- (new_lead_j2, new_lead_j5) sont DÉSACTIVÉES par défaut : Camille relit leur texte, puis les active :
+--   INSERT INTO vsw_automation_rules (key, enabled, updated_by) VALUES
+--     ('new_lead_j2', true, 'Camille'), ('new_lead_j5', true, 'Camille')
+--   ON CONFLICT (key) DO UPDATE SET enabled = true, updated_at = now(), updated_by = EXCLUDED.updated_by;
 
 INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
   ('first_reply', 'fr', 'Votre demande chez Vie Solution Web — prochaine étape',
    E'Bonjour {{prenom}},\n\nMerci pour votre message — je l''ai bien reçu et je l''ai lu attentivement.\n\nPour bien comprendre votre contexte et vous proposer la bonne approche, le plus simple est un court appel découverte de 30 minutes, gratuit et sans engagement.\n\nQuelles sont vos disponibilités cette semaine ?\n\nAu plaisir,\nCamille — Vie Solution Web'),
-  ('relance', 'fr', 'Petit suivi — votre projet chez Vie Solution Web',
-   E'Bonjour {{prenom}},\n\nJe me permets un petit suivi concernant votre demande. Votre projet m''intéresse et je garde du temps pour en discuter.\n\nSi le moment est mal choisi, dites-le-moi simplement — sinon, quelles seraient vos disponibilités pour un appel de 30 minutes ?\n\nBonne journée,\nCamille — Vie Solution Web')
+  -- Relances automatiques (moteur : new_lead_j2, new_lead_j5) — texte proposé le 2026-10-21, à relire
+  -- par Camille avant activation. Le pied « loi anti-pourriel » (adresse postale, désabonnement) est
+  -- ajouté par le code, pas ici.
+  ('followup_new_1', 'fr', 'Votre demande — je pense encore à votre projet',
+   E'Bonjour {{prenom}},\n\nMerci encore pour votre demande. Vous avez pris le temps de nous écrire, et j''aimerais vraiment comprendre ce qui vous ferait gagner du temps au quotidien.\n\nLe plus simple : un appel découverte de 30 minutes, gratuit et sans engagement. Vous pouvez choisir le moment qui vous convient ici : {{lien_rdv}}\n\nEt si ce n''est pas le bon moment, répondez simplement à ce courriel : je comprendrai très bien.\n\nAu plaisir de vous lire,\nCamille — Vie Solution Web'),
+  ('followup_new_2', 'fr', 'Un dernier petit mot au sujet de votre demande',
+   E'Bonjour {{prenom}},\n\nJe ne veux pas vous encombrer : c''est mon dernier courriel à ce sujet.\n\nSi votre projet est toujours d''actualité, je garde du temps pour vous. Un appel découverte de 30 minutes, gratuit et sans engagement, permet souvent d''y voir plus clair : {{lien_rdv}}\n\nSi les choses ont changé, aucun souci. Un simple « pas pour l''instant » en réponse me suffit.\n\nMerci pour votre confiance,\nCamille — Vie Solution Web')
 ON CONFLICT (key, lang) DO NOTHING;
 
+-- postal_address : adresse postale du pied des relances (LCAP) — [à confirmer] par Camille ; tant
+-- qu'elle est vide, AUCUNE relance automatique ne part. notify_email : adresse des alertes à l'équipe.
 INSERT INTO vsw_settings (key, value) VALUES
-  ('cron_secret', to_jsonb(encode(gen_random_bytes(24), 'hex'))),
   ('notify_email', to_jsonb(''::text)),
-  ('relance_delay_hours', to_jsonb(48)),
-  ('first_reply_enabled', to_jsonb(true)),
-  ('relance_enabled', to_jsonb(true))
+  ('sender_name', to_jsonb('Vie Solution Web'::text)),
+  ('postal_address', to_jsonb(''::text))
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO vsw_availability_windows (weekday, start_minutes, end_minutes)
 SELECT d, 540, 1020 FROM generate_series(1, 5) AS d;
 
 -- ============================================================================
--- 5. CRON — après déploiement de l'Edge Function vsw-lead-followup
---    Secret :  SELECT value FROM vsw_settings WHERE key = 'cron_secret';
+-- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
+--    « Authorization: Bearer <CRON_SECRET> » (variable d'environnement Vercel).
+--    Plan gratuit Vercel (Hobby) : crons limités à un par jour (limite à vérifier à la création
+--    du projet). Si c'est le cas, appeler la route chaque heure
+--    depuis Supabase à la place (pg_cron + pg_net, à activer dans le projet), puis retirer
+--    vercel.json :
 -- ============================================================================
 -- SELECT cron.schedule(
---   'vsw-lead-followups',
+--   'vsw-tick',
 --   '20 * * * *',
 --   $cron$
---   SELECT net.http_post(
---     url := 'https://gflkfwalfaeeknauxyig.supabase.co/functions/v1/vsw-lead-followup',
---     headers := jsonb_build_object(
---       'Content-Type', 'application/json',
---       'Authorization', 'Bearer <CRON_SECRET>'
---     ),
---     body := '{}'::jsonb
+--   SELECT net.http_get(
+--     url := 'https://viesolutionweb.ca/api/cron/tick',
+--     headers := jsonb_build_object('Authorization', 'Bearer <CRON_SECRET>')
 --   );
 --   $cron$
 -- );

@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Icon } from '@/components/vsw/icon';
+import { STATUTS } from '@/lib/crm/regles';
 
 type Lead = {
   id: string; name: string; email: string; phone: string; company: string | null;
@@ -19,8 +20,6 @@ type Task = { id: string; lead_id: string; title: string; due_at: string | null 
 type Notif = { id: string; title: string; body: string; created_at: string };
 
 type Data = { leads: Lead[]; drafts: Draft[]; tasks: Task[]; notifications: Notif[] };
-
-const STATUTS = ['Nouveau', 'Contacté', 'RDV', 'Client', 'Perdu'];
 
 const box: React.CSSProperties = {
   background: 'var(--bg-1)', border: '1px solid var(--line-soft)',

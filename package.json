@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run typecheck && npm run lint && npm run build && node scripts/check-rules.mjs && node scripts/check-secrets-suivis.mjs"
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build && node scripts/check-rules.mjs && node scripts/check-secrets-suivis.mjs",
+    "test": "node --test 'tests/*.test.mjs'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
