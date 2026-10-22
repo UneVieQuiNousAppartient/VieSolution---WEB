@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 28.
+**Dernière mise à jour : 2026-10-22** — dernière section : 29.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -443,4 +443,32 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Non fait dans ce round**
 - Je n'ai pas accès au compte Anthropic de Camille : aucun outil de cette session ne s'y connecte. La clé reste à créer et à saisir par Camille dans Vercel, sans passer par la conversation.
 - **À tester par Camille** : Haiku résiste moins bien que Opus aux tentatives de détournement. Essayer quelques questions hors sujet une fois la clé saisie ; si besoin, revenir à Opus en une ligne.
+
+## 29. ✅ Base du suivi des demandes installée dans Supabase (2026-10-22)
+
+**Contexte / demande** : Camille : « oui exécute le SQL » (`supabase/setup-crm-vsw.sql`, nécessaire au clavardage IA pour ses quotas et au suivi des demandes).
+
+**Ce qui a été fait**
+- Avant d'exécuter :
+  - fichier relu en entier : il ne crée ou ne modifie que des objets `vsw_`, plus quatre déclencheurs `trg_vsw_intake` posés sur les tables de formulaires du site (`contact_requests`, `chatbot_leads`, `estimateur_requests`, `audit_requests`) ;
+  - vérifié dans la base : aucune table `vsw_` existante ; toutes les colonnes lues par `fn_vsw_lead_intake` existent ; aucun déclencheur déjà présent sur ces quatre tables ; aucune table de CSF touchée.
+- Exécuté en quatre migrations :
+  - `vsw_setup_crm_1_tables` : 21 tables, index, RLS, 4 politiques ;
+  - `vsw_setup_crm_2_fonctions` : 8 fonctions et leurs droits ;
+  - `vsw_setup_crm_3_declencheurs` : les 4 déclencheurs ;
+  - `vsw_setup_crm_4_donnees` : 3 gabarits de courriel, 3 réglages dont l'adresse postale, 5 plages de disponibilité.
+- Le premier essai, en un seul bloc, a dépassé le délai sans rien appliquer : voir `docs/ERREURS-CONNUES.md` E04.
+- `setup-crm-vsw.sql` aligné sur ce qui a été exécuté : `CREATE OR REPLACE TRIGGER` remplace `DROP` + `CREATE`, et les politiques (bloc `IF NOT EXISTS`) comme les disponibilités ne se répètent plus : le fichier peut être rejoué (bloc des politiques exécuté une fois de plus dans la base : sans effet, 4 politiques ; le reste vérifié par relecture). E03 a été complété (reproduit sur un `.next` neuf).
+
+**Vérification technique**
+- Comptes dans la base : 21 tables `vsw_` (RLS active sur les 21), 8 fonctions, 4 déclencheurs, 4 politiques, 3 gabarits, 3 réglages, 5 plages.
+- La clé anon ne peut pas appeler `vsw_rate_limit_hit`.
+- Essai dans une transaction annulée : une demande `rdv-decouverte` envoyée par `chatbot-ia` crée un dossier à l'étape « RDV » (source « site web — rdv »), avec la tâche « Confirmer l'appel découverte demandé par … » ; le compteur renvoie 1, puis 2. Après l'annulation, 0 dossier, 0 tâche, 0 compteur et 0 ligne d'essai.
+- `npm run verify` vert (45 tests).
+- `qa-agent` (Opus, ≈ 55 k) **VERT**. Corrigé ensuite : politiques gardées pour qu'on puisse rejouer le fichier, cause de E04 écrite comme « probable ».
+
+**Non fait dans ce round**
+- Variables Supabase à saisir par Camille dans Vercel (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) ; case « Preview » de `ANTHROPIC_API_KEY`.
+- Le passage horaire (`/api/cron/tick`) ne tourne que sur la production, avec `CRON_SECRET`. Les relances J2/J5 partiront seulement avec Resend configuré (`RESEND_API_KEY`, `EMAIL_FROM`) : à décider avec l'issue #5 avant de les activer en ligne.
+- Activation de la double vérification de `/admin` dès la mise en ligne (`ADMIN_ACCESS_CODE`, `ADMIN_SECRET`).
 

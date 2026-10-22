@@ -79,11 +79,11 @@ EMAIL_FROM=Vie Solution Web <adresse d'un domaine vérifié dans Resend>
 EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 ```
 
-## État au 2026-10-10
+## État (au 2026-10-10 ; SQL du CRM : 2026-10-22)
 
 - Site : terminé, build OK (`npm run build`).
-- CRM : code livré ; le SQL `setup-crm-vsw.sql` n'a PAS encore été exécuté dans
-  Supabase ; projet Vercel `vie-solution-web` créé le 2026-10-21 (équipe `viesolution`, relié
+- CRM : code livré ; le SQL `setup-crm-vsw.sql` a été exécuté dans Supabase le 2026-10-22
+  (accord de Camille, `SUIVI-TACHES.md` § 29) ; projet Vercel `vie-solution-web` créé le 2026-10-21 (équipe `viesolution`, relié
   au dépôt ; KHI s'y déploie déjà avec un cron horaire dans son `vercel.json`) — variables d'environnement à
   saisir par Camille ; secours pg_cron en fin de fichier SQL.
 - Pas encore en ligne : la branche de production Vercel est la branche par défaut du dépôt

@@ -2,6 +2,8 @@
 -- VIE SOLUTION WEB — CRM COMPLET version vsw_ (pour le projet VieSolutionCSF)
 -- ============================================================================
 -- FICHIER DÉFINITIF (remplace vsw-lead-system.sql et setup-crm-complet.sql).
+-- EXÉCUTÉ dans Supabase le 2026-10-22 (accord de Camille), en quatre migrations vsw_setup_crm_1 à 4
+-- (docs/ERREURS-CONNUES.md E04 : pas de DROP, d'où CREATE OR REPLACE TRIGGER ci-dessous).
 -- Toutes les tables sont préfixées vsw_ : AUCUNE collision avec les tables CSF
 -- (leads, notifications, settings, bookings, etc. de CSF ne sont pas touchées).
 -- Les tables du site (contact_requests, chatbot_leads, estimateur_requests,
@@ -432,10 +434,22 @@ ALTER TABLE vsw_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vsw_applications ENABLE ROW LEVEL SECURITY;
 
 -- Le site peut afficher les disponibilités et soumettre questions/commentaires
-CREATE POLICY "anon read vsw availability" ON vsw_availability_windows FOR SELECT TO anon USING (true);
-CREATE POLICY "anon insert vsw_faq_suggestions" ON vsw_faq_suggestions FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "anon insert vsw_comments" ON vsw_comments FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "anon read approved vsw_comments" ON vsw_comments FOR SELECT TO anon USING (status = 'Approuvé');
+-- Gardées par IF NOT EXISTS (pas de DROP POLICY, E04) : le fichier peut être rejoué.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vsw_availability_windows' AND policyname = 'anon read vsw availability') THEN
+    CREATE POLICY "anon read vsw availability" ON vsw_availability_windows FOR SELECT TO anon USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vsw_faq_suggestions' AND policyname = 'anon insert vsw_faq_suggestions') THEN
+    CREATE POLICY "anon insert vsw_faq_suggestions" ON vsw_faq_suggestions FOR INSERT TO anon WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vsw_comments' AND policyname = 'anon insert vsw_comments') THEN
+    CREATE POLICY "anon insert vsw_comments" ON vsw_comments FOR INSERT TO anon WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vsw_comments' AND policyname = 'anon read approved vsw_comments') THEN
+    CREATE POLICY "anon read approved vsw_comments" ON vsw_comments FOR SELECT TO anon USING (status = 'Approuvé');
+  END IF;
+END $$;
 
 -- Fonctions du verrou et de l'accès admin : service_role seulement (jamais appelables par la clé anon).
 REVOKE ALL ON FUNCTION public.vsw_claim_job_lock(text, integer, text) FROM PUBLIC, anon, authenticated;
@@ -561,20 +575,16 @@ BEGIN
 END;
 $$;
 
-DROP TRIGGER IF EXISTS trg_vsw_intake ON contact_requests;
-CREATE TRIGGER trg_vsw_intake AFTER INSERT ON contact_requests
+CREATE OR REPLACE TRIGGER trg_vsw_intake AFTER INSERT ON contact_requests
 FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 
-DROP TRIGGER IF EXISTS trg_vsw_intake ON chatbot_leads;
-CREATE TRIGGER trg_vsw_intake AFTER INSERT ON chatbot_leads
+CREATE OR REPLACE TRIGGER trg_vsw_intake AFTER INSERT ON chatbot_leads
 FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 
-DROP TRIGGER IF EXISTS trg_vsw_intake ON estimateur_requests;
-CREATE TRIGGER trg_vsw_intake AFTER INSERT ON estimateur_requests
+CREATE OR REPLACE TRIGGER trg_vsw_intake AFTER INSERT ON estimateur_requests
 FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 
-DROP TRIGGER IF EXISTS trg_vsw_intake ON audit_requests;
-CREATE TRIGGER trg_vsw_intake AFTER INSERT ON audit_requests
+CREATE OR REPLACE TRIGGER trg_vsw_intake AFTER INSERT ON audit_requests
 FOR EACH ROW EXECUTE FUNCTION fn_vsw_lead_intake();
 
 -- ============================================================================
@@ -608,7 +618,8 @@ INSERT INTO vsw_settings (key, value) VALUES
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO vsw_availability_windows (weekday, start_minutes, end_minutes)
-SELECT d, 540, 1020 FROM generate_series(1, 5) AS d;
+SELECT d, 540, 1020 FROM generate_series(1, 5) AS d
+WHERE NOT EXISTS (SELECT 1 FROM vsw_availability_windows);
 
 -- ============================================================================
 -- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
