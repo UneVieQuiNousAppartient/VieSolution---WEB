@@ -121,8 +121,12 @@ export async function POST(req: NextRequest) {
     }
     return repondre({ texte: filtrerReponse(texte), fin });
   } catch (e) {
-    // Jamais le contenu de la conversation dans les journaux : seulement le type d'erreur.
-    console.error('chat: échec de l’appel à l’IA', e instanceof Anthropic.APIError ? e.status : 'réseau');
+    // Jamais le contenu de la conversation dans les journaux : le statut, le type et le motif donnés
+    // par l'API (ex. crédits épuisés, paramètre refusé), qui ne reprennent pas les messages du visiteur.
+    if (e instanceof Anthropic.APIError) {
+      const motif = (e.error as { error?: { type?: string; message?: string } } | undefined)?.error;
+      console.error('chat: échec de l’appel à l’IA', e.status, motif?.type ?? '', String(motif?.message ?? '').slice(0, 200));
+    } else console.error('chat: échec de l’appel à l’IA', 'réseau');
     return repli(502);
   }
 }
