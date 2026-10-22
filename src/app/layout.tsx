@@ -21,12 +21,15 @@ const ORGANISATION = {
   logo: `${SITE_URL}/icon.svg`,
   slogan: 'Une vie qui nous appartient',
   description:
-    "Studio québécois : automatisation des tâches, assistants IA, installation de Claude ou ChatGPT, implantation Zoho, CRM et outils sur mesure, sites et applications web, référencement (SEO et AEO) et formation, pour les PME, les travailleurs autonomes et les professionnels.",
+    "Studio québécois : automatisation des tâches, assistants IA, installation de Claude ou ChatGPT, accueil IA (clavardage, prise de rendez-vous, agent vocal), implantation Zoho, CRM et outils sur mesure, sites et applications web, référencement (SEO et AEO) et formation, pour les PME, les travailleurs autonomes et les professionnels.",
   areaServed: { '@type': 'AdministrativeArea', name: 'Québec' },
   availableLanguage: 'fr-CA',
   knowsAbout: [
     'Automatisation des processus',
     'Intelligence artificielle',
+    'Assistants de clavardage',
+    'Agents vocaux',
+    'Prise de rendez-vous en ligne',
     'Zoho',
     'CRM',
     'Sites web',

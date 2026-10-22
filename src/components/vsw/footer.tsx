@@ -76,10 +76,6 @@ export function VswFooter() {
             <Link href="/conditions-utilisation">Conditions d&apos;utilisation</Link>
           </div>
         </div>
-        <p className="footer-marques">
-          Zoho, Claude, ChatGPT et Copilot sont des marques de leurs propriétaires respectifs.
-          Vie Solution Web n&apos;est affiliée à aucune de ces entreprises.
-        </p>
         <p className="footer-geant" aria-hidden="true">Vie Solution Web</p>
       </div>
     </footer>

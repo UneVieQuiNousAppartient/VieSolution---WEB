@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 25.
+**Dernière mise à jour : 2026-10-22** — dernière section : 26.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -351,3 +351,17 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Mesuré à 320, 360, 390, 820 et 1440 px (avec des liens d'exemple pour l'affichage des icônes, retirés ensuite) : aucun débordement, grand nom entier, courriel dans sa colonne. `qa-agent` (Opus, ≈ 61 k) **OK** (contrastes : `--fg-1` 12,7:1, `--fg-2` 7,8:1, mention des marques 4,5:1, bouton 12:1) ; corrigé ensuite : grand nom et courriel à 320 px. Coût réel ≈ 150 k (session ≈ 90 k + QA 61 k).
 
 **Non fait dans ce round** : liens WhatsApp et Facebook à donner par Camille (icônes cachées d'ici là) ; courriel et téléphone toujours des exemples `[à confirmer]` ; « Québec · Canada » reste sur la page `/contact` (question posée).
+
+## 26. ✅ Nouveau service « Accueil IA : clavardage, rendez-vous et voix » + retrait de la mention des marques (2026-10-22)
+
+**Contexte / demande** : Camille, « on supprime [la mention des marques] et rajoute les logos Facebook WhatsApp ; je veux aussi un chatbot, on offre aussi ce service, j'avais oublié ; on facilite la prise de rdv, prise de rendez-vous avec IA ; la voix c'est aussi un bon service ». Réponses : chatbot « les deux » (service offert + vraie IA sur le site), « une seule page », agent vocal : répond au téléphone, prend les rendez-vous, prend les messages, rappels et confirmations ; liens WhatsApp/Facebook « plus tard ».
+
+**Ce qui a été fait** (agent principal) :
+- Page `/accueil-ia` (gabarit `ServiceDetailSection`) : « Bien accueillir chaque client. », trois volets (clavardage sur le site, prise de rendez-vous par IA, agent vocal au téléphone), bandeau « Vous gardez le dernier mot : l'assistant ne donne ni conseil ni réponse personnalisée ; il vous les transmet. », bouton `APPEL`. Aucun outil, prix ni délai nommé.
+- **Raccordement** (skill `nouvelle-page`) : carte 03 de l'accueil (suivantes renumérotées 04-08, « Huit façons »), menu Services (barre et mobile) et pied de page via `SERVICES_NAV`, plan du site (`PUBLIC_ROUTES`), `llms.txt`, `knowsAbout` et description de l'organisation (`layout.tsx`), redirection `/services/chatbots-ia` → `/accueil-ia`. Atteinte en cliquant depuis l'accueil vérifiée.
+- FAQ « Mes clients vont-ils parler à un robot ? » adaptée (elle contredisait le nouveau service) : « Seulement si vous le voulez, et seulement pour l'accueil… Pour tout le reste, c'est à vous qu'ils parlent… ».
+- Pied de page : mention « Zoho, Claude, ChatGPT et Copilot sont des marques… » retirée (ajoutée par Claude au §10, pas exigée) ; styles `.footer-marques` retirés. La phrase de non-affiliation reste dans `public/llms.txt` (lu par les IA, pas affiché).
+
+**Vérification technique** : `npm run verify` vert. Captures 1440 et 390 px, aucun débordement ; `h1` unique ; page présente au plan du site. `qa-agent` (Opus, ≈ 65 k) **OK** ; corrigé ensuite (promesses que Camille n'avait pas faites) : « Toujours là pour vos clients » → « Bien accueillir chaque client », « même en dehors de vos heures », « Réponses en français » et « sans échange de courriels » retirés, agent vocal limité à ce qu'elle a coché, bandeau reformulé, icône téléphone. Coût réel ≈ 190 k (session ≈ 125 k + QA 65 k).
+
+**Non fait dans ce round** : la bulle de clavardage du site reste scriptée — la rendre « vraie IA » (réponses + prise de rendez-vous) est un lot à part, plan à faire valider par Camille (clé API, coût par message, données des visiteurs). Liens WhatsApp et Facebook toujours attendus.

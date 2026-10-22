@@ -10,6 +10,7 @@ export const PUBLIC_ROUTES: { path: string; priority: number }[] = [
   { path: '/', priority: 1 },
   { path: '/ia', priority: 0.9 },
   { path: '/zoho', priority: 0.9 },
+  { path: '/accueil-ia', priority: 0.8 },
   { path: '/sites-web', priority: 0.8 },
   { path: '/crm-sur-mesure', priority: 0.8 },
   { path: '/referencement', priority: 0.8 },

@@ -8,6 +8,7 @@ Les logiciels existent déjà : Zoho, Claude et bien d'autres. Vie Solution Web 
 
 - [Automatisation des processus](https://viesolutionweb.ca/ia) : relances, rapports et copier-coller qui se font tout seuls.
 - [Assistants IA et installation de Claude ou ChatGPT](https://viesolutionweb.ca/ia) : outils d'IA installés pour l'équipe, ou assistants bâtis sur mesure ; ce qui engage le jugement professionnel n'est jamais envoyé sans validation humaine.
+- [Accueil IA : clavardage, rendez-vous et voix](https://viesolutionweb.ca/accueil-ia) : assistant de clavardage sur le site, prise de rendez-vous automatique, agent vocal qui répond au téléphone, prend les rendez-vous et les messages, et envoie rappels et confirmations ; l'assistant ne donne ni conseil ni réponse personnalisée : il les transmet au professionnel.
 - [Implantation Zoho](https://viesolutionweb.ca/zoho) : Zoho CRM, Bigin, Books, Desk, Campaigns, Inventory, People, Projects, Creator, Flow — choisis selon les besoins, réglés et enseignés.
 - [Formation à l'IA pour petites entreprises](https://viesolutionweb.ca/ia#formation) : ateliers concrets avec les vrais dossiers du client. Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic).
 - [Sites et applications web](https://viesolutionweb.ca/sites-web) : sites vitrines, pages de destination, applications web, formulaires reliés aux outils du client.

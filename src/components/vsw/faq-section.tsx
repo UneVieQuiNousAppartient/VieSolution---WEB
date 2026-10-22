@@ -7,7 +7,7 @@ const FAQS = [
   },
   {
     q: "Mes clients vont-ils parler à un robot ?",
-    a: "C'est toujours à vous qu'ils parlent. L'outil prépare le travail : un brouillon de réponse, un rappel, un résumé de dossier. Vous relisez, vous ajustez, vous envoyez. Vos clients gardent le contact avec vous — simplement plus vite, avec chaque suivi en place.",
+    a: "Seulement si vous le voulez, et seulement pour l'accueil : un assistant peut répondre aux questions fréquentes, prendre un rendez-vous ou un message. Pour tout le reste, c'est à vous qu'ils parlent : l'outil prépare le travail (un brouillon de réponse, un rappel, un résumé de dossier), vous relisez, vous ajustez, vous envoyez.",
   },
   {
     q: "Je ne suis pas techno. Est-ce que c'est pour moi ?",

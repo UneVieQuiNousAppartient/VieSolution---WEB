@@ -14,6 +14,7 @@ export type ServiceNavItem = NavLinkItem & { desc: string; icon: IconName };
  */
 export const SERVICES_NAV: readonly ServiceNavItem[] = [
   { href: '/ia', label: 'Automatisation et IA', desc: 'Claude ou ChatGPT installés, tâches qui roulent seules', icon: 'bolt' },
+  { href: '/accueil-ia', label: 'Accueil IA : clavardage, rendez-vous, voix', desc: 'Une réponse tout de suite à vos clients', icon: 'phone' },
   { href: '/zoho', label: 'Implantation Zoho', desc: 'Clients, factures et suivi au même endroit', icon: 'grid' },
   { href: '/sites-web', label: 'Sites et applications web', desc: 'Un site qui travaille pour votre entreprise', icon: 'globe' },
   { href: '/crm-sur-mesure', label: 'CRM et outils sur mesure', desc: 'Un outil fait pour votre façon de travailler', icon: 'layout' },

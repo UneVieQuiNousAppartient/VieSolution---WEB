@@ -1589,13 +1589,6 @@ section { position: relative; }
   transition: color 0.15s;
 }
 .footer a:hover { color: var(--accent); }
-.footer-marques {
-  margin: 16px 0 0;
-  font-family: var(--font-body);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--fg-2);
-}
 .footer-bottom {
   border-top: 1px solid var(--line-soft);
   padding-top: 24px;
@@ -4013,7 +4006,6 @@ html[data-theme="dark"] .pv-carte[aria-pressed="true"] .pv-case { color: var(--b
 .footer--premium .footer-reseaux a:hover { border-color: var(--accent); color: var(--accent); }
 .footer--premium .footer-bottom { border-top-color: var(--line-soft); color: var(--fg-2); }
 .footer--premium .footer-bottom a { color: var(--fg-2); }
-.footer--premium .footer-marques { color: var(--fg-3); }
 .footer-geant {
   margin: clamp(20px, 3vw, 36px) 0 clamp(24px, 3vw, 40px);
   font-family: var(--font-display);

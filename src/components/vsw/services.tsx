@@ -28,6 +28,14 @@ const SERVICES: {
   },
   {
     num: '03',
+    icon: 'phone',
+    title: 'Accueil IA : clavardage, rendez-vous et voix',
+    desc: "Un assistant de clavardage sur votre site, une prise de rendez-vous qui se fait toute seule, et un agent vocal qui répond au téléphone, prend les rendez-vous et les messages. Vos clients ont une réponse tout de suite.",
+    tags: ['Clavardage', 'Prise de rendez-vous', 'Agent vocal', 'Rappels'],
+    href: '/accueil-ia',
+  },
+  {
+    num: '04',
     icon: 'grid',
     title: 'Implantation Zoho',
     desc: "On installe et règle Zoho chez vous : clients, factures, soutien, infolettres. Tout au même endroit, au lieu d'éparpillé dans plusieurs outils.",
@@ -35,7 +43,7 @@ const SERVICES: {
     href: '/zoho',
   },
   {
-    num: '04',
+    num: '05',
     icon: 'users',
     title: 'Formation IA et Zoho',
     desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite.",
@@ -43,7 +51,7 @@ const SERVICES: {
     href: '/ia#formation',
   },
   {
-    num: '05',
+    num: '06',
     icon: 'globe',
     title: 'Sites et applications web',
     desc: "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils : formulaires, rendez-vous, carnet de clients.",
@@ -51,7 +59,7 @@ const SERVICES: {
     href: '/sites-web',
   },
   {
-    num: '06',
+    num: '07',
     icon: 'layout',
     title: 'CRM et outils sur mesure',
     desc: "Votre façon de travailler vous est propre. Si aucun logiciel tout fait ne lui convient, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels.",
@@ -59,7 +67,7 @@ const SERVICES: {
     href: '/crm-sur-mesure',
   },
   {
-    num: '07',
+    num: '08',
     icon: 'chat',
     title: 'Être trouvé sur Google et par les IA',
     desc: "Quand un client cherche votre métier, il demande à Google, mais aussi à ChatGPT, Claude ou Perplexity. On rend votre site clair pour les deux : des réponses aux vraies questions de vos clients, une fiche d'entreprise et des informations que les machines savent lire.",
@@ -77,7 +85,7 @@ export function Services() {
       <div className="container services-layout">
         <div className="services-intro reveal">
           <div className="eyebrow">Services</div>
-          <h2>Sept façons de vous<br />simplifier la vie.</h2>
+          <h2>Huit façons de vous<br />simplifier la vie.</h2>
           <p className="desc">
             Les logiciels existent déjà : Zoho, Claude et bien d&apos;autres. Nous, on choisit les
             bons pour vous, on les installe, on les relie et on vous forme. Et quand rien

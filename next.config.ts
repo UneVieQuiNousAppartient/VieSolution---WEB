@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     return [
       // Anciennes pages (ancien design) → nouvelles pages
       { source: '/services', destination: '/', permanent: true },
+      { source: '/services/chatbots-ia', destination: '/accueil-ia', permanent: true },
       { source: '/services/:path*', destination: '/ia', permanent: true },
       { source: '/solutions', destination: '/', permanent: true },
       { source: '/solutions/:path*', destination: '/', permanent: true },
