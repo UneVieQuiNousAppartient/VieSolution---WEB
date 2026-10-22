@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 26.
+**Dernière mise à jour : 2026-10-22** — dernière section : 27.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -371,3 +371,64 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 *Correctif du 2026-10-22 (slogan partout)* : Camille, « même dans l'entête, le hero, même slogan ». Hero : h1 « Une vie qui *vous appartient,* des clients mieux servis, plus vite. » (seconde moitié plus petite, `.hero-h1-suite`), introduction « Et du temps retrouvé pour votre vrai métier… » (évite la répétition). « nous » → « vous » aussi dans la fiche JSON-LD et la description (`layout.tsx`), `llms.txt`, la page et la section Zoho, `CLAUDE.md`. Plus aucun « nous appartient » dans le site actif. `npm run verify` vert ; `qa-agent` (Opus, ≈ 47 k) : un seul défaut (espace manquant entre les deux moitiés du h1 dans le HTML), corrigé et vérifié dans la page construite. Hors périmètre : le nom du dépôt GitHub (UneVieQuiNousAppartient).
 
 *Correctif du 2026-10-22 (hero, stage)* : Camille, « oui applique l'option 1, arranger au niveau de retour, mettre dans l'accueil cette partie pour les stagiaires ». (1) Sous-titre du hero : « Concentrez-vous sur votre vrai métier. IA, Zoho, sites web et CRM sur mesure : on choisit les bons outils, on les installe et on vous forme. On s'occupe de la technique. » (2) `/postuler-stagiaire` : le bouton « Retour au site » collé au sur-titre devient un lien « Retour à l'accueil » seul sur sa ligne, vers `/#stagiaires`. (3) Accueil : nouvelle section « Programme de stage » (`stage-section.tsx`, après Partenaires) — titre, introduction et 3 offres repris tels quels de la page de stage (`OFFRES_STAGE` partagé), bouton « Postuler comme stagiaire ». `npm run verify` vert ; `qa-agent` (Opus, ≈ 49 k) **OK** ; ajouté ensuite : `aria-hidden` sur les deux flèches.
+
+## 27. ✅ Bulle de clavardage en vraie IA, qui répond à partir du site seulement (2026-10-22)
+
+**Contexte / demande** : Camille : « oui lance le chatbot IA et bloque les questions malicieuses, on répond du site seulement ». Elle a approuvé le plan présenté au § 26 : réponses tirées du site seulement, jamais de prix ni de conseil, demande de rendez-vous relue par le visiteur, avis « vous parlez à une IA », conversation non conservée, quotas, repli sur l'ancienne bulle, clé saisie par Camille dans Vercel.
+
+**Ce qui a été fait**
+- **Route serveur `src/app/api/chat/route.ts`**, avec le SDK officiel `@anthropic-ai/sdk` 0.135.0, épinglé ; c'est une nouvelle dépendance, `npm audit` ne signale aucune faille.
+  - Modèle `claude-opus-5-5`, effort `low`, `max_tokens` 800, consigne mise en cache.
+  - `GET` indique si l'IA est branchée (clé `ANTHROPIC_API_KEY` et base). Sans clé, la bulle garde ses réponses toutes faites.
+  - Pas de modèle de repli en cas de refus : un refus donne une réponse fixe.
+- **Consigne `src/lib/chat/connaissances.ts`**, construite à partir des mêmes constantes que les pages : services, métiers, démarche de prix, engagements, FAQ, stage, pages. `FAQS` et `SERVICES` sont désormais exportés.
+  - Elle refuse : montants, conseils professionnels, hors sujet, révélation ou changement de consigne.
+  - Elle ne donne jamais de courriel ni de téléphone, puisque ce sont des valeurs de démonstration.
+- **Trois barrières, dans `src/lib/chat/regles.ts`** (fonctions pures, `tests/chat-regles.test.mjs`, 13 tests vérifiés en cassant la règle une fois) :
+  - Avant l'appel :
+    - forme et taille de l'historique : 12 questions de 600 caractères au plus, réponses de 1 200 caractères au plus, caractères invisibles retirés ;
+    - détournements évidents, cherchés dans tout l'historique : réponse fixe, sans appel payant ;
+    - quotas `vsw_rate_limit_hit` : 30 par heure et 80 par jour par adresse IP (IPv6 regroupées par réseau /64, une empreinte seulement est gardée, effacée après 24 h par `tick.ts`), 400 par jour pour tout le site.
+  - Pendant l'appel : la consigne.
+  - Après l'appel : toute réponse qui contient un montant est remplacée par la phrase « prix sur mesure ».
+- **Rendez-vous** : l'outil `proposer_rendez_vous` (`strict`) ne fait qu'afficher un résumé. Le visiteur le relit, puis clique « Envoyer ma demande » ou « Corriger ».
+  - L'envoi fait la même insertion que le formulaire de rendez-vous : `contact_requests`, `sujet` `rdv-decouverte`, `source` `chatbot-ia`. Il crée la fiche, la tâche « Confirmer l'appel découverte » et les relances.
+  - Un nouveau résumé désactive les anciens.
+- **Bulle `chatbot.tsx`** :
+  - avis « Vous parlez à une IA… Nous ne conservons pas la conversation… », avec un lien vers la politique de confidentialité ;
+  - le statut affiche « Assistant IA » seulement si l'IA est branchée ;
+  - repli sur les réponses toutes faites dès un échec ;
+  - limite de conversation, avec le bouton d'appel en fin de conversation ;
+  - accessibilité : focus dans le champ sur ordinateur, Échap ferme la bulle, `aria-live`, `role="status"`.
+- **Politique de confidentialité** : nouveau paragraphe « Assistant IA de la bulle de clavardage » sur la transmission des messages à Anthropic (États-Unis), qui les traite selon ses propres conditions.
+- `CLAUDE.md` : `ANTHROPIC_API_KEY` ajoutée aux variables attendues. Issue créée pour un risque qui existait déjà : https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/issues/5 (insertion anonyme sans contrôle, relances J2/J5 possibles vers le courriel d'un tiers).
+
+**Coût par message, estimation à vérifier dans la console Anthropic après quelques jours.** Base de calcul : consigne d'environ 6 500 jetons, tarifs Opus 5.5 de 4 $ US par million de jetons en entrée, 20 $ US en sortie, 0,20 $ US en lecture du cache.
+- **Opus 5.5** : environ 1 ¢ US par message, et jusqu'à 4 ¢ US quand le cache est à refaire (premier message après 5 minutes sans visite). Pour 1 000 messages par mois, de 10 $ à 30 $ US. Au pire, avec le plafond de 400 messages par jour, de 4 $ à 16 $ US par jour.
+- **Haiku 5.5** (0,10 $ / 0,50 $ US par million de jetons) : environ 40 fois moins cher, sous 0,1 ¢ US par message. Il est moins solide face aux tentatives de détournement.
+- Le choix se fait dans la constante `MODELE` de `route.ts`, une seule ligne à changer.
+
+**Vérification technique**
+- `npm run verify` vert : 45 tests, 0 erreur, les 10 avertissements déjà connus.
+- Essai de bout en bout avec une fausse API Claude et une fausse base locales, sans vraie clé, sur ordinateur et téléphone (375 px) :
+  - détournement bloqué sans appel ;
+  - montant remplacé ;
+  - refus géré ;
+  - résumé affiché puis envoyé, avec la bonne ligne `contact_requests` ;
+  - repli quand les services sont injoignables.
+- `securite` (Opus, ≈ 73 k) **VERT**, aucun point bloquant.
+  - Corrigé : `max_tokens` réduit, détournement cherché dans tout l'historique, IPv6 regroupées par /64, formulation « Nous ne conservons pas ».
+  - Non corrigé : réponses de l'assistant non signées (risque mineur : seul l'auteur voit le résultat).
+- `qa-agent` (Opus, ≈ 78 k) **VERT**.
+  - Corrigé : cinq faux positifs du filtre (ajoutés aux tests), adresse IP remplacée par une empreinte, boutons désactivés pendant l'attente, anciens résumés désactivés, accessibilité.
+  - Son constat « compteurs jamais purgés » est faux : `src/lib/crm/tick.ts:30` les efface après 24 h.
+
+**Non fait dans ce round**
+- **À faire par Camille** :
+  - créer la clé Claude, la saisir dans Vercel (`ANTHROPIC_API_KEY`) et fixer une **limite de dépenses mensuelle** dans la console Anthropic (c'est le seul plafond en dollars) ;
+  - choisir Opus ou Haiku.
+- **À valider par Camille (Loi 25)** : l'évaluation et l'entente exigées pour un transfert de renseignements hors Québec (Anthropic) ; la durée de conservation d'Anthropic à indiquer dans la politique ; la date « Janvier 2025 » et le courriel `contact@viesolution.com` de la politique, qui existaient déjà et ne sont pas corrigés.
+- **À tester par Camille**, une fois la clé saisie : quelques vraies questions, et quelques tentatives de détournement, sur la version d'essai.
+- Non fait : signature des réponses de l'assistant ; `.env.local.example` non modifié (fichier protégé).
+- Coût réel du round : ≈ 400 k jetons (session principale ≈ 250 k, plus 151 k pour les deux agents).
+

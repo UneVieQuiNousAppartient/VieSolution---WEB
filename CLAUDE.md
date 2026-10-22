@@ -74,6 +74,7 @@ ADMIN_SECRET=<32 caractères au hasard — signe les sessions /admin et chiffre 
 CRON_SECRET=<32 caractères au hasard — Vercel l'envoie au passage horaire>
 UNSUBSCRIBE_SECRET=<32 caractères au hasard — signe les liens de désabonnement ; ne plus le changer>
 RESEND_API_KEY=<clé Resend>
+ANTHROPIC_API_KEY=<clé Claude (Anthropic) — assistant IA de la bulle de clavardage, /api/chat ; sans elle, réponses toutes faites>
 EMAIL_FROM=Vie Solution Web <adresse d'un domaine vérifié dans Resend>
 EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 ```

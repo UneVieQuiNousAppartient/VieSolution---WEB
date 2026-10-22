@@ -19,6 +19,15 @@ export default function PolitiqueConfidentialitePage() {
           peuvent inclure votre nom, adresse e-mail, numéro de téléphone, nom d&apos;entreprise et description de votre projet.
         </p>
 
+        <p>
+          <strong>Assistant IA de la bulle de clavardage.</strong> Quand vous écrivez une question dans
+          la bulle de clavardage, votre message est transmis à Anthropic, l&apos;entreprise
+          américaine qui fournit l&apos;intelligence artificielle, pour produire la réponse ; Anthropic
+          les traite selon ses propres conditions. Nous n&apos;enregistrons pas la conversation. Seule la demande de rendez-vous que vous
+          relisez et choisissez d&apos;envoyer est conservée, comme un formulaire de contact.
+          N&apos;écrivez pas de renseignements sensibles dans la conversation.
+        </p>
+
         <h2>2. Utilisation des informations</h2>
         <p>Les informations collectées sont utilisées pour :</p>
         <ul>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Icon, type IconName } from './icon';
 import { APPEL, ECRIT } from './appel';
 
-const SERVICES: {
+export const SERVICES: {
   num: string;
   icon: IconName;
   title: string;

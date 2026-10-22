@@ -1,6 +1,6 @@
 import { JsonLd } from './json-ld';
 
-const FAQS = [
+export const FAQS = [
   {
     q: "Est-ce que ça convient à un cabinet réglementé (finance, santé) ?",
     a: "Oui. On tient compte de vos obligations dès le départ : la conformité de votre secteur (par exemple l'AMF en finance) et la Loi 25 pour les renseignements personnels de vos clients. Ce qui engage votre jugement professionnel — un conseil, une réponse personnalisée, une note au dossier — n'est jamais envoyé sans votre validation. Vous décidez de ce qui peut partir seul, comme un simple rappel de rendez-vous.",
