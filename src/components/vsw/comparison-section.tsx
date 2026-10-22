@@ -1,4 +1,4 @@
-const ROWS: [string, string][] = [
+export const ROWS: [string, string][] = [
   ['Solutions génériques', 'Plans personnalisés à votre réalité'],
   ['Jargon technique', 'Des explications claires, en français'],
   ['Outils imposés', 'Des outils que vous maîtrisez (IA + Zoho)'],

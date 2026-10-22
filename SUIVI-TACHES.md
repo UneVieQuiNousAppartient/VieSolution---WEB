@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-21** — dernière section : 20.
+**Dernière mise à jour : 2026-10-22** — dernière section : 21.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -277,3 +277,18 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 
 **Non fait dans ce round** : `braces` (via `micromatch`, outils de lint seulement, pas dans le site publié) reste signalé par `npm audit` : la seule « correction » proposée (`--force`) rétrograderait `eslint-config-next` en 14 — refusée.
 
+
+## 21. ✅ Relief du haut de page, réorganisation de l'accueil, menu Services, couleurs vives, galerie d'admin (2026-10-22)
+
+**Contexte / demande** : brief design de Camille (relief du hero, sélecteur « Je suis… », palette plus dynamique, typographie), puis « mieux disposer les sections, le navbar mettre des redirections qui font du sens, être cohérent dans la présentation ». Choix de Camille sur maquettes (`scratchpad/maquettes-structure/`) : mini tableau de bord, mini-cartes métiers, bande des sites sur fond sombre, note manuscrite + flèche ; « Clair + plus de bandes sombres » ; « Services en menu déroulant » ; ordre de l'accueil en 11 sections ; « fond 1, couleurs A ». Le 2026-10-22 : « j'ai des artefacts des admin crm que j'ai fait, tu peux les utiliser comme exemple » → page CRM sur mesure, KHI nommé (accord de Camille).
+
+**Ce qui a été fait** (agent principal) :
+- **Hero** (`hero.tsx`) : 4 cartes décoratives (Nouvelle demande, Rappeler demain, RDV confirmé, Relance envoyée — `aria-hidden`), « nous appartient. » en dégradé, note manuscrite « appel gratuit de 30 min » avec flèche SVG, métiers en mini-cartes + lien « Autre métier ? », sur-titre en pilule.
+- **Navigation** : menu déroulant « Services » (`nav-services.tsx`, 6 services avec icône et description + « Voir par où commencer ») — clic, survol, clavier ; Échap rend le focus au bouton ; un survol suivi d'un clic ne referme plus le menu. Menu mobile : sous-liste « Services » repliable. Liens : Métiers, Réalisations, Prix (`/devis`), À propos, Contact. Pied de page : colonne Services tirée de la même liste (`SERVICES_NAV`), « Prix : combien ça coûte ? ».
+- **Accueil** (`page.tsx`) : Hero, Pour vous, Avant/après (bande sombre), Services, Métiers, Démarrer, Processus, **Pourquoi nous** (nouvelle `pourquoi-section.tsx` : les 4 engagements + 5 des 7 lignes du comparatif + carte « Un appel de 30 minutes »), Partenaires, Témoignages, FAQ, appel final (carte sombre). Retirés de l'accueil : Bénéfices, Comparatif, Engagements, Stagiaires (toujours sur `/a-propos`).
+- **Couleurs** (`vsw.css`) : palette A (sarcelle intense `oklch(0.51 0.17 218)`, violet vif), fond 1 (blanc + halos cyan et violet, sections blanc / bleu très pâle) ; `.section--nuit` redéfinit les jetons sombres localement. Contraste vérifié (boutons ≥ 4,5:1). Thème sombre `data-theme="dark"` vérifié.
+- **Galerie « À quoi ça ressemble »** sur `/crm-sur-mesure` (`outils-galerie.tsx`) : 4 écrans tirés des artefacts « Maquette tableau de bord VieSolution » et « Maquette admin KHI » (Aujourd'hui, Leads ; Accueil, Statistiques), images `public/realisations/outils/*.webp` (66 à 102 Ko), mention « Données fictives », présentés comme des écrans *conçus* pour ces clients (ce sont des maquettes). Accessible par Services → CRM et outils sur mesure (menu, pied de page, carte 06 de l'accueil).
+
+**Vérification technique** : `npm run verify` vert (32/32 tests, 0 erreur, 10 avertissements eslint préexistants, build). Captures 1440 px et 390 px : aucun débordement, aucune erreur de page ; les 10 liens du menu répondent 200. Le vide de la colonne « Avant » vu sur une capture pleine page était un artefact de l'outil de capture (animations relancées), pas un défaut : colonne complète dans le navigateur et en mouvement réduit. `qa-agent` (Opus, ≈ 94 k) **OK**, rien de bloquant ; corrigé ensuite : lien mort « Retour au site » de `/postuler-stagiaire` (`/#stagiaires` → `/a-propos#stagiaires`), contraste de la colonne « Ailleurs » (`--fg-3` → `--fg-2`), libellés du menu Services en `--fg-0`, « maquettes d'écrans » dans la galerie, minuteur du menu nettoyé au démontage, panneau du menu en une colonne sous 860 px (il dépassait à droite entre 641 et 830 px). `npm run verify` relancé : vert. Coût réel du lot ≈ 450 k (session ≈ 350 k + QA 94 k).
+
+**Non fait dans ce round** : points mineurs de la QA laissés tels quels (sans effet visible) : sous-liste « Services » du menu mobile non refermée à la fermeture du menu, reflet blanc décoratif des cartes du hero ; les pages de service (`/ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`, `/referencement`) n'ont pas encore la même structure que l'accueil (promis par la maquette) ; inspiration tooly.ca / inovision.ca (demande du 2026-10-22) : Camille a retenu « un seul bouton partout » — maquette à faire, prochain lot.

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { PageHeader } from '@/components/vsw/page-header';
 import { ServiceDetailSection } from '@/components/vsw/service-detail-section';
+import { OutilsGalerie } from '@/components/vsw/outils-galerie';
 import { CTASection } from '@/components/vsw/cta-section';
 
 export const metadata: Metadata = {
@@ -55,6 +56,7 @@ export default function CrmSurMesurePage() {
         boutonLibelle="Décrire votre situation"
         boutonLien="/devis#situation"
       />
+      <OutilsGalerie />
       <CTASection
         text={
           <>

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icon';
-import type { NavLinkItem } from './nav';
+import type { NavLinkItem, ServiceNavItem } from './nav';
 
 const PANEL_ID = 'nav-menu-panel';
 
@@ -12,8 +12,9 @@ const PANEL_ID = 'nav-menu-panel';
  * Fermeture : bouton, touche Échap, clic sur un lien. Défilement du corps bloqué quand ouvert ;
  * le focus revient au bouton à la fermeture. Style : vsw.css (« pme-accessible — premium »).
  */
-export function NavMenu({ links }: { links: readonly NavLinkItem[] }) {
+export function NavMenu({ links, services }: { links: readonly NavLinkItem[]; services: readonly ServiceNavItem[] }) {
   const [open, setOpen] = useState(false);
+  const [servicesOuverts, setServicesOuverts] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
 
@@ -64,6 +65,24 @@ export function NavMenu({ links }: { links: readonly NavLinkItem[] }) {
       </button>
       <div id={PANEL_ID} className="nav-menu-panel" hidden={!open}>
         <ul className="nav-menu-list">
+          <li>
+            <button
+              type="button"
+              className="nav-menu-sous-btn"
+              aria-expanded={servicesOuverts}
+              aria-controls="nav-menu-services"
+              onClick={() => setServicesOuverts((o) => !o)}
+            >
+              Services <span aria-hidden="true">{servicesOuverts ? '▴' : '▾'}</span>
+            </button>
+            <ul id="nav-menu-services" className="nav-menu-sous" hidden={!servicesOuverts}>
+              {services.map((s) => (
+                <li key={s.href}>
+                  <Link href={s.href} onClick={close}>{s.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </li>
           {links.map((l) => (
             <li key={l.href}>
               <Link href={l.href} onClick={close}>

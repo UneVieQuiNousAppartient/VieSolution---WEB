@@ -17,7 +17,7 @@ export function CTASection({
   return (
     <section className="section">
       <div className="container">
-        <div className="cta-card reveal">
+        <div className="cta-card section--nuit reveal">
           <div className="eyebrow cta-card-eyebrow">{'Prochaine étape'}</div>
           <h2 className="cta-card-title">
             {text ?? (

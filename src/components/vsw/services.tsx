@@ -36,7 +36,7 @@ const SERVICES: {
   {
     num: '04',
     icon: 'users',
-    title: 'Formation IA & Zoho',
+    title: 'Formation IA et Zoho',
     desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite.",
     tags: ['Ateliers', 'Équipes', 'Relève', 'Coaching'],
     href: '/ia#formation',

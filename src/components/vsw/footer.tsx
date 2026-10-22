@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { LogoMark } from './logo-mark';
+import { SERVICES_NAV } from './nav';
 
 export function VswFooter() {
   return (
@@ -18,18 +19,15 @@ export function VswFooter() {
           </div>
           <div>
             <h5>Services</h5>
-            <Link href="/ia">Automatisation &amp; IA</Link>
-            <Link href="/zoho">Implantation Zoho</Link>
-            <Link href="/sites-web">Sites et applications web</Link>
-            <Link href="/crm-sur-mesure">CRM et outils sur mesure</Link>
-            <Link href="/referencement">SEO et AEO</Link>
-            <Link href="/ia#formation">Formation IA &amp; Zoho</Link>
-            <Link href="/devis">Combien ça coûte ?</Link>
+            {SERVICES_NAV.map((sv) => (
+              <Link key={sv.href} href={sv.href}>{sv.label}</Link>
+            ))}
+            <Link href="/devis">Prix : combien ça coûte ?</Link>
           </div>
           <div>
             <h5>Entreprise</h5>
             <Link href="/a-propos">À propos</Link>
-            <Link href="/realisations">Cas d&apos;usage</Link>
+            <Link href="/realisations">Réalisations</Link>
             <Link href="/#partenaires">Partenaires</Link>
             <Link href="/postuler-stagiaire">Stagiaires</Link>
             <Link href="/rdv">Prendre un RDV</Link>

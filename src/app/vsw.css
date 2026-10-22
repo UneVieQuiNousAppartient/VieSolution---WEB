@@ -3329,12 +3329,505 @@ html { scroll-behavior: smooth; }
 .sites-band-lien a:hover { text-decoration: underline; }
 .sites-band-viewport + .sites-band-lien { margin-top: 18px; }
 
+/* ==========================================================================
+   Lot « relief » (2026-10-22, demande de Camille) : mini tableau de bord dans le hero, titre en
+   dégradé, surtitres en pastille, cartes de métiers, note manuscrite fléchée, bande des sites
+   sur fond nuit. Tout passe par les jetons (clair et sombre).
+   ========================================================================== */
+:root {
+  --accent-ink: color-mix(in oklch, var(--accent) 78%, black);     /* texte sarcelle sur fond pâle */
+  --night: oklch(0.21 0.045 255);                                 /* zones de contraste */
+  --night-2: oklch(0.26 0.05 255);
+  --on-night: oklch(0.97 0.006 255);
+  --on-night-2: oklch(0.80 0.02 255);
+  --night-line: oklch(1 0 0 / 0.12);
+  --accent-on-night: oklch(0.82 0.12 205);
+}
+:root[data-theme="dark"] {
+  --accent-ink: var(--accent);
+  --night: oklch(0.09 0.02 260);
+  --night-2: oklch(0.14 0.025 260);
+  --accent-on-night: var(--accent);
+}
+
+/* Surtitre : pastille sarcelle discrète (remplace l'étiquette grise encadrée) */
+.eyebrow {
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-color: color-mix(in oklch, var(--accent) 22%, transparent);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 500;
+}
+
+/* Titre : « nous appartient. » en dégradé sarcelle → violet */
+.hero h1 .highlight {
+  background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--accent);
+  animation: none;
+}
+@media (forced-colors: active) {
+  .hero h1 .highlight { -webkit-text-fill-color: currentColor; background: none; }
+}
+
+/* Mini tableau de bord flottant */
+.hero-cartes { position: absolute; inset: 0; pointer-events: none; perspective: 1200px; }
+.hero-carte {
+  --ton: var(--accent);
+  position: absolute;
+  width: 232px;
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: center;
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  background:
+    linear-gradient(160deg, color-mix(in oklch, var(--ton) 7%, var(--surface)), var(--surface) 55%);
+  border: 1px solid color-mix(in oklch, var(--ton) 18%, var(--line-soft));
+  box-shadow:
+    0 1px 0 oklch(1 0 0 / 0.7) inset,
+    0 18px 40px -18px color-mix(in oklch, var(--fg-0) 35%, transparent),
+    0 4px 10px -6px color-mix(in oklch, var(--ton) 30%, transparent);
+  animation: vsw-flotte 7s var(--vsw-ease) infinite alternate;
+}
+.hero-carte.ton-ok { --ton: var(--ok); }
+.hero-carte.ton-warn { --ton: var(--warn); }
+.hero-carte.ton-violet { --ton: var(--accent-2); }
+.hero-carte-icone {
+  grid-row: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  color: var(--on-ink);
+  background: linear-gradient(145deg, color-mix(in oklch, var(--ton) 82%, white), var(--ton));
+  box-shadow: 0 6px 14px -6px var(--ton);
+}
+.hero-carte-texte { grid-row: 1; display: grid; gap: 2px; min-width: 0; text-align: left; }
+.hero-carte-texte strong { font-size: 14px; font-weight: 600; color: var(--fg-0); line-height: 1.2; }
+.hero-carte-texte small { font-size: 12px; color: var(--fg-2); line-height: 1.3; }
+.hero-carte-pastille {
+  grid-column: 2;
+  justify-self: start;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: color-mix(in oklch, var(--ton) 78%, var(--fg-0));
+  background: color-mix(in oklch, var(--ton) 14%, transparent);
+}
+.hero-carte-pastille::before { content: "● " / ""; font-size: 8px; vertical-align: 1px; }
+.hero-carte.c1 { left: 3.5%; top: 190px; rotate: -4deg; transform: rotateY(10deg); }
+.hero-carte.c2 { left: 5%;   top: 470px; rotate: 3deg;  transform: rotateY(8deg);  animation-delay: -2.5s; }
+.hero-carte.c3 { right: 3.5%; top: 210px; rotate: 4deg; transform: rotateY(-10deg); animation-delay: -4s; }
+.hero-carte.c4 { right: 5%;  top: 490px; rotate: -3deg; transform: rotateY(-8deg); animation-delay: -1.2s; }
+@media (max-width: 1279px) { .hero-cartes { display: none; } }
+
+/* Note manuscrite avec flèche dessinée */
+.hero-note {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  top: calc(100% + 4px);
+  translate: -300px 0;
+}
+.hero-note-fleche { color: var(--accent); margin-bottom: 10px; }
+@media (max-width: 640px) {
+  .hero .eyebrow { border-radius: 14px; }              /* sur deux lignes : coins plus doux qu'une pilule */
+  .hero-note { font-size: 22px; translate: none; }
+  .hero-note-fleche { width: 34px; height: 28px; }
+}
+
+/* « Je suis… » : mini-cartes */
+.hero-metiers-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.hero-metier-carte {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  color: var(--fg-0);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 180ms var(--vsw-ease), box-shadow 180ms var(--vsw-ease), transform 180ms var(--vsw-ease);
+}
+.hero-metier-icone {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  transition: background 180ms var(--vsw-ease), color 180ms var(--vsw-ease);
+}
+.hero-metier-carte:hover,
+.hero-metier-carte:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 12px 24px -16px color-mix(in oklch, var(--accent) 60%, transparent);
+  transform: translateY(-2px);
+  outline: none;
+}
+.hero-metier-carte:hover .hero-metier-icone,
+.hero-metier-carte:focus-visible .hero-metier-icone { background: var(--accent); color: var(--on-ink); }
+.hero-metier-autre { margin: 14px 0 0; text-align: center; font-size: 14px; }
+.hero-metier-autre a { color: var(--accent-ink); font-weight: 500; text-decoration: none; }
+.hero-metier-autre a:hover { text-decoration: underline; }
+@media (max-width: 900px) { .hero-metiers-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 380px) { .hero-metier-carte { font-size: 13px; gap: 8px; padding: 8px 10px; } }
+
+/* Bande « Des sites qu'on a bâtis » sur fond nuit */
+.sites-band {
+  background:
+    radial-gradient(120% 140% at 50% 0%, var(--night-2), var(--night) 65%);
+  border-color: transparent;
+  color: var(--on-night);
+}
+.sites-band .hero-divider { color: var(--on-night-2); }
+.sites-band .hero-divider::before,
+.sites-band .hero-divider::after { background: var(--night-line); }
+.sites-band .site-card {
+  border-color: var(--night-line);
+  box-shadow: 0 22px 44px -24px oklch(0 0 0 / 0.7);
+}
+.sites-band .site-card:hover { border-color: var(--accent-on-night); }
+.sites-band .site-card:focus-visible { outline-color: var(--accent-on-night); }
+.sites-band-pause {
+  background: transparent;
+  border-color: var(--night-line);
+  color: var(--on-night);
+}
+.sites-band-pause:has(input:focus-visible) { outline-color: var(--accent-on-night); }
+.sites-band-lien a { color: var(--accent-on-night); }
+
+/* ==========================================================================
+   Réorganisation du 2026-10-22 (maquettes validées par Camille : « fond 1, couleurs A ») :
+   couleurs plus vives (sarcelle intense + violet vif), fond blanc franc avec halos de couleur,
+   sections alternées blanc / bleu très pâle, bandes bleu nuit, menu « Services ».
+   Thème sombre inchangé (html[data-theme="dark"] l'emporte sur :root).
+   ========================================================================== */
+:root {
+  --accent: oklch(0.51 0.17 218);          /* #0079A6 — texte blanc 4,9:1 */
+  --accent-2: oklch(0.52 0.25 300);        /* violet vif #8426DF */
+  --accent-vif: oklch(0.70 0.14 212);      /* cyan lumineux : reflets, dégradés, jamais en texte */
+  --accent-soft: oklch(0.60 0.14 215 / 0.13);
+  --accent-glow: oklch(0.60 0.14 215 / 0.28);
+  --bg-0: oklch(1 0 0);
+  --bg-1: oklch(0.976 0.011 215);          /* bleu très pâle des sections alternées */
+  --bg-2: oklch(0.955 0.014 215);
+  --bg-3: oklch(0.92 0.016 215);
+  --bg-band: oklch(0.976 0.011 215);
+  --tray: oklch(0.958 0.014 215);
+  --line: oklch(0.88 0.016 230);
+  --line-soft: oklch(0.93 0.01 230);
+  --arc: color-mix(in oklch, var(--accent) 9%, transparent);
+}
+:root:not([data-theme="dark"]) .btn-primary {
+  background: linear-gradient(135deg, oklch(0.53 0.16 220), oklch(0.45 0.14 228));   /* haut #007FAE : 4,5:1 */
+  border-color: transparent;
+  box-shadow: 0 10px 22px -12px var(--accent-glow);
+}
+:root:not([data-theme="dark"]) .btn-primary:hover {
+  background: linear-gradient(135deg, oklch(0.49 0.16 222), oklch(0.41 0.14 230));
+  box-shadow: 0 14px 26px -12px var(--accent-glow);
+}
+.hero h1 .highlight {
+  background-image: linear-gradient(100deg, oklch(0.58 0.15 216) 5%, var(--accent-2) 95%);   /* gros titre : ≥ 3:1 */
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-theme="dark"] .hero h1 .highlight { background-image: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; }
+
+/* Fond 1 : blanc franc avec halos cyan et violet derrière le titre */
+:root:not([data-theme="dark"]) .hero {
+  background:
+    radial-gradient(48% 55% at 8% 6%, oklch(0.78 0.12 212 / 0.38), transparent 62%),
+    radial-gradient(42% 50% at 94% 12%, oklch(0.70 0.17 300 / 0.24), transparent 62%),
+    radial-gradient(60% 45% at 50% 100%, oklch(0.80 0.10 212 / 0.20), transparent 65%),
+    var(--bg-0);
+}
+:root:not([data-theme="dark"]) .hero-glow { opacity: 0; }
+
+/* Bandes bleu nuit : jetons du thème sombre dans la section (tout ce qui est dedans s'adapte) */
+.section--nuit {
+  color-scheme: dark;
+  --bg-0: oklch(0.18 0.035 255);
+  --bg-1: oklch(0.23 0.04 255);
+  --bg-2: oklch(0.27 0.045 255);
+  --bg-3: oklch(0.31 0.05 255);
+  --line: oklch(0.38 0.04 255);
+  --line-soft: oklch(0.30 0.04 255);
+  --fg-0: oklch(0.97 0.005 260);
+  --fg-1: oklch(0.86 0.01 260);
+  --fg-2: oklch(0.72 0.015 260);
+  --fg-3: oklch(0.58 0.02 260);
+  --accent: oklch(0.84 0.14 205);
+  --accent-2: oklch(0.74 0.20 305);
+  --accent-ink: oklch(0.84 0.14 205);
+  --accent-soft: oklch(0.84 0.14 205 / 0.14);
+  --accent-glow: oklch(0.84 0.14 205 / 0.35);
+  --ok: oklch(0.82 0.18 150);
+  --warn: oklch(0.84 0.16 80);
+  --surface: oklch(0.23 0.04 255);
+  --tray: oklch(0.15 0.03 255);
+  --ink: oklch(0.96 0.008 260);
+  --on-ink: oklch(0.18 0.035 255);
+  --bg-band: transparent;
+  --accent-hover: color-mix(in oklch, var(--accent) 88%, white);
+  background: radial-gradient(120% 120% at 50% 0%, oklch(0.25 0.05 255), oklch(0.17 0.035 255) 70%);
+  color: var(--fg-1);
+}
+:root .section--nuit .btn-primary,
+:root:not([data-theme="dark"]) .section--nuit .btn-primary {
+  background: var(--accent);
+  color: var(--on-ink);
+  border-color: var(--accent);
+  box-shadow: 0 10px 24px -12px var(--accent-glow);
+}
+:root .section--nuit .btn-primary:hover,
+:root:not([data-theme="dark"]) .section--nuit .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+/* Menu « Services » (nav-services.tsx) */
+.nav-services { position: relative; }
+.nav-services-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.nav-services-btn:hover,
+.nav-services-btn[aria-expanded="true"] { color: var(--accent-ink); }
+.nav-services-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.nav-services-chev { font-size: 10px; transition: transform 160ms var(--vsw-ease); }
+.nav-services-btn[aria-expanded="true"] .nav-services-chev { transform: rotate(180deg); }
+.nav-services-panel {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: -24px;
+  width: 640px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  box-shadow: 0 30px 60px -28px color-mix(in oklch, var(--fg-0) 45%, transparent);
+  z-index: 60;
+}
+.nav-services-panel::before { content: ""; position: absolute; inset: -18px 0 auto 0; height: 18px; }   /* pont pour la souris */
+.nav-services-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+@media (max-width: 860px) {   /* tablette : une colonne, le panneau ne dépasse plus à droite */
+  .nav-services-panel { width: min(360px, calc(100vw - 32px)); }
+  .nav-services-list { grid-template-columns: 1fr; }
+}
+.nav-services-item {
+  display: flex;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--fg-0);
+  white-space: normal !important;
+}
+.nav-services-item:hover,
+.nav-services-item:focus-visible { background: var(--accent-soft); outline: none; }
+.nav-services-icone {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.nav-services-item strong { display: block; color: var(--fg-0); font-size: 14px; font-weight: 600; line-height: 1.3; }
+.nav-services-item small { display: block; font-size: 12.5px; color: var(--fg-2); line-height: 1.35; margin-top: 2px; }
+.nav-services-pied {
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-1);
+  font-size: 13.5px;
+  color: var(--fg-1) !important;
+  text-decoration: none;
+}
+.nav-services-pied strong { color: var(--accent-ink); font-weight: 600; }
+.nav-services-pied:hover strong { text-decoration: underline; }
+/* Menu mobile : « Services » dépliable */
+.nav-menu-sous-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 56px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  background: none;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--fg-0);
+  cursor: pointer;
+}
+.nav-menu-sous-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+.nav-menu-sous { list-style: none; margin: 0; padding: 4px 0 8px 14px; border-bottom: 1px solid var(--line-soft); }
+.nav-menu-list .nav-menu-sous a { min-height: 44px; font-family: var(--font-body); font-size: 16px; border-bottom: 0; }
+
+/* « Pourquoi nous » (pourquoi-section.tsx) */
+.pourquoi-accent {
+  background-image: linear-gradient(100deg, oklch(0.58 0.15 216), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-theme="dark"] .pourquoi-accent { background-image: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; }
+@media (forced-colors: active) { .pourquoi-accent { -webkit-text-fill-color: currentColor; background: none; } }
+.pourquoi-engagements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+.pourquoi-carte {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+}
+.pourquoi-icone {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  color: var(--on-ink);
+  background: linear-gradient(145deg, var(--accent-vif, var(--accent)), var(--accent));
+  margin-bottom: 14px;
+}
+html[data-theme="dark"] .pourquoi-icone { color: var(--bg-0); }
+.pourquoi-carte h3 { font-size: 17px; margin: 0 0 6px; color: var(--fg-0); }
+.pourquoi-carte p { margin: 0; font-size: 14px; color: var(--fg-2); line-height: 1.55; }
+.pourquoi-duo { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); gap: 14px; }
+.pourquoi-tableau {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+  font-size: 14.5px;
+}
+.pourquoi-tableau th {
+  text-align: left;
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  background: var(--bg-1);
+}
+.pourquoi-tableau td { padding: 13px 18px; border-top: 1px solid var(--line-soft); vertical-align: top; }
+.pourquoi-tableau td:first-child { color: var(--fg-2); text-decoration: line-through; text-decoration-color: color-mix(in oklch, var(--fg-2) 50%, transparent); width: 42%; }
+.pourquoi-tableau td:last-child { color: var(--fg-0); }
+.pourquoi-coche { color: var(--accent); font-weight: 700; margin-right: 8px; }
+.pourquoi-appel {
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.pourquoi-appel h3 { margin: 0; font-size: 22px; color: var(--fg-0); }
+.pourquoi-appel p { margin: 0; font-size: 14.5px; color: var(--fg-2); line-height: 1.55; }
+.pourquoi-appel .btn { margin-top: auto; }
+@media (max-width: 1024px) {
+  .pourquoi-engagements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pourquoi-duo { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .pourquoi-engagements { grid-template-columns: 1fr; }
+  .pourquoi-tableau td, .pourquoi-tableau th { padding: 11px 12px; }
+}
+
+/* ============ Galerie « À quoi ça ressemble » de /crm-sur-mesure (outils-galerie.tsx, 2026-10-22) ============ */
+.outils-grille {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+.outils-carte figure { margin: 0; display: flex; flex-direction: column; gap: 14px; }
+.outils-cadre {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -26px color-mix(in oklch, var(--fg-0) 45%, transparent);
+  transition: transform 220ms var(--vsw-ease), border-color 220ms var(--vsw-ease);
+}
+.outils-cadre:hover { transform: translateY(-3px); border-color: var(--accent-40); }
+.outils-cadre:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.outils-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+.outils-carte figcaption { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-card); line-height: 1.55; color: var(--fg-2); }
+.outils-carte figcaption strong { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--fg-0); }
+.outils-client {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.outils-note { margin: 28px 0 0; font-size: 13px; color: var(--fg-2); }
+@media (max-width: 900px) {
+  .outils-grille { grid-template-columns: 1fr; gap: 32px; }
+}
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
   .sites-band-track { animation: none !important; }
   .sites-band-pause { display: none; }
   .sites-band-viewport { overflow-x: auto; }
-  .hero-tile { animation: none !important; }
+  .hero-tile, .hero-carte { animation: none !important; }
+  .hero-metier-carte { transition: none; transform: none !important; }
   html { scroll-behavior: auto !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

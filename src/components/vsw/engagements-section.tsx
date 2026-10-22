@@ -6,7 +6,7 @@ import { METIERS } from './metiers-section';
  * « Nos engagements » (idée reprise de la section valeurs de zoho.com). Aucune promesse nouvelle :
  * chaque engagement reprend un texte déjà publié sur le site (FAQ, « La différence »).
  */
-const ENGAGEMENTS: { icon: IconName; title: string; desc: string }[] = [
+export const ENGAGEMENTS: { icon: IconName; title: string; desc: string }[] = [
   {
     icon: 'grid',
     title: 'Vos besoins d’abord',

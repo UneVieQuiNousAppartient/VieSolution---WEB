@@ -102,7 +102,7 @@ export const METIERS: Metier[] = [
 
 export function MetiersSection() {
   return (
-    <section id="metiers" className="section">
+    <section id="metiers" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>

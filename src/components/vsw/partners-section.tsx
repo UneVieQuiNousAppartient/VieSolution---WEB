@@ -60,7 +60,7 @@ function PartnerContent({ p }: { p: Partner }) {
 
 export function PartnersSection() {
   return (
-    <section id="partenaires" className="section">
+    <section id="partenaires" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>

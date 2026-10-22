@@ -51,7 +51,7 @@ export function AvantApresSection() {
   const switchable = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
   return (
-    <section id="avant-apres" className="section section--band">
+    <section id="avant-apres" className="section section--nuit">
       <div className="container">
         <div className="section-head reveal">
           <div>

@@ -32,7 +32,7 @@ export default function PostulerStagiairePage() {
       <section className="section" style={{ paddingTop: 96, borderTop: 'none' }}>
         <div className="container">
           <Link
-            href="/#stagiaires"
+            href="/a-propos#stagiaires"
             className="btn btn-ghost"
             style={{ marginBottom: 32 }}
           >
