@@ -11,7 +11,7 @@ export function VswFooter() {
           <div>
             <div className="logo" style={{ marginBottom: 16 }}>
               <LogoMark />
-              <div>Vie Solution Web<br /><small>Québec · Canada</small></div>
+              <div>Vie Solution Web</div>
             </div>
             <p style={{ color: 'var(--fg-2)', fontSize: 14, maxWidth: 300, margin: 0 }}>
               Une vie qui nous appartient. Automatisation, IA, sites web et implantation Zoho
@@ -38,7 +38,6 @@ export function VswFooter() {
             <h5>Contact</h5>
             <a href="mailto:bonjour@viesolutionweb.ca">bonjour@viesolutionweb.ca</a>
             <a href="tel:+14185550143">(418) 555-0143</a>
-            <a>Québec · Canada</a>
           </div>
         </div>
         <div className="footer-bottom">
