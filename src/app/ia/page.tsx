@@ -22,7 +22,7 @@ export default function IAPage() {
             L&apos;IA qui travaille<br />pour vous.
           </>
         }
-        lede="Un assistant IA bien réglé, des tâches qui se font toutes seules, et une formation pour être à l'aise. Trois façons d'utiliser l'IA dans votre quotidien — même si vous n'êtes pas techno."
+        lede="Un assistant IA bien réglé, des tâches qui se font toutes seules, et une formation pour être à l'aise. Trois façons d'utiliser l'IA dans votre quotidien. On s'occupe de la technique."
       />
       <DemarrerSection variant="ia" />
       <AISection />

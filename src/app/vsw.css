@@ -2154,6 +2154,9 @@ section { position: relative; }
 .metiers-grid { grid-template-columns: 1fr; }
 @media (min-width: 700px) { .metiers-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .metiers-grid { grid-template-columns: repeat(3, 1fr); } }
+/* Une carte ouverte (« Le temps retrouvé… ») n'étire plus ses voisines : sinon, grand vide sous
+   leur contenu (signalé par Camille, 2026-10-22). Repliées, les cartes gardent la même hauteur. */
+.metiers-grid:has(.metier-plus[open]) { align-items: start; }
 /* Intertitres « Ce qui vous gruge » alignés d'une carte à l'autre (titre + précision facultative) */
 .metier-titres { min-height: calc(var(--fs-h3) * 1.25 + 4px + var(--fs-small) * 1.6); }
 .metiers-grid .benefit { padding: 28px 22px; }
