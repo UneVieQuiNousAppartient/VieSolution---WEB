@@ -64,7 +64,6 @@ export default function SitesWebPage() {
             minutes.
           </>
         }
-        primaryLabel="Discuter d'un projet de site"
       />
     </>
   );

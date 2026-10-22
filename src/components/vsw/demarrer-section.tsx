@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
 type Variant = 'accueil' | 'ia' | 'zoho';
 
@@ -114,8 +115,8 @@ export function DemarrerSection({ variant }: { variant: Variant }) {
               Un premier pas, <em>à votre rythme</em>. Sur mesure — on en discute à l&apos;appel
               découverte gratuit.
             </div>
-            <Link href="/rdv" className="btn btn-primary btn-lg">
-              Parler de mon premier pas <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
         </div>

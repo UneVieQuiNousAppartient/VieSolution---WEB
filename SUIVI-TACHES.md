@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 21.
+**Dernière mise à jour : 2026-10-22** — dernière section : 22.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -292,3 +292,17 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert (32/32 tests, 0 erreur, 10 avertissements eslint préexistants, build). Captures 1440 px et 390 px : aucun débordement, aucune erreur de page ; les 10 liens du menu répondent 200. Le vide de la colonne « Avant » vu sur une capture pleine page était un artefact de l'outil de capture (animations relancées), pas un défaut : colonne complète dans le navigateur et en mouvement réduit. `qa-agent` (Opus, ≈ 94 k) **OK**, rien de bloquant ; corrigé ensuite : lien mort « Retour au site » de `/postuler-stagiaire` (`/#stagiaires` → `/a-propos#stagiaires`), contraste de la colonne « Ailleurs » (`--fg-3` → `--fg-2`), libellés du menu Services en `--fg-0`, « maquettes d'écrans » dans la galerie, minuteur du menu nettoyé au démontage, panneau du menu en une colonne sous 860 px (il dépassait à droite entre 641 et 830 px). `npm run verify` relancé : vert. Coût réel du lot ≈ 450 k (session ≈ 350 k + QA 94 k).
 
 **Non fait dans ce round** : points mineurs de la QA laissés tels quels (sans effet visible) : sous-liste « Services » du menu mobile non refermée à la fermeture du menu, reflet blanc décoratif des cartes du hero ; les pages de service (`/ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`, `/referencement`) n'ont pas encore la même structure que l'accueil (promis par la maquette) ; inspiration tooly.ca / inovision.ca (demande du 2026-10-22) : Camille a retenu « un seul bouton partout » — maquette à faire, prochain lot.
+
+## 22. ✅ Un seul bouton partout + barre fixe sur téléphone (2026-10-22)
+
+**Contexte / demande** : inspiration tooly.ca et inovision.ca demandée par Camille (« le meilleur des deux dans l'organisation de mes services pour ne pas perdre mes leads, ressort le côté positif »). Analyse présentée ; Camille a retenu « un seul bouton partout » ; maquette `scratchpad/maquettes-structure/6-un-seul-bouton.png` ; accord : « oui applique le bouton s'il y a une plus-value ».
+
+**Ce qui a été fait** (agent principal) :
+- `src/components/vsw/appel.ts` : les deux textes écrits une seule fois — `APPEL` « Réserver mon appel gratuit » → `/rdv` (« Appel gratuit » dans la barre du haut, faute de place) et `ECRIT` « Décrire ma situation par écrit » → `/devis#situation`. Avant : 12 libellés différents menaient à `/rdv`.
+- Appliqués : barre du haut, menu mobile, hero, pied de page, Pour vous, Services (les deux boutons), Métiers, Démarrer, Pourquoi nous, Engagements, sections IA et Zoho, carte d'appel final (second bouton : « Décrire ma situation par écrit » au lieu de « Nous écrire » ; Contact reste dans la barre et le pied), formulaire de situation, niveaux d'accompagnement de `/devis` (« Commencer »), pages `/ia`, `/zoho`, `/sites-web`, `/devis`, `/crm-sur-mesure`, `/referencement`, sur-titre et titre de `/rdv`, puces du clavardage. Note du hero : « 30 min, sans engagement » (le bouton dit déjà « gratuit »).
+- `barre-appel.tsx` : barre fixe en bas de l'écran, téléphone seulement (≤ 640 px) ; apparaît après 480 px de défilement, se cache au pied de page et quand le menu mobile est ouvert, absente de `/rdv` et `/admin`, `inert` quand cachée ; le bouton de clavardage remonte au-dessus.
+- Liens d'information (« Par où commencer ? », « En savoir plus », « Voir le référencement ») et la puce « Je préfère en parler » du clavardage (réponse du visiteur, pas un bouton) : inchangés.
+
+**Vérification technique** : `npm run verify` vert (32/32 tests, 0 erreur, 10 avertissements préexistants, build). Barre testée à 390 px (cachée en haut, visible au milieu, cachée au pied et sur `/rdv`, cachée menu ouvert, clavardage à 112 px) ; invisible à 1440 px. `/devis` à 1440, 1024, 390 px : boutons sur une ligne, aucun débordement. `qa-agent` (Opus, ≈ 65 k) **OK** ; corrigé ensuite : bouton « Commencer » des niveaux de `/devis`. Coût réel ≈ 170 k (session ≈ 105 k + QA 65 k).
+
+**Non fait dans ce round** : focus clavier perdu si la barre se cache pendant que son bouton a le focus (cas rare, QA mineur) ; autres idées tooly/inovision non retenues (« Être rappelé » en 20 s, ton positif partout, menu Ressources). Les carrés « Vous vous reconnaissez ? » (« trop simple », Camille) : 3 maquettes proposées (`7-carres-option-A/B/C.png`), en attente de son choix.

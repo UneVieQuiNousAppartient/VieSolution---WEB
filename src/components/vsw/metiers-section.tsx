@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
+import { APPEL } from './appel';
 
 export type Metier = {
   slug: string; // ancre de la carte : id="metier-<slug>" (sélecteur « Je suis… » du hero)
@@ -158,8 +159,8 @@ export function MetiersSection() {
             Votre métier n&apos;est pas dans la liste ? Si vous servez des clients, on regarde
             ensemble ce qui vous gruge et ce qu&apos;on peut améliorer.
           </p>
-          <Link href="/rdv" className="btn btn-ghost">
-            Parler de mon métier <Icon name="arrow" size={14} />
+          <Link href={APPEL.href} className="btn btn-ghost">
+            {APPEL.libelle} <Icon name="arrow" size={14} />
           </Link>
         </div>
       </div>

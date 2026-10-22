@@ -3,6 +3,7 @@ import { Icon, type IconName } from './icon';
 import { NavMenu } from './nav-menu';
 import { NavServices } from './nav-services';
 import { LogoMark } from './logo-mark';
+import { APPEL } from './appel';
 
 export type NavLinkItem = { href: string; label: string };
 export type ServiceNavItem = NavLinkItem & { desc: string; icon: IconName };
@@ -45,8 +46,8 @@ export function VswNav() {
             </Link>
           ))}
         </div>
-        <Link href="/rdv" className="btn btn-primary nav-cta">
-          Prendre un RDV <Icon name="arrow" size={14} />
+        <Link href={APPEL.href} className="btn btn-primary nav-cta">
+          {APPEL.court} <Icon name="arrow" size={14} />
         </Link>
         <NavMenu links={NAV_LINKS} services={SERVICES_NAV} />
       </div>

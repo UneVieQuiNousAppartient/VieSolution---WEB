@@ -3821,6 +3821,35 @@ html[data-theme="dark"] .pourquoi-icone { color: var(--bg-0); }
   .outils-grille { grid-template-columns: 1fr; gap: 32px; }
 }
 
+/* ============ Bouton unique (appel.ts, 2026-10-22) ============ */
+.services-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Barre fixe « Réserver mon appel gratuit » (barre-appel.tsx) : téléphone seulement. */
+.barre-appel { display: none; }
+@media (max-width: 640px) {
+  .barre-appel {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+    background: color-mix(in oklch, var(--bg-0) 94%, transparent);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line-soft);
+    box-shadow: 0 -12px 28px -20px color-mix(in oklch, var(--fg-0) 45%, transparent);
+    transform: translateY(110%);
+    transition: transform 260ms var(--vsw-ease);
+  }
+  .barre-appel[data-visible] { transform: none; }
+  body:has(.nav-menu-panel:not([hidden])) .barre-appel { display: none; }   /* le menu ouvert a déjà son bouton */
+  .barre-appel .btn { width: 100%; justify-content: center; }
+  .barre-appel small { display: block; margin-top: 6px; text-align: center; font-size: 12px; color: var(--fg-2); }
+  html[data-barre-appel="on"] .chat-fab { bottom: 112px; }
+  html[data-barre-appel="on"] .chat-panel { bottom: 180px; max-height: calc(100dvh - 224px); }
+}
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
   .sites-band-track { animation: none !important; }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
 import { METIERS } from './metiers-section';
+import { APPEL } from './appel';
 
 /*
  * « Nos engagements » (idée reprise de la section valeurs de zoho.com). Aucune promesse nouvelle :
@@ -59,8 +60,8 @@ export function EngagementsSection() {
               Gratuit, sans engagement. On regarde votre situation ensemble, puis vous recevez une
               proposition écrite.
             </p>
-            <Link href="/rdv" className="btn btn-dark">
-              Prendre un RDV <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-dark">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
           {carte(b, 'eg-c')}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
 /* Niveaux d'accompagnement — aucun montant affiché (décision de Camille, 2026-10-17) :
    le prix de chaque forfait est établi par écrit après l'appel découverte. */
@@ -71,11 +72,11 @@ export function PricingSection() {
                 ))}
               </ul>
               <Link
-                href="/rdv"
+                href={APPEL.href}
                 className={'btn btn-lg ' + (p.featured ? 'btn-primary' : 'btn-ghost')}
                 style={{ justifyContent: 'center' }}
               >
-                Commencer <Icon name="arrow" size={14} />
+                {APPEL.libelle} <Icon name="arrow" size={14} />
               </Link>
             </div>
           ))}

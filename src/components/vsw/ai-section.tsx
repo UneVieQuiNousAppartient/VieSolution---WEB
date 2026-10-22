@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
 const AI_PILLARS: { num: string; title: string; desc: string; items: string[]; note?: string }[] = [
   {
@@ -66,8 +67,8 @@ export function AISection() {
               Nous sommes là pour <em>simplifier votre travail</em> avec l&apos;IA — à votre
               mesure, avec vos outils et votre équipe.
             </div>
-            <Link href="/rdv" className="btn btn-primary btn-lg">
-              Discuter d&apos;un projet IA <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
         </div>

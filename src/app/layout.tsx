@@ -5,6 +5,7 @@ import './vsw.css';
 import { VswNav } from '@/components/vsw/nav';
 import { VswFooter } from '@/components/vsw/footer';
 import { VswChatbot } from '@/components/vsw/chatbot';
+import { BarreAppel } from '@/components/vsw/barre-appel';
 import { TrackPageview } from '@/components/vsw/track-pageview';
 import { NavScroll } from '@/components/vsw/nav-scroll';
 import { JsonLd } from '@/components/vsw/json-ld';
@@ -115,6 +116,7 @@ export default function RootLayout({
         <VswNav />
         <main>{children}</main>
         <VswFooter />
+        <BarreAppel />
         <VswChatbot />
       </body>
     </html>

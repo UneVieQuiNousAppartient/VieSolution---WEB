@@ -9,6 +9,7 @@ import { submitEstimateurRequest } from '@/lib/supabase/actions';
 import { checkRateLimit } from '@/lib/utils/security';
 import { Icon } from './icon';
 import { FACTEURS, CONCLUSION_PRIX } from './comment-prix-section';
+import { APPEL } from './appel';
 
 /* Les 8 métiers de metiers-section.tsx (titres des cartes), + « Autre ». */
 const METIERS = [
@@ -154,8 +155,8 @@ export function SituationForm() {
                   <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
                     {isSubmitting ? 'Envoi…' : 'Envoyer ma situation'} <Icon name="send" size={14} />
                   </button>
-                  <Link href="/rdv" className="btn btn-ghost btn-lg">
-                    Je préfère réserver un appel
+                  <Link href={APPEL.href} className="btn btn-ghost btn-lg">
+                    {APPEL.libelle}
                   </Link>
                 </div>
               </form>

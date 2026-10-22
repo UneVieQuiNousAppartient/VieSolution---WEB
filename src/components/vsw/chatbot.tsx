@@ -17,7 +17,7 @@ const BOT_FLOW: Record<string, Node> = {
       { text: 'Combien ça coûte ?', next: 'estimer' },
       { text: 'Voir les services', next: 'services' },
       { text: 'Parler de Zoho', next: 'zoho' },
-      { text: 'Prendre un RDV', next: 'rdv' },
+      { text: 'Réserver mon appel gratuit', next: 'rdv' },
     ],
   },
   debuter: {
@@ -31,14 +31,14 @@ const BOT_FLOW: Record<string, Node> = {
   'debut-zoho': {
     bot: 'On peut mettre en place Zoho pour vos clients et vos factures, tout au même endroit. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
     chips: [
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
       { text: 'Voir Zoho', action: 'goto-zoho' },
     ],
   },
   'debut-ia': {
     bot: 'On peut configurer un assistant IA pour votre entreprise et vous montrer comment vous en servir. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
     chips: [
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
       { text: 'Voir l\'IA', action: 'goto-ia' },
     ],
   },
@@ -55,13 +55,13 @@ const BOT_FLOW: Record<string, Node> = {
     bot: "On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
       { text: 'Voir comment on établit un prix', action: 'goto-devis' },
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
     ],
   },
   agent: {
     bot: "Un assistant IA (clavardage client, assistant interne, tri de documents) dépend des outils à brancher : on le cadre ensemble lors d'un appel. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
       { text: 'Voir comment on établit un prix', action: 'goto-devis' },
     ],
   },
@@ -69,12 +69,12 @@ const BOT_FLOW: Record<string, Node> = {
     bot: "Une implantation Zoho dépend des modules (CRM, Books, Desk, Campaigns…) et du nombre d'utilisateurs. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
     chips: [
       { text: 'Voir comment on établit un prix', action: 'goto-devis' },
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
     ],
   },
   formation: {
     bot: "Nos formations IA et Zoho : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
-    chips: [{ text: 'Prendre un RDV', action: 'goto-rdv' }],
+    chips: [{ text: 'Réserver mon appel gratuit', action: 'goto-rdv' }],
   },
   services: {
     bot: "On peut vous aider de quatre façons : rendre vos tâches automatiques, créer un assistant IA, installer Zoho pour vos clients et vos factures, ou vous former. Qu'est-ce qui vous intéresse ?",
@@ -89,7 +89,7 @@ const BOT_FLOW: Record<string, Node> = {
     bot: "Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme.",
     chips: [
       { text: 'Combien ça coûte ?', next: 'zoho-estim' },
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
     ],
   },
   rdv: {
@@ -99,7 +99,7 @@ const BOT_FLOW: Record<string, Node> = {
   fallback: {
     bot: "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à bonjour@viesolutionweb.ca.",
     chips: [
-      { text: 'Prendre un RDV', action: 'goto-rdv' },
+      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
       { text: 'Combien ça coûte ?', action: 'goto-devis' },
     ],
   },

@@ -3,6 +3,7 @@ import { RevealInit } from '@/components/vsw/reveal-init';
 import { PageHeader } from '@/components/vsw/page-header';
 import { ServiceDetailSection } from '@/components/vsw/service-detail-section';
 import { CTASection } from '@/components/vsw/cta-section';
+import { APPEL } from '@/components/vsw/appel';
 
 export const metadata: Metadata = {
   title: 'Référencement SEO et AEO',
@@ -52,8 +53,8 @@ export default function ReferencementPage() {
             questions fréquentes</em> lisibles par Google et les IA.
           </>
         }
-        boutonLibelle="Discuter de votre référencement"
-        boutonLien="/rdv"
+        boutonLibelle={APPEL.libelle}
+        boutonLien={APPEL.href}
       />
       <CTASection
         text={

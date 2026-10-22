@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL, ECRIT } from './appel';
 
 type CTASectionProps = {
   text?: React.ReactNode;
@@ -11,8 +12,8 @@ type CTASectionProps = {
    --accent-2), contenu centré. Inspiration « Gradient CTA Banner », 21st.dev. */
 export function CTASection({
   text,
-  primaryLabel = 'Réserver un appel découverte',
-  primaryHref = '/rdv',
+  primaryLabel = APPEL.libelle,
+  primaryHref = APPEL.href,
 }: CTASectionProps) {
   return (
     <section className="section">
@@ -31,8 +32,8 @@ export function CTASection({
             <Link href={primaryHref} className="btn btn-primary btn-lg">
               {primaryLabel} <Icon name="arrow" size={14} />
             </Link>
-            <Link href="/contact" className="btn btn-ghost btn-lg">
-              Nous écrire
+            <Link href={ECRIT.href} className="btn btn-ghost btn-lg">
+              {ECRIT.libelle}
             </Link>
           </div>
         </div>

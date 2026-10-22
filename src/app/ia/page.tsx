@@ -33,7 +33,6 @@ export default function IAPage() {
             appel gratuit de 30 minutes.
           </>
         }
-        primaryLabel="Discuter d'un projet IA"
       />
     </>
   );

@@ -35,7 +35,6 @@ export default function DevisPage() {
             découverte gratuit.
           </>
         }
-        primaryLabel="Réserver un appel"
       />
     </>
   );

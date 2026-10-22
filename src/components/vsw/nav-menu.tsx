@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icon';
 import type { NavLinkItem, ServiceNavItem } from './nav';
+import { APPEL } from './appel';
 
 const PANEL_ID = 'nav-menu-panel';
 
@@ -91,8 +92,8 @@ export function NavMenu({ links, services }: { links: readonly NavLinkItem[]; se
             </li>
           ))}
         </ul>
-        <Link href="/rdv" className="btn btn-primary btn-lg nav-menu-cta" onClick={close}>
-          Prendre un RDV <Icon name="arrow" size={14} />
+        <Link href={APPEL.href} className="btn btn-primary btn-lg nav-menu-cta" onClick={close}>
+          {APPEL.libelle} <Icon name="arrow" size={14} />
         </Link>
       </div>
     </>

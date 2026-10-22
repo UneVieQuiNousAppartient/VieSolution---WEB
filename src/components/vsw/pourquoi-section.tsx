@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Icon } from './icon';
 import { ENGAGEMENTS } from './engagements-section';
 import { ROWS } from './comparison-section';
+import { APPEL } from './appel';
 
 /*
  * « Pourquoi nous » (réorganisation du 2026-10-22, maquette 3 validée par Camille) : fusion de
@@ -57,8 +58,8 @@ export function PourquoiSection() {
               Gratuit, sans engagement. On regarde votre situation ensemble, puis vous recevez une
               proposition écrite.
             </p>
-            <Link href="/rdv" className="btn btn-primary">
-              Prendre un RDV <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-primary">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
         </div>

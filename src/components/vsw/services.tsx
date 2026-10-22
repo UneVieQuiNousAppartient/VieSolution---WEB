@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
+import { APPEL, ECRIT } from './appel';
 
 const SERVICES: {
   num: string;
@@ -82,9 +83,14 @@ export function Services() {
             bons pour vous, on les installe, on les relie et on vous forme. Et quand rien
             n&apos;existe, on le bâtit&nbsp;: votre site, votre CRM, vos outils.
           </p>
-          <Link href="/devis#situation" className="btn btn-primary btn-lg">
-            Décrire votre situation <Icon name="arrow" size={14} />
-          </Link>
+          <div className="services-actions">
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
+            </Link>
+            <Link href={ECRIT.href} className="btn btn-ghost btn-lg">
+              {ECRIT.libelle}
+            </Link>
+          </div>
           <div className="services-count" aria-hidden="true">01 — {total}</div>
         </div>
         <div className="tray services-stack reveal">

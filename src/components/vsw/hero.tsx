@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Icon, type IconName } from './icon';
 import { SitesBand } from './sites-band';
 import { METIERS } from './metiers-section';
+import { APPEL } from './appel';
 
 /*
  * Mini tableau de bord qui flotte autour du titre (lot « relief », choix de Camille le 2026-10-22) :
@@ -45,15 +46,15 @@ export function Hero() {
           Pas besoin d&apos;être techno.
         </p>
         <div className="hero-ctas">
-          <Link href="/rdv" className="btn btn-primary btn-lg">
-            Prendre un RDV <Icon name="arrow" size={14} />
+          <Link href={APPEL.href} className="btn btn-primary btn-lg">
+            {APPEL.libelle} <Icon name="arrow" size={14} />
           </Link>
           <Link href="#demarrer" className="btn btn-dark btn-lg">
             Par où commencer ?
           </Link>
           <span className="hero-note">
-            appel gratuit de 30&nbsp;min
-            {/* Flèche tracée à la main, qui remonte vers « Prendre un RDV » */}
+            30&nbsp;min, sans engagement
+            {/* Flèche tracée à la main, qui remonte vers le bouton d'appel */}
             <svg className="hero-note-fleche" width="46" height="38" viewBox="0 0 46 38" fill="none" aria-hidden="true">
               <path d="M3 33c9 1 21-3 28-12 3-4 5-9 6-14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
               <path d="M30 9l7-4 2 8" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />

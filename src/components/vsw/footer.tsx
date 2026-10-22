@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { LogoMark } from './logo-mark';
 import { SERVICES_NAV } from './nav';
+import { APPEL } from './appel';
 
 export function VswFooter() {
   return (
@@ -30,7 +31,7 @@ export function VswFooter() {
             <Link href="/realisations">Réalisations</Link>
             <Link href="/#partenaires">Partenaires</Link>
             <Link href="/postuler-stagiaire">Stagiaires</Link>
-            <Link href="/rdv">Prendre un RDV</Link>
+            <Link href={APPEL.href}>{APPEL.libelle}</Link>
             <Link href="/contact">Contact</Link>
           </div>
           <div>

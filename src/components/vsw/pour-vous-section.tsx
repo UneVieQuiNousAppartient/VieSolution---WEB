@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
 const SITUATIONS = [
   'Vous faites vos factures le soir ou la fin de semaine.',
@@ -39,8 +40,8 @@ export function PourVousSection() {
             Une seule de ces phrases vous ressemble ? Un appel de 30 minutes suffit pour voir
             par où commencer.
           </p>
-          <Link href="/rdv" className="btn btn-primary">
-            Prendre un RDV gratuit <Icon name="arrow" size={14} />
+          <Link href={APPEL.href} className="btn btn-primary">
+            {APPEL.libelle} <Icon name="arrow" size={14} />
           </Link>
         </div>
       </div>

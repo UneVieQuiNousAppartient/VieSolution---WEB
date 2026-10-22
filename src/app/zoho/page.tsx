@@ -33,7 +33,6 @@ export default function ZohoPage() {
             votre entreprise.
           </>
         }
-        primaryLabel="Discuter d'un projet Zoho"
       />
     </>
   );

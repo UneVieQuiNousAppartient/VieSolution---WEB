@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
 const ZOHO_PILLARS = [
   {
@@ -95,8 +96,8 @@ export function ZohoSection() {
               <em>Une vie qui nous appartient</em> — reprenez la main sur la gestion de
               votre entreprise, avec des outils que vous maîtrisez.
             </div>
-            <Link href="/rdv" className="btn btn-primary btn-lg">
-              Discuter d&apos;un projet Zoho <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
         </div>
