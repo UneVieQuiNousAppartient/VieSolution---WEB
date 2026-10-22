@@ -22,3 +22,14 @@ export const PUBLIC_ROUTES: { path: string; priority: number }[] = [
   { path: '/politique-confidentialite', priority: 0.2 },
   { path: '/conditions-utilisation', priority: 0.2 },
 ];
+
+/**
+ * Réseaux sociaux du pied de page (demande de Camille, 2026-10-22 : WhatsApp et Facebook).
+ * [à confirmer] — liens à donner par Camille. Une icône n'apparaît que lorsque son lien est rempli :
+ * jamais de lien inventé ni d'icône qui ne mène nulle part.
+ * WhatsApp : « https://wa.me/1XXXXXXXXXX » (numéro sans espaces) ; Facebook : adresse de la page.
+ */
+export const RESEAUX: { nom: 'WhatsApp' | 'Facebook'; url: string }[] = [
+  { nom: 'WhatsApp', url: '' },
+  { nom: 'Facebook', url: '' },
+];

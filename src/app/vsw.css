@@ -3958,6 +3958,89 @@ html[data-theme="dark"] .pv-carte[aria-pressed="true"] .pv-case { color: var(--b
    haut ; l'écart reste celui d'une seule marge. Entre deux fonds différents, rien ne change. */
 .section:not(.section--band):not(.section--nuit):not(.page-header) + .section:not(.section--band):not(.section--nuit) { padding-top: 0; }
 
+/* ============ Pied de page premium (footer.tsx, option A validée le 2026-10-22) ============
+   Jetons sombres de .section--nuit ; halos cyan et violet ; grand nom en filigrane, sur une ligne à
+   toutes les largeurs, avec de l'air sous lui (il ne touche pas le bas de la page). */
+.footer--premium {
+  border-top: 0;
+  padding: clamp(56px, 7vw, 80px) 0 0;
+  background:
+    radial-gradient(70% 60% at 12% 0%, oklch(0.30 0.07 230 / 0.85), transparent 60%),
+    radial-gradient(55% 55% at 100% 8%, oklch(0.32 0.12 300 / 0.32), transparent 60%),
+    oklch(0.16 0.03 255);
+  overflow: hidden;
+}
+.footer--premium .footer-inner { margin-bottom: 40px; }
+.footer--premium .logo { margin-bottom: 20px; color: var(--fg-0); }
+.footer-slogan {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background-image: linear-gradient(100deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (forced-colors: active) { .footer-slogan { -webkit-text-fill-color: currentColor; background: none; } }
+.footer-desc { margin: 0 0 22px; max-width: 320px; font-size: 15px; line-height: 1.6; color: var(--fg-2); }
+.footer--premium a.footer-appel { display: inline-flex; padding: 0 18px; font-size: 14.5px; color: var(--on-ink); }
+.footer--premium a.footer-appel:hover { color: var(--on-ink); }
+.footer--premium h5 {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 4px 0 14px;
+}
+.footer--premium a { color: var(--fg-1); overflow-wrap: anywhere; }
+.footer--premium a:hover { color: var(--accent); }
+.footer-reseaux { list-style: none; margin: 14px 0 0; padding: 0; display: flex; gap: 10px; }
+.footer--premium .footer-reseaux a {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  color: var(--fg-0);
+}
+.footer--premium .footer-reseaux a:hover { border-color: var(--accent); color: var(--accent); }
+.footer--premium .footer-bottom { border-top-color: var(--line-soft); color: var(--fg-2); }
+.footer--premium .footer-bottom a { color: var(--fg-2); }
+.footer--premium .footer-marques { color: var(--fg-3); }
+.footer-geant {
+  margin: clamp(20px, 3vw, 36px) 0 clamp(24px, 3vw, 40px);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(32px, 9.2vw, 146px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  text-align: center;
+  background-image: linear-gradient(180deg, oklch(0.40 0.05 245 / 0.75), oklch(0.40 0.05 245 / 0.08));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+}
+@media (forced-colors: active) { .footer-geant { display: none; } }
+@media (max-width: 640px) {
+  .footer--premium .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px 20px; }
+  .footer--premium .footer-inner > :nth-child(-n + 2) { grid-column: 1 / -1; }   /* marque et services pleine largeur ; entreprise et contact côte à côte */
+  .footer-geant { margin-bottom: 36px; }
+  .footer--premium .footer-bottom { flex-direction: column; gap: 8px; }
+  .footer--premium a.footer-appel { width: 100%; justify-content: center; }
+}
+@media (max-width: 400px) {   /* très petits téléphones : le courriel ne se coupe pas en deux */
+  .footer--premium .footer-inner { grid-template-columns: 1fr; }
+}
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
   .sites-band-track { animation: none !important; }

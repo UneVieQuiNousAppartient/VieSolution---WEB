@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 24 (+ correctif d'espacement noté au §24).
+**Dernière mise à jour : 2026-10-22** — dernière section : 25.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -341,3 +341,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 *Correctif du 2026-10-22 (après §24, espacement)* : Camille, « tous les onglets ont beaucoup d'espace entre les sections » (capture `/devis`). Cause : deux sections au même fond blanc additionnaient leurs marges (jusqu'à 224 px). `vsw.css` : la seconde ne rajoute plus sa marge du haut (`.section + .section`, hors bandes et fonds sombres), et `--section-y` passe de `clamp(72px, 9vw, 112px)` à `clamp(56px, 7vw, 88px)`. Mesuré à 1440 px sur 11 pages : même fond 224 → 88 px ; changement de fond 224 → 176 px (88 de chaque côté) ; sous l'en-tête des pages intérieures 72 px. `npm run verify` vert. Un seul fichier de style : pas de `qa-agent`.
 
 *Correctif du 2026-10-22 (pied de page)* : Camille, « le footer n'est pas premium, on voit toujours le logo avec Québec Canada, bref enlever ». `footer.tsx` : « Québec · Canada » retiré sous le logo et dans la colonne Contact (c'était aussi un `<a>` sans lien). Reste sur la page `/contact` (`contact.tsx:78`, carte « Où ») : question posée à Camille. `npm run verify` vert ; un seul fichier, pas de `qa-agent`.
+
+## 25. ✅ Pied de page premium (option A) (2026-10-22)
+
+**Contexte / demande** : Camille, « le footer n'est pas premium ». Deux maquettes (`scratchpad/maquettes-structure/8-pied-de-page-A/B.png`) ; choix : « option A ; Vie Solution Web ne doit pas trop toucher la fin de la page et penser aussi mobile ; enlever // FAIT AU QUÉBEC ; mettre les logos WhatsApp et Facebook ».
+
+**Ce qui a été fait** (agent principal) : `footer.tsx` réécrit — fond nuit (jetons `.section--nuit`, halos cyan et violet), slogan « Une vie qui nous appartient. » en dégradé, phrase de présentation, bouton `APPEL`, colonnes Services / Entreprise / Nous joindre, mentions légales et des marques, grand « Vie Solution Web » en filigrane (`aria-hidden`, une ligne à toutes les largeurs, 24 à 40 px d'air sous lui). Retirés : « // FAIT AU QUÉBEC AVEC RIGUEUR », le lien « Réserver mon appel gratuit » de la colonne Entreprise (le bouton est au-dessus). Téléphone : Entreprise et Nous joindre côte à côte ; une seule colonne sous 400 px (le courriel ne se coupe pas). Icônes WhatsApp et Facebook (logos Simple Icons, CC0) tirées de `RESEAUX` dans `src/lib/site.ts` : **liens vides, `[à confirmer]` par Camille** — une icône n'apparaît que lorsque son lien est rempli (jamais de lien inventé).
+
+**Vérification technique** : `npm run verify` vert. Mesuré à 320, 360, 390, 820 et 1440 px (avec des liens d'exemple pour l'affichage des icônes, retirés ensuite) : aucun débordement, grand nom entier, courriel dans sa colonne. `qa-agent` (Opus, ≈ 61 k) **OK** (contrastes : `--fg-1` 12,7:1, `--fg-2` 7,8:1, mention des marques 4,5:1, bouton 12:1) ; corrigé ensuite : grand nom et courriel à 320 px. Coût réel ≈ 150 k (session ≈ 90 k + QA 61 k).
+
+**Non fait dans ce round** : liens WhatsApp et Facebook à donner par Camille (icônes cachées d'ici là) ; courriel et téléphone toujours des exemples `[à confirmer]` ; « Québec · Canada » reste sur la page `/contact` (question posée).
