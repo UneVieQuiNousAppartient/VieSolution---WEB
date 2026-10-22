@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 27.
+**Dernière mise à jour : 2026-10-22** — dernière section : 28.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -431,4 +431,16 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - **À tester par Camille**, une fois la clé saisie : quelques vraies questions, et quelques tentatives de détournement, sur la version d'essai.
 - Non fait : signature des réponses de l'assistant ; `.env.local.example` non modifié (fichier protégé).
 - Coût réel du round : ≈ 400 k jetons (session principale ≈ 250 k, plus 151 k pour les deux agents).
+
+## 28. ✅ Clavardage IA : passage au modèle Haiku 5.5 (2026-10-22)
+
+**Contexte / demande** : Camille, après l'estimation du § 27 : « Haiku, c'est moins cher ».
+
+**Ce qui a été fait** : `src/app/api/chat/route.ts`, constante `MODELE` → `claude-haiku-5-5`, `thinking: { type: 'disabled' }` (permis sur Haiku jusqu'à l'effort `high`), `max_tokens` 800 → 500. Coût estimé : moins de 0,1 ¢ US par message (0,10 $ / 0,50 $ US par million de jetons, consigne d'environ 6 500 jetons), moins de 1 $ US pour 1 000 messages par mois. Haiku n'a pas de modèle de repli côté serveur : un refus donne la réponse fixe, comme avant. Les trois barrières du § 27 (filtre avant l'appel, consigne, filtre des montants après) ne changent pas.
+
+**Vérification technique** : `npm run verify` vert ; `qa-agent` (Opus). Le 2026-10-22, le projet Vercel `vie-solution-web` n'a encore **aucune** variable d'environnement : la clé n'est pas saisie.
+
+**Non fait dans ce round**
+- Je n'ai pas accès au compte Anthropic de Camille : aucun outil de cette session ne s'y connecte. La clé reste à créer et à saisir par Camille dans Vercel, sans passer par la conversation.
+- **À tester par Camille** : Haiku résiste moins bien que Opus aux tentatives de détournement. Essayer quelques questions hors sujet une fois la clé saisie ; si besoin, revenir à Opus en une ligne.
 

@@ -30,8 +30,8 @@ import {
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-/** Modèle de l'assistant. Coût par message de chaque choix : SUIVI-TACHES.md § 27. */
-const MODELE = 'claude-opus-5-5';
+/** Modèle de l'assistant : Haiku, choisi par Camille le 2026-10-22 pour son coût (SUIVI-TACHES.md § 27-28). */
+const MODELE = 'claude-haiku-5-5';
 
 const OUTIL_RDV: Anthropic.Tool = {
   name: 'proposer_rendez_vous',
@@ -97,7 +97,9 @@ export async function POST(req: NextRequest) {
   try {
     const r = await anthropic().messages.create({
       model: MODELE,
-      max_tokens: 800, // réflexion comprise ; la consigne demande 80 mots au plus
+      max_tokens: 500, // la consigne demande 80 mots au plus
+      // Sans réflexion préalable (permis sur Haiku jusqu'à l'effort « high ») : réponse plus rapide et moins chère.
+      thinking: { type: 'disabled' },
       output_config: { effort: 'low' },
       system: [{ type: 'text', text: consigneAssistant(), cache_control: { type: 'ephemeral' } }],
       tools: [OUTIL_RDV],
