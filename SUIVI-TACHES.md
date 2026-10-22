@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 24.
+**Dernière mise à jour : 2026-10-22** — dernière section : 24 (+ correctif d'espacement noté au §24).
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -333,3 +333,5 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Captures 1440 px et 390 px (Pourquoi nous, Métiers) : aucun débordement, aucune erreur. `qa-agent` (Opus, ≈ 62 k) **OK** ; corrigé ensuite : sens exact rétabli pour la phrase « logiciel tout fait » (la première version élargissait le cas), titre « Avec nous » (lecture fluide des lignes), réponse « coûter une fortune » qui répond de nouveau à la question, deux répétitions. Coût réel ≈ 160 k (session ≈ 100 k + QA 62 k).
 
 **Non fait dans ce round** (gardé exprès) : « sans engagement », « sans frais cachés », « sans jargon » (réassurances attendues) ; « quand rien n'existe, on le bâtit » (positionnement validé, §12) ; les « pour X, pas pour Y » des métiers (temps retrouvé, dans « Voir plus ») ; l'étape 03 du prix (« jamais après » : engagement qui attend la validation de Camille) ; pages de l'ancien design redirigées.
+
+*Correctif du 2026-10-22 (après §24)* : grand vide sous l'en-tête des pages intérieures, signalé par Camille sur `/ia` (« pourquoi trop d'espace ») — 64 px sous l'en-tête + jusqu'à 112 px au-dessus de la section suivante. Règle `.page-header + .section` (hors bandes et fonds sombres) dans `vsw.css` : écart mesuré à 72 px sur les 10 pages (`/ia`, `/zoho`, `/devis`, `/crm-sur-mesure`, `/sites-web`, `/referencement`, `/realisations`, `/a-propos`, `/contact`, `/rdv`). `npm run verify` vert. Un seul fichier de style : pas de `qa-agent` (règle `agent-workflow.md`).

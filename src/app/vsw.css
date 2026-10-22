@@ -3946,6 +3946,11 @@ html[data-theme="dark"] .pv-carte[aria-pressed="true"] .pv-case { color: var(--b
   .pv-bilan-phrase { font-size: 18px; }
 }
 
+/* En-tête des pages intérieures (page-header.tsx) : la section qui suit ne rajoute pas sa grande
+   marge du haut. Sinon 64 px + jusqu'à 112 px de vide (signalé par Camille sur /ia, 2026-10-22).
+   Une section en bande ou sur fond sombre garde sa marge : son fond marque déjà la séparation. */
+.page-header + .section:not(.section--band):not(.section--nuit) { padding-top: 8px; }
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
   .sites-band-track { animation: none !important; }
