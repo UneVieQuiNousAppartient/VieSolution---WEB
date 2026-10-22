@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 22.
+**Dernière mise à jour : 2026-10-22** — dernière section : 23.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -306,3 +306,13 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert (32/32 tests, 0 erreur, 10 avertissements préexistants, build). Barre testée à 390 px (cachée en haut, visible au milieu, cachée au pied et sur `/rdv`, cachée menu ouvert, clavardage à 112 px) ; invisible à 1440 px. `/devis` à 1440, 1024, 390 px : boutons sur une ligne, aucun débordement. `qa-agent` (Opus, ≈ 65 k) **OK** ; corrigé ensuite : bouton « Commencer » des niveaux de `/devis`. Coût réel ≈ 170 k (session ≈ 105 k + QA 65 k).
 
 **Non fait dans ce round** : focus clavier perdu si la barre se cache pendant que son bouton a le focus (cas rare, QA mineur) ; autres idées tooly/inovision non retenues (« Être rappelé » en 20 s, ton positif partout, menu Ressources). Les carrés « Vous vous reconnaissez ? » (« trop simple », Camille) : 3 maquettes proposées (`7-carres-option-A/B/C.png`), en attente de son choix.
+
+## 23. ✅ Cartes « C'est pour vous si… » : ce qui change + cases à cocher (2026-10-22)
+
+**Contexte / demande** : Camille, sur la section « Vous vous reconnaissez ? » : « trop simple ces carrés ». Trois maquettes (`scratchpad/maquettes-structure/7-carres-option-A/B/C.png`) ; réponse : « un mélange » — mélange suggéré dans la proposition : cartes de A + jauge de B.
+
+**Ce qui a été fait** (agent principal) : `pour-vous-section.tsx` réécrit (composant client) — chaque carte : icône, ce qui gruge (gris), « → ce qui change » (gras), case à cocher (`button aria-pressed`). Bande sombre en dessous : « N sur 6 vous ressemblent », jauge, phrase qui change (0, 1, plusieurs, toutes), bouton `APPEL`. Titre : « Vous vous reconnaissez ? / Voici ce qui change. » (dégradé). Rien n'est envoyé ni enregistré. Les textes « → » reprennent `avant-apres-section.tsx` et `demarrer-section.tsx` (rien de nouveau promis). Styles `.pv-*` en fin de `vsw.css` (3 → 2 → 1 colonnes) ; anciens styles `.pv-card`, `.pv-check`, `.pv-situation` retirés.
+
+**Vérification technique** : `npm run verify` vert. Captures 1440 px et 390 px, 3 cartes cochées : phrase et jauge correctes, aucun débordement, aucune erreur de page. `qa-agent` (Opus, ≈ 56 k) **OK** ; corrigé ensuite : `aria-atomic` sur la phrase annoncée, « Les six ? » → « Toutes ? », phrase « C'est plus courant qu'on le pense » retirée (affirmation absente du reste du site). Coût réel ≈ 120 k (session ≈ 65 k + QA 56 k).
+
+**Non fait dans ce round** : sur téléphone, le bouton de la bande et la barre fixe peuvent être visibles en même temps (choix assumé) ; le soulèvement des cartes au survol devient instantané (pas supprimé) en mouvement réduit.
