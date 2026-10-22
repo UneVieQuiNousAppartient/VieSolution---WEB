@@ -8,6 +8,7 @@ import { DemarrerSection } from '@/components/vsw/demarrer-section';
 import { ProcessSection } from '@/components/vsw/process-section';
 import { PourquoiSection } from '@/components/vsw/pourquoi-section';
 import { PartnersSection } from '@/components/vsw/partners-section';
+import { StageSection } from '@/components/vsw/stage-section';
 import { Testimonials } from '@/components/vsw/testimonials';
 import { FAQSection } from '@/components/vsw/faq-section';
 import { CTASection } from '@/components/vsw/cta-section';
@@ -16,7 +17,7 @@ import { CTASection } from '@/components/vsw/cta-section';
  * Accueil (ordre validé par Camille le 2026-10-22, maquette 2) : votre problème → ce qui change →
  * ce qu'on fait → pour votre métier → comment on travaille → pourquoi nous → preuves → questions →
  * l'appel. « Pourquoi nous choisir », « La différence » et « Nos engagements » sont fusionnées dans
- * PourquoiSection ; « Stagiaires » reste sur /a-propos et /postuler-stagiaire (pied de page).
+ * PourquoiSection. « Programme de stage » revenu sur l'accueil le 2026-10-22 (demande de Camille), après Partenaires.
  */
 export default function HomePage() {
   return (
@@ -31,6 +32,7 @@ export default function HomePage() {
       <ProcessSection />
       <PourquoiSection />
       <PartnersSection />
+      <StageSection />
       <Testimonials />
       <FAQSection />
       <CTASection />

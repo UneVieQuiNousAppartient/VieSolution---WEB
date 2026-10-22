@@ -4045,6 +4045,13 @@ html[data-theme="dark"] .pv-carte[aria-pressed="true"] .pv-case { color: var(--b
   color: var(--fg-1);
 }
 
+/* Programme de stage sur l'accueil (stage-section.tsx) et lien « Retour à l'accueil » de /postuler-stagiaire. */
+.stage-appel { margin-top: 28px; }
+.retour { margin: 0 0 28px; }
+.retour a { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 500; color: var(--fg-2); text-decoration: none; }
+.retour a:hover { color: var(--accent); }
+.retour a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */
 @media (prefers-reduced-motion: reduce) {
   .sites-band-track { animation: none !important; }

@@ -41,7 +41,7 @@ export function Hero() {
           <span className="hero-h1-suite">des clients mieux servis, plus vite.</span>
         </h1>
         <p className="lede">
-          Et du temps retrouvé pour votre vrai métier. IA, Zoho, sites web, CRM sur mesure :
+          Concentrez-vous sur votre vrai métier. IA, Zoho, sites web et CRM sur mesure :
           on choisit les bons outils, on les installe et on vous forme.
           On s&apos;occupe de la technique.
         </p>
