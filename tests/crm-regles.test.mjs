@@ -197,10 +197,13 @@ test('alerte de nouvelle demande : coordonnées, demande et lien vers /admin', (
 });
 
 test('alerte : le HTML échappe ce que le visiteur a écrit', () => {
-  const { texte } = alerteNouvelleDemande({ name: '<b>X</b>', email: 'x@exemple.ca', need: '<script>alert(1)</script>', source: 'site web — contact' }, 'https://viesolutionweb.ca');
+  const { texte } = alerteNouvelleDemande({ name: '<b>X</b>', email: 'x@exemple.ca', need: '<SCRIPT>alert(1)</SCRIPT><script >x</script >', source: 'site web — contact' }, 'https://viesolutionweb.ca');
   const html = texteEnHtml(texte);
-  assert.doesNotMatch(html, /<script>/);
-  assert.doesNotMatch(html, /<b>X<\/b>/);
+  // Aucun « < » venu du visiteur ne reste : tout est échappé (vérifié sans expression régulière, quelle que soit la casse).
+  assert.equal(html.toLowerCase().includes('<script'), false);
+  assert.equal(html.includes('<b>'), false);
+  assert.ok(html.includes('&lt;SCRIPT&gt;'));
+  assert.ok(html.includes('&lt;b&gt;X&lt;/b&gt;'));
 });
 
 test('prénom : seulement un mot fait de lettres, sinon « Bonjour, »', () => {
