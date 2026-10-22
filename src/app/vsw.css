@@ -1093,6 +1093,8 @@ section { position: relative; }
   color: var(--fg-0);
   font-size: 15px;
 }
+.contact-item a.val { display: block; text-decoration: none; }
+.contact-item a.val:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
 .form-field { margin-bottom: 20px; }
 .form-field label {

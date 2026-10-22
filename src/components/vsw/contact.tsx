@@ -61,14 +61,14 @@ export function Contact({ showIntro = true }: { showIntro?: boolean }) {
               <div className="icon"><Icon name="mail" size={16} /></div>
               <div>
                 <div className="txt">Courriel</div>
-                <div className="val">info@viesolutionweb.ca</div>
+                <a className="val" href="mailto:info@viesolutionweb.ca">info@viesolutionweb.ca</a>
               </div>
             </div>
             <div className="contact-item">
               <div className="icon"><Icon name="phone" size={16} /></div>
               <div>
                 <div className="txt">Téléphone</div>
-                <div className="val">+1 (418) 555-0143</div>
+                <a className="val" href="tel:+14385065243">+1 (438) 506-5243</a>
               </div>
             </div>
             <div className="contact-item">

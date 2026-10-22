@@ -24,7 +24,7 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Chantier PME : « Taxes du Québec configurées » (valider ou retirer) ; nom de l'offre d'entrée (« Démarrer simplement » / « Premier pas ») ; accueil à 14 sections.
 - Page prix : valider la phrase de l'étape 03 (« si quelque chose doit changer, on en parle avant, jamais après ») — engagement envers le client.
 - Suivi : variables d'environnement du projet Vercel ; rebrancher Claude API pour les brouillons (nouvelle dépendance).
-- Courriel du site : info@viesolutionweb.ca partout (§32). Téléphone `(418) 555-0143` : exemple, Camille va donner son numéro.
+- Coordonnées du site : info@viesolutionweb.ca et (438) 506-5243 (§32-33).
 - Prix : plus aucun montant sur le site (décision du 2026-10-17) ; les 3 niveaux d'accompagnement gardent leurs noms, sans montant.
 - Témoignages `site_testimonials` : exemples non publiés ; ne publier que de vrais témoignages.
 - Clavardage IA (Loi 25) : évaluation et entente pour le transfert à Anthropic (hors Québec), durée de conservation à écrire dans la politique ; date « Janvier 2025 » de la politique à corriger.
@@ -35,4 +35,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**33**
+**34**

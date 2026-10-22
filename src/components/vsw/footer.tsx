@@ -52,7 +52,7 @@ export function VswFooter() {
           <div>
             <h5>Nous joindre</h5>
             <a href="mailto:info@viesolutionweb.ca">info@viesolutionweb.ca</a>
-            <a href="tel:+14185550143">(418) 555-0143</a>
+            <a href="tel:+14385065243">(438) 506-5243</a>
             {reseaux.length > 0 && (
               <ul className="footer-reseaux">
                 {reseaux.map((r) => (

@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 32.
+**Dernière mise à jour : 2026-10-22** — dernière section : 33.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -547,10 +547,23 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert (51 tests) ; `qa-agent` (Opus, ≈ 45 k) **VERT** ; ses remarques sur `ETAT-ACTUEL.md` et les fichiers d’agents ont été corrigées.
 
 **Non fait dans ce round**
-- Le **téléphone** `(418) 555-0143` reste un exemple (Contact, pied de page) tant que Camille n'a pas donné son numéro.
+- ~~Le téléphone `(418) 555-0143` reste un exemple~~ : remplacé au § 33 par (438) 506-5243.
 - **À faire par Camille** :
   - le renvoi de info@ dans Cloudflare (Email Routing) avant la mise en ligne, sinon les messages envoyés à cette adresse sont perdus ;
   - le CNAME `rsend` de Resend ;
   - les variables Vercel.
 - La date « Janvier 2025 » de la politique de confidentialité reste à corriger après la relecture Loi 25.
+
+## 33. ✅ Téléphone du site : (438) 506-5243 (2026-10-22)
+
+**Contexte / demande** : Camille a donné son numéro (« 438 506 5243 ») avec le mot « fusionne ».
+
+**Ce qui a été fait**
+- `(438) 506-5243` remplace l'exemple `(418) 555-0143` sur la page Contact (`contact.tsx`) et dans le pied de page (`footer.tsx`, lien `tel:+14385065243`).
+- La consigne du clavardage IA (`connaissances.ts`) autorise ces deux seules coordonnées : info@ et ce numéro.
+- `CLAUDE.md`, la règle de contenu des 4 agents et `docs/ETAT-ACTUEL.md` sont à jour.
+
+**Vérification technique** : `npm run verify` vert (51 tests) ; `qa-agent` (Opus, ≈ 50 k) **VERT** ; ensuite : liens `mailto:` et `tel:` sur la page Contact, commentaire périmé de `layout.tsx` corrigé.
+
+**Non fait dans ce round** : coordonnées dans la fiche JSON-LD (à proposer à Camille). Sinon rien de plus. La suite, c'est la fusion de la PR #1 et la mise en ligne.
 

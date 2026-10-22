@@ -11,8 +11,8 @@ import { NavScroll } from '@/components/vsw/nav-scroll';
 import { JsonLd } from '@/components/vsw/json-ld';
 import { SITE_NAME, SITE_URL } from '@/lib/site';
 
-/* Fiche d'entreprise pour Google et les assistants IA. Aucune coordonnée : courriel et téléphone
-   du site sont encore des exemples [à confirmer] (CLAUDE.md). */
+/* Fiche d'entreprise pour Google et les assistants IA. Sans coordonnées pour l'instant : courriel et
+   téléphone (donnés par Camille le 2026-10-22) seront ajoutés ici avec son accord. */
 const ORGANISATION = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
