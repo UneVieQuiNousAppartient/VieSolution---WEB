@@ -93,7 +93,7 @@ export function ZohoSection() {
 
           <div className="ai-banner">
             <div className="ai-banner-text">
-              <em>Une vie qui nous appartient</em> — reprenez la main sur la gestion de
+              <em>Une vie qui vous appartient</em> — reprenez la main sur la gestion de
               votre entreprise, avec des outils que vous maîtrisez.
             </div>
             <Link href={APPEL.href} className="btn btn-primary btn-lg">

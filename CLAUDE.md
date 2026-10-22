@@ -1,7 +1,7 @@
 # Vie Solution Web — contexte du projet
 
 Site vitrine de Vie Solution Web (studio québécois : automatisation, agents IA,
-implantation Zoho, formation). Marque et promesse : « Une vie qui nous appartient ».
+implantation Zoho, formation). Marque et promesse : « Une vie qui vous appartient » (slogan complet depuis le 2026-10-22 : « Une vie qui vous appartient, des clients mieux servis, plus vite. »).
 Langue : français québécois (vouvoiement). Tout le contenu visible est en français.
 
 ## Stack

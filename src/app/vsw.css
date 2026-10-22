@@ -3050,7 +3050,7 @@ html { scroll-behavior: smooth; }
 }
 @media (max-width: 1100px) { .hero-tiles { display: none; } }
 
-.hero h1 .highlight {                       /* « appartient. » en couleur pleine (maquette) */
+.hero h1 .highlight {                       /* « vous appartient, » en couleur pleine (maquette) */
   background: none;
   -webkit-text-fill-color: currentColor;
   color: var(--accent);
@@ -3353,7 +3353,7 @@ html { scroll-behavior: smooth; }
   font-weight: 500;
 }
 
-/* Titre : « nous appartient. » en dégradé sarcelle → violet */
+/* Titre : « vous appartient, » en dégradé sarcelle → violet (slogan du 2026-10-22) */
 .hero h1 .highlight {
   background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 95%);
   -webkit-background-clip: text;
@@ -4032,6 +4032,17 @@ html[data-theme="dark"] .pv-carte[aria-pressed="true"] .pv-case { color: var(--b
 }
 @media (max-width: 400px) {   /* très petits téléphones : le courriel ne se coupe pas en deux */
   .footer--premium .footer-inner { grid-template-columns: 1fr; }
+}
+
+/* Slogan du hero (2026-10-22, même phrase que le pied de page, demande de Camille) : la seconde
+   moitié, plus petite, sur sa propre ligne. */
+.hero h1 .hero-h1-suite {
+  display: block;
+  margin-top: 0.22em;
+  font-size: 0.5em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--fg-1);
 }
 
 /* Réduction des animations (réglage du système) : règle globale, en dernier. */

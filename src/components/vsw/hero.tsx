@@ -37,12 +37,12 @@ export function Hero() {
       <div className="container hero-inner">
         <div className="eyebrow">Pour les professionnels, les travailleurs autonomes et les PME du Québec</div>
         <h1>
-          Une vie qui<br />
-          <span className="highlight">nous appartient.</span>
+          Une vie qui <span className="highlight">vous appartient,</span>{' '}
+          <span className="hero-h1-suite">des clients mieux servis, plus vite.</span>
         </h1>
         <p className="lede">
-          Mieux servir vos clients et retrouver du temps pour votre vrai métier. IA, Zoho, sites
-          web, CRM sur mesure : on choisit les bons outils, on les installe et on vous forme.
+          Et du temps retrouvé pour votre vrai métier. IA, Zoho, sites web, CRM sur mesure :
+          on choisit les bons outils, on les installe et on vous forme.
           On s&apos;occupe de la technique.
         </p>
         <div className="hero-ctas">

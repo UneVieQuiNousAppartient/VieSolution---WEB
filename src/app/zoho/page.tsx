@@ -29,7 +29,7 @@ export default function ZohoPage() {
       <CTASection
         text={
           <>
-            <em>Une vie qui nous appartient</em> — reprenez la main sur la gestion de
+            <em>Une vie qui vous appartient</em> — reprenez la main sur la gestion de
             votre entreprise.
           </>
         }

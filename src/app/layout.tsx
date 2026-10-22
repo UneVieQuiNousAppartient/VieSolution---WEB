@@ -19,7 +19,7 @@ const ORGANISATION = {
   name: SITE_NAME,
   url: SITE_URL,
   logo: `${SITE_URL}/icon.svg`,
-  slogan: 'Une vie qui nous appartient',
+  slogan: 'Une vie qui vous appartient, des clients mieux servis, plus vite',
   description:
     "Studio québécois : automatisation des tâches, assistants IA, installation de Claude ou ChatGPT, accueil IA (clavardage, prise de rendez-vous, agent vocal), implantation Zoho, CRM et outils sur mesure, sites et applications web, référencement (SEO et AEO) et formation, pour les PME, les travailleurs autonomes et les professionnels.",
   areaServed: { '@type': 'AdministrativeArea', name: 'Québec' },
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     template: '%s | Vie Solution Web',
   },
   description:
-    "Automatisation des processus, agents IA, sites et applications web, référencement SEO et AEO, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui nous appartient dans la gestion de votre entreprise.",
+    "Automatisation des processus, agents IA, sites et applications web, référencement SEO et AEO, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui vous appartient, des clients mieux servis, plus vite.",
   keywords: [
     'automatisation',
     'intelligence artificielle',

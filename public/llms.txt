@@ -1,6 +1,6 @@
 # Vie Solution Web
 
-> Studio québécois qui aide les PME, les travailleurs autonomes et les professionnels (conseillers financiers, courtiers hypothécaires, cliniques dentaires et de soins, cabinets comptables, entrepreneurs en construction, agents immobiliers, commerces et restaurants) à mieux servir leurs clients et à retrouver du temps. Slogan : « Une vie qui nous appartient ». Service en français.
+> Studio québécois qui aide les PME, les travailleurs autonomes et les professionnels (conseillers financiers, courtiers hypothécaires, cliniques dentaires et de soins, cabinets comptables, entrepreneurs en construction, agents immobiliers, commerces et restaurants) à mieux servir leurs clients et à retrouver du temps. Slogan : « Une vie qui vous appartient, des clients mieux servis, plus vite. » Service en français.
 
 Les logiciels existent déjà : Zoho, Claude et bien d'autres. Vie Solution Web choisit les bons pour chaque entreprise, les installe, les relie et forme l'équipe. Quand rien n'existe, elle bâtit l'outil sur mesure. Aucun prix n'est affiché : chaque mandat est estimé par écrit après un appel découverte gratuit de 30 minutes. Vie Solution Web n'est affiliée ni à Zoho, ni à Anthropic, ni à OpenAI, ni à Microsoft.
 
