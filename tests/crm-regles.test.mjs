@@ -4,6 +4,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   ajouterMois,
+  estDemandeDuSite,
+  estDemandeProspect,
+  recoitAccuseReception,
+  alerteNouvelleDemande,
   peutEnvoyerCommercial,
   raisonDeRetenue,
   avecDesabonnementAdresse,
@@ -162,3 +166,65 @@ test('memeSecret', () => {
   assert.equal(memeSecret('abc', 'abd'), false);
   assert.equal(memeSecret('', ''), false);
 });
+
+test('accusé de réception : demandes de prospects du site seulement, pas les candidatures de stage', () => {
+  assert.equal(estDemandeProspect({ source: 'site web — contact', service_interest: 'zoho' }), true);
+  assert.equal(estDemandeProspect({ source: 'site web — rdv', service_interest: 'rdv-decouverte' }), true);
+  assert.equal(estDemandeProspect({ source: 'site web — chatbot', service_interest: '' }), true);
+  assert.equal(estDemandeProspect({ source: 'site web — contact', service_interest: 'candidature-stage' }), false);
+  assert.equal(estDemandeProspect({ source: 'site web — contact', service_interest: ' candidature-stage ' }), false);
+  assert.equal(estDemandeProspect({ source: 'admin', service_interest: 'zoho' }), false);
+  assert.equal(estDemandeProspect({ source: null, service_interest: null }), false);
+  assert.equal(estDemandeDuSite({ source: 'site web — contact', service_interest: 'candidature-stage' }), true);
+  assert.equal(estDemandeDuSite({ source: 'import' }), false);
+});
+
+test('alerte de nouvelle demande : coordonnées, demande et lien vers /admin', () => {
+  const { sujet, texte } = alerteNouvelleDemande(
+    { name: 'Marie Tremblay', email: 'marie@exemple.ca', phone: '', company: 'Clinique Tremblay', service_interest: 'rdv-decouverte', need: 'Mes factures', source: 'site web — rdv' },
+    'https://viesolutionweb.ca',
+  );
+  assert.equal(sujet, 'Nouvelle demande : Marie Tremblay');
+  assert.match(texte, /Courriel : marie@exemple\.ca/);
+  assert.match(texte, /Téléphone : —/);
+  assert.match(texte, /Entreprise : Clinique Tremblay/);
+  assert.match(texte, /Formulaire : site web — rdv \(rdv-decouverte\)/);
+  assert.match(texte, /Demande : Mes factures/);
+  assert.match(texte, /https:\/\/viesolutionweb\.ca\/admin/);
+  const sans = alerteNouvelleDemande({ name: 'Léo', email: 'l@exemple.ca', source: 'site web — contact' }, 'https://viesolutionweb.ca').texte;
+  assert.doesNotMatch(sans, /Entreprise/);
+  assert.match(sans, /Demande : —/);
+});
+
+test('alerte : le HTML échappe ce que le visiteur a écrit', () => {
+  const { texte } = alerteNouvelleDemande({ name: '<b>X</b>', email: 'x@exemple.ca', need: '<script>alert(1)</script>', source: 'site web — contact' }, 'https://viesolutionweb.ca');
+  const html = texteEnHtml(texte);
+  assert.doesNotMatch(html, /<script>/);
+  assert.doesNotMatch(html, /<b>X<\/b>/);
+});
+
+test('prénom : seulement un mot fait de lettres, sinon « Bonjour, »', () => {
+  assert.equal(prenomDe("D'Arcy Lévesque"), "D'Arcy");
+  assert.equal(prenomDe('Jean-François'), 'Jean-François');
+  assert.equal(prenomDe('https://faux-site.example/payer Tremblay'), '');
+  assert.equal(prenomDe('<b>Marie</b>'), '');
+  assert.equal(prenomDe('www.faux.ca'), '');
+  assert.equal(prenomDe('x'.repeat(41)), '');
+  assert.equal(remplir('Bonjour {{prenom}},\n', { prenom: prenomDe('https://faux.example') }), 'Bonjour,\n');
+  assert.equal(remplir('Quelles sont vos disponibilités ?', {}), 'Quelles sont vos disponibilités ?');
+});
+
+test('accusé de réception : pas aux demandes de rendez-vous (texte « choisir le moment de notre appel »)', () => {
+  assert.equal(recoitAccuseReception({ source: 'site web — contact', service_interest: 'zoho' }), true);
+  assert.equal(recoitAccuseReception({ source: 'site web — rdv', service_interest: 'rdv-decouverte' }), false);
+  assert.equal(recoitAccuseReception({ source: 'site web — contact', service_interest: 'candidature-stage' }), false);
+});
+
+test('alerte : objet sans saut de ligne, 80 caractères de nom au plus ; liens non cliquables', () => {
+  const { sujet, texte } = alerteNouvelleDemande({ name: 'Marie\r\nBcc: x@y.z' + 'a'.repeat(200), email: 'm@exemple.ca', need: 'https://faux.example', source: 'site web — contact' }, 'https://viesolutionweb.ca');
+  assert.doesNotMatch(sujet, /[\r\n]/);
+  assert.ok(sujet.length <= 'Nouvelle demande : '.length + 80);
+  assert.doesNotMatch(texteEnHtml(texte, false), /<a /);
+  assert.match(texteEnHtml('Voir https://viesolutionweb.ca/rdv'), /<a href=/);
+});
+

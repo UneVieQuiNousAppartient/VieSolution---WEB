@@ -605,7 +605,11 @@ INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
   ('followup_new_1', 'fr', 'Votre demande — je pense encore à votre projet',
    E'Bonjour {{prenom}},\n\nMerci encore pour votre demande. Vous avez pris le temps de nous écrire, et j''aimerais vraiment comprendre ce qui vous ferait gagner du temps au quotidien.\n\nLe plus simple : un appel découverte de 30 minutes, gratuit et sans engagement. Vous pouvez choisir le moment qui vous convient ici : {{lien_rdv}}\n\nEt si ce n''est pas le bon moment, répondez simplement à ce courriel : je comprendrai très bien.\n\nAu plaisir de vous lire,\nCamille — Vie Solution Web'),
   ('followup_new_2', 'fr', 'Un dernier petit mot au sujet de votre demande',
-   E'Bonjour {{prenom}},\n\nJe ne veux pas vous encombrer : c''est mon dernier courriel à ce sujet.\n\nSi votre projet est toujours d''actualité, je garde du temps pour vous. Un appel découverte de 30 minutes, gratuit et sans engagement, permet souvent d''y voir plus clair : {{lien_rdv}}\n\nSi les choses ont changé, aucun souci. Un simple « pas pour l''instant » en réponse me suffit.\n\nMerci pour votre confiance,\nCamille — Vie Solution Web')
+   E'Bonjour {{prenom}},\n\nJe ne veux pas vous encombrer : c''est mon dernier courriel à ce sujet.\n\nSi votre projet est toujours d''actualité, je garde du temps pour vous. Un appel découverte de 30 minutes, gratuit et sans engagement, permet souvent d''y voir plus clair : {{lien_rdv}}\n\nSi les choses ont changé, aucun souci. Un simple « pas pour l''instant » en réponse me suffit.\n\nMerci pour votre confiance,\nCamille — Vie Solution Web'),
+  -- Accusé de réception (moteur : accuse_reception), texte approuvé par Camille le 2026-10-22
+  -- (« oui ajoute les deux, le texte est bon »). Pied LCAP ajouté par le code.
+  ('accuse_reception', 'fr', 'Nous avons bien reçu votre demande',
+   E'Bonjour {{prenom}},\n\nMerci d''avoir pris le temps de nous écrire. Votre demande est bien arrivée, et je la lirai avec attention.\n\nJe vous reviens personnellement sous 24 h ouvrables. Si c''est plus simple pour vous, vous pouvez aussi choisir dès maintenant le moment de notre appel gratuit : {{lien_rdv}}\n\nAu plaisir,\nCamille, Vie Solution Web')
 ON CONFLICT (key, lang) DO NOTHING;
 
 -- postal_address : adresse postale du pied des relances (LCAP), donnée par Camille le 2026-10-21

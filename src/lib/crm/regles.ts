@@ -131,19 +131,28 @@ export const echapper = (s: unknown) =>
     .replace(/"/g, '&quot;');
 
 /** Remplace {{cle}} ; une clé inconnue devient vide (jamais « {{…}} » dans un courriel). */
+// « Bonjour {{prenom}}, » sans prénom donne « Bonjour, » (une virgule n'est jamais précédée d'une espace).
 export const remplir = (texte: string, vars: Record<string, string>) =>
-  texte.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k: string) => vars[k] ?? '');
+  texte.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k: string) => vars[k] ?? '').replace(/ +,/g, ',');
 
-export const prenomDe = (nom: string | null | undefined) => String(nom || '').trim().split(/\s+/)[0] || '';
+/**
+ * Premier mot du nom, seulement s'il ressemble à un prénom (lettres, apostrophe, trait d'union) ;
+ * sinon vide. Revue de sécurité du 2026-10-22 : un « nom » comme https://faux-site.example devenait
+ * un lien cliquable en tête d'un courriel signé Vie Solution Web (hameçonnage).
+ */
+export const prenomDe = (nom: string | null | undefined) => {
+  const mot = String(nom || '').trim().split(/\s+/)[0] || '';
+  return /^\p{L}[\p{L}'’-]{0,39}$/u.test(mot) ? mot : '';
+};
 
-/** Texte brut → HTML : paragraphes et sauts de ligne, liens https cliquables, tout le reste échappé. */
-export const texteEnHtml = (texte: string) =>
+/** Texte brut → HTML : paragraphes et sauts de ligne, liens https cliquables (sauf `liens = false`), tout le reste échappé. */
+export const texteEnHtml = (texte: string, liens = true) =>
   texte
     .trim()
     .split(/\n{2,}/)
     .map((p) => {
       const ligne = echapper(p).replace(/\n/g, '<br>');
-      const avecLiens = ligne.replace(/https:\/\/[^\s<]+/g, (u) => `<a href="${u}" style="color:#00789C">${u}</a>`);
+      const avecLiens = liens ? ligne.replace(/https:\/\/[^\s<]+/g, (u) => `<a href="${u}" style="color:#00789C">${u}</a>`) : ligne;
       return `<p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1F2430">${avecLiens}</p>`;
     })
     .join('');
@@ -193,4 +202,50 @@ export const pretAEnvoyer = (c: Configuration): string | null => {
 export const masquerCourriel = (email: string | null | undefined) => {
   const [local, domaine] = String(email || '').split('@');
   return local && domaine ? `${local[0]}•••@${domaine}` : '';
+};
+
+// --- Accusé de réception et alerte de nouvelle demande (2026-10-22) ---------------------
+
+/** Sujets de formulaire qui ne sont pas des demandes de prospect : ni accusé de réception, ni relance commerciale. */
+export const SUJETS_HORS_PROSPECTION = ['candidature-stage'] as const;
+
+type DemandeSite = { source?: string | null; service_interest?: string | null };
+
+/** Fiche née d'un formulaire du site (source « site web — … » posée par fn_vsw_lead_intake). */
+export const estDemandeDuSite = (lead: DemandeSite) => String(lead.source || '').startsWith('site web');
+
+/** Demande de prospect venue du site (pas une candidature de stage). */
+export const estDemandeProspect = (lead: DemandeSite) =>
+  estDemandeDuSite(lead) && !(SUJETS_HORS_PROSPECTION as readonly string[]).includes(String(lead.service_interest || '').trim());
+
+/**
+ * Reçoit l'accusé de réception : demande de prospect, sauf une demande de rendez-vous (le texte
+ * approuvé invite à « choisir le moment de notre appel », ce que la personne vient de faire) —
+ * en attente de la décision de Camille (SUIVI-TACHES.md § 30).
+ */
+export const recoitAccuseReception = (lead: DemandeSite) =>
+  estDemandeProspect(lead) && String(lead.service_interest || '').trim() !== 'rdv-decouverte';
+
+/** Nom saisi par le visiteur, rendu sûr pour un objet de courriel : sans caractères de contrôle, 80 caractères au plus. */
+const pourObjet = (s: string) => s.replace(/[\u0000-\u001F\u007F]+/g, ' ').trim().slice(0, 80);
+
+/** Courriel d'alerte à l'équipe pour une nouvelle demande (texte simple ; échappé par texteEnHtml à l'envoi). */
+export const alerteNouvelleDemande = (
+  lead: { name: string; email: string; phone?: string | null; company?: string | null; service_interest?: string | null; need?: string | null; source: string },
+  site: string,
+) => {
+  const sujet = `Nouvelle demande : ${pourObjet(lead.name)}`;
+  const texte = [
+    `${lead.name} vient de remplir un formulaire du site.`,
+    '',
+    `Courriel : ${lead.email}`,
+    `Téléphone : ${lead.phone || '—'}`,
+    ...(lead.company ? [`Entreprise : ${lead.company}`] : []),
+    `Formulaire : ${lead.source}${lead.service_interest ? ` (${lead.service_interest})` : ''}`,
+    '',
+    `Demande : ${lead.need || '—'}`,
+    '',
+    `Fiche et réponse à approuver : ${site}/admin`,
+  ].join('\n');
+  return { sujet, texte };
 };

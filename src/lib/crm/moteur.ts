@@ -21,9 +21,12 @@ import { SITE_NAME, SITE_URL } from '@/lib/site';
 import {
   AUTEURS_AUTOMATIQUES,
   TYPES_CONTACT,
+  alerteNouvelleDemande,
   avecDesabonnementAdresse,
   contactDepuis,
   echeance,
+  estDemandeDuSite,
+  recoitAccuseReception,
   plusRecente,
   piedLcap,
   prenomDe,
@@ -47,6 +50,7 @@ export type Lead = {
   phone: string;
   company: string | null;
   service_interest: string;
+  need?: string | null;
   status: string;
   source: string;
   created_at: string;
@@ -71,6 +75,8 @@ type Regle = {
   params: Record<string, string>;
   /** Écrit au prospect : suspendue tant que l'envoi n'est pas prêt (LCAP, Resend). */
   ecritAuProspect?: boolean;
+  /** Au-delà de ce nombre de candidats en un passage, la règle est suspendue (afflux de faux formulaires, issue #5). */
+  plafond?: number;
   candidats: (ctx: Contexte, cfg: Config) => Promise<Candidat[]>;
   executer: (ctx: Contexte, c: Candidat, cfg: Config) => Promise<Meta>;
 };
@@ -123,8 +129,11 @@ async function gabarit(db: SupabaseClient, cle: string) {
 
 const variables = (lead: Lead) => ({ prenom: prenomDe(lead.name), lien_rdv: `${SITE_URL}/rdv` });
 
-/** Relance au prospect, pied LCAP et en-têtes de désabonnement. Une panne d'envoi libère la réservation. */
-async function relancer(ctx: Contexte, lead: Lead, cfg: Config): Promise<Meta> {
+/**
+ * Courriel au prospect (relance ou accusé de réception), pied LCAP et en-têtes de désabonnement.
+ * Une panne d'envoi libère la réservation. `relance` : note relance_sent_at et le libellé du journal.
+ */
+async function relancer(ctx: Contexte, lead: Lead, cfg: Config, relance = true): Promise<Meta> {
   if (echeance(lead.created_at, cfg.delay_hours, ctx.maintenant, RATTRAPAGE_H) !== 'ok') return { skipped: 'hors délai' };
   const retenue = raisonDeRetenue(lead, ctx.maintenant);
   if (retenue) return { skipped: retenue };
@@ -152,7 +161,7 @@ async function relancer(ctx: Contexte, lead: Lead, cfg: Config): Promise<Meta> {
   }
   const id = envoi.id;
   const maintenant = new Date().toISOString();
-  await ctx.db.from('vsw_leads').update({ relance_sent_at: maintenant }).eq('id', lead.id);
+  if (relance) await ctx.db.from('vsw_leads').update({ relance_sent_at: maintenant }).eq('id', lead.id);
   await ctx.db.from('vsw_email_messages').insert({
     lead_id: lead.id,
     direction: 'out',
@@ -168,7 +177,7 @@ async function relancer(ctx: Contexte, lead: Lead, cfg: Config): Promise<Meta> {
   await journaliser(ctx.db, {
     lead_id: lead.id,
     type: 'automation',
-    content: `Relance automatique envoyée : ${sujet}`,
+    content: `${relance ? 'Relance automatique envoyée' : 'Accusé de réception envoyé'} : ${sujet}`,
     meta: { automatic: true, regle: cfg.key, template: cfg.params.template, email_id: id },
   });
   return { email_id: id };
@@ -226,6 +235,51 @@ export const REGLES: Record<string, Regle> = {
       await journaliser(ctx.db, { lead_id: lead.id, type: 'automation', content: 'Brouillon de première réponse prêt (à approuver)', meta: { automatic: true, regle: 'first_reply', draft_id: data.id } });
       await notifier(ctx.db, lead, 'draft_pending', 'Réponse prête à approuver', `${lead.name} <${lead.email}>`);
       return { draft_id: data.id };
+    },
+  },
+
+  // Demande de Camille du 2026-10-22 (« oui ajoute les deux, le texte est bon ») : accusé de
+  // réception au prospect et alerte à l'équipe, au passage horaire qui suit chaque nouvelle demande.
+  accuse_reception: {
+    libelle: 'Accusé de réception au prospect',
+    description:
+      "Au passage horaire qui suit une nouvelle demande du site : « Nous avons bien reçu votre demande » (gabarit « accuse_reception », texte approuvé par Camille le 2026-10-22). Pas aux candidatures de stage, ni si vous avez déjà pris contact.",
+    enabled: true,
+    delay_hours: 0,
+    params: { template: 'accuse_reception' },
+    ecritAuProspect: true,
+    plafond: 20,
+    candidats: async (ctx) => {
+      // 24 h au plus : passé ce délai (passage horaire manqué, envoi pas encore prêt), il n'est plus envoyé.
+      const leads = (await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24)))).filter(recoitAccuseReception);
+      return (await sansContactDepuis(ctx.db, leads, (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
+    },
+    executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg, false),
+  },
+
+  nouvelle_demande: {
+    libelle: 'Alerte : nouvelle demande',
+    description:
+      "Vous écrit à l'adresse d'alerte (réglage notify_email) au passage horaire qui suit chaque nouvelle demande du site, candidatures de stage comprises : nom, coordonnées, demande. Sans adresse d'alerte, rien ne part.",
+    enabled: true,
+    delay_hours: 0,
+    params: {},
+    plafond: 10,
+    candidats: async (ctx) => {
+      // Rien n'est réservé tant que l'adresse d'alerte ou l'envoi manquent : les demandes des dernières 24 h attendent.
+      if (!ctx.reglages.notifyEmail || !resendConfigure() || !expediteurConfigure()) return [];
+      const leads = await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24)));
+      return leads.filter(estDemandeDuSite).map((lead) => ({ lead, periode: '' }));
+    },
+    executer: async (ctx, { lead }) => {
+      const { sujet, texte } = alerteNouvelleDemande(lead, SITE_URL);
+      const envoi = await envoyerCourriel({ to: ctx.reglages.notifyEmail, subject: sujet, html: texteEnHtml(texte, false), text: texte, cle: `vsw-nouvelle-${lead.id}` });
+      if ('echec' in envoi) {
+        throw Object.assign(new Error(`alerte ${envoi.echec === 'temporaire' ? 'impossible pour le moment' : 'refusée'} (Resend)`), {
+          liberer: envoi.echec === 'temporaire',
+        });
+      }
+      return { alerte_id: envoi.id };
     },
   },
 
@@ -500,6 +554,17 @@ export async function executerRegles(db: SupabaseClient, maintenant = new Date()
       continue;
     }
     b.candidats = candidats.length;
+    if (regle.plafond && candidats.length > regle.plafond) {
+      // Afflux anormal (souvent de faux formulaires) : rien n'est réservé ni envoyé, une notification prévient l'équipe.
+      b.suspendue = `${candidats.length} demandes en attente (plafond ${regle.plafond})`;
+      await db.from('vsw_notifications').insert({
+        recipient: 'admin',
+        type: 'automation_error',
+        title: `${regle.libelle} : suspendu, afflux de ${candidats.length} demandes`,
+        body: "Plus de demandes que d'habitude en 24 h : vérifiez qu'elles sont vraies dans « Aujourd'hui ». Aucun courriel n'est parti pour cette règle.",
+      });
+      continue;
+    }
     for (const c of candidats) {
       let runId: string | null = null;
       try {

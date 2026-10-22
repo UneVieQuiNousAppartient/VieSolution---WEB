@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 29.
+**Dernière mise à jour : 2026-10-22** — dernière section : 30.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -471,4 +471,40 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - Variables Supabase à saisir par Camille dans Vercel (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) ; case « Preview » de `ANTHROPIC_API_KEY`.
 - Le passage horaire (`/api/cron/tick`) ne tourne que sur la production, avec `CRON_SECRET`. Les relances J2/J5 partiront seulement avec Resend configuré (`RESEND_API_KEY`, `EMAIL_FROM`) : à décider avec l'issue #5 avant de les activer en ligne.
 - Activation de la double vérification de `/admin` dès la mise en ligne (`ADMIN_ACCESS_CODE`, `ADMIN_SECRET`).
+
+## 30. ✅ Accusé de réception au prospect et alerte de nouvelle demande (2026-10-22)
+
+**Contexte / demande** : Camille a demandé si les gens reçoivent une confirmation après un formulaire : seulement un message à l'écran. Elle a répondu « oui ajoute les deux, le texte est bon » à deux propositions : l'accusé de réception (texte proposé dans la conversation) et une alerte pour elle à chaque nouvelle demande.
+
+**Ce qui a été fait**
+- Deux nouvelles règles dans `src/lib/crm/moteur.ts`. Elles paraissent d'elles-mêmes dans l'onglet « Relances » de `/admin`, avec marche/arrêt.
+- **`accuse_reception`** (écrit au prospect) :
+  - envoie le gabarit `accuse_reception` (« Nous avons bien reçu votre demande »), au passage horaire qui suit une demande du site ;
+  - mêmes protections que les relances J2/J5 : pied LCAP, désabonnement, rien tant que l'envoi n'est pas prêt ;
+  - pas aux candidatures de stage (`candidature-stage`), **pas aux demandes de rendez-vous** (`rdv-decouverte` : le texte invite à « choisir le moment de notre appel », ce que la personne vient de faire), pas si un contact humain a déjà été noté, et plus envoyé après 24 h ;
+  - ne note pas `relance_sent_at`.
+- **`nouvelle_demande`** :
+  - courriel à l'adresse d'alerte (`vsw_settings.notify_email`) pour chaque demande du site, stages compris : nom, coordonnées, entreprise, formulaire, demande, lien vers `/admin` ;
+  - rien n'est réservé tant que l'adresse ou Resend manquent.
+- Fonctions pures dans `src/lib/crm/regles.ts` : `estDemandeDuSite`, `estDemandeProspect`, `recoitAccuseReception`, `alerteNouvelleDemande`, plus six tests dans `tests/crm-regles.test.mjs`. Le test du filtre des stages a été vérifié en cassant la règle une fois (19 réussis, 1 échec).
+- **Après la revue de sécurité** (ROUGE) :
+  - `prenomDe` ne garde plus qu'un prénom fait de lettres, d'apostrophes et de traits d'union. Sinon, le courriel commence par « Bonjour, ». Un « nom » comme `https://faux-site…` devenait un lien cliquable en tête des courriels, relances J2/J5 comprises.
+  - Plafond par passage : au-delà de 20 accusés ou de 10 alertes en attente, la règle est suspendue et l'équipe est notifiée.
+  - L'objet de l'alerte est nettoyé et limité à 80 caractères, et ses liens ne sont pas cliquables.
+- Gabarit ajouté à `supabase/setup-crm-vsw.sql` et inséré dans la base le 2026-10-22. Vérifié par une requête : 4 gabarits, dont `accuse_reception`.
+
+**Délai réel** : au **passage horaire** (`vercel.json`, à :20 chaque heure), donc **dans l'heure**, pas dans la minute comme je l'avais écrit à Camille. Un envoi à la minute demanderait de faire passer les formulaires par une route serveur, ce qui serait un autre chantier.
+
+**Vérification technique**
+- `npm run verify` vert.
+- `qa-agent` (Opus, ≈ 76 k) **VERT**. Sa question sur les demandes de rendez-vous a conduit à les exclure, et `CLAUDE.md` est mis à jour.
+- `securite` (Opus, ≈ 63 k) **ROUGE** sur le prénom et le volume, corrigé ci-dessus. La revue n'a pas été relancée après la correction (une révision au plus, `budget-jetons.md`).
+- **À tester par Camille** : le premier envoi réel en production (accusé et alerte).
+
+**Non fait dans ce round**
+- **Adresse d'alerte à donner par Camille** : `notify_email` est vide.
+- Les courriels ne partiront qu'en production, avec Resend (`RESEND_API_KEY`, `EMAIL_FROM` d'un domaine vérifié), `CRON_SECRET`, et un lien de désabonnement (`UNSUBSCRIBE_SECRET` ou `CRON_SECRET`).
+- **À décider par Camille** : un accusé pour les demandes de rendez-vous, avec un texte adapté.
+- **Constaté, non corrigé** : les relances J2/J5 ne filtrent pas les candidatures de stage. Un ou une stagiaire recevrait donc les relances « appel découverte ». C'est à Camille de décider : même filtre (`estDemandeProspect`) ou non.
+- Issue #5 (insertion anonyme) toujours ouverte : l'accusé de réception part à l'adresse saisie dans le formulaire.
 
