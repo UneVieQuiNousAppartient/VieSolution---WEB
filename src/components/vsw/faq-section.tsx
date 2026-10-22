@@ -7,7 +7,7 @@ const FAQS = [
   },
   {
     q: "Mes clients vont-ils parler à un robot ?",
-    a: "Non. L'outil prépare le travail : un brouillon de réponse, un rappel, un résumé de dossier. Vous relisez, vous ajustez, vous envoyez. Vos clients gardent le contact avec vous — simplement plus vite, et sans oubli.",
+    a: "C'est toujours à vous qu'ils parlent. L'outil prépare le travail : un brouillon de réponse, un rappel, un résumé de dossier. Vous relisez, vous ajustez, vous envoyez. Vos clients gardent le contact avec vous — simplement plus vite, avec chaque suivi en place.",
   },
   {
     q: "Je ne suis pas techno. Est-ce que c'est pour moi ?",
@@ -15,11 +15,11 @@ const FAQS = [
   },
   {
     q: "L'IA et Zoho, ce n'est pas pour les grosses compagnies ?",
-    a: "Non. Ces outils sont aujourd'hui abordables et pensés aussi pour les petites entreprises et les travailleurs autonomes. Une petite équipe a même souvent plus à gagner : chaque heure sauvée compte. On adapte tout à votre taille.",
+    a: "C'est aussi pour vous. Ces outils sont aujourd'hui abordables et pensés aussi pour les petites entreprises et les travailleurs autonomes. Une petite équipe a même souvent plus à gagner : chaque heure sauvée compte. On adapte tout à votre taille.",
   },
   {
     q: "Ça doit coûter une fortune ?",
-    a: "Pas nécessairement. On peut commencer par un premier pas simple, et en discuter à l'appel découverte gratuit. Le prix est toujours sur mesure, donné par écrit avant de commencer, sans frais cachés.",
+    a: "Ça peut rester simple : on commence par un premier pas, et on en discute à l'appel découverte gratuit. Le prix est toujours sur mesure, donné par écrit avant de commencer, sans frais cachés.",
   },
   {
     q: "Combien de temps ça va me demander ?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Et si je veux juste commencer petit ?",
-    a: "C'est souvent la meilleure idée. On choisit une seule chose — votre facturation, vos courriels, votre liste de clients — et on la règle. Vous voyez la différence, puis vous décidez de la suite. Aucune obligation d'aller plus loin.",
+    a: "C'est souvent la meilleure idée. On choisit une seule chose — votre facturation, vos courriels, votre liste de clients — et on la règle. Vous voyez la différence, puis vous décidez librement de la suite.",
   },
   {
     q: "Combien de temps prend une implantation Zoho ?",
@@ -39,7 +39,7 @@ const FAQS = [
   },
   {
     q: "J'ai déjà un logiciel pour mes clients. Faut-il tout changer ?",
-    a: "Non. On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on peut installer Zoho, ou vous bâtir un outil maison sur mesure. On choisit ensemble, selon votre façon de travailler et votre budget.",
+    a: "On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on peut installer Zoho, ou vous bâtir un outil maison sur mesure. On choisit ensemble, selon votre façon de travailler et votre budget.",
   },
   {
     q: "C'est quoi l'AEO ?",
@@ -51,7 +51,7 @@ const FAQS = [
   },
   {
     q: "Que se passe-t-il après l'implantation ?",
-    a: "On ne disparaît pas. Votre équipe est formée jusqu'à l'autonomie, et on reste disponibles pour le support, l'optimisation et l'ajout de nouvelles fonctions ou tâches automatiques à mesure que votre entreprise évolue.",
+    a: "On continue avec vous. Votre équipe est formée jusqu'à l'autonomie, et on reste disponibles pour le support, l'optimisation et l'ajout de nouvelles fonctions ou tâches automatiques à mesure que votre entreprise évolue.",
   },
   {
     q: "Et mes données dans tout ça ?",

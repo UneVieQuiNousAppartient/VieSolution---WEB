@@ -79,12 +79,12 @@ export function DemarrerSection({ variant }: { variant: Variant }) {
             <div>
               <div className="eyebrow">{'Démarrer simplement'}</div>
               <h2>
-                Pas besoin de tout changer.<br />
+                Un premier pas suffit.<br />
                 <span className="glow">On commence petit.</span>
               </h2>
             </div>
             <p>
-              Vous n&apos;avez pas à tout comprendre ni à tout faire d&apos;un coup. On choisit
+              On avance une étape à la fois. On choisit
               avec vous une seule chose qui vous fera gagner du temps, on la met en place, et on
               vous montre comment l&apos;utiliser. Le reste viendra quand vous serez prêt.
             </p>

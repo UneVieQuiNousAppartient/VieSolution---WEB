@@ -2172,6 +2172,9 @@ section { position: relative; }
   color: var(--accent);
   margin-bottom: 4px;
 }
+.benefit .metier-gruge p { color: var(--fg-2); }
+.metier-ameliore p { color: var(--fg-0); font-weight: 600; }
+.metier-ameliore p > span { color: var(--accent); }
 .benefit p.metier-note {
   margin-top: auto;
   padding-top: 12px;
@@ -3734,31 +3737,44 @@ html[data-theme="dark"] .pourquoi-icone { color: var(--bg-0); }
 .pourquoi-carte h3 { font-size: 17px; margin: 0 0 6px; color: var(--fg-0); }
 .pourquoi-carte p { margin: 0; font-size: 14px; color: var(--fg-2); line-height: 1.55; }
 .pourquoi-duo { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); gap: 14px; }
-.pourquoi-tableau {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+.pourquoi-liste {
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-lg);
-  overflow: hidden;
   background: var(--surface);
-  font-size: 14.5px;
+  padding: 22px 24px;
 }
-.pourquoi-tableau th {
-  text-align: left;
-  padding: 12px 18px;
+.pourquoi-liste h3 {
+  margin: 0 0 12px;
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fg-2);
-  background: var(--bg-1);
 }
-.pourquoi-tableau td { padding: 13px 18px; border-top: 1px solid var(--line-soft); vertical-align: top; }
-.pourquoi-tableau td:first-child { color: var(--fg-2); text-decoration: line-through; text-decoration-color: color-mix(in oklch, var(--fg-2) 50%, transparent); width: 42%; }
-.pourquoi-tableau td:last-child { color: var(--fg-0); }
-.pourquoi-coche { color: var(--accent); font-weight: 700; margin-right: 8px; }
+.pourquoi-liste ul { list-style: none; margin: 0; padding: 0; }
+.pourquoi-liste li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 0;
+  border-top: 1px solid var(--line-soft);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-0);
+}
+.pourquoi-liste li:first-child { border-top: 0; padding-top: 0; }
+.pourquoi-coche {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
 .pourquoi-appel {
   border-radius: var(--radius-lg);
   padding: 26px;
@@ -3776,7 +3792,7 @@ html[data-theme="dark"] .pourquoi-icone { color: var(--bg-0); }
 }
 @media (max-width: 560px) {
   .pourquoi-engagements { grid-template-columns: 1fr; }
-  .pourquoi-tableau td, .pourquoi-tableau th { padding: 11px 12px; }
+  .pourquoi-liste { padding: 18px 18px; }
 }
 
 /* ============ Galerie « À quoi ça ressemble » de /crm-sur-mesure (outils-galerie.tsx, 2026-10-22) ============ */

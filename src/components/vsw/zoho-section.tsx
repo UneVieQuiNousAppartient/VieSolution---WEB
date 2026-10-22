@@ -30,7 +30,7 @@ const ZOHO_APPS: { besoin: string; nom: string; desc: string }[] = [
   { besoin: 'Clients', nom: 'Zoho CRM', desc: 'Vos clients, vos ventes et vos suivis au même endroit.' },
   { besoin: 'Clients, en simple', nom: 'Bigin', desc: 'Un carnet de clients léger, pensé pour les petites entreprises.' },
   { besoin: 'Facturation', nom: 'Zoho Books', desc: 'Vos factures, vos dépenses et votre comptabilité.' },
-  { besoin: 'Service client', nom: 'Zoho Desk', desc: 'Les demandes de vos clients, sans qu’aucune ne se perde.' },
+  { besoin: 'Service client', nom: 'Zoho Desk', desc: 'Les demandes de vos clients, chacune suivie jusqu’à sa réponse.' },
   { besoin: 'Marketing', nom: 'Zoho Campaigns', desc: 'Vos infolettres et vos courriels à toute votre clientèle.' },
   { besoin: 'Stock', nom: 'Zoho Inventory', desc: 'Votre inventaire et vos commandes, à jour.' },
   { besoin: 'Équipe', nom: 'Zoho People', desc: 'Vos employés : congés, horaires et dossiers.' },

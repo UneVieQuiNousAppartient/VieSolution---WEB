@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 23.
+**Dernière mise à jour : 2026-10-22** — dernière section : 24.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -316,3 +316,20 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert. Captures 1440 px et 390 px, 3 cartes cochées : phrase et jauge correctes, aucun débordement, aucune erreur de page. `qa-agent` (Opus, ≈ 56 k) **OK** ; corrigé ensuite : `aria-atomic` sur la phrase annoncée, « Les six ? » → « Toutes ? », phrase « C'est plus courant qu'on le pense » retirée (affirmation absente du reste du site). Coût réel ≈ 120 k (session ≈ 65 k + QA 56 k).
 
 **Non fait dans ce round** : sur téléphone, le bouton de la bande et la barre fixe peuvent être visibles en même temps (choix assumé) ; le soulèvement des cartes au survol devient instantané (pas supprimé) en mouvement réduit.
+
+## 24. ✅ Ton positif partout (2026-10-22)
+
+**Contexte / demande** : Camille, « fais le ton positif partout maintenant » (idée tirée de tooly.ca, §22). Règle suivie : retourner les phrases vers ce qui va mieux, sans fait ni promesse nouvelle ; les difficultés que le visiteur doit reconnaître restent, suivies de ce qui change ; les questions de la FAQ restent les vraies inquiétudes, seules les réponses changent.
+
+**Ce qui a été fait** (agent principal), avant → après :
+- Hero : « Pas besoin d'être techno. » → « On s'occupe de la technique. » (déjà dit dans la FAQ).
+- Services 01 : « Fini les tâches répétitives qui grugent vos journées. » → « Vos journées, libérées des tâches répétitives. » ; carte CRM et `/crm-sur-mesure` : « Votre façon de travailler vous est propre. Si aucun logiciel tout fait ne lui convient… » ; intro : « On part de ce que vous avez. »
+- Démarrer : « Pas besoin de tout changer. » → « Un premier pas suffit. » ; « Vous n'avez pas à tout comprendre… » → « On avance une étape à la fois. »
+- Métiers : « On ne vous vend pas de l'IA… ne sont que les moyens » → « On part de votre métier… sont nos outils pour y arriver » ; « Ce qu'on améliore » visible sous « Ce qui vous gruge » (avant : caché dans « Voir plus ») ; « Votre métier n'est pas dans la liste ? » → « Un autre métier ? » ; agent immobilier : « personne n'est oublié » → « chaque acheteur ou vendeur est suivi jusqu'au bout ».
+- Pourquoi nous : tableau « Ailleurs » barré → liste « Avec nous » à coches (5 mêmes lignes).
+- FAQ (réponses) : « Non. » → « C'est toujours à vous qu'ils parlent. », « C'est aussi pour vous. », « On part de ce que vous avez. » ; « Pas nécessairement. » → « Ça peut rester simple : … » ; « Aucune obligation d'aller plus loin. » → « vous décidez librement de la suite. » ; « On ne disparaît pas. » → « On continue avec vous. » ; « sans oubli » → « avec chaque suivi en place ».
+- Prix étape 01 : « Aucune obligation. » → « Vous restez libre de la suite. » ; Zoho Desk : « sans qu'aucune ne se perde » → « chacune suivie jusqu'à sa réponse » ; Avant/après : « Rien d'oublié » → « Tout est suivi » ; menu Services : « Vous ne savez pas par où commencer ? » → « Un premier pas, à votre rythme ».
+
+**Vérification technique** : `npm run verify` vert. Captures 1440 px et 390 px (Pourquoi nous, Métiers) : aucun débordement, aucune erreur. `qa-agent` (Opus, ≈ 62 k) **OK** ; corrigé ensuite : sens exact rétabli pour la phrase « logiciel tout fait » (la première version élargissait le cas), titre « Avec nous » (lecture fluide des lignes), réponse « coûter une fortune » qui répond de nouveau à la question, deux répétitions. Coût réel ≈ 160 k (session ≈ 100 k + QA 62 k).
+
+**Non fait dans ce round** (gardé exprès) : « sans engagement », « sans frais cachés », « sans jargon » (réassurances attendues) ; « quand rien n'existe, on le bâtit » (positionnement validé, §12) ; les « pour X, pas pour Y » des métiers (temps retrouvé, dans « Voir plus ») ; l'étape 03 du prix (« jamais après » : engagement qui attend la validation de Camille) ; pages de l'ancien design redirigées.

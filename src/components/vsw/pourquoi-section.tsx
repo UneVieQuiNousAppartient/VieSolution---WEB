@@ -7,8 +7,9 @@ import { APPEL } from './appel';
 /*
  * « Pourquoi nous » (réorganisation du 2026-10-22, maquette 3 validée par Camille) : fusion de
  * « Pourquoi nous choisir », « La différence » et « Nos engagements ». Textes repris tels quels :
- * les 4 engagements (engagements-section.tsx), 5 des 7 lignes « ailleurs / avec nous »
- * (comparison-section.tsx), la carte d'appel. Les 5 bénéfices, qui répétaient l'avant/après, sont
+ * les 4 engagements (engagements-section.tsx), la colonne « avec nous » de 5 des 7 lignes
+ * (comparison-section.tsx ; colonne « ailleurs » barrée retirée le 2026-10-22, ton positif demandé
+ * par Camille), la carte d'appel. Les 5 bénéfices, qui répétaient l'avant/après, sont
  * retirés de l'accueil (benefits-section.tsx reste dans le dépôt).
  */
 const LIGNES_GARDEES = ['Solutions génériques', 'Jargon technique', 'Projet livré, consultant parti', 'Coûts cachés', 'Vous dépendez du consultant'];
@@ -38,20 +39,17 @@ export function PourquoiSection() {
           ))}
         </div>
         <div className="pourquoi-duo reveal">
-          <table className="pourquoi-tableau">
-            <caption className="sr-only">Ce qui change avec Vie Solution Web</caption>
-            <thead>
-              <tr><th scope="col">Ailleurs</th><th scope="col">Avec nous</th></tr>
-            </thead>
-            <tbody>
+          <div className="pourquoi-liste">
+            <h3>Avec nous</h3>
+            <ul>
               {LIGNES.map(([ailleurs, nous]) => (
-                <tr key={ailleurs}>
-                  <td><span className="sr-only">Ailleurs : </span>{ailleurs}</td>
-                  <td><span className="pourquoi-coche" aria-hidden="true">✓</span>{nous}</td>
-                </tr>
+                <li key={ailleurs}>
+                  <span className="pourquoi-coche" aria-hidden="true"><Icon name="check" size={14} /></span>
+                  {nous}
+                </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+          </div>
           <div className="pourquoi-appel section--nuit">
             <h3>Un appel de 30&nbsp;minutes</h3>
             <p>

@@ -98,7 +98,7 @@ export function NavServices({ services }: { services: readonly ServiceNavItem[] 
           ))}
         </ul>
         <Link href="/#demarrer" className="nav-services-pied" onClick={() => setOpen(false)}>
-          <span>Vous ne savez pas par où commencer ?</span>
+          <span>Un premier pas, à votre rythme</span>
           <strong>Voir par où commencer <span aria-hidden="true">→</span></strong>
         </Link>
       </div>

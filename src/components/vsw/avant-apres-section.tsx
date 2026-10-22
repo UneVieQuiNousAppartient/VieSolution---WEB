@@ -37,7 +37,7 @@ const ROWS: [string, string][] = [
 /* Bandeau de conclusion : des résultats qualitatifs, jamais un chiffre inventé. */
 const OUTCOMES: [string, string][] = [
   ['Moins de ressaisie', 'chaque information entre une seule fois'],
-  ['Rien d’oublié', 'rappels et relances préparés pour vous'],
+  ['Tout est suivi', 'rappels et relances préparés pour vous'],
   ['Clients mieux servis', 'des réponses plus rapides, par les mêmes personnes'],
 ];
 

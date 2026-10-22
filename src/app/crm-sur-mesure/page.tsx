@@ -23,14 +23,14 @@ export default function CrmSurMesurePage() {
             Un outil fait pour<br />votre façon de travailler.
           </>
         }
-        lede="Quand aucun logiciel tout fait ne colle à votre façon de travailler, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels."
+        lede="Votre façon de travailler vous est propre. Si aucun logiciel tout fait ne lui convient, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels."
       />
       <ServiceDetailSection
         id="sur-mesure"
         eyebrow="Ce qu'on bâtit"
         titre="Le bon outil, pas le plus gros."
         accroche="On part de ce que vous avez."
-        intro="Pas besoin de tout changer. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on installe Zoho ou on vous bâtit un outil maison."
+        intro="On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on installe Zoho ou on vous bâtit un outil maison."
         piliers={[
           {
             titre: 'On part de ce que vous avez',

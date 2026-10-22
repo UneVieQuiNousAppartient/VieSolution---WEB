@@ -84,7 +84,7 @@ export const METIERS: Metier[] = [
     slug: 'agent-immobilier',
     titre: 'Agent immobilier',
     gruge: "Les demandes d'information arrivent à toute heure, et le suivi de chaque acheteur ou vendeur repose sur votre mémoire.",
-    ameliore: "Chaque demande reçoit une réponse rapide, et personne n'est oublié en cours de route.",
+    ameliore: "Chaque demande reçoit une réponse rapide, et chaque acheteur ou vendeur est suivi jusqu'au bout.",
     temps: 'Pour les visites et les gens, pas pour la paperasse.',
     tags: ['Réponses aux demandes', 'Suivi des acheteurs et vendeurs', 'Dossier client unique'],
     icon: 'house-sign',
@@ -111,9 +111,9 @@ export function MetiersSection() {
             <h2>Un meilleur service pour vos clients.<br />Plus de temps pour vous.</h2>
           </div>
           <p className="desc">
-            On ne vous vend pas de l&apos;IA. On regarde ce qui vous gruge dans votre métier, on
-            améliore le service que vous offrez à vos clients, et vous retrouvez du temps.
-            L&apos;IA, Zoho et l&apos;automatisation ne sont que les moyens.
+            On part de votre métier. On regarde ce qui vous gruge, on améliore le service que vous
+            offrez à vos clients, et vous retrouvez du temps. L&apos;IA, Zoho et l&apos;automatisation
+            sont nos outils pour y arriver.
           </p>
         </div>
         <div className="benefits-grid metiers-grid reveal">
@@ -130,13 +130,13 @@ export function MetiersSection() {
                 <div className="metier-label">Ce qui vous gruge</div>
                 <p>{m.gruge}</p>
               </div>
+              <div className="metier-ameliore">
+                <div className="metier-label">Ce qu&apos;on améliore</div>
+                <p><span aria-hidden="true">→ </span>{m.ameliore}</p>
+              </div>
               <details className="metier-plus">
-                <summary>Voir ce qu&apos;on améliore pour vous</summary>
+                <summary>Le temps retrouvé et ce qu&apos;on installe</summary>
                 <div className="metier-plus-body">
-                  <div>
-                    <div className="metier-label">Pour vos clients</div>
-                    <p>{m.ameliore}</p>
-                  </div>
                   <div>
                     <div className="metier-label">Le temps retrouvé</div>
                     <p>{m.temps}</p>
@@ -156,7 +156,7 @@ export function MetiersSection() {
         </div>
         <div className="pv-outro reveal">
           <p>
-            Votre métier n&apos;est pas dans la liste ? Si vous servez des clients, on regarde
+            Un autre métier ? Si vous servez des clients, on regarde
             ensemble ce qui vous gruge et ce qu&apos;on peut améliorer.
           </p>
           <Link href={APPEL.href} className="btn btn-ghost">

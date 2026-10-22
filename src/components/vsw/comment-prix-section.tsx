@@ -3,7 +3,7 @@ export const ETAPES = [
   {
     num: '01',
     title: 'Un appel gratuit de 30 minutes',
-    desc: 'On écoute ce qui vous gruge. Aucune obligation.',
+    desc: 'On écoute ce qui vous gruge. Vous restez libre de la suite.',
   },
   {
     num: '02',

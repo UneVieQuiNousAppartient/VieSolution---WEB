@@ -43,7 +43,7 @@ export function Hero() {
         <p className="lede">
           Mieux servir vos clients et retrouver du temps pour votre vrai métier. IA, Zoho, sites
           web, CRM sur mesure : on choisit les bons outils, on les installe et on vous forme.
-          Pas besoin d&apos;être techno.
+          On s&apos;occupe de la technique.
         </p>
         <div className="hero-ctas">
           <Link href={APPEL.href} className="btn btn-primary btn-lg">
