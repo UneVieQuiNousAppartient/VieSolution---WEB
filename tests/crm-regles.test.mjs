@@ -6,7 +6,8 @@ import {
   ajouterMois,
   estDemandeDuSite,
   estDemandeProspect,
-  recoitAccuseReception,
+  estHorsProspection,
+  estDemandeRdv,
   alerteNouvelleDemande,
   peutEnvoyerCommercial,
   raisonDeRetenue,
@@ -217,10 +218,13 @@ test('prénom : seulement un mot fait de lettres, sinon « Bonjour, »', () => {
   assert.equal(remplir('Quelles sont vos disponibilités ?', {}), 'Quelles sont vos disponibilités ?');
 });
 
-test('accusé de réception : pas aux demandes de rendez-vous (texte « choisir le moment de notre appel »)', () => {
-  assert.equal(recoitAccuseReception({ source: 'site web — contact', service_interest: 'zoho' }), true);
-  assert.equal(recoitAccuseReception({ source: 'site web — rdv', service_interest: 'rdv-decouverte' }), false);
-  assert.equal(recoitAccuseReception({ source: 'site web — contact', service_interest: 'candidature-stage' }), false);
+test('accusé et relances : gabarit des rendez-vous, stages exclus', () => {
+  assert.equal(estDemandeRdv({ source: 'site web — rdv', service_interest: 'rdv-decouverte' }), true);
+  assert.equal(estDemandeRdv({ source: 'site web — contact', service_interest: 'zoho' }), false);
+  assert.equal(estDemandeProspect({ source: 'site web — rdv', service_interest: 'rdv-decouverte' }), true);
+  assert.equal(estHorsProspection({ service_interest: 'candidature-stage' }), true);
+  assert.equal(estHorsProspection({ service_interest: 'zoho' }), false);
+  assert.equal(estHorsProspection({ service_interest: null }), false);
 });
 
 test('alerte : objet sans saut de ligne, 80 caractères de nom au plus ; liens non cliquables', () => {

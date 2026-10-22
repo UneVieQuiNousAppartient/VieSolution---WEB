@@ -214,17 +214,15 @@ type DemandeSite = { source?: string | null; service_interest?: string | null };
 /** Fiche née d'un formulaire du site (source « site web — … » posée par fn_vsw_lead_intake). */
 export const estDemandeDuSite = (lead: DemandeSite) => String(lead.source || '').startsWith('site web');
 
-/** Demande de prospect venue du site (pas une candidature de stage). */
-export const estDemandeProspect = (lead: DemandeSite) =>
-  estDemandeDuSite(lead) && !(SUJETS_HORS_PROSPECTION as readonly string[]).includes(String(lead.service_interest || '').trim());
+/** Candidature de stage (ou autre sujet hors prospection) : ni accusé de réception, ni relance J2/J5 (issue #6). */
+export const estHorsProspection = (lead: DemandeSite) =>
+  (SUJETS_HORS_PROSPECTION as readonly string[]).includes(String(lead.service_interest || '').trim());
 
-/**
- * Reçoit l'accusé de réception : demande de prospect, sauf une demande de rendez-vous (le texte
- * approuvé invite à « choisir le moment de notre appel », ce que la personne vient de faire) —
- * en attente de la décision de Camille (SUIVI-TACHES.md § 30).
- */
-export const recoitAccuseReception = (lead: DemandeSite) =>
-  estDemandeProspect(lead) && String(lead.service_interest || '').trim() !== 'rdv-decouverte';
+/** Demande de prospect venue du site (pas une candidature de stage). */
+export const estDemandeProspect = (lead: DemandeSite) => estDemandeDuSite(lead) && !estHorsProspection(lead);
+
+/** Demande d'appel découverte (calendrier de /rdv ou clavardage IA) : sujet « rdv-decouverte ». */
+export const estDemandeRdv = (lead: DemandeSite) => String(lead.service_interest || '').trim() === 'rdv-decouverte';
 
 /** Nom saisi par le visiteur, rendu sûr pour un objet de courriel : sans caractères de contrôle, 80 caractères au plus. */
 const pourObjet = (s: string) => s.replace(/[\u0000-\u001F\u007F]+/g, ' ').trim().slice(0, 80);

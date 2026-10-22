@@ -26,7 +26,9 @@ import {
   contactDepuis,
   echeance,
   estDemandeDuSite,
-  recoitAccuseReception,
+  estDemandeProspect,
+  estDemandeRdv,
+  estHorsProspection,
   plusRecente,
   piedLcap,
   prenomDe,
@@ -243,18 +245,20 @@ export const REGLES: Record<string, Regle> = {
   accuse_reception: {
     libelle: 'Accusé de réception au prospect',
     description:
-      "Au passage horaire qui suit une nouvelle demande du site : « Nous avons bien reçu votre demande » (gabarit « accuse_reception », texte approuvé par Camille le 2026-10-22). Pas aux candidatures de stage, ni si vous avez déjà pris contact.",
+      "Au passage horaire qui suit une nouvelle demande du site : « Nous avons bien reçu votre demande » (gabarit « accuse_reception »), ou, pour une demande de rendez-vous, « Votre demande d'appel est bien arrivée » (gabarit « accuse_rdv »). Textes acceptés par Camille le 2026-10-22 (pour les rendez-vous : la phrase proposée, avec l'objet, la salutation et la signature de l'autre accusé). Pas aux candidatures de stage, ni si vous avez déjà pris contact.",
     enabled: true,
     delay_hours: 0,
-    params: { template: 'accuse_reception' },
+    params: { template: 'accuse_reception', template_rdv: 'accuse_rdv' },
     ecritAuProspect: true,
     plafond: 20,
     candidats: async (ctx) => {
       // 24 h au plus : passé ce délai (passage horaire manqué, envoi pas encore prêt), il n'est plus envoyé.
-      const leads = (await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24)))).filter(recoitAccuseReception);
+      const leads = (await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24)))).filter(estDemandeProspect);
       return (await sansContactDepuis(ctx.db, leads, (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
-    executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg, false),
+    // Demande de rendez-vous : la personne vient de choisir son appel, le texte « choisissez le moment » ne lui va pas.
+    executer: (ctx, { lead }, cfg) =>
+      relancer(ctx, lead, estDemandeRdv(lead) ? { ...cfg, params: { ...cfg.params, template: cfg.params.template_rdv } } : cfg, false),
   },
 
   nouvelle_demande: {
@@ -334,7 +338,8 @@ export const REGLES: Record<string, Regle> = {
           .lte('created_at', ilYa(ctx, cfg.delay_hours))
           .gte('created_at', ilYa(ctx, cfg.delay_hours + RATTRAPAGE_H)),
       );
-      return (await sansContactDepuis(ctx.db, leads, (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
+      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22).
+      return (await sansContactDepuis(ctx.db, leads.filter((l) => !estHorsProspection(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
     executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg),
   },
@@ -355,7 +360,8 @@ export const REGLES: Record<string, Regle> = {
           .lte('created_at', ilYa(ctx, cfg.delay_hours))
           .gte('created_at', ilYa(ctx, cfg.delay_hours + RATTRAPAGE_H)),
       );
-      return (await sansContactDepuis(ctx.db, leads, (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
+      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22).
+      return (await sansContactDepuis(ctx.db, leads.filter((l) => !estHorsProspection(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
     executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg),
   },

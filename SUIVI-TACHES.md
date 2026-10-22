@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 30.
+**Dernière mise à jour : 2026-10-22** — dernière section : 31.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -507,4 +507,27 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - **À décider par Camille** : un accusé pour les demandes de rendez-vous, avec un texte adapté.
 - **Constaté, non corrigé** : les relances J2/J5 ne filtrent pas les candidatures de stage. Un ou une stagiaire recevrait donc les relances « appel découverte ». C'est à Camille de décider : même filtre (`estDemandeProspect`) ou non.
 - Issue #5 (insertion anonyme) toujours ouverte : l'accusé de réception part à l'adresse saisie dans le formulaire.
+
+## 31. ✅ Relances sans les stages, accusé de réception pour les rendez-vous (2026-10-22)
+
+**Contexte / demande** : Camille : « oui corrige les stages, et ajoute l'accusé pour les rdv ». Ce sont les deux questions du § 30 : l'issue #6 (relances J2/J5 envoyées aux candidatures de stage) et l'accusé de réception des demandes de rendez-vous.
+
+**Ce qui a été fait**
+- `new_lead_j2` et `new_lead_j5` (`src/lib/crm/moteur.ts`) écartent les candidatures de stage (`estHorsProspection`, `src/lib/crm/regles.ts`). `new_lead_j7` reste inchangée : la tâche « Appeler » sert aussi à répondre à un candidat.
+- `accuse_reception` envoie désormais aussi aux demandes de rendez-vous (`estDemandeRdv`, sujet `rdv-decouverte`, venues de `/rdv` ou du clavardage IA), avec le gabarit `accuse_rdv` :
+  - objet : « Votre demande d'appel est bien arrivée » ;
+  - texte : « Bonjour {{prenom}}, Merci, votre demande d'appel est bien arrivée. Je vous confirme l'heure par courriel sous 24 h ouvrables. Au plaisir, Camille, Vie Solution Web ».
+  La phrase centrale est celle que Camille a acceptée. L'objet, la salutation et la signature reprennent ceux de l'accusé approuvé.
+- `recoitAccuseReception` est retiré, et son test est remplacé.
+- Gabarit ajouté à `supabase/setup-crm-vsw.sql` et à la base le 2026-10-22. Une requête le confirme : 5 gabarits, dont `accuse_rdv`. Le commentaire « ni relance commerciale » relevé au § 30 est désormais exact.
+- `CLAUDE.md` est à jour. Le correctif du test signalé par CodeQL (commit 5d28ce3 : échappement vérifié quelle que soit la casse) est consigné ici.
+
+**Vérification technique**
+- `npm run verify` : code 0, 51 tests.
+- `qa-agent` (Opus, ≈ 30 k) **VERT**. Après sa revue, la description de la règle et `CLAUDE.md` disent « acceptés » au lieu d'« approuvés ».
+- Le filtre des stages dans J2/J5 n'a pas de test direct ; la fonction pure qu'il utilise est testée.
+
+**Non fait dans ce round**
+- L'adresse d'alerte (`notify_email`) est toujours à donner par Camille.
+- **À tester par Camille** : le premier envoi réel, en production avec Resend.
 

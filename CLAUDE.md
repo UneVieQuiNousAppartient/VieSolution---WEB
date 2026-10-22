@@ -47,9 +47,9 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   (boutons « Appel fait », « Courriel envoyé », « RDV pris »). `/admin` s'ouvre sur
   « Aujourd'hui » (`src/lib/crm/aujourdhui.ts`) ; onglet « Relances » : marche/arrêt et délai
   de chaque règle (`/api/admin/regles`, surcharge dans `vsw_automation_rules`).
-- **Courriels automatiques** : seuls l'accusé de réception (texte approuvé par Camille le 2026-10-22,
-  pas aux demandes de rendez-vous ni aux stages) et les relances 1 et 2 (textes approuvés et activées par
-  Camille le 2026-10-21) partent seuls, avec l'alerte de nouvelle demande à l'équipe (`notify_email`) ; la première réponse reste un brouillon à
+- **Courriels automatiques** : seuls l'accusé de réception (textes acceptés par Camille le 2026-10-22 :
+  un pour les demandes, un pour les rendez-vous — `SUIVI-TACHES.md` § 30-31 ; pas aux stages) et les relances 1 et 2 (textes approuvés et activées par
+  Camille le 2026-10-21 ; pas aux stages) partent seuls, avec l'alerte de nouvelle demande à l'équipe (`notify_email`) ; la première réponse reste un brouillon à
   approuver. Envoi par Resend (`src/lib/crm/envoi.ts`). Loi anti-pourriel (LCAP,
   `src/lib/crm/regles.ts`) : pied avec adresse postale (`vsw_settings.postal_address`) et
   lien de désabonnement (`/api/desabonnement`) — sans adresse postale, rien ne part.
