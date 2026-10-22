@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
+import { APPEL, ECRIT } from './appel';
 
-const SERVICES: {
+export const SERVICES: {
   num: string;
   icon: IconName;
   title: string;
@@ -13,67 +14,111 @@ const SERVICES: {
     num: '01',
     icon: 'bolt',
     title: 'Automatisation des processus',
-    desc: "Éliminez les tâches répétitives qui grugent vos journées. Audit de vos processus, automatisation de vos workflows, connexions entre vos outils, rapports et relances automatiques — propulsés par l'IA.",
-    tags: ['Workflows', 'Agents IA', 'Intégrations', 'Rapports'],
+    desc: "Vos journées, libérées des tâches répétitives. On regarde comment vous travaillez, puis on fait en sorte que les relances, les rapports et les copier-coller se fassent tout seuls.",
+    tags: ['Tâches automatiques', 'Relances', 'Liens entre vos outils', 'Rapports'],
     href: '/ia',
   },
   {
     num: '02',
     icon: 'code',
-    title: 'Agents & intégrations IA',
-    desc: "Des agents IA sur mesure branchés sur vos outils : assistants internes, chatbots clients, traitement de documents, suivi de leads. L'IA qui travaille pour vous, 24/7.",
-    tags: ['Claude', 'ChatGPT', 'Chatbots', 'API'],
+    title: 'Assistants IA sur mesure',
+    desc: "On installe Claude ou ChatGPT pour votre équipe, prêts à l'emploi, ou on bâtit un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses à vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part.",
+    tags: ['Installation de Claude', 'ChatGPT', 'Clavardage client', 'Tri de documents'],
     href: '/ia',
   },
   {
     num: '03',
-    icon: 'grid',
-    title: 'Implantation Zoho',
-    desc: "On installe et configure Zoho chez vous : CRM, facturation, soutien client, marketing. Vos données centralisées, vos processus connectés — une entreprise qui roule dans un seul écosystème.",
-    tags: ['Zoho CRM', 'Books', 'Desk', 'Campaigns'],
-    href: '/zoho',
+    icon: 'phone',
+    title: 'Accueil IA : clavardage, rendez-vous et voix',
+    desc: "Un assistant de clavardage sur votre site, une prise de rendez-vous qui se fait toute seule, et un agent vocal qui répond au téléphone, prend les rendez-vous et les messages. Vos clients ont une réponse tout de suite.",
+    tags: ['Clavardage', 'Prise de rendez-vous', 'Agent vocal', 'Rappels'],
+    href: '/accueil-ia',
   },
   {
     num: '04',
+    icon: 'grid',
+    title: 'Implantation Zoho',
+    desc: "On installe et règle Zoho chez vous : clients, factures, soutien, infolettres. Tout au même endroit, au lieu d'éparpillé dans plusieurs outils.",
+    tags: ['Zoho CRM (clients)', 'Books (factures)', 'Desk (soutien)', 'Campaigns (infolettres)'],
+    href: '/zoho',
+  },
+  {
+    num: '05',
     icon: 'users',
-    title: 'Formation IA & Zoho',
-    desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, cas d'usage réels, autonomie durable.",
+    title: 'Formation IA et Zoho',
+    desc: "On forme vos équipes — et la relève — à travailler concrètement avec l'IA et avec Zoho. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite.",
     tags: ['Ateliers', 'Équipes', 'Relève', 'Coaching'],
     href: '/ia#formation',
   },
+  {
+    num: '06',
+    icon: 'globe',
+    title: 'Sites et applications web',
+    desc: "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils : formulaires, rendez-vous, carnet de clients.",
+    tags: ['Sites vitrines', 'Pages de destination', 'Applications web', 'Formulaires reliés à vos outils'],
+    href: '/sites-web',
+  },
+  {
+    num: '07',
+    icon: 'layout',
+    title: 'CRM et outils sur mesure',
+    desc: "Votre façon de travailler vous est propre. Si aucun logiciel tout fait ne lui convient, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels.",
+    tags: ['CRM maison', 'Outils internes', 'Tableaux de suivi', 'Liens avec vos outils'],
+    href: '/crm-sur-mesure',
+  },
+  {
+    num: '08',
+    icon: 'chat',
+    title: 'Être trouvé sur Google et par les IA',
+    desc: "Quand un client cherche votre métier, il demande à Google, mais aussi à ChatGPT, Claude ou Perplexity. On rend votre site clair pour les deux : des réponses aux vraies questions de vos clients, une fiche d'entreprise et des informations que les machines savent lire.",
+    tags: ['SEO (Google)', 'AEO (assistants IA)', 'Questions de vos clients', 'Fiche d’entreprise'],
+    href: '/referencement',
+  },
 ];
 
+/* Services en deux colonnes (lot design Agnos, 2026-10-21) : titre fixe à gauche, cartes
+   empilées à droite dans un « plateau », icône en haut à droite. */
 export function Services() {
+  const total = String(SERVICES.length).padStart(2, '0');
   return (
     <section id="services" className="section">
-      <div className="container">
-        <div className="section-head reveal">
-          <div>
-            <div className="eyebrow">Services</div>
-            <h2>Quatre expertises<br />pour un même objectif.</h2>
-          </div>
+      <div className="container services-layout">
+        <div className="services-intro reveal">
+          <div className="eyebrow">Services</div>
+          <h2>Huit façons de vous<br />simplifier la vie.</h2>
           <p className="desc">
-            Automatiser, outiller et former : nous aidons les entreprises québécoises à
-            reprendre la main sur leur gestion grâce à l&apos;IA et à l&apos;écosystème Zoho.
-            Chaque mandat est traité avec rigueur, transparence et un accompagnement de
-            bout en bout.
+            Les logiciels existent déjà : Zoho, Claude et bien d&apos;autres. Nous, on choisit les
+            bons pour vous, on les installe, on les relie et on vous forme. Et quand rien
+            n&apos;existe, on le bâtit&nbsp;: votre site, votre CRM, vos outils.
           </p>
+          <div className="services-actions">
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
+            </Link>
+            <Link href={ECRIT.href} className="btn btn-ghost btn-lg">
+              {ECRIT.libelle}
+            </Link>
+          </div>
+          <div className="services-count" aria-hidden="true">01 — {total}</div>
         </div>
-        <div className="services-grid reveal">
+        <div className="tray services-stack reveal">
           {SERVICES.map((s) => (
-            <Link href={s.href} className="service" key={s.num} style={{ textDecoration: 'none' }}>
-              <div className="service-num">{s.num} / 04</div>
-              <div className="service-icon">
-                <Icon name={s.icon} size={22} />
+            <Link href={s.href} className="svc-card" key={s.num}>
+              <div className="svc-card-head">
+                <h3>
+                  <span className="svc-card-num">{s.num}</span>
+                  {s.title}
+                </h3>
+                <span className="svc-card-icon" aria-hidden="true">
+                  <Icon name={s.icon} size={18} />
+                </span>
               </div>
-              <h3>{s.title}</h3>
               <p>{s.desc}</p>
-              <div className="service-tags">
+              <div className="svc-card-tags">
                 {s.tags.map((t) => (
-                  <span key={t} className="service-tag">{t}</span>
+                  <span key={t} className="pill">{t}</span>
                 ))}
               </div>
-              <div className="service-arrow"><Icon name="arrow" size={18} /></div>
             </Link>
           ))}
         </div>

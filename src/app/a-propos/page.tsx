@@ -17,7 +17,7 @@ export default function AProposPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// À propos"
+        eyebrow="À propos"
         title={
           <>
             Comprendre d&apos;abord,<br />bâtir ensuite.

@@ -14,7 +14,7 @@ export default function ContactPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="// Contact"
+        eyebrow="Contact"
         title={
           <>
             Parlons de<br />votre projet.

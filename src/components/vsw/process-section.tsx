@@ -6,13 +6,13 @@ const STEPS = [
   },
   {
     num: '02',
-    title: 'Audit de vos processus',
-    desc: "On cartographie votre façon de travailler et on identifie précisément où l'IA et Zoho vous feront gagner du temps et de l'argent.",
+    title: 'Portrait de vos façons de faire',
+    desc: "On regarde comment vous travaillez et on repère où l'IA et Zoho vous feront gagner du temps.",
   },
   {
     num: '03',
     title: 'Implantation',
-    desc: "Automatisations, agents IA, configuration Zoho : on déploie par étapes, en validant chaque livrable avec vous.",
+    desc: "Tâches automatiques, assistants IA, configuration Zoho : on avance par étapes, en validant chaque étape avec vous.",
   },
   {
     num: '04',
@@ -21,29 +21,35 @@ const STEPS = [
   },
 ];
 
+/* Frise : pastilles numérotées reliées par une ligne fine au-dessus des cartes
+   (inspiration « How it works 09 », 21st.dev). Le modificateur `process-grid--timeline`
+   ne touche pas les autres grilles `process-grid` du site (/devis, /postuler-stagiaire). */
 export function ProcessSection() {
   return (
-    <section id="processus" className="section">
+    <section id="processus" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>
             <div className="eyebrow">Notre processus</div>
-            <h2>De l&apos;idée à l&apos;impact,<br />en quatre étapes.</h2>
+            <h2>Simple, du début<br />à la fin.</h2>
           </div>
           <p className="desc">
             Une méthode simple et transparente : vous savez toujours où on s&apos;en va, ce
             que ça coûte et ce que ça rapporte.
           </p>
         </div>
-        <div className="process-grid reveal">
+        <ol className="process-grid process-grid--timeline reveal">
           {STEPS.map((s) => (
-            <div className="process-step" key={s.num}>
-              <div className="step-num">Étape {s.num}</div>
-              <h4>{s.title}</h4>
-              <p>{s.desc}</p>
-            </div>
+            <li className="process-step" key={s.num}>
+              <span className="step-dot" aria-hidden="true">{s.num}</span>
+              <div className="step-body">
+                <div className="step-num">Étape {s.num}</div>
+                <h4>{s.title}</h4>
+                <p>{s.desc}</p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

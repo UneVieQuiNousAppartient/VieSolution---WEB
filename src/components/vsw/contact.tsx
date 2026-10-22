@@ -13,7 +13,7 @@ const PROJECT_OPTIONS = [
   'Agent IA',
   'Implantation Zoho',
   'Formation IA / Zoho',
-  'Site web',
+  'Site ou application web',
   'Autre',
 ];
 
@@ -61,14 +61,14 @@ export function Contact({ showIntro = true }: { showIntro?: boolean }) {
               <div className="icon"><Icon name="mail" size={16} /></div>
               <div>
                 <div className="txt">Courriel</div>
-                <div className="val">bonjour@viesolutionweb.ca</div>
+                <a className="val" href="mailto:info@viesolutionweb.ca">info@viesolutionweb.ca</a>
               </div>
             </div>
             <div className="contact-item">
               <div className="icon"><Icon name="phone" size={16} /></div>
               <div>
                 <div className="txt">Téléphone</div>
-                <div className="val">+1 (418) 555-0143</div>
+                <a className="val" href="tel:+14385065243">+1 (438) 506-5243</a>
               </div>
             </div>
             <div className="contact-item">
@@ -131,7 +131,7 @@ export function Contact({ showIntro = true }: { showIntro?: boolean }) {
                   <input type="text" name="website" ref={honeypotRef} tabIndex={-1} autoComplete="off" />
                 </div>
                 {error && (
-                  <p style={{ color: 'oklch(0.75 0.18 25)', fontSize: 13, margin: '0 0 12px' }}>{error}</p>
+                  <p style={{ color: 'var(--danger)', fontSize: 13, margin: '0 0 12px' }}>{error}</p>
                 )}
                 <button
                   type="submit"

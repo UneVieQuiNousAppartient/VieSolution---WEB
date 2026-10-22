@@ -10,7 +10,7 @@ const PROJECTS = [
   {
     tag: 'Automatisation',
     title: 'Cabinet comptable',
-    desc: 'Workflow de traitement de factures assisté par IA',
+    desc: 'Traitement automatique des factures, assisté par IA',
     span: 3,
     label: '[ flow · diagram ]',
   },

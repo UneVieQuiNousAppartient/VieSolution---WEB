@@ -1,0 +1,31 @@
+# Vie Solution Web
+
+> Studio québécois qui aide les PME, les travailleurs autonomes et les professionnels (conseillers financiers, courtiers hypothécaires, cliniques dentaires et de soins, cabinets comptables, entrepreneurs en construction, agents immobiliers, commerces et restaurants) à mieux servir leurs clients et à retrouver du temps. Slogan : « Une vie qui vous appartient, des clients mieux servis, plus vite. » Service en français.
+
+Les logiciels existent déjà : Zoho, Claude et bien d'autres. Vie Solution Web choisit les bons pour chaque entreprise, les installe, les relie et forme l'équipe. Quand rien n'existe, elle bâtit l'outil sur mesure. Aucun prix n'est affiché : chaque mandat est estimé par écrit après un appel découverte gratuit de 30 minutes. Vie Solution Web n'est affiliée ni à Zoho, ni à Anthropic, ni à OpenAI, ni à Microsoft.
+
+## Services
+
+- [Automatisation des processus](https://viesolutionweb.ca/ia) : relances, rapports et copier-coller qui se font tout seuls.
+- [Assistants IA et installation de Claude ou ChatGPT](https://viesolutionweb.ca/ia) : outils d'IA installés pour l'équipe, ou assistants bâtis sur mesure ; ce qui engage le jugement professionnel n'est jamais envoyé sans validation humaine.
+- [Accueil IA : clavardage, rendez-vous et voix](https://viesolutionweb.ca/accueil-ia) : assistant de clavardage sur le site, prise de rendez-vous automatique, agent vocal qui répond au téléphone, prend les rendez-vous et les messages, et envoie rappels et confirmations ; l'assistant ne donne ni conseil ni réponse personnalisée : il les transmet au professionnel.
+- [Implantation Zoho](https://viesolutionweb.ca/zoho) : Zoho CRM, Bigin, Books, Desk, Campaigns, Inventory, People, Projects, Creator, Flow — choisis selon les besoins, réglés et enseignés.
+- [Formation à l'IA pour petites entreprises](https://viesolutionweb.ca/ia#formation) : ateliers concrets avec les vrais dossiers du client. Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic).
+- [Sites et applications web](https://viesolutionweb.ca/sites-web) : sites vitrines, pages de destination, applications web, formulaires reliés aux outils du client.
+- [CRM et outils sur mesure](https://viesolutionweb.ca/crm-sur-mesure) : carnet de clients maison, outils internes, tableaux de suivi.
+- [Référencement SEO et AEO](https://viesolutionweb.ca/referencement) : être trouvé sur Google et cité par les assistants IA.
+
+## Engagements
+
+- On part de ce que le client a déjà.
+- Les renseignements personnels sont traités selon la Loi 25 du Québec ; les accès et l'hébergement sont expliqués clairement.
+- L'équipe est formée jusqu'à l'autonomie ; le suivi continue après l'implantation.
+
+## Pages
+
+- [Accueil](https://viesolutionweb.ca/)
+- [Combien ça coûte ?](https://viesolutionweb.ca/devis) : démarche de prix, sans montant affiché.
+- [Cas d'usage](https://viesolutionweb.ca/realisations)
+- [À propos](https://viesolutionweb.ca/a-propos)
+- [Prendre rendez-vous](https://viesolutionweb.ca/rdv)
+- [Contact](https://viesolutionweb.ca/contact)

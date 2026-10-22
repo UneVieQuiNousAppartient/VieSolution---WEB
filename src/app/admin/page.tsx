@@ -1,15 +1,19 @@
 'use client';
 
-// Admin Vie Solution Web — équivalent léger de l'admin KHI EDUC :
-// leads, brouillons à approuver, tâches, notifications. Accès par code (cookie httpOnly).
+// Admin Vie Solution Web — équivalent léger de l'admin KHI EDUC : « Aujourd'hui » (quoi faire ce
+// jour-là), leads, brouillons à approuver, tâches, relances automatiques. Accès : code + double
+// vérification (cookie httpOnly).
 
 import { useCallback, useEffect, useState } from 'react';
 import { Icon } from '@/components/vsw/icon';
+import { STATUTS } from '@/lib/crm/regles';
+import type { Aujourdhui } from '@/lib/crm/aujourdhui';
+import type { RegleAffichee } from '@/lib/crm/moteur';
 
 type Lead = {
   id: string; name: string; email: string; phone: string; company: string | null;
   service_interest: string; need: string; status: string; source: string;
-  created_at: string; last_contact_at: string | null;
+  created_at: string; last_contact_at: string | null; email_opt_out_at: string | null;
 };
 type Draft = {
   id: string; target_id: string; kind: string; subject: string; body: string;
@@ -18,9 +22,37 @@ type Draft = {
 type Task = { id: string; lead_id: string; title: string; due_at: string | null };
 type Notif = { id: string; title: string; body: string; created_at: string };
 
-type Data = { leads: Lead[]; drafts: Draft[]; tasks: Task[]; notifications: Notif[] };
+type Data = {
+  leads: Lead[]; drafts: Draft[]; tasks: Task[]; notifications: Notif[];
+  aujourdhui: Aujourdhui; regles: RegleAffichee[];
+};
 
-const STATUTS = ['Nouveau', 'Contacté', 'RDV', 'Client', 'Perdu'];
+type Act = (type: string, id: string, value?: string) => void;
+
+/** Boutons d'une fiche : un contact noté arrête les relances automatiques. */
+function ActionsFiche({ lead, act, busy }: { lead: { id: string; email_opt_out_at: string | null }; act: Act; busy: boolean }) {
+  return (
+    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10 }}>
+      <button className="calc-option" disabled={busy} onClick={() => act('contact', lead.id, 'appel')}>Appel fait</button>
+      <button className="calc-option" disabled={busy} onClick={() => act('contact', lead.id, 'courriel')}>Courriel envoyé</button>
+      <button className="calc-option" disabled={busy} onClick={() => act('contact', lead.id, 'rdv')}>RDV pris</button>
+      {lead.email_opt_out_at ? (
+        <span className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', alignSelf: 'center' }}>Désabonnement enregistré</span>
+      ) : (
+        <button
+          className="calc-option" disabled={busy}
+          onClick={() => {
+            if (window.confirm('Ne plus envoyer aucune relance automatique à cette adresse ?')) act('opt_out', lead.id);
+          }}
+        >
+          Désabonner
+        </button>
+      )}
+    </div>
+  );
+}
+
+const heures = (h: number) => (h % 24 === 0 ? `${h / 24} jour${h / 24 > 1 ? 's' : ''}` : `${h} h`);
 
 const box: React.CSSProperties = {
   background: 'var(--bg-1)', border: '1px solid var(--line-soft)',
@@ -35,9 +67,17 @@ function fmtDate(s: string | null) {
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [code, setCode] = useState('');
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+  // Double vérification : 'activer' (session « code seulement »), puis 'codes' (codes de secours à noter)
+  const [mfaEtape, setMfaEtape] = useState<null | 'activer' | 'codes'>(null);
+  const [mfa, setMfa] = useState<{ secret: string; lisible: string; lien: string } | null>(null);
+  const [mfaCode, setMfaCode] = useState('');
+  const [codesSecours, setCodesSecours] = useState<string[]>([]);
   const [data, setData] = useState<Data | null>(null);
-  const [tab, setTab] = useState<'leads' | 'drafts' | 'tasks'>('leads');
+  const [tab, setTab] = useState<'aujourdhui' | 'leads' | 'drafts' | 'tasks' | 'regles'>('aujourdhui');
+  const [delais, setDelais] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [openDraft, setOpenDraft] = useState<string | null>(null);
 
@@ -59,14 +99,54 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, otp }),
     });
     setBusy(false);
-    const json = await res.json();
+    const json = await res.json().catch(() => ({}));
     if (!res.ok) { setError(json.error || 'Erreur'); return; }
     setError('');
+    setOtp('');
+    if (json.activer_mfa) { setMfaEtape('activer'); return; }
+    if (json.code_secours_utilise) setInfo('Connexion faite avec un code de secours : il ne servira plus. S’il vous en reste peu, réactivez la double vérification avec votre nouveau téléphone.');
     setAuthed(true);
     load();
+  };
+
+  const mfaPost = async (payload: Record<string, string>) => {
+    setBusy(true);
+    const res = await fetch('/api/admin/mfa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setBusy(false);
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) { setError(json.error || 'Erreur'); return null; }
+    setError('');
+    return json;
+  };
+
+  const commencerMfa = async () => {
+    const json = await mfaPost({ etape: 'debut' });
+    if (json) setMfa(json);
+  };
+
+  const confirmerMfa = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mfa) return;
+    const json = await mfaPost({ etape: 'confirmer', secret: mfa.secret, otp: mfaCode });
+    if (!json) return;
+    setMfa(null);
+    setMfaCode('');
+    setCodesSecours(json.codes || []);
+    setMfaEtape('codes');
+  };
+
+  const logout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    setAuthed(false);
+    setData(null);
+    setCode('');
   };
 
   const act = async (type: string, id: string, value?: string) => {
@@ -84,13 +164,105 @@ export default function AdminPage() {
     }
   };
 
+  const regler = async (key: string, reglage: { enabled?: boolean; delai_jours?: number }) => {
+    setBusy(true);
+    const res = await fetch('/api/admin/regles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key, ...reglage }),
+    });
+    setBusy(false);
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) { setError(json.error || 'Erreur'); return; }
+    setError('');
+    setDelais((d) => ({ ...d, [key]: '' }));
+    load();
+  };
+
   const leadById = (id: string) => data?.leads.find((l) => l.id === id);
+
+  if (mfaEtape === 'activer') {
+    return (
+      <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
+        <div className="container" style={{ maxWidth: 520 }}>
+          <div className="eyebrow">{'Admin'}</div>
+          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 12px' }}>Activer la double vérification</h1>
+          <p style={{ color: 'var(--fg-2)', fontSize: 15, lineHeight: 1.6 }}>
+            En plus du code d&apos;accès, l&apos;admin demandera un code à 6 chiffres affiché par une application sur
+            votre téléphone. À faire une seule fois.
+          </p>
+          <div style={box}>
+            {!mfa ? (
+              <>
+                <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.6 }}>
+                  1. Installez une application d&apos;authentification gratuite : Google Authenticator, Microsoft
+                  Authenticator ou 1Password.
+                </p>
+                <button className="btn btn-primary" disabled={busy} onClick={commencerMfa}
+                  style={{ width: '100%', justifyContent: 'center' }}>
+                  {busy ? '…' : 'C’est fait, continuer'}
+                </button>
+              </>
+            ) : (
+              <form onSubmit={confirmerMfa}>
+                <p style={{ margin: '0 0 10px', fontSize: 14, lineHeight: 1.6 }}>
+                  2. Ajoutez Vie Solution Web à l&apos;application. Sur ce téléphone :{' '}
+                  <a href={mfa.lien} style={{ color: 'var(--accent)', fontWeight: 600 }}>ajouter à mon application</a>.
+                </p>
+                <p style={{ margin: '0 0 6px', fontSize: 14, lineHeight: 1.6 }}>
+                  Ou, dans l&apos;application, choisissez « Saisir une clé de configuration » et tapez cette clé :
+                </p>
+                <p className="mono" style={{ margin: '0 0 18px', fontSize: 15, letterSpacing: '0.06em', color: 'var(--fg-0)', wordBreak: 'break-word' }}>
+                  {mfa.lisible}
+                </p>
+                <div className="form-field">
+                  <label htmlFor="mfa-code">3. Entrez le code à 6 chiffres affiché</label>
+                  <input id="mfa-code" inputMode="numeric" autoComplete="one-time-code" value={mfaCode}
+                    onChange={(e) => setMfaCode(e.target.value)} autoFocus />
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={busy}
+                  style={{ width: '100%', justifyContent: 'center' }}>
+                  {busy ? '…' : 'Activer'}
+                </button>
+              </form>
+            )}
+            {error && <p role="alert" style={{ color: 'var(--danger)', fontSize: 13, marginTop: 12 }}>{error}</p>}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (mfaEtape === 'codes') {
+    return (
+      <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
+        <div className="container" style={{ maxWidth: 520 }}>
+          <div className="eyebrow">{'Admin'}</div>
+          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 12px' }}>Vos codes de secours</h1>
+          <p style={{ color: 'var(--fg-2)', fontSize: 15, lineHeight: 1.6 }}>
+            Si vous perdez votre téléphone, un de ces codes remplace le code à 6 chiffres. Chacun ne sert
+            qu&apos;une fois. Notez-les sur papier ou dans votre gestionnaire de mots de passe : ils ne
+            seront plus jamais affichés.
+          </p>
+          <div style={box}>
+            <ul className="mono" style={{ listStyle: 'none', padding: 0, margin: '0 0 18px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, fontSize: 15, color: 'var(--fg-0)' }}>
+              {codesSecours.map((c) => <li key={c}>{c}</li>)}
+            </ul>
+            <button className="btn btn-primary" onClick={() => { setMfaEtape(null); setCodesSecours([]); setAuthed(true); load(); }}
+              style={{ width: '100%', justifyContent: 'center' }}>
+              Je les ai notés — ouvrir le tableau de bord
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!authed) {
     return (
       <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
         <div className="container" style={{ maxWidth: 420 }}>
-          <div className="eyebrow">{'// Admin'}</div>
+          <div className="eyebrow">{'Admin'}</div>
           <h1 className="display" style={{ fontSize: 36, margin: '20px 0 24px' }}>Espace admin</h1>
           <form onSubmit={login} style={box}>
             <div className="form-field">
@@ -99,6 +271,16 @@ export default function AdminPage() {
                 id="code" type="password" value={code}
                 onChange={(e) => setCode(e.target.value)} autoFocus
               />
+            </div>
+            <div className="form-field">
+              <label htmlFor="otp">Code à 6 chiffres de votre application</label>
+              <input
+                id="otp" inputMode="numeric" autoComplete="one-time-code" value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <span style={{ fontSize: 12, color: 'var(--fg-3)' }}>
+                Première connexion : laissez vide, on l&apos;active ensuite. Téléphone perdu : entrez un code de secours.
+              </span>
             </div>
             {error && <p style={{ color: 'oklch(0.75 0.18 25)', fontSize: 13 }}>{error}</p>}
             <button type="submit" className="btn btn-primary" disabled={busy}
@@ -116,10 +298,16 @@ export default function AdminPage() {
   return (
     <section className="section" style={{ borderTop: 'none' }}>
       <div className="container">
-        <div className="eyebrow">{'// Admin — suivi des leads'}</div>
+        <div className="eyebrow">{'Admin — suivi des leads'}</div>
         <h1 className="display" style={{ fontSize: 'clamp(28px,4vw,44px)', margin: '18px 0 24px' }}>
           Tableau de bord
         </h1>
+
+        {info && (
+          <div style={{ ...box, marginBottom: 20 }}>
+            <p style={{ margin: 0, fontSize: 14 }}>{info}</p>
+          </div>
+        )}
 
         {error && (
           <div style={{ ...box, borderColor: 'oklch(0.6 0.15 25)', marginBottom: 20 }}>
@@ -143,8 +331,14 @@ export default function AdminPage() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-              {([['leads', 'Leads'], ['drafts', `Brouillons (${pending.length})`], ['tasks', 'Tâches']] as const).map(([k, label]) => (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
+              {([
+                ['aujourdhui', `Aujourd’hui (${data.aujourdhui.total})`],
+                ['leads', 'Leads'],
+                ['drafts', `Brouillons (${pending.length})`],
+                ['tasks', 'Tâches'],
+                ['regles', 'Relances'],
+              ] as const).map(([k, label]) => (
                 <button key={k} className={'calc-option' + (tab === k ? ' active' : '')} onClick={() => setTab(k)}>
                   {label}
                 </button>
@@ -152,7 +346,152 @@ export default function AdminPage() {
               <button className="calc-option" onClick={load} disabled={busy} style={{ marginLeft: 'auto' }}>
                 Rafraîchir
               </button>
+              <button className="calc-option" onClick={logout}>
+                Se déconnecter
+              </button>
             </div>
+
+            {tab === 'aujourdhui' && (() => {
+              const a = data.aujourdhui;
+              const titre = (t: string, n: number) => (
+                <h2 style={{ fontSize: 17, margin: '26px 0 10px', color: 'var(--fg-0)' }}>
+                  {t} <span className="mono" style={{ fontSize: 12, color: 'var(--fg-3)' }}>({n})</span>
+                </h2>
+              );
+              const ficheCourte = (l: Lead | Aujourdhui['sansContact'][number] | null) =>
+                l ? (
+                  <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>
+                    {l.name} · <a href={`mailto:${l.email}`} style={{ color: 'var(--accent)' }}>{l.email}</a>
+                    {l.phone ? <> · <a href={`tel:${l.phone}`} style={{ color: 'var(--accent)' }}>{l.phone}</a></> : null} · {l.status}
+                  </div>
+                ) : null;
+              if (a.total === 0) {
+                return <div style={box}><p style={{ margin: 0 }}>Rien à faire pour l&apos;instant. Les nouvelles demandes apparaîtront ici.</p></div>;
+              }
+              const tache = (t: Aujourdhui['enRetard'][number], retard: boolean) => (
+                <div key={t.id} style={{ ...box, borderColor: retard ? 'var(--danger)' : 'var(--line-soft)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <div>
+                      <div style={{ color: 'var(--fg-0)', fontWeight: 500 }}>{t.title}</div>
+                      <div className="mono" style={{ fontSize: 11, color: retard ? 'var(--danger)' : 'var(--fg-3)' }}>
+                        {retard ? 'En retard — ' : ''}échéance {fmtDate(t.due_at)}
+                      </div>
+                      {ficheCourte(t.lead)}
+                    </div>
+                    <button className="calc-option" disabled={busy} onClick={() => act('task_done', t.id)}>
+                      <Icon name="check" size={13} /> Fait
+                    </button>
+                  </div>
+                  {t.lead && <ActionsFiche lead={t.lead} act={act} busy={busy} />}
+                </div>
+              );
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {a.enRetard.length > 0 && <>{titre('En retard', a.enRetard.length)}{a.enRetard.map((t) => tache(t, true))}</>}
+                  {a.duJour.length > 0 && <>{titre('À faire aujourd’hui', a.duJour.length)}{a.duJour.map((t) => tache(t, false))}</>}
+                  {a.sansContact.length > 0 && (
+                    <>
+                      {titre('Demandes sans contact depuis 24 h', a.sansContact.length)}
+                      {a.sansContact.map((l) => (
+                        <div key={l.id} style={box}>
+                          {ficheCourte(l)}
+                          <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginTop: 4 }}>Reçue {fmtDate(l.created_at)} · {l.source}</div>
+                          <ActionsFiche lead={l} act={act} busy={busy} />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {a.aRelancer.length > 0 && (
+                    <>
+                      {titre('À relancer', a.aRelancer.length)}
+                      {a.aRelancer.map((l) => (
+                        <div key={l.id} style={box}>
+                          {ficheCourte(l)}
+                          <ActionsFiche lead={l} act={act} busy={busy} />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {a.brouillons.length > 0 && (
+                    <>
+                      {titre('Réponses prêtes à approuver', a.brouillons.length)}
+                      {a.brouillons.map((b) => (
+                        <div key={b.id} style={{ ...box, display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                          <div>
+                            <div style={{ color: 'var(--fg-0)' }}>{b.subject}</div>
+                            {ficheCourte(b.lead)}
+                          </div>
+                          <button className="calc-option" onClick={() => setTab('drafts')}>Voir le brouillon</button>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {a.alertes.length > 0 && (
+                    <>
+                      {titre('Alertes', a.alertes.length)}
+                      {a.alertes.map((n) => (
+                        <div key={n.id} style={{ ...box, display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                          <div>
+                            <div style={{ color: 'var(--fg-0)' }}>{n.title}</div>
+                            {n.body && <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>{n.body}</div>}
+                            <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)' }}>{fmtDate(n.created_at)}</div>
+                          </div>
+                          <button className="calc-option" disabled={busy} onClick={() => act('notif_read', n.id)}>Lu</button>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              );
+            })()}
+
+            {tab === 'regles' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <p style={{ color: 'var(--fg-2)', fontSize: 14, lineHeight: 1.6, margin: 0 }}>
+                  Le suivi tourne toutes les heures. Tout s&apos;arrête pour une personne dès qu&apos;un contact
+                  (appel, courriel, RDV) est noté sur sa fiche.
+                </p>
+                {data.regles.length === 0 && <p style={{ color: 'var(--fg-2)' }}>Réglages indisponibles pour le moment.</p>}
+                {data.regles.map((r) => (
+                  <div key={r.key} style={box}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                      <div style={{ flex: '1 1 260px' }}>
+                        <div style={{ color: 'var(--fg-0)', fontWeight: 500 }}>
+                          {r.libelle}
+                          {r.ecrit_au_prospect && <span className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginLeft: 8 }}>courriel au prospect</span>}
+                        </div>
+                        <div style={{ fontSize: 13, color: 'var(--fg-2)', marginTop: 4 }}>{r.description}</div>
+                        {r.delai_reglable && (
+                          <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginTop: 6 }}>Après {heures(r.delay_hours)}</div>
+                        )}
+                      </div>
+                      <button
+                        className={'calc-option' + (r.enabled ? ' active' : '')} disabled={busy}
+                        aria-pressed={r.enabled}
+                        onClick={() => regler(r.key, { enabled: !r.enabled })}
+                      >
+                        {r.enabled ? 'Activée' : 'Désactivée'}
+                      </button>
+                    </div>
+                    {r.delai_reglable && (
+                      <form
+                        style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10, flexWrap: 'wrap' }}
+                        onSubmit={(e) => { e.preventDefault(); regler(r.key, { delai_jours: Number(delais[r.key]) }); }}
+                      >
+                        <label htmlFor={`delai-${r.key}`} style={{ fontSize: 13, color: 'var(--fg-2)' }}>Nouveau délai (jours)</label>
+                        <input
+                          id={`delai-${r.key}`} type="number" min={1} max={90} step={1}
+                          value={delais[r.key] ?? ''}
+                          onChange={(e) => setDelais((d) => ({ ...d, [r.key]: e.target.value }))}
+                          style={{ width: 80, background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 8, color: 'var(--fg-0)', padding: '6px 8px' }}
+                        />
+                        <button type="submit" className="calc-option" disabled={busy || !delais[r.key]}>Enregistrer</button>
+                      </form>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             {tab === 'leads' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -170,6 +509,7 @@ export default function AdminPage() {
                       <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginTop: 6 }}>
                         Créé {fmtDate(l.created_at)} · Dernier contact {fmtDate(l.last_contact_at)}
                       </div>
+                      <ActionsFiche lead={l} act={act} busy={busy} />
                     </div>
                     <div>
                       <select

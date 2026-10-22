@@ -1,24 +1,27 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
-const AI_PILLARS = [
+const AI_PILLARS: { num: string; title: string; desc: string; items: string[]; note?: string }[] = [
   {
     num: '01',
-    title: "Formation à l'IA",
-    desc: "Nous formons vos équipes à utiliser concrètement les outils d'IA générative dans leur quotidien — ChatGPT, Claude, Copilot et bien d'autres.",
-    items: ['Ateliers personnalisés', "Cas d'usage métier", 'Bonnes pratiques & limites'],
+    title: "Formation à l'IA pour petites entreprises",
+    desc: "Des ateliers concrets pour utiliser l'IA (comme Claude, ChatGPT ou Copilot) au quotidien : courriels, documents, suivi des clients. Avec vos vrais dossiers, sans jargon, et en sachant ce qu'on ne confie pas à une IA.",
+    items: ['Pour vous seul ou votre équipe', 'Exemples tirés de votre métier', 'Bonnes pratiques & limites'],
+    // Badge fourni par Camille (PDF, 2026-10-21). Titre recopié tel quel ; date volontairement omise (demande de Camille).
+    note: "Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic).",
   },
   {
     num: '02',
     title: "Comment l'IA améliore votre travail",
-    desc: "On audite vos processus actuels, on identifie où l'IA fait gagner du temps, et on vous accompagne dans son intégration progressive.",
-    items: ['Audit de processus', 'Identification des gains', "Plan d'intégration"],
+    desc: "On regarde comment vous travaillez, on repère où l'IA vous fait gagner du temps, et on vous accompagne pas à pas pour l'adopter.",
+    items: ['Portrait de vos façons de faire', 'Identification des gains', 'Plan étape par étape'],
   },
   {
     num: '03',
-    title: 'Construction de processus IA',
-    desc: "Nous bâtissons sur mesure les processus, agents et automatisations IA qui s'intègrent parfaitement à vos outils existants.",
-    items: ['Agents personnalisés', 'Workflows automatisés', 'Connexion à vos outils'],
+    title: 'Des outils IA installés et bâtis pour vous',
+    desc: "On installe et règle pour votre équipe des outils d'IA comme Claude ou ChatGPT. Et on bâtit sur mesure des assistants et des tâches automatiques qui fonctionnent avec vos outils actuels.",
+    items: ['Installation de Claude ou ChatGPT pour votre équipe', 'Assistants personnalisés', "Tâches qui s'enchaînent seules", 'Connexion à vos outils'],
   },
 ];
 
@@ -29,18 +32,17 @@ export function AISection() {
         <div className="ai-wrap reveal">
           <div className="ai-top">
             <div>
-              <div className="eyebrow">{'// Intelligence artificielle'}</div>
+              <div className="eyebrow">{'Intelligence artificielle'}</div>
               <h2>
                 L&apos;IA dans votre quotidien.<br />
                 <span className="glow">On vous montre comment.</span>
               </h2>
             </div>
             <p>
-              Au-delà de l&apos;automatisation classique, nous formons et accompagnons les
-              particuliers et les PME québécoises dans l&apos;intégration de l&apos;intelligence
-              artificielle. Comprendre, expérimenter, puis bâtir ensemble les processus qui
-              transformeront votre façon de travailler. Nous formons également des jeunes
-              en informatique et en IA au sein de notre studio.
+              On vous aide à utiliser l&apos;IA dans votre quotidien, que vous soyez seul ou en
+              équipe. D&apos;abord comprendre, ensuite essayer, puis bâtir ensemble des façons de
+              faire qui vous sauvent du temps. On forme aussi des jeunes en informatique et en
+              IA dans notre studio.
             </p>
           </div>
 
@@ -55,17 +57,18 @@ export function AISection() {
                     <li key={it}>{it}</li>
                   ))}
                 </ul>
+                {p.note && <p className="ai-pillar-note">{p.note}</p>}
               </div>
             ))}
           </div>
 
           <div className="ai-banner">
             <div className="ai-banner-text">
-              Nous sommes là pour <em>construire des processus</em> qui s&apos;appuient sur
-              l&apos;IA — adaptés à votre réalité, vos outils et votre équipe.
+              Nous sommes là pour <em>simplifier votre travail</em> avec l&apos;IA — à votre
+              mesure, avec vos outils et votre équipe.
             </div>
-            <Link href="/rdv" className="btn btn-primary btn-lg">
-              Discuter d&apos;un projet IA <Icon name="arrow" size={14} />
+            <Link href={APPEL.href} className="btn btn-primary btn-lg">
+              {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
         </div>

@@ -1,25 +1,39 @@
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { Hero } from '@/components/vsw/hero';
+import { PourVousSection } from '@/components/vsw/pour-vous-section';
+import { AvantApresSection } from '@/components/vsw/avant-apres-section';
 import { Services } from '@/components/vsw/services';
-import { BenefitsSection } from '@/components/vsw/benefits-section';
-import { ComparisonSection } from '@/components/vsw/comparison-section';
+import { MetiersSection } from '@/components/vsw/metiers-section';
+import { DemarrerSection } from '@/components/vsw/demarrer-section';
 import { ProcessSection } from '@/components/vsw/process-section';
+import { PourquoiSection } from '@/components/vsw/pourquoi-section';
+import { PartnersSection } from '@/components/vsw/partners-section';
+import { StageSection } from '@/components/vsw/stage-section';
 import { Testimonials } from '@/components/vsw/testimonials';
-import { InternsSection } from '@/components/vsw/interns-section';
 import { FAQSection } from '@/components/vsw/faq-section';
 import { CTASection } from '@/components/vsw/cta-section';
 
+/*
+ * Accueil (ordre validé par Camille le 2026-10-22, maquette 2) : votre problème → ce qui change →
+ * ce qu'on fait → pour votre métier → comment on travaille → pourquoi nous → preuves → questions →
+ * l'appel. « Pourquoi nous choisir », « La différence » et « Nos engagements » sont fusionnées dans
+ * PourquoiSection. « Programme de stage » revenu sur l'accueil le 2026-10-22 (demande de Camille), après Partenaires.
+ */
 export default function HomePage() {
   return (
     <>
       <RevealInit />
       <Hero />
+      <PourVousSection />
+      <AvantApresSection />
       <Services />
-      <BenefitsSection />
+      <MetiersSection />
+      <DemarrerSection variant="accueil" />
       <ProcessSection />
-      <ComparisonSection />
+      <PourquoiSection />
+      <PartnersSection />
+      <StageSection />
       <Testimonials />
-      <InternsSection />
       <FAQSection />
       <CTASection />
     </>

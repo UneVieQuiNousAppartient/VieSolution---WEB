@@ -98,7 +98,7 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
         {showHead && (
           <div className="section-head reveal">
             <div>
-              <div className="eyebrow">Prendre un RDV</div>
+              <div className="eyebrow">Votre appel gratuit</div>
               <h2>Un appel découverte<br />gratuit, 30 minutes.</h2>
             </div>
             <p className="desc">

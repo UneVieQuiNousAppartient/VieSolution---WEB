@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Icon } from '@/components/vsw/icon';
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { InternApplyForm } from '@/components/vsw/intern-apply-form';
+import { OFFRES_STAGE } from '@/components/vsw/stage-section';
 
 export const metadata: Metadata = {
   title: 'Postuler comme stagiaire',
@@ -10,20 +11,6 @@ export const metadata: Metadata = {
     "Vie Solution Web accueille des stagiaires en informatique, en IA et sur Zoho pour apprendre le métier sur de vrais mandats clients québécois.",
 };
 
-const OFFERS = [
-  {
-    title: 'Mentorat individuel',
-    desc: "Un accompagnement rapproché tout au long du stage, avec suivi régulier et retours concrets sur le travail et les livrables.",
-  },
-  {
-    title: 'Projets clients réels',
-    desc: "Pas de mandats fictifs : vous contribuez à des automatisations, des implantations Zoho et des agents IA livrés à de vrais clients québécois.",
-  },
-  {
-    title: "IA & Zoho appliqués",
-    desc: "Formation aux outils d'IA générative et à l'écosystème Zoho — les compétences que les PME recherchent dès maintenant.",
-  },
-];
 
 export default function PostulerStagiairePage() {
   return (
@@ -31,14 +18,12 @@ export default function PostulerStagiairePage() {
       <RevealInit />
       <section className="section" style={{ paddingTop: 96, borderTop: 'none' }}>
         <div className="container">
-          <Link
-            href="/#stagiaires"
-            className="btn btn-ghost"
-            style={{ marginBottom: 32 }}
-          >
-            <Icon name="arrow" size={14} style={{ transform: 'rotate(180deg)' }} /> Retour au site
-          </Link>
-          <div className="eyebrow">{'// Programme de stage'}</div>
+          <p className="retour">
+            <Link href="/#stagiaires">
+              <Icon name="arrow" size={14} style={{ transform: 'rotate(180deg)' }} aria-hidden="true" /> Retour à l&apos;accueil
+            </Link>
+          </p>
+          <div className="eyebrow">{'Programme de stage'}</div>
           <h1
             className="display"
             style={{ fontSize: 'clamp(36px, 5vw, 60px)', margin: '24px 0 20px', maxWidth: 780 }}
@@ -66,8 +51,8 @@ export default function PostulerStagiairePage() {
             </p>
           </div>
           <div className="process-grid cols-3 reveal">
-            {OFFERS.map((o, i) => (
-              <div className="process-step" key={i}>
+            {OFFRES_STAGE.map((o, i) => (
+              <div className="process-step" key={o.title}>
                 <div className="step-num">0{i + 1}</div>
                 <h4>{o.title}</h4>
                 <p>{o.desc}</p>
@@ -91,7 +76,7 @@ export default function PostulerStagiairePage() {
                 <div className="icon"><Icon name="mail" size={16} /></div>
                 <div>
                   <div className="txt">Courriel</div>
-                  <div className="val">stages@viesolutionweb.ca</div>
+                  <div className="val">info@viesolutionweb.ca</div>
                 </div>
               </div>
             </div>

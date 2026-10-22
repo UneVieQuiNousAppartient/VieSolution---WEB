@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { Icon } from './icon';
+import { APPEL } from './appel';
 
-/* Forfaits mensuels — montants indicatifs [à confirmer] */
+/* Niveaux d'accompagnement — aucun montant affiché (décision de Camille, 2026-10-17) :
+   le prix de chaque forfait est établi par écrit après l'appel découverte. */
 const PLANS = [
   {
     name: 'Essentiel',
-    price: '495',
     desc: 'Pour garder vos automatisations en santé.',
     items: [
       'Surveillance de vos automatisations',
@@ -17,7 +18,6 @@ const PLANS = [
   },
   {
     name: 'Croissance',
-    price: '995',
     desc: "Pour faire progresser l'IA et Zoho chaque mois.",
     items: [
       'Tout le forfait Essentiel',
@@ -29,7 +29,6 @@ const PLANS = [
   },
   {
     name: 'Partenaire',
-    price: '1 995',
     desc: 'Votre département techno externalisé.',
     items: [
       'Tout le forfait Croissance',
@@ -51,9 +50,8 @@ export function PricingSection() {
             <h2>Un accompagnement<br />clair et prévisible.</h2>
           </div>
           <p className="desc">
-            Pour les projets ponctuels, utilisez le calculateur ci-dessus. Pour un
-            accompagnement continu, choisissez un forfait — sans contrat de longue durée,
-            ajustable chaque mois.
+            Pour un accompagnement continu, trois niveaux — le bon dépend de votre
+            situation, on le choisit ensemble.
           </p>
         </div>
         <div className="pricing-grid reveal">
@@ -62,8 +60,8 @@ export function PricingSection() {
               {p.featured && <div className="pricing-badge">Populaire</div>}
               <h3>{p.name}</h3>
               <div className="pricing-price">
-                <span className="amount">{p.price} $</span>
-                <span className="period">/ mois · CAD</span>
+                <span className="amount">Sur mesure</span>
+                <span className="period" style={{ display: 'block', marginTop: 4 }}>selon votre situation</span>
               </div>
               <p className="pricing-desc">{p.desc}</p>
               <ul>
@@ -74,18 +72,18 @@ export function PricingSection() {
                 ))}
               </ul>
               <Link
-                href="/rdv"
+                href={APPEL.href}
                 className={'btn btn-lg ' + (p.featured ? 'btn-primary' : 'btn-ghost')}
                 style={{ justifyContent: 'center' }}
               >
-                Commencer <Icon name="arrow" size={14} />
+                {APPEL.libelle} <Icon name="arrow" size={14} />
               </Link>
             </div>
           ))}
         </div>
         <p className="pricing-note">
-          Montants indicatifs, taxes en sus. Le forfait exact est confirmé après
-          l&apos;audit de vos processus.
+          Le prix de chaque forfait est établi après l&apos;appel découverte, avant tout
+          engagement.
         </p>
       </div>
     </section>
