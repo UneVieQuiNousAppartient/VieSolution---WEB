@@ -76,7 +76,7 @@ export default function PostulerStagiairePage() {
                 <div className="icon"><Icon name="mail" size={16} /></div>
                 <div>
                   <div className="txt">Courriel</div>
-                  <div className="val">stages@viesolutionweb.ca</div>
+                  <div className="val">info@viesolutionweb.ca</div>
                 </div>
               </div>
             </div>

@@ -112,7 +112,7 @@ const BOT_FLOW: Record<string, Node> = {
     chips: [{ text: 'Voir le calendrier', action: 'goto-rdv' }],
   },
   fallback: {
-    bot: "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à bonjour@viesolutionweb.ca.",
+    bot: "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à info@viesolutionweb.ca.",
     chips: [
       { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
       { text: 'Combien ça coûte ?', action: 'goto-devis' },

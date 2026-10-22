@@ -59,12 +59,12 @@ export default function PolitiqueConfidentialitePage() {
         <h2>6. Vos droits</h2>
         <p>
           Vous avez le droit de demander l&apos;accès, la correction ou la suppression de vos données
-          personnelles. Pour exercer ces droits, contactez-nous à contact@viesolution.com.
+          personnelles. Pour exercer ces droits, contactez-nous à info@viesolutionweb.ca.
         </p>
 
         <h2>7. Contact</h2>
         <p>
-          Pour toute question concernant cette politique, veuillez nous contacter à contact@viesolution.com.
+          Pour toute question concernant cette politique, veuillez nous contacter à info@viesolutionweb.ca.
         </p>
       </div>
     </section>

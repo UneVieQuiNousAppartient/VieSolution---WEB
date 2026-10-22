@@ -61,7 +61,7 @@ export function Contact({ showIntro = true }: { showIntro?: boolean }) {
               <div className="icon"><Icon name="mail" size={16} /></div>
               <div>
                 <div className="txt">Courriel</div>
-                <div className="val">bonjour@viesolutionweb.ca</div>
+                <div className="val">info@viesolutionweb.ca</div>
               </div>
             </div>
             <div className="contact-item">

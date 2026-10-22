@@ -93,8 +93,8 @@ EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 
 ## [à confirmer] avant mise en ligne — ne pas inventer, demander à Camille
 
-- Courriels `bonjour@viesolutionweb.ca` / `stages@viesolutionweb.ca` et téléphone
-  `(418) 555-0143` : placeholders du design.
+- Courriel du site : **info@viesolutionweb.ca** partout (décision de Camille, 2026-10-22). Téléphone
+  `(418) 555-0143` : placeholder du design, vrai numéro à donner par Camille.
 - Aucun montant sur le site public (décision de Camille, 2026-10-17) : les prix sont donnés par écrit après l'appel découverte.
 - Témoignages `site_testimonials` : exemples non publiés (`publie = false`) —
   ne publier que de vrais témoignages.

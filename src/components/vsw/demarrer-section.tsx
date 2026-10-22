@@ -28,7 +28,7 @@ const CARTES: Record<Variant, Carte[]> = {
     {
       title: 'Formation courte',
       desc: 'Une formation pratique, avec vos vrais dossiers, pour être à l’aise seul ensuite.',
-      items: ['En français, sans jargon', 'Pour vous ou votre équipe', 'Durée : [à confirmer]'],
+      items: ['En français, sans jargon', 'Pour vous ou votre équipe'],
       href: '/ia#formation',
     },
   ],

@@ -58,7 +58,7 @@ export default function ConditionsUtilisationPage() {
 
         <h2>8. Contact</h2>
         <p>
-          Pour toute question concernant ces conditions, veuillez nous contacter à contact@viesolution.com.
+          Pour toute question concernant ces conditions, veuillez nous contacter à info@viesolutionweb.ca.
         </p>
       </div>
     </section>

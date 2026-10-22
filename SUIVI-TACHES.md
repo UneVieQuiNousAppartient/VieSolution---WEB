@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 31.
+**Dernière mise à jour : 2026-10-22** — dernière section : 32.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -530,4 +530,27 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Non fait dans ce round**
 - L'adresse d'alerte (`notify_email`) est toujours à donner par Camille.
 - **À tester par Camille** : le premier envoi réel, en production avec Resend.
+
+## 32. ✅ Courriel du site : info@viesolutionweb.ca ; durée de formation retirée (2026-10-22)
+
+**Contexte / demande** : Camille, « finissons d'abord et prenons une décision ». Réponses à quatre questions : « info@ partout » ; « je donne mon numéro » (le numéro n'est pas encore donné) ; « retirer la durée » ; mise en ligne « variables puis fusion ».
+
+**Ce qui a été fait**
+- **info@viesolutionweb.ca** remplace les exemples :
+  - `bonjour@` : page Contact (`contact.tsx`), pied de page (texte et `mailto:`), réponse toute faite du chatbot (`chatbot.tsx`) ;
+  - `stages@` : page `/postuler-stagiaire` ;
+  - l'adresse d'un autre domaine `contact@viesolution.com` : politique de confidentialité (2 fois) et conditions d'utilisation.
+- La consigne du clavardage IA (`connaissances.ts`) permet maintenant de donner cette seule adresse, et jamais de téléphone.
+- Carte « Formation » de « Démarrer simplement » (`demarrer-section.tsx`) : « Durée : [à confirmer] » retiré, sans durée inventée.
+- `CLAUDE.md` : la liste « [à confirmer] » est mise à jour, ainsi que la règle de contenu de 4 agents (`.claude/agents/`) qui donnait encore `bonjour@`/`stages@` comme exemples.
+
+**Vérification technique** : `npm run verify` vert (51 tests) ; `qa-agent` (Opus, ≈ 45 k) **VERT** ; ses remarques sur `ETAT-ACTUEL.md` et les fichiers d’agents ont été corrigées.
+
+**Non fait dans ce round**
+- Le **téléphone** `(418) 555-0143` reste un exemple (Contact, pied de page) tant que Camille n'a pas donné son numéro.
+- **À faire par Camille** :
+  - le renvoi de info@ dans Cloudflare (Email Routing) avant la mise en ligne, sinon les messages envoyés à cette adresse sont perdus ;
+  - le CNAME `rsend` de Resend ;
+  - les variables Vercel.
+- La date « Janvier 2025 » de la politique de confidentialité reste à corriger après la relecture Loi 25.
 
