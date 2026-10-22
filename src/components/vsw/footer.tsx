@@ -26,7 +26,7 @@ export function VswFooter() {
               <LogoMark />
               <div>Vie Solution Web</div>
             </div>
-            <p className="footer-slogan">Une vie qui<br />nous appartient.</p>
+            <p className="footer-slogan">Une vie qui vous appartient, des clients mieux servis, plus vite.</p>
             <p className="footer-desc">
               Automatisation, IA, sites web et implantation Zoho pour les entreprises québécoises.
             </p>
