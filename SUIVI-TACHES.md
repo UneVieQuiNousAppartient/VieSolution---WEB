@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 47.
+**Dernière mise à jour : 2026-10-23** — dernière section : 48.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -938,7 +938,7 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Coût** : estimé ≈ 60 k ; réel ≈ 105 k (session ≈ 70 k + `qa-agent` ≈ 35 k).
 
-## 47. ✅ Vidéo de présentation sur À propos, avec musique chaleureuse (2026-10-23)
+## 47. ✅ Vidéo de présentation sur À propos (fusionnée, PR #17, en ligne le 2026-10-23), avec musique chaleureuse (2026-10-23)
 
 **Contexte / demande** : « ou alors une vidéo qui montre l'évolution, ce que l'on ramène aux PME ». Camille donne le découpage en 4 actes (constat, enjeu, solution, chute et appel), ses messages et l'appel « Réservez votre appel découverte gratuit de 30 minutes ». Choix : vraie vidéo MP4 ; essai avec voix de synthèse libre (Siwis, CC-BY 4.0, accent de France) envoyé, puis « mets juste un son chaleureux pour le site » ; sur le site, sourdine et bouton « Activer le son ».
 
@@ -958,4 +958,18 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 `qa-agent` (Opus, ≈ 45 k) **ROUGE puis corrigé** : il manquait un bouton Pause (contenu en boucle, WCAG 2.2.2) ; libellé faux avec « réduire les animations » ; double annonce du bouton (aria-pressed retiré) ; icônes lues à voix haute. Le reste vert : fichiers servis, 56 s avec piste audio, contraste du bouton ≥ 10:1, aucun fait inventé.
 
 **Coût** : estimé ≈ 120 k ; réel ≈ 180 k (session ≈ 135 k + `qa-agent` ≈ 45 k).
+
+## 48. ✅ Vidéo aussi sur l'accueil ; « relève » retirée partout (2026-10-23)
+
+**Contexte / demande** : à « je retire “relève” des deux derniers endroits, et la vidéo aussi sur l'accueil ? », Camille répond « OUIIII ».
+
+**Ce qui a été fait**
+- Accueil (`src/app/page.tsx`) : nouvelle section « En 1 minute » (`video-section.tsx`), entre « Nos solutions » et « C'est pour vous si… » ; titre nouveau, à relire par Camille : « Ce qu'on change dans votre journée. » ; même composant que À propos (sourdine, Pause, Activer le son).
+- « relève » retirée : `benefits-section.tsx` (« On forme vos gens pour que les outils vous appartiennent vraiment. ») et `pricing-section.tsx` (« Formations trimestrielles de votre équipe »). Plus aucune occurrence dans `src/` (hors ancien design).
+
+**Vérification technique** : `npm run verify` vert ; capture de la section ; aucun débordement à 390 px.
+
+**Non fait dans ce round** : —
+
+**Coût** : estimé ≈ 20 k ; réel ≈ 25 k (session).
 
