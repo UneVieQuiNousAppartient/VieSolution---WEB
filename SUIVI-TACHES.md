@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 44.
+**Dernière mise à jour : 2026-10-23** — dernière section : 45.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -902,5 +902,19 @@ Laissé tel quel :
 
 `qa-agent` (Opus, ≈ 80 k) **ROUGE puis corrigé** : les parts 20 / 9 / 7 / 6 % viennent de l'analyse des conversations de Claude, pas de l'enquête auprès de 9 700 répondants (attribution corrigée dans « 5 tâches » et « Claude ou ChatGPT », et dans les sources) ; « environ deux fois moins » au lieu de « un peu moins vite » ; « aide davantage ceux qui débutent » ramené à l'étude sur le service à la clientèle ; `lienPermis` refuse aussi `/\…` (tests ajoutés). Le reste : vert (chiffres, rendu sans HTML brut, routes, plan du site, menu, CSS).
 
+Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, venant des noms de fichiers) corrigées : adresses vérifiées (`slugValide`) et encodées (`cheminArticle`), tests ajoutés ; CodeQL vert. Fusionnée (PR #16) et en ligne le 2026-10-23.
+
 **Coût** : estimé ≈ 250 k (série) + ≈ 100 k (pages) ; réel ≈ 560 k (rédaction ≈ 190 k, recherche et vérification ≈ 80 k, pages et tests ≈ 130 k, `qa-agent` ≈ 80 k, corrections ≈ 80 k).
+
+## 45. ✅ Couleurs plus vives sur tout le site, palette B (2026-10-23)
+
+**Contexte / demande** : « mettre plus de couleur plus vive », sur tout le site, mêmes teintes plus saturées. Maquette SiteCouleurs (A aujourd'hui, B plus vif, C très vif) : Camille choisit **B**.
+
+**Ce qui a été fait** (`src/app/vsw.css`, bloc « Couleurs plus vives, palette B » en fin de fichier, thème clair seulement) : sarcelle et violet plus saturés (`--accent`, `--accent-2`, `--accent-vif`, `--accent-soft`, `--accent-glow`) ; sections alternées plus colorées (`--bg-1`, `--bg-2`, `--bg-band`, `--tray`) ; bouton principal en dégradé sarcelle → violet ; mot en couleur du hero plus vif ; icônes sur pastille colorée (services, menu, avantages), une couleur par pilier (sarcelle, vert, violet) ; titres de piliers et surtitres en couleur. Thème sombre inchangé.
+
+**Vérification technique** : `npm run verify` vert. Captures de l'accueil (hero, solutions, section métier). `qa-agent` (Opus, ≈ 45 k) **ROUGE puis corrigé**, contrastes recalculés (sRGB, WCAG) : texte blanc sur le bouton 4,99 et 6,74 (le départ à 0,53 donnait 4,41, la couleur sortant de l'espace sRGB) ; `--accent` abaissé à 0,49 (≥ 4,55 sur blanc et sur les sections pâles) ; `--ok` du pilier Zoho à 0,49 (≥ 4,96) ; règle `.eyebrow` en double retirée.
+
+**Non fait dans ce round** : à regarder par Camille sur son téléphone et son ordinateur (aperçu de la PR).
+
+**Coût** : estimé ≈ 50 k ; réel ≈ 120 k (session ≈ 75 k + `qa-agent` ≈ 45 k).
 

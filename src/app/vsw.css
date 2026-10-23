@@ -4484,3 +4484,47 @@ body:has(.adm-page) .chat-panel { display: none; }
 .blog-cote-bloc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
 .blog-cote-bloc a { color: var(--fg-1); text-decoration: none; font-weight: 500; }
 .blog-cote-bloc a:hover { color: var(--accent-ink); text-decoration: underline; }
+
+/* Couleurs plus vives, palette B (2026-10-23, maquette SiteCouleurs choisie par Camille) : mêmes
+   teintes sarcelle et violet, plus saturées ; bouton en dégradé sarcelle → violet ; sections
+   alternées plus colorées ; icônes sur pastille colorée. Contrastes calculés (sRGB, WCAG) : texte
+   blanc sur le bouton ≥ 4,99 ; --accent ≥ 4,55 et --ok ≥ 4,96 sur tous les fonds clairs. Thème
+   sombre inchangé. */
+:root:not([data-theme="dark"]) {
+  --accent: oklch(0.49 0.19 222);          /* texte ≥ 4,5:1 sur blanc et sur les sections pâles */
+  --accent-2: oklch(0.54 0.28 302);
+  --ok: oklch(0.49 0.15 150);              /* vert du pilier Zoho, lisible sur les fonds pâles */
+  --accent-vif: oklch(0.76 0.17 205);
+  --accent-soft: oklch(0.60 0.19 215 / 0.16);
+  --accent-glow: oklch(0.60 0.19 215 / 0.34);
+  --bg-1: oklch(0.965 0.028 210);
+  --bg-2: oklch(0.945 0.032 210);
+  --bg-band: oklch(0.965 0.028 210);
+  --tray: oklch(0.948 0.03 210);
+  --line: oklch(0.87 0.03 220);
+}
+:root:not([data-theme="dark"]) .btn-primary {
+  background: linear-gradient(135deg, oklch(0.50 0.20 220), oklch(0.50 0.24 285));   /* blanc dessus : 4,99 et 6,74 */
+}
+:root:not([data-theme="dark"]) .btn-primary:hover {
+  background: linear-gradient(135deg, oklch(0.48 0.20 222), oklch(0.45 0.24 288));
+}
+:root:not([data-theme="dark"]) .hero h1 .highlight {
+  background-image: linear-gradient(100deg, oklch(0.56 0.20 218) 5%, var(--accent-2) 95%);
+}
+:root:not([data-theme="dark"]) .benefit-icon,
+:root:not([data-theme="dark"]) .nav-element-icone,
+:root:not([data-theme="dark"]) .service-icon,
+:root:not([data-theme="dark"]) .svc-card-icon {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+:root:not([data-theme="dark"]) .nav-colonne:nth-child(3) .nav-element-icone { background: color-mix(in oklch, var(--accent-2) 14%, transparent); color: var(--accent-2); }
+:root:not([data-theme="dark"]) .nav-colonne:nth-child(2) .nav-element-icone { background: color-mix(in oklch, var(--ok) 14%, transparent); color: var(--ok); }
+:root:not([data-theme="dark"]) .svc-pilier:nth-child(2) .svc-card-icon { background: color-mix(in oklch, var(--ok) 14%, transparent); color: var(--ok); }
+:root:not([data-theme="dark"]) .svc-pilier:nth-child(3) .svc-card-icon { background: color-mix(in oklch, var(--accent-2) 14%, transparent); color: var(--accent-2); }
+:root:not([data-theme="dark"]) .svc-pilier-titre { color: var(--accent-ink); }
+:root:not([data-theme="dark"]) .svc-pilier:nth-child(2) .svc-pilier-titre { color: var(--ok); }
+:root:not([data-theme="dark"]) .svc-pilier:nth-child(3) .svc-pilier-titre { color: var(--accent-2); }
+
