@@ -699,6 +699,99 @@ ALTER TABLE vsw_page_views ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON vsw_page_views FROM anon, authenticated;
 
 -- ============================================================================
+-- ÉVÉNEMENTS (étape F, accord de Camille du 2026-10-23, migration vsw_evenements) :
+-- ateliers en ligne et en personne, page cachée /evenements (lien envoyé aux clients),
+-- inscription par /api/evenements/inscription (service_role, fonction vsw_inscrire),
+-- confirmation à l'inscription, rappel la veille (passage horaire), onglet « Événements ».
+-- lieu_prive (adresse ou lien de visioconférence) n'est jamais affiché sur le site.
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS vsw_evenements (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug text NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$' AND char_length(slug) <= 90),
+  titre text NOT NULL CHECK (char_length(titre) BETWEEN 3 AND 120),
+  genre text NOT NULL CHECK (genre IN ('en_ligne', 'en_personne')),
+  debut timestamptz NOT NULL,
+  fin timestamptz NOT NULL CHECK (fin > debut),
+  lieu_public text NOT NULL DEFAULT '' CHECK (char_length(lieu_public) <= 120),
+  lieu_prive text NOT NULL DEFAULT '' CHECK (char_length(lieu_prive) <= 500),
+  places integer NOT NULL CHECK (places BETWEEN 1 AND 500),
+  presentation text NOT NULL DEFAULT '' CHECK (char_length(presentation) <= 5000),
+  statut text NOT NULL DEFAULT 'brouillon' CHECK (statut IN ('brouillon', 'publie', 'annule')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS vsw_evenements_debut_idx ON vsw_evenements (statut, debut);
+ALTER TABLE vsw_evenements ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON vsw_evenements FROM anon, authenticated;
+
+CREATE TABLE IF NOT EXISTS vsw_inscriptions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  evenement_id uuid NOT NULL REFERENCES vsw_evenements(id) ON DELETE CASCADE,
+  nom text NOT NULL CHECK (char_length(nom) BETWEEN 2 AND 80),
+  courriel text NOT NULL CHECK (char_length(courriel) BETWEEN 5 AND 200),
+  entreprise text CHECK (entreprise IS NULL OR char_length(entreprise) <= 120),
+  question text CHECK (question IS NULL OR char_length(question) <= 1000),
+  avertir boolean NOT NULL DEFAULT false,
+  statut text NOT NULL DEFAULT 'confirmee' CHECK (statut IN ('confirmee', 'annulee')),
+  consentement_at timestamptz NOT NULL,
+  consentement_texte text NOT NULL,
+  confirmation_envoyee_at timestamptz,
+  rappel_envoye_at timestamptz,
+  annulee_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS vsw_inscriptions_unique ON vsw_inscriptions (evenement_id, lower(courriel));
+CREATE INDEX IF NOT EXISTS vsw_inscriptions_evt_idx ON vsw_inscriptions (evenement_id, statut);
+ALTER TABLE vsw_inscriptions ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON vsw_inscriptions FROM anon, authenticated;
+
+-- Preuve de l'accord « prochains ateliers » (revue securite du 2026-10-23, LCAP) : date et texte.
+ALTER TABLE vsw_inscriptions ADD COLUMN IF NOT EXISTS avertir_at timestamptz;
+ALTER TABLE vsw_inscriptions ADD COLUMN IF NOT EXISTS avertir_texte text CHECK (avertir_texte IS NULL OR char_length(avertir_texte) <= 300);
+
+-- Inscription atomique : verrou sur l'événement, « complet » vérifié avant « déjà inscrit » (la réponse
+-- ne révèle pas qui est inscrit), réinscription après annulation. La première version, vsw_inscrire
+-- (7 paramètres), reste en base sans être appelée : à retirer avec l'accord de Camille.
+CREATE OR REPLACE FUNCTION vsw_inscrire2(
+  p_evenement uuid, p_nom text, p_courriel text, p_entreprise text, p_question text,
+  p_avertir boolean, p_consentement text, p_avertir_texte text
+) RETURNS jsonb LANGUAGE plpgsql SET search_path = public AS $$
+DECLARE
+  e vsw_evenements%ROWTYPE;
+  pris integer;
+  existante vsw_inscriptions%ROWTYPE;
+  nouvel_id uuid;
+BEGIN
+  SELECT * INTO e FROM vsw_evenements WHERE id = p_evenement FOR UPDATE;
+  IF NOT FOUND OR e.statut <> 'publie' OR e.debut <= now() THEN
+    RETURN jsonb_build_object('etat', 'ferme');
+  END IF;
+  SELECT count(*) INTO pris FROM vsw_inscriptions WHERE evenement_id = p_evenement AND statut = 'confirmee';
+  IF pris >= e.places THEN
+    RETURN jsonb_build_object('etat', 'complet');
+  END IF;
+  SELECT * INTO existante FROM vsw_inscriptions WHERE evenement_id = p_evenement AND lower(courriel) = lower(p_courriel);
+  IF existante.id IS NOT NULL AND existante.statut = 'confirmee' THEN
+    RETURN jsonb_build_object('etat', 'deja', 'id', existante.id);
+  END IF;
+  IF existante.id IS NOT NULL THEN
+    UPDATE vsw_inscriptions SET nom = p_nom, entreprise = p_entreprise, question = p_question, avertir = p_avertir,
+      avertir_at = CASE WHEN p_avertir THEN now() END, avertir_texte = CASE WHEN p_avertir THEN p_avertir_texte END,
+      statut = 'confirmee', annulee_at = NULL, consentement_at = now(), consentement_texte = p_consentement,
+      confirmation_envoyee_at = NULL, rappel_envoye_at = NULL
+    WHERE id = existante.id;
+    RETURN jsonb_build_object('etat', 'ok', 'id', existante.id);
+  END IF;
+  INSERT INTO vsw_inscriptions (evenement_id, nom, courriel, entreprise, question, avertir, avertir_at, avertir_texte, consentement_at, consentement_texte)
+  VALUES (p_evenement, p_nom, p_courriel, p_entreprise, p_question, p_avertir,
+    CASE WHEN p_avertir THEN now() END, CASE WHEN p_avertir THEN p_avertir_texte END, now(), p_consentement)
+  RETURNING id INTO nouvel_id;
+  RETURN jsonb_build_object('etat', 'ok', 'id', nouvel_id);
+END $$;
+REVOKE ALL ON FUNCTION vsw_inscrire2(uuid, text, text, text, text, boolean, text, text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION vsw_inscrire2(uuid, text, text, text, text, boolean, text, text) TO service_role;
+
+-- ============================================================================
 -- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
 --    « Authorization: Bearer <CRON_SECRET> » (variable d'environnement Vercel).
 --    Projet Vercel « vie-solution-web » (équipe viesolution, où le cron horaire de KHI se déploie
