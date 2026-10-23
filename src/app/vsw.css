@@ -4583,3 +4583,9 @@ body:has(.adm-page) .chat-panel { display: none; }
 .video-presentation-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .video-presentation figcaption { margin-top: 12px; font-size: 14px; color: var(--fg-2); line-height: 1.5; }
 @media (max-width: 900px) { .video-presentation { position: static; } }
+.video-section-cadre { max-width: 960px; margin: 0 auto; }
+.video-section .video-presentation { position: static; }
+.video-section .video-presentation figcaption { text-align: center; }
+
+.video-section-tete { display: block; text-align: center; }
+.video-section-tete h2 { margin-left: auto; margin-right: auto; }

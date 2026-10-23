@@ -33,7 +33,7 @@ const PLANS = [
     items: [
       'Tout le forfait Croissance',
       'Agent IA dédié à votre entreprise',
-      'Formations trimestrielles (équipe & relève)',
+      'Formations trimestrielles de votre équipe',
       'Accompagnement stratégique',
     ],
     featured: false,

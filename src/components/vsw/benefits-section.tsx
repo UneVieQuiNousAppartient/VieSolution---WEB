@@ -19,7 +19,7 @@ const BENEFITS: { icon: IconName; title: string; desc: string }[] = [
   {
     icon: 'users',
     title: 'Votre équipe devient autonome',
-    desc: "On forme vos gens — et la relève — pour que les outils vous appartiennent vraiment.",
+    desc: "On forme vos gens pour que les outils vous appartiennent vraiment.",
   },
   {
     icon: 'check',
