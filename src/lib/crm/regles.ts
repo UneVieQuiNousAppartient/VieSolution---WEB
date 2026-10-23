@@ -221,6 +221,14 @@ export const estHorsProspection = (lead: DemandeSite) =>
 /** Demande de prospect venue du site (pas une candidature de stage). */
 export const estDemandeProspect = (lead: DemandeSite) => estDemandeDuSite(lead) && !estHorsProspection(lead);
 
+/**
+ * Relances automatiques 1 et 2 : demandes du site (pas les stages), ou fiche ajoutée à la main dont
+ * l'accord pour les courriels de suivi a été noté (consent_at, case cochée dans l'admin — décision de
+ * Camille du 2026-10-23 : aucune relance par défaut pour une fiche ajoutée à la main).
+ */
+export const recoitRelances = (lead: DemandeSite & { consent_at?: string | null }) =>
+  !estHorsProspection(lead) && (estDemandeDuSite(lead) || Boolean(lead.consent_at));
+
 /** Demande d'appel découverte (calendrier de /rdv ou clavardage IA) : sujet « rdv-decouverte ». */
 export const estDemandeRdv = (lead: DemandeSite) => String(lead.service_interest || '').trim() === 'rdv-decouverte';
 

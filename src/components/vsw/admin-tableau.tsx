@@ -7,7 +7,7 @@
 import type { Aujourdhui } from '@/lib/crm/aujourdhui';
 import { SOURCES, cleSource, type LeadTableau, type RaisonAppel, type Tableau } from '@/lib/crm/tableau';
 
-type Act = (type: string, id: string, value?: string) => void;
+type Act = (type: string, id: string, value?: string) => unknown;
 export type Vue = 'aujourdhui' | 'leads' | 'clients' | 'rdv' | 'stages' | 'drafts' | 'tasks' | 'regles';
 
 const FUSEAU = 'America/Toronto';
@@ -34,7 +34,7 @@ const RAISONS: Record<RaisonAppel, string> = {
 const libelleSource = (source: string) => SOURCES.find((s) => s.cle === cleSource(source))?.libelle ?? 'Autres';
 
 // Couleurs des provenances, dans l'ordre de SOURCES : jetons de vsw.css (clair et sombre).
-const COULEURS = ['var(--accent)', 'var(--accent-2)', 'var(--warn)', 'var(--fg-1)', 'var(--ok)', 'var(--line)'];
+const COULEURS = ['var(--accent)', 'var(--accent-2)', 'var(--warn)', 'var(--fg-1)', 'var(--ok)', 'var(--danger)', 'var(--line)'];
 
 function Pastille({ ton, children }: { ton: 'ok' | 'danger' | 'warn' | 'accent' | 'violet'; children: React.ReactNode }) {
   return <span className={`adm-pastille adm-pastille-${ton}`}>{children}</span>;
@@ -168,8 +168,8 @@ function EnTete({ titre, sousTitre, lien, onLien }: { titre: string; sousTitre: 
   );
 }
 
-export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, leadParId }: {
-  t: Tableau; aujourdhui: Aujourdhui; act: Act; busy: boolean; ouvrir: (v: Vue) => void;
+export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, ouvrirFiche, leadParId }: {
+  t: Tableau; aujourdhui: Aujourdhui; act: Act; busy: boolean; ouvrir: (v: Vue) => void; ouvrirFiche: (id: string) => void;
   leadParId: (id: string) => LeadTableau | undefined;
 }) {
   const maintenant = new Date(t.maintenant).getTime();
@@ -250,7 +250,7 @@ export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, leadParId }: {
             <div key={lead.id} className="adm-ligne adm-ligne-bordee">
               <div className="adm-ligne-texte">
                 <span>
-                  <strong>{lead.name}</strong>{' '}
+                  <button type="button" className="adm-lien adm-lien-nom" onClick={() => ouvrirFiche(lead.id)}>{lead.name}</button>{' '}
                   {priorite !== 'Normale' && <Pastille ton={priorite === 'Urgente' ? 'danger' : 'warn'}>{priorite}</Pastille>}
                 </span>
                 <span className={priorite === 'Urgente' ? 'adm-rouge' : 'adm-gris'}>
@@ -259,8 +259,8 @@ export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, leadParId }: {
               </div>
               <div className="adm-ligne-actions">
                 {lead.phone
-                  ? <a className="adm-bouton" href={`tel:${lead.phone}`}>Appeler</a>
-                  : <a className="adm-bouton adm-bouton-contour" href={`mailto:${lead.email}`}>Écrire</a>}
+                  ? <a className="adm-bouton" href={`tel:${encodeURIComponent(lead.phone)}`}>Appeler</a>
+                  : <a className="adm-bouton adm-bouton-contour" href={`mailto:${encodeURIComponent(lead.email)}`}>Écrire</a>}
                 <button type="button" className="adm-bouton adm-bouton-discret" disabled={busy}
                   onClick={() => act('contact', lead.id, lead.phone ? 'appel' : 'courriel')}>
                   {lead.phone ? 'Appel fait' : 'Courriel envoyé'}
@@ -280,8 +280,8 @@ export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, leadParId }: {
                 <span className={demain ? 'adm-gris' : 'adm-accent'}>{demain ? 'Demain' : 'Aujourd’hui'}</span>
               </div>
               <div className="adm-ligne-texte">
-                <strong>{lead.name}</strong>
-                <span className="adm-gris">Appel découverte · {lead.phone ? <a href={`tel:${lead.phone}`}>{lead.phone}</a> : <a href={`mailto:${lead.email}`}>{lead.email}</a>}</span>
+                <button type="button" className="adm-lien adm-lien-nom" onClick={() => ouvrirFiche(lead.id)}>{lead.name}</button>
+                <span className="adm-gris">Appel découverte · {lead.phone ? <a href={`tel:${encodeURIComponent(lead.phone)}`}>{lead.phone}</a> : <a href={`mailto:${encodeURIComponent(lead.email)}`}>{lead.email}</a>}</span>
               </div>
             </div>
           ))}
@@ -291,10 +291,10 @@ export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, leadParId }: {
               {t.rdvAConfirmer.map(({ lead, moment }) => (
                 <div key={lead.id} className="adm-ligne adm-ligne-bordee">
                   <div className="adm-ligne-texte">
-                    <strong>{lead.name}</strong>
+                    <button type="button" className="adm-lien adm-lien-nom" onClick={() => ouvrirFiche(lead.id)}>{lead.name}</button>
                     <span className="adm-gris">{moment ? `Moment souhaité : ${moment}` : 'Moment non précisé'} · reçue {ilYa(lead.created_at, maintenant)}</span>
                   </div>
-                  <a className="adm-bouton adm-bouton-contour" href={`mailto:${lead.email}`}>Écrire</a>
+                  <a className="adm-bouton adm-bouton-contour" href={`mailto:${encodeURIComponent(lead.email)}`}>Écrire</a>
                 </div>
               ))}
             </>

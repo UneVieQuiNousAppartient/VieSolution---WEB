@@ -28,7 +28,7 @@ import {
   estDemandeDuSite,
   estDemandeProspect,
   estDemandeRdv,
-  estHorsProspection,
+  recoitRelances,
   plusRecente,
   piedLcap,
   prenomDe,
@@ -61,6 +61,7 @@ export type Lead = {
   next_action_at: string | null;
   email_opt_out_at: string | null;
   assigned_to: string | null;
+  consent_at?: string | null;
 };
 
 type Config = { key: string; enabled: boolean; delay_hours: number; params: Record<string, string> };
@@ -183,6 +184,64 @@ async function relancer(ctx: Contexte, lead: Lead, cfg: Config, relance = true):
     meta: { automatic: true, regle: cfg.key, template: cfg.params.template, email_id: id },
   });
   return { email_id: id };
+}
+
+/**
+ * Courriel écrit par Camille depuis la fiche (étape A, 2026-10-23) : mêmes garde-fous que les envois
+ * automatiques (configuration complète, adresse non désabonnée, consentement LCAP en cours), même pied
+ * et mêmes en-têtes de désabonnement, puis rangé dans vsw_email_messages. Renvoie l'id Resend, ou la
+ * raison du refus. Ne note pas le contact : l'appelant le fait (noterContact) une fois l'envoi réussi.
+ */
+export async function envoyerCourrielFiche(
+  db: SupabaseClient,
+  lead: Lead,
+  sujet: string,
+  corps: string,
+  cle: string,
+): Promise<{ id: string; deja?: boolean } | { refus: string }> {
+  const reglages = await lireReglages(db);
+  const pret = pretAEnvoyer({
+    resend: resendConfigure(),
+    expediteur: expediteurConfigure(),
+    adressePostale: reglages.adressePostale,
+    secretDesabonnement: Boolean(secretDesabonnement()),
+    site: SITE_URL,
+  });
+  if (pret) return { refus: `Envoi impossible pour le moment : ${pret}.` };
+  const liste = await desabonnes(db);
+  if (liste === null) return { refus: 'Envoi impossible pour le moment : liste des désabonnements illisible.' };
+  const retenue = raisonDeRetenue(avecDesabonnementAdresse(lead, liste));
+  if (retenue) return { refus: `Aucun courriel ne peut partir à cette personne (${retenue}).` };
+  const lien = lienDesabonnement(SITE_URL, lead.id, lead.email, secretDesabonnement());
+  if (!lien) return { refus: 'Envoi impossible : lien de désabonnement indisponible.' };
+  const pied = piedLcap({ nom: reglages.nomExpediteur, adressePostale: reglages.adressePostale, site: SITE_URL }, lien);
+  const envoi = await envoyerCourriel({
+    to: lead.email,
+    subject: sujet,
+    html: texteEnHtml(corps) + pied.html,
+    text: `${corps}\n\n${pied.texte}`,
+    headers: entetesDesabonnement(lien),
+    cle,
+  });
+  if ('echec' in envoi) {
+    return { refus: envoi.echec === 'temporaire' ? 'Le service d’envoi ne répond pas. Réessayez dans quelques minutes.' : 'Le service d’envoi a refusé ce courriel.' };
+  }
+  // Requête rejouée (double clic) : Resend renvoie le même id sans renvoyer le courriel ; rien n'est noté deux fois.
+  const { data: deja } = await db.from('vsw_email_messages').select('id').eq('resend_id', envoi.id).limit(1);
+  if (deja?.length) return { id: envoi.id, deja: true };
+  await db.from('vsw_email_messages').insert({
+    lead_id: lead.id,
+    direction: 'out',
+    from_email: process.env.EMAIL_FROM || '',
+    to_email: lead.email,
+    subject: sujet,
+    snippet: corps.slice(0, 200),
+    body_text: corps,
+    received_at: new Date().toISOString(),
+    source: 'resend',
+    resend_id: envoi.id,
+  });
+  return { id: envoi.id };
 }
 
 async function notifier(db: SupabaseClient, lead: Lead, type: string, titre: string, corps: string) {
@@ -338,8 +397,9 @@ export const REGLES: Record<string, Regle> = {
           .lte('created_at', ilYa(ctx, cfg.delay_hours))
           .gte('created_at', ilYa(ctx, cfg.delay_hours + RATTRAPAGE_H)),
       );
-      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22).
-      return (await sansContactDepuis(ctx.db, leads.filter((l) => !estHorsProspection(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
+      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22),
+      // ni à une fiche ajoutée à la main sans accord noté (2026-10-23).
+      return (await sansContactDepuis(ctx.db, leads.filter((l) => recoitRelances(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
     executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg),
   },
@@ -360,8 +420,9 @@ export const REGLES: Record<string, Regle> = {
           .lte('created_at', ilYa(ctx, cfg.delay_hours))
           .gte('created_at', ilYa(ctx, cfg.delay_hours + RATTRAPAGE_H)),
       );
-      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22).
-      return (await sansContactDepuis(ctx.db, leads.filter((l) => !estHorsProspection(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
+      // Pas de relance « appel découverte » aux candidatures de stage (issue #6, accord de Camille du 2026-10-22),
+      // ni à une fiche ajoutée à la main sans accord noté (2026-10-23).
+      return (await sansContactDepuis(ctx.db, leads.filter((l) => recoitRelances(l)), (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
     executer: (ctx, { lead }, cfg) => relancer(ctx, lead, cfg),
   },

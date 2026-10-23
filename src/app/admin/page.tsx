@@ -9,6 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { encode } from 'uqr';
 import { Icon } from '@/components/vsw/icon';
 import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
+import { FicheDemande } from '@/components/vsw/admin-fiche';
+import { NouvelleDemande } from '@/components/vsw/admin-nouvelle';
 import { STATUTS } from '@/lib/crm/regles';
 import { PERIODES, construireTableau, estRdv, estStage, type Periode } from '@/lib/crm/tableau';
 import type { Aujourdhui } from '@/lib/crm/aujourdhui';
@@ -108,6 +110,9 @@ export default function AdminPage() {
   const [delais, setDelais] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [openDraft, setOpenDraft] = useState<string | null>(null);
+  // Fiche ouverte (étape A) et fenêtre « Nouvelle demande ».
+  const [ficheId, setFicheId] = useState<string | null>(null);
+  const [nouvelle, setNouvelle] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/data');
@@ -193,11 +198,10 @@ export default function AdminPage() {
       body: JSON.stringify({ type, id, value }),
     });
     setBusy(false);
-    if (res.ok) load();
-    else {
-      const json = await res.json().catch(() => ({}));
-      setError(json.error || 'Erreur');
-    }
+    if (res.ok) { load(); return true; }
+    const json = await res.json().catch(() => ({}));
+    setError(json.error || 'Erreur');
+    return false;
   };
 
   const regler = async (key: string, reglage: { enabled?: boolean; delai_jours?: number }) => {
@@ -375,7 +379,8 @@ export default function AdminPage() {
     stages: 'Stagiaires', drafts: 'Brouillons à approuver', tasks: 'Tâches', regles: 'Courriels et relances',
   };
   const date = new Intl.DateTimeFormat('fr-CA', { timeZone: 'America/Toronto', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
-  const ouvrir = (v: Vue) => { setTab(v); window.scrollTo({ top: 0 }); };
+  const ouvrir = (v: Vue) => { setTab(v); setFicheId(null); window.scrollTo({ top: 0 }); };
+  const ouvrirFiche = (id: string) => { setFicheId(id); window.scrollTo({ top: 0 }); };
 
   return (
     <div className="adm-page">
@@ -405,8 +410,8 @@ export default function AdminPage() {
       <div className="adm-contenu">
         <div className="adm-entete">
           <div>
-            <h1>{titres[tab]}</h1>
-            {tab === 'aujourdhui' && (
+            <h1>{ficheId ? 'Fiche de la demande' : titres[tab]}</h1>
+            {tab === 'aujourdhui' && !ficheId && (
               <span className="adm-gris">{date.charAt(0).toUpperCase() + date.slice(1)} · voici ce qui demande votre attention</span>
             )}
           </div>
@@ -419,7 +424,8 @@ export default function AdminPage() {
               <input type="search" value={recherche} onChange={(e) => setRecherche(e.target.value)}
                 placeholder="Chercher un nom, un courriel…" aria-label="Chercher une demande" />
             </form>
-            {tab === 'aujourdhui' && (
+            <button type="button" className="adm-bouton" onClick={() => setNouvelle(true)}>+ Nouvelle demande</button>
+            {tab === 'aujourdhui' && !ficheId && (
               <div className="adm-periodes" role="group" aria-label="Période">
                 {PERIODES.map((p) => (
                   <button key={p} type="button" aria-pressed={periode === p} className={periode === p ? 'actif' : ''}
@@ -436,10 +442,16 @@ export default function AdminPage() {
         {error && <div className="adm-carte" role="alert" style={{ borderColor: 'var(--danger)' }}><p style={{ margin: 0, fontSize: 14 }}>{error}</p></div>}
         {!data && !error && <p className="adm-gris">Chargement…</p>}
 
-        {data && (
+        {nouvelle && (
+          <NouvelleDemande onFermer={() => setNouvelle(false)} onCreee={(id) => { setNouvelle(false); load(); ouvrirFiche(id); }} />
+        )}
+        {data && ficheId && (
+          <FicheDemande key={ficheId} id={ficheId} act={act} busy={busy} onRetour={() => setFicheId(null)} onChange={load} />
+        )}
+        {data && !ficheId && (
           <>
             {tab === 'aujourdhui' && tableau && (
-              <TableauDeBord t={tableau} aujourdhui={data.aujourdhui} act={act} busy={busy} ouvrir={ouvrir} leadParId={leadById} />
+              <TableauDeBord t={tableau} aujourdhui={data.aujourdhui} act={act} busy={busy} ouvrir={ouvrir} ouvrirFiche={ouvrirFiche} leadParId={leadById} />
             )}
 
             {tab === 'regles' && (
@@ -498,7 +510,7 @@ export default function AdminPage() {
                 {listeLeads.map((l) => (
                   <div key={l.id} style={{ ...box, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
                     <div>
-                      <strong style={{ color: 'var(--fg-0)' }}>{l.name}</strong>
+                      <button type="button" className="adm-lien adm-lien-nom" onClick={() => ouvrirFiche(l.id)}>{l.name}</button>
                       <span className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginLeft: 10 }}>{l.source}</span>
                       <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>
                         <a href={`mailto:${l.email}`} style={{ color: 'var(--accent)' }}>{l.email}</a>
@@ -541,7 +553,7 @@ export default function AdminPage() {
                           </span>
                           <div style={{ color: 'var(--fg-0)', fontWeight: 500, marginTop: 4 }}>{d.subject}</div>
                           <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>
-                            Pour : {lead ? `${lead.name} <${lead.email}>` : d.target_id}
+                            Pour : {lead ? <button type="button" className="adm-lien" onClick={() => ouvrirFiche(lead.id)}>{`${lead.name} <${lead.email}>`}</button> : d.target_id}
                           </div>
                         </div>
                         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
@@ -587,7 +599,10 @@ export default function AdminPage() {
                 {data.tasks.map((t) => (
                   <div key={t.id} style={{ ...box, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                     <div>
-                      <div style={{ color: 'var(--fg-0)' }}>{t.title}</div>
+                      <div style={{ color: 'var(--fg-0)' }}>
+                        {t.title}
+                        {leadById(t.lead_id) && <> — <button type="button" className="adm-lien" onClick={() => ouvrirFiche(t.lead_id)}>{leadById(t.lead_id)?.name}</button></>}
+                      </div>
                       <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)' }}>Échéance {fmtDate(t.due_at)}</div>
                     </div>
                     <button className="calc-option" disabled={busy} onClick={() => act('task_done', t.id)}>
