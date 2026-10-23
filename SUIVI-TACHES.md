@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 35.
+**Dernière mise à jour : 2026-10-23** — dernière section : 36.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -592,3 +592,16 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `get_domain_config` : `misconfigured: false` ; en HTTPS, `/`, `/ia`, `/zoho`, `/devis`, `/realisations`, `/a-propos`, `/rdv`, `/contact`, `/postuler-stagiaire`, `/admin` et la politique de confidentialité répondent 200 ; `www` → 308 ; `/api/chat` → `actif: true` ; cron sans secret → 401 ; `og:url` = `https://viesolutionweb.ca`.
 
 **Non fait dans ce round** : CNAME `rsend` (Resend) et renvoi Cloudflare Email Routing de info@ (aucun MX) — **à faire par Camille** ; adresse d'alerte `notify_email` à recevoir de Camille.
+
+## 36. ✅ Clavardage IA actif en production (2026-10-23)
+
+**Contexte / demande** : la bulle répondait par ses réponses toutes faites (erreur 400 de l'API, § 34). Camille a dit « fusionne » pour la PR #7, puis a remplacé la clé (« clé remplacée »).
+
+**Ce qui a été fait**
+- PR #7 fusionnée : le journal donne le type et le motif d'un refus de l'API (jamais le contenu des messages).
+- Cause prouvée par ce motif : clé Anthropic hors de tout espace de travail (`docs/ERREURS-CONNUES.md` E05). Ce n'était pas un problème de crédits.
+- Camille a créé une clé dans un espace de travail et l'a saisie dans Vercel ; production redéployée (`dpl_9cPWwuRMD772ZEVcTAPAwhTmDUVv`).
+
+**Vérification technique** : `POST https://viesolutionweb.ca/api/chat` : « Bonjour, que faites-vous ? » → présentation du studio et question sur le métier ; « Combien coûte une implantation Zoho ? » → aucun montant, renvoi vers l'appel découverte et demande du nom et du courriel.
+
+**Non fait dans ce round** : suppression de l'ancienne clé et plafond de dépenses mensuel dans la console Anthropic — **à faire par Camille** ; essai complet d'une demande de rendez-vous par la bulle — **à tester par Camille** (après le renvoi de info@).
