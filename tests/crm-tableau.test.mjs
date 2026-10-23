@@ -146,3 +146,30 @@ test('construireTableau : vide, et période de 7 jours', () => {
   assert.equal(sept.nouvelles.n, 1);
   assert.equal(sept.nouvelles.precedent, 1);
 });
+
+test('prospection : à part des demandes reçues et du taux, comptée dans les clients gagnés', async () => {
+  const { estProspection } = await import('../src/lib/crm/tableau.ts');
+  const r = construireTableau(
+    {
+      leads: [
+        lead('a'),
+        lead('e', { status: 'Client', status_changed_at: ilYa(10), created_at: ilYa(24 * 10), last_contact_at: ilYa(20) }),
+        lead('p1', { status: 'Prospect', source: 'admin — Événement', tags: ['prospection'] }),
+        lead('p2', { status: 'Contacté', source: 'admin — Autre', tags: ['prospection'], last_contact_at: ilYa(1) }),
+        lead('p3', { status: 'Client', source: 'admin — Autre', tags: ['prospection'], status_changed_at: ilYa(5), last_contact_at: ilYa(6) }),
+      ],
+      taches: [],
+      brouillons: [],
+    },
+    30,
+    MAINTENANT,
+  );
+  assert.equal(r.nouvelles.n, 2, 'a et e seulement : la prospection n’est pas une demande reçue');
+  assert.deepEqual(r.clients, { n: 1, sur: 2, taux: 50, gagnes: 2 }, 'taux sur les demandes ; e et p3 gagnés');
+  assert.deepEqual(r.prospection, { enCours: 2, gagnes: 1 }, 'p1 et p2 en cours, p3 devenue cliente');
+  assert.equal(r.semaines.reduce((x, s) => x + s.demandes, 0), 2);
+  assert.ok(!r.aAppeler.some((x) => x.lead.id === 'p1'), 'un prospect n’est pas « jamais contacté » d’une demande');
+  assert.equal(estProspection({ status: 'Prospect', tags: null }), true);
+  assert.equal(estProspection({ status: 'Client', tags: ['prospection'] }), true, 'l’étiquette reste après l’étape');
+  assert.equal(estProspection({ status: 'Nouveau', tags: [] }), false);
+});

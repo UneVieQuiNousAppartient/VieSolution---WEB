@@ -57,11 +57,16 @@ CREATE TABLE IF NOT EXISTS vsw_leads (
   email_opt_out_source TEXT,
   estimator JSONB,
   CONSTRAINT vsw_leads_status_check
-    CHECK (status IN ('Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu')),
+    CHECK (status IN ('Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu')),
   CONSTRAINT vsw_leads_email_opt_out_source_check
     CHECK (email_opt_out_source IS NULL OR email_opt_out_source IN ('lien', 'one-click', 'admin'))
 );
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_status ON vsw_leads (status, created_at DESC);
+-- Étape « Prospect » (accord de Camille du 2026-10-23, migration vsw_leads_etape_prospect) : pour une
+-- base créée avant cette date, la règle des étapes est remplacée.
+ALTER TABLE vsw_leads DROP CONSTRAINT IF EXISTS vsw_leads_status_check;
+ALTER TABLE vsw_leads ADD CONSTRAINT vsw_leads_status_check
+  CHECK (status IN ('Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'));
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_email ON vsw_leads (lower(email));
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_next_action ON vsw_leads (next_action_at);
 

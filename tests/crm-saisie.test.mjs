@@ -100,3 +100,29 @@ test('relances automatiques : site oui, stage non, ajout à la main seulement av
   assert.equal(recoitRelances({ source: 'admin — Appel reçu', service_interest: '', consent_at: null }), false);
   assert.equal(recoitRelances({ source: 'admin — Appel reçu', service_interest: '', consent_at: '2026-10-23T12:00:00Z' }), true);
 });
+
+test('nouvelle demande : case « prospect » → étape « Prospect », sauf si déjà parlé', async () => {
+  const { etapeInitiale, validerNouvelleDemande } = await import('../src/lib/crm/saisie.ts');
+  const v = validerNouvelleDemande({ nom: 'Paul Exemple', courriel: 'paul@ex.ca', telephone: '', entreprise: '', provenance: 'Événement', besoin: '', prospect: true });
+  assert.equal(v.ok && v.valeur.prospect, true);
+  assert.equal(etapeInitiale({ dejaParle: false, prospect: true }), 'Prospect');
+  assert.equal(etapeInitiale({ dejaParle: true, prospect: true }), 'Contacté');
+  assert.equal(etapeInitiale({ dejaParle: false, prospect: false }), 'Nouveau');
+  const sans = validerNouvelleDemande({ nom: 'Paul Exemple', courriel: 'paul@ex.ca', provenance: 'Autre', prospect: 'oui' });
+  assert.equal(sans.ok && sans.valeur.prospect, false, 'seul true coche la case');
+});
+
+test('prospect : aucun courriel depuis l’admin sans accord noté, quelle que soit la provenance (revue securite)', async () => {
+  const { accordManquant, validerNouvelleDemande, ETIQUETTE_PROSPECTION_SAISIE } = await import('../src/lib/crm/saisie.ts');
+  const { ETIQUETTE_PROSPECTION } = await import('../src/lib/crm/tableau.ts');
+  assert.equal(ETIQUETTE_PROSPECTION_SAISIE, ETIQUETTE_PROSPECTION, 'parité de l’étiquette');
+  assert.equal(accordManquant({ source: 'admin — Appel reçu', consent_at: null, tags: ['prospection'] }), true);
+  assert.equal(accordManquant({ source: 'admin — Autre', consent_at: null, tags: ['prospection'] }), true, 'même après « Contacté »');
+  assert.equal(accordManquant({ source: 'admin — Autre', consent_at: '2026-10-23T00:00:00Z', tags: ['prospection'] }), false, 'accord noté');
+  assert.equal(accordManquant({ source: 'site web — contact', consent_at: null, tags: [] }), false, 'demande du site inchangée');
+  assert.equal(accordManquant({ source: 'admin — Appel reçu', consent_at: null }), false, 'appel reçu sans prospection inchangé');
+  for (const provenance of ['Appel reçu', 'Courriel reçu']) {
+    const v = validerNouvelleDemande({ nom: 'Paul Exemple', courriel: 'paul@ex.ca', provenance, prospect: true });
+    assert.equal(v.ok, false, `prospect + ${provenance} refusé`);
+  }
+});

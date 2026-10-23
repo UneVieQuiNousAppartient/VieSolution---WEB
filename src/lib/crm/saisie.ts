@@ -18,8 +18,14 @@ export const PROVENANCES_DEMANDE: readonly ProvenanceManuelle[] = ['Appel reçu'
  * sociaux, autre) et sans accord noté : aucun courriel ne peut lui partir de l'admin (loi anti-pourriel,
  * revue securite du 2026-10-23). Il faut d'abord noter son accord.
  */
-export const accordManquant = (lead: { source?: string | null; consent_at?: string | null }) =>
-  estAjoutManuel(lead.source) && !lead.consent_at && !PROVENANCES_DEMANDE.some((p) => lead.source === sourceManuelle(p));
+/** Étiquette des fiches de prospection (même valeur que ETIQUETTE_PROSPECTION de tableau.ts, test de parité). */
+export const ETIQUETTE_PROSPECTION_SAISIE = 'prospection';
+
+export const accordManquant = (lead: { source?: string | null; consent_at?: string | null; tags?: string[] | null }) =>
+  !lead.consent_at &&
+  // Un prospect n'a rien demandé, quelle que soit la provenance ; l'étiquette reste après « Contacté » (revue securite).
+  (((lead.tags ?? []).includes(ETIQUETTE_PROSPECTION_SAISIE)) ||
+    (estAjoutManuel(lead.source) && !PROVENANCES_DEMANDE.some((p) => lead.source === sourceManuelle(p))));
 
 /** Texte gardé avec l'accord de recevoir les courriels de suivi (preuve LCAP). */
 export const TEXTE_ACCORD_MANUEL = "Accord pour recevoir les courriels de suivi de Vie Solution Web, donné à l'équipe et noté dans l'admin";
@@ -74,6 +80,8 @@ export type NouvelleDemande = Coordonnees & {
   rappel: { annee: number; mois: number; jour: number } | null;
   dejaParle: boolean;
   accord: boolean;
+  /** Prospection : personne que Camille va chercher elle-même (étape « Prospect », aucun courriel automatique). */
+  prospect: boolean;
 };
 
 /** Formulaire « Nouvelle demande » de l'admin. */
@@ -92,7 +100,16 @@ export function validerNouvelleDemande(e: unknown): Resultat<NouvelleDemande> {
   }
   const accord = x.accord === true;
   if (accord && !c.valeur.courriel) return echec('L’accord pour les courriels de suivi demande un courriel.');
-  return { ok: true, valeur: { ...c.valeur, provenance, besoin, rappel, dejaParle: x.dejaParle === true, accord } };
+  if (x.prospect === true && PROVENANCES_DEMANDE.includes(provenance)) {
+    return echec('Un prospect n’a encore rien demandé : choisissez une autre provenance que « Appel reçu » ou « Courriel reçu ».');
+  }
+  return { ok: true, valeur: { ...c.valeur, provenance, besoin, rappel, dejaParle: x.dejaParle === true, accord, prospect: x.prospect === true } };
+}
+
+/** Étape d'une fiche ajoutée à la main : déjà parlé → « Contacté » ; prospection → « Prospect » ; sinon « Nouveau ». */
+export function etapeInitiale(d: { dejaParle: boolean; prospect: boolean }): 'Contacté' | 'Prospect' | 'Nouveau' {
+  if (d.dejaParle) return 'Contacté';
+  return d.prospect ? 'Prospect' : 'Nouveau';
 }
 
 /** Note de l'historique. */

@@ -36,6 +36,7 @@ import {
   raisonDeRetenue,
   raisonPied,
   remplir,
+  sansCourrielAutomatique,
   texteEnHtml,
 } from './regles';
 import { entetesDesabonnement, lienDesabonnement, secretDesabonnement } from './jeton';
@@ -165,6 +166,7 @@ const courrielHabille = (corps: string, piedHtml: string, gabarit?: string | nul
  * Une panne d'envoi libère la réservation. `relance` : note relance_sent_at et le libellé du journal.
  */
 async function relancer(ctx: Contexte, lead: Lead, cfg: Config, relance = true): Promise<Meta> {
+  if (sansCourrielAutomatique(lead)) return { skipped: 'prospect' };
   if (echeance(lead.created_at, cfg.delay_hours, ctx.maintenant, RATTRAPAGE_H) !== 'ok') return { skipped: 'hors délai' };
   const retenue = raisonDeRetenue(lead, ctx.maintenant);
   if (retenue) return { skipped: retenue };
@@ -341,7 +343,8 @@ export const REGLES: Record<string, Regle> = {
     plafond: 20,
     candidats: async (ctx) => {
       // 24 h au plus : passé ce délai (passage horaire manqué, envoi pas encore prêt), il n'est plus envoyé.
-      const leads = (await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24)))).filter(estDemandeProspect);
+      const leads = (await selection(ctx.db.from('vsw_leads').select('*').gte('created_at', ilYa(ctx, 24))))
+        .filter((l) => estDemandeProspect(l) && !sansCourrielAutomatique(l));
       return (await sansContactDepuis(ctx.db, leads, (l) => l.created_at)).map((lead) => ({ lead, periode: '' }));
     },
     // Demande de rendez-vous : la personne vient de choisir son appel, le texte « choisissez le moment » ne lui va pas.

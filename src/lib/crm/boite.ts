@@ -9,7 +9,7 @@ const CHAMPS = 'id, lead_id, direction, from_email, to_email, subject, snippet, 
 
 export type FicheBoite = {
   id: string; name: string; email: string; company: string | null; need: string | null; status: string;
-  source: string; consent_at: string | null; email_opt_out_at: string | null;
+  source: string; consent_at: string | null; email_opt_out_at: string | null; tags: string[] | null;
 };
 
 export type MessageComplet = {
@@ -29,7 +29,7 @@ export async function lireConversation(db: SupabaseClient, cle: unknown) {
   if ('fiche' in c) {
     const { data, error } = await db
       .from('vsw_leads')
-      .select('id, name, email, company, need, status, source, consent_at, email_opt_out_at')
+      .select('id, name, email, company, need, status, source, consent_at, email_opt_out_at, tags')
       .eq('id', c.fiche)
       .maybeSingle();
     if (error) throw new Error(error.message);

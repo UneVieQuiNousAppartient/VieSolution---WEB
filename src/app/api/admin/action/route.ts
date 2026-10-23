@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthed } from '@/lib/admin-auth';
 import { getAdminClient, hasServiceKey } from '@/lib/supabase/admin';
 import { estStatut } from '@/lib/crm/regles';
+import { ETIQUETTE_PROSPECTION } from '@/lib/crm/tableau';
 import { desabonnerAdresse, noterContact, recalculerProchaineAction } from '@/lib/crm/fiche';
 
 export const dynamic = 'force-dynamic';
@@ -57,9 +58,19 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'étape inconnue' }, { status: 400 });
       }
       const status = body.value;
+      // Étape « Prospect » : l'étiquette « prospection » reste ensuite (statistiques à part, src/lib/crm/tableau.ts),
+      // posée dans la même mise à jour que l'étape.
+      let tags: string[] | null = null;
+      if (status === 'Prospect') {
+        const { data: actuel, error: e0 } = await db.from('vsw_leads').select('tags').eq('id', body.id).single();
+        if (e0) throw e0;
+        const avant: string[] = actuel?.tags ?? [];
+        tags = avant.includes(ETIQUETTE_PROSPECTION) ? null : [...avant, ETIQUETTE_PROSPECTION];
+      }
       const { error } = await db
         .from('vsw_leads')
         .update({
+          ...(tags ? { tags } : {}),
           status,
           status_changed_at: now,
           ...(status === 'Contacté' ? { last_contact_at: now } : {}),

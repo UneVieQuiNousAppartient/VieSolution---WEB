@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 40.
+**Dernière mise à jour : 2026-10-23** — dernière section : 41.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -746,6 +746,7 @@ Laissé tel quel :
 - Le test « la réponse d'un prospect n'est pas un contact humain » a échoué avant la correction et passe après.
 - Aperçu réel d'un courriel habillé, sur ordinateur et sur téléphone de 375 px.
 - `qa-agent` (Opus, ≈ 109 k) ROUGE sur la règle du contact, corrigé. `securite` (Opus, ≈ 98 k) À CORRIGER, sans rien de critique : boucles et quota, expéditeur usurpé, filtre des destinataires, liens glissés dans la suggestion, taille du corps, classe de caractères, `includes`, tout corrigé. Le point Loi 25 est traité par la suggestion éteinte.
+- CodeQL (2 alertes « Incomplete multi-character sanitization » sur `texteDepuisHtml`) : balises retirées jusqu'à stabilité, chevrons restants retirés ; un vrai bogue trouvé au passage (une entité numérique invalide faisait lever `RangeError` et échouer la réception) est corrigé (commit 3dc5fce, `qa-agent` Opus ≈ 42 k VERT).
 - **À tester par Camille, après la mise en ligne et ses réglages** : un vrai courriel à info@ (réception, copie Gmail, réponse depuis l'admin, fil chez le destinataire).
 
 **Non fait dans ce round**
@@ -756,3 +757,39 @@ Laissé tel quel :
 - Pièces jointes : listées seulement, à ouvrir dans Gmail ou dans Resend.
 
 **Coût** : estimé ≈ 720 k (600 k + 120 k d'habillage et de modèles) ; réel ≈ 550 k (agents ≈ 207 k + session ≈ 350 k).
+
+## 41. ✅ CRM : étape « Prospect », sans courriel automatique (2026-10-23)
+
+**Contexte / demande** : ajouter au CRM une étape « Prospect » pour les personnes que Camille va chercher elle-même, que le moteur ignore (aucun courriel automatique). Plan présenté, puis accord de Camille (« Oui, les deux choix ») :
+- au premier contact noté, la fiche passe à « Contacté » ;
+- les prospects sont comptés à part dans les statistiques.
+
+**Ce qui a été fait**
+- **Base**, migration `vsw_leads_etape_prospect`, `vsw_leads` seulement : la règle des étapes accepte « Prospect ». Recopiée dans `setup-crm-vsw.sql`.
+- `src/lib/crm/regles.ts` : « Prospect » ajouté en tête de `STATUTS`. `sansCourrielAutomatique` est vérifiée par `relancer` (accusés et relances) et par les candidats de l'accusé de réception. Les autres règles ne visent déjà que « Nouveau », « RDV », « Contacté » ou « Qualifié ». `statutApresContact` : Prospect → « Contacté », ou « RDV » si un rendez-vous est pris.
+- `src/lib/crm/tableau.ts` : `estProspection` repose sur l'étape « Prospect » ou sur l'étiquette `prospection` (colonne `tags`, déjà présente), qui reste quand la fiche avance.
+  - Ces fiches sont exclues des demandes reçues, du taux de conversion, de la courbe et de la provenance.
+  - Elles restent comptées dans les clients gagnés.
+  - Une ligne « prospection à part : N en cours, M devenues clientes » s'ajoute sur la tuile « Devenues clientes ».
+- **Admin** :
+  - case « C'est un prospect : je vais le contacter moi-même » dans « + Nouvelle demande » (`etapeInitiale`) ;
+  - le choix « Prospect » dans l'étape d'une fiche pose l'étiquette ;
+  - la fiche affiche « Relances : Aucune : prospect ».
+- Inchangé : le modèle de prospection ne part qu'avec un accord noté (`accordManquant`).
+
+**Vérification technique** :
+- `npm run verify` vert : 84 tests, dont un par règle (étape et contact, étape initiale, statistiques à part, accord du prospect, parité de l'étiquette). La règle des étapes a été vérifiée dans la base après la migration.
+- `qa-agent` (Opus, ≈ 70 k) **VERT** : aucun chemin automatique n'atteint un prospect.
+- `securite` (Opus, ≈ 66 k) **À CORRIGER**, corrigé :
+  - un prospect créé avec la provenance « Appel reçu » (le choix par défaut) échappait au blocage anti-pourriel ;
+  - `accordManquant` bloque maintenant toute fiche étiquetée `prospection` sans accord noté, quelle que soit la provenance, y compris dans la boîte de réception ;
+  - la combinaison prospect + « Appel reçu » / « Courriel reçu » est refusée (le formulaire passe à « Autre ») ;
+  - l'étiquette et l'étape sont écrites dans une seule mise à jour.
+
+**Non fait dans ce round**
+- Issue #13 : un prospect qui remplit ensuite le formulaire du site reste « Prospect ». La correction passe par une migration, donc accord de Camille d'abord.
+- Pas de test du moteur lui-même : la garde de `relancer` n'est testée qu'à travers la fonction pure.
+- `/api/admin/action` ne vérifie pas que l'id est un UUID et renvoie l'erreur brute. C'était déjà le cas avant ce lot ; seul l'admin connecté y a accès.
+- Pas d'onglet « Prospects » séparé : les prospects apparaissent dans « Demandes », avec leur étape.
+
+**Coût** : estimé ≈ 100 k ; réel ≈ 230 k (agents ≈ 136 k + session ≈ 95 k), à cause du correctif de sécurité et de ses tests.

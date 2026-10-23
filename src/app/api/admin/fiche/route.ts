@@ -15,10 +15,11 @@ import { journaliser, noterContact, recalculerProchaineAction } from '@/lib/crm/
 import { envoyerCourrielFiche, type Lead } from '@/lib/crm/moteur';
 import { modelesPour } from '@/lib/crm/boite';
 import { MODELES_REPONSE } from '@/lib/crm/suggestion';
-import { instantLocal } from '@/lib/crm/tableau';
+import { ETIQUETTE_PROSPECTION, instantLocal } from '@/lib/crm/tableau';
 import {
   TEXTE_ACCORD_MANUEL,
   accordManquant,
+  etapeInitiale,
   sourceManuelle,
   validerCoordonnees,
   validerNote,
@@ -109,7 +110,8 @@ export async function POST(req: NextRequest) {
           company: d.entreprise || null,
           need: d.besoin,
           source: sourceManuelle(d.provenance),
-          status: d.dejaParle ? 'Contacté' : 'Nouveau',
+          status: etapeInitiale(d),
+          tags: d.prospect ? [ETIQUETTE_PROSPECTION] : [],
           status_changed_at: maintenant,
           last_contact_at: d.dejaParle ? maintenant : null,
           consent_at: d.accord ? maintenant : null,
@@ -118,7 +120,7 @@ export async function POST(req: NextRequest) {
         .select('id')
         .single();
       if (error) throw error;
-      await journaliser(db, { lead_id: lead.id, type: 'note', content: `Demande ajoutée à la main (${d.provenance})${d.accord ? ' — accord noté pour les courriels de suivi' : ''}`, author: 'admin' });
+      await journaliser(db, { lead_id: lead.id, type: 'note', content: `${d.prospect ? 'Prospect ajouté' : 'Demande ajoutée'} à la main (${d.provenance})${d.accord ? ' — accord noté pour les courriels de suivi' : ''}`, author: 'admin' });
       if (d.dejaParle) await journaliser(db, { lead_id: lead.id, type: 'appel', content: 'Premier échange avant l’ajout de la fiche', author: 'admin' });
       if (d.rappel) {
         const due = instantLocal(d.rappel.annee, d.rappel.mois, d.rappel.jour, 9, 0).toISOString();
@@ -139,7 +141,7 @@ export async function POST(req: NextRequest) {
           await journaliser(db, { lead_id: lead.id, type: 'email_in', content: `Courriel reçu : ${m.subject || '(sans objet)'}`, author: 'prospect', meta: { message: m.id } });
         }
       }
-      await audit(db, 'lead_creer', lead.id, { provenance: d.provenance, accord: d.accord });
+      await audit(db, 'lead_creer', lead.id, { provenance: d.provenance, accord: d.accord, prospect: d.prospect });
       return NextResponse.json({ ok: true, id: lead.id });
     }
 

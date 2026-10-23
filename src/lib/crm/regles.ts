@@ -13,7 +13,9 @@
 export const FUSEAU = 'America/Toronto';
 
 /** Étapes d'un dossier (contrainte vsw_leads_status_check de supabase/setup-crm-vsw.sql). */
-export const STATUTS = ['Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'] as const;
+// « Prospect » (accord de Camille du 2026-10-23) : une personne que Camille va chercher elle-même.
+// Aucun courriel automatique (sansCourrielAutomatique) ; au premier contact noté, elle passe à « Contacté ».
+export const STATUTS = ['Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'] as const;
 export type Statut = (typeof STATUTS)[number];
 export const estStatut = (s: unknown): s is Statut => typeof s === 'string' && (STATUTS as readonly string[]).includes(s);
 
@@ -120,9 +122,12 @@ export const plusRecente = (...isos: (string | null | undefined)[]): string | nu
 
 /** Ce statut se fait-il « remonter » en Contacté par un contact humain ? (RDV, Qualifié, Client ne reculent pas.) */
 export const statutApresContact = (statut: string, genre: 'appel' | 'courriel' | 'sms' | 'rdv'): Statut | null => {
-  if (genre === 'rdv') return ['Nouveau', 'Contacté', 'À relancer'].includes(statut) ? 'RDV' : null;
-  return ['Nouveau', 'À relancer'].includes(statut) ? 'Contacté' : null;
+  if (genre === 'rdv') return ['Prospect', 'Nouveau', 'Contacté', 'À relancer'].includes(statut) ? 'RDV' : null;
+  return ['Prospect', 'Nouveau', 'À relancer'].includes(statut) ? 'Contacté' : null;
 };
+
+/** Étape « Prospect » : jamais de courriel automatique (accusé, relances), quoi que disent la source ou l'accord. */
+export const sansCourrielAutomatique = (lead: { status: string }) => lead.status === 'Prospect';
 
 // --- Courriels ---------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ type Act = (type: string, id: string, value?: string) => Promise<boolean>;
 type LeadFiche = {
   id: string; name: string; email: string; phone: string; company: string | null; need: string;
   status: string; source: string; service_interest: string; created_at: string;
-  last_contact_at: string | null; email_opt_out_at: string | null; consent_at: string | null;
+  last_contact_at: string | null; email_opt_out_at: string | null; consent_at: string | null; tags?: string[] | null;
 };
 type Activite = { id: string; type: string; content: string; author: string; created_at: string };
 type Tache = { id: string; title: string; due_at: string | null; done_at: string | null };
@@ -176,6 +176,7 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
                 <dt>Relances</dt>
                 <dd>
                   {l.email_opt_out_at ? 'Arrêtées (désabonnement)'
+                    : l.status === 'Prospect' ? 'Aucune : prospect, vous le contactez vous-même'
                     : l.last_contact_at ? 'Arrêtées : un contact a été noté'
                       : cleSource(l.source) === 'manuel' && !l.consent_at ? 'Aucune : ajoutée à la main, sans accord noté'
                         : 'Actives tant qu’aucun contact n’est noté'}

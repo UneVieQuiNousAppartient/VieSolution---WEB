@@ -235,3 +235,13 @@ test('alerte : objet sans saut de ligne, 80 caractères de nom au plus ; liens n
   assert.match(texteEnHtml('Voir https://viesolutionweb.ca/rdv'), /<a href=/);
 });
 
+
+test('étape « Prospect » : aucun courriel automatique ; au premier contact, « Contacté » (ou « RDV »)', async () => {
+  const { STATUTS, sansCourrielAutomatique } = await import('../src/lib/crm/regles.ts');
+  assert.ok(STATUTS.includes('Prospect'));
+  assert.equal(sansCourrielAutomatique({ status: 'Prospect' }), true);
+  assert.equal(sansCourrielAutomatique({ status: 'Nouveau' }), false);
+  assert.equal(statutApresContact('Prospect', 'appel'), 'Contacté');
+  assert.equal(statutApresContact('Prospect', 'courriel'), 'Contacté');
+  assert.equal(statutApresContact('Prospect', 'rdv'), 'RDV');
+});
