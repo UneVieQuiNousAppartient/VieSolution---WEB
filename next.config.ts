@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
       { source: '/prix', destination: '/devis', permanent: true },
       { source: '/audit-gratuit', destination: '/contact', permanent: true },
       { source: '/diagnostic', destination: '/ia', permanent: true },
-      { source: '/blog', destination: '/', permanent: true },
       // Refonte du 2026-10-23 : l'offre de stage est sur la page Emplois
       { source: '/postuler-stagiaire', destination: '/emplois', permanent: true },
     ];

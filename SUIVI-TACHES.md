@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 43.
+**Dernière mise à jour : 2026-10-23** — dernière section : 44.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -881,4 +881,26 @@ Laissé tel quel :
 - Page Avis (étape E) : nouvelle table `vsw_avis` acceptée (`site_testimonials`, sans préfixe, n'est pas touchée) ; texte de consentement à la publication accepté ; affichage nom, métier, note ; WhatsApp et code QR comme KHI ; bibliothèque `qrcode` acceptée ; liens Google et Facebook fournis plus tard (cases dans l'admin).
 
 **Coût** : estimé ≈ 60 k ; réel ≈ 130 k (session ≈ 70 k + `qa-agent` ≈ 60 k, VERT ; ses remarques corrigées : transition de la marge, décalage au survol par `translate`, ligne de l'état).
+
+## 44. ✅ Blog : 6 articles approuvés, pages /blog et /blog/<slug>, lien au menu (2026-10-23)
+
+**Contexte / demande** : un vrai Blog (maquette SiteBlog validée). Camille choisit 3 sujets métier, puis demande une série sur Claude, ChatGPT et ce que l'IA apporte aux PME, appuyée sur ce que publient Anthropic, OpenAI et les grands magazines. Décisions de Camille : garder les 6 articles ; rappels par courriel ou texto, confirmation et annulation par le client (« j'offre tout ce que l'IA peut faire ») ; formulation Loi 25, rythme sur 4 semaines, phrase sur les équipes plus grandes : « oui » ; signature « Camille Yvan, Vie Solution Web ».
+
+**Ce qui a été fait**
+- **Rédaction** (Sonnet) : 3 articles métier à partir des seuls textes du site ; 3 articles de la série IA à partir de sources vérifiées une à une dans le document d'origine (`docs/projets/blog/SOURCES-SERIE-IA.md` : ISQ nov. 2025, OpenAI déc. 2025, Anthropic juin 2026, Brynjolfsson et coll. QJE 2025, pages de confidentialité). Deux sources écartées faute d'avoir pu les lire (Gusto, Harvard/BCG). Chaque chiffre est cité avec sa date et son lien, avec une section « Sources ».
+- **Contenu** : `src/content/blog/*.md` (6 articles, date du 2026-10-23, signature, ordre) ; brouillons et sources gardés dans `docs/projets/blog/`.
+- **Lecture** : `src/lib/blog-markdown.ts` (pur : en-tête, sous-ensemble de Markdown, ancres, plan, temps de lecture ; liens permis : internes ou https seulement ; rendu en éléments React, jamais de HTML brut), `src/lib/blog.ts` (lecture au build).
+- **Pages** : `/blog` (remplace l'ancienne page de l'ancien design aux articles d'exemple ; filtres par pilier, `blog-liste.tsx`) ; `/blog/<slug>` (6 pages statiques ; fil d'Ariane, signature, date, plan, texte, « À retenir », sources, appel ; côté : service lié, métiers, « À lire aussi » ; fiche schema.org Article). Slug inconnu : 404.
+- **Raccordement** : « Blog » dans le menu (bureau et mobile, `NAV_LINKS`) et le pied de page ; redirection `/blog` → `/` retirée ; plan du site (`sitemap.ts` lit les articles) ; bulle de clavardage (`connaissances.ts`).
+
+**Vérification technique** : `npm run verify` vert, dont 7 tests nouveaux (`tests/blog.test.mjs` : 6 articles et en-têtes, aucune mention [à confirmer] publiée, aucun montant, liens internes ou https, lecture du Markdown, lien `javascript:` neutralisé). 200 sur `/blog` et les articles, 404 sur un article inconnu, 7 adresses du Blog dans le plan du site. Captures 1280 px et 390 px, aucun débordement.
+
+**Non fait dans ce round**
+- Version anglaise du Blog (avec le chantier FR/EN).
+- Pas d'image par article.
+- À relire par Camille sur l'aperçu : la phrase d'introduction du Blog (« ce qu'on explique à nos clients pendant l'appel découverte, écrit pour vous »).
+
+`qa-agent` (Opus, ≈ 80 k) **ROUGE puis corrigé** : les parts 20 / 9 / 7 / 6 % viennent de l'analyse des conversations de Claude, pas de l'enquête auprès de 9 700 répondants (attribution corrigée dans « 5 tâches » et « Claude ou ChatGPT », et dans les sources) ; « environ deux fois moins » au lieu de « un peu moins vite » ; « aide davantage ceux qui débutent » ramené à l'étude sur le service à la clientèle ; `lienPermis` refuse aussi `/\…` (tests ajoutés). Le reste : vert (chiffres, rendu sans HTML brut, routes, plan du site, menu, CSS).
+
+**Coût** : estimé ≈ 250 k (série) + ≈ 100 k (pages) ; réel ≈ 560 k (rédaction ≈ 190 k, recherche et vérification ≈ 80 k, pages et tests ≈ 130 k, `qa-agent` ≈ 80 k, corrections ≈ 80 k).
 

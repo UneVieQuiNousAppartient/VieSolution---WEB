@@ -21,6 +21,7 @@ export const PUBLIC_ROUTES: { path: string; priority: number }[] = [
   ...METIERS.map((m) => ({ path: `/metiers/${m.slug}`, priority: 0.8 })),
   { path: '/devis', priority: 0.8 },
   { path: '/realisations', priority: 0.7 },
+  { path: '/blog', priority: 0.7 }, // les articles : ajoutés par src/app/sitemap.ts (lus au build)
   { path: '/a-propos', priority: 0.7 },
   { path: '/rdv', priority: 0.8 },
   { path: '/contact', priority: 0.8 },

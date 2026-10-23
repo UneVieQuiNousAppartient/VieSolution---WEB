@@ -30,7 +30,7 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 
 `/` (accueil), `/services` (les 9 solutions en 3 piliers), `/ia`, `/accueil-ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`,
 `/referencement`, `/metiers` et `/metiers/<slug>` (8 métiers, données dans `src/lib/metiers.ts`), `/devis` (« Combien ça coûte ? » :
-démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/a-propos`, `/rdv`, `/contact`,
+démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/a-propos`, `/rdv`, `/contact`,
 `/emplois` (offre de stage ; ancienne `/postuler-stagiaire`), `/admin` (+ pages légales).
 Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 
