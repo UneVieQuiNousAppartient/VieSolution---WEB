@@ -5,7 +5,7 @@
 Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — installée le 2026-10-17.
 
 ## Chantiers en cours
-- **EN LIGNE** sur **https://viesolutionweb.ca** depuis le 2026-10-23 (PR #1 fusionnée le 2026-10-22, § 34-35). Clavardage IA actif (§ 36 ; ancienne clé à supprimer et plafond de dépenses à fixer par Camille). Reste : double vérification de `/admin` à activer par Camille (connexion en deux écrans et code QR, § 37 ; son code d'accès est refusé : valeur à vérifier dans Vercel) ; CNAME `rsend` et renvoi de info@ (Cloudflare Email Routing) à faire par Camille ; adresse `notify_email` à recevoir ; formulaire de contact et demande de rendez-vous par la bulle à tester par Camille.
+- **EN LIGNE** sur **https://viesolutionweb.ca** depuis le 2026-10-23 (PR #1 fusionnée le 2026-10-22, § 34-35). Tableau de bord de l'admin sur le modèle de l'image de Camille (§ 38 ; rendez-vous = demandes, pas d'agenda branché). Clavardage IA actif (§ 36 ; ancienne clé à supprimer et plafond de dépenses à fixer par Camille). Reste : double vérification de `/admin` activée le 2026-10-23 (§ 37) ; CNAME `rsend` et renvoi de info@ (Cloudflare Email Routing) à faire par Camille ; adresse `notify_email` à recevoir ; formulaire de contact et demande de rendez-vous par la bulle à tester par Camille.
 - **Site plus accessible aux PME et travailleurs autonomes** : livré sur la branche `claude/brave-euler-68e7pl`, PR #1 fusionnée le 2026-10-22, `qa-agent` VERT, `npm run verify` vert. Livré : métiers et partenaires (§3), thème clair (§4), prix sur mesure (§5), animations (§6), sélecteur « Je suis… » (§7). Issue #2 (sections invisibles sans JS) ouverte ; #3 fermée (§8).
 - **Finition premium** livrée (§8 ; issue #3 fermée) et **lot design 21st.dev** livré (§9 : panneau « Avant / après » aligné + bascule mobile, frise du processus, carte d'appel à l'action, hero en deux tons). Restent les éléments de Camille : logo définitif, photos, témoignage. Option : passer « La différence » sur le même panneau (≈ 30 k).
 - **Offre élargie** livrée (§10) : 5ᵉ service « CRM et outils sur mesure », FAQ « J'ai déjà un logiciel… », formation IA pour petites entreprises avec le badge Claude Academy de Camille (sans date), **logo ampoule** (variante de viesolution.ca). **Plus tard** (demande de Camille) : gestion des réseaux sociaux et vidéos.
@@ -35,4 +35,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**38**
+**39**

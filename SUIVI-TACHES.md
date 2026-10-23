@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 37.
+**Dernière mise à jour : 2026-10-23** — dernière section : 38.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -622,3 +622,31 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `npm run verify` vert (51 tests, 10 avertissements connus) ; captures des 4 états avec réponses d'API simulées ; QR décodé par jsQR, identique au lien otpauth. `qa-agent` (Opus, ≈ 48 k) **VERT** ; `securite` (Opus, ≈ 54 k) **VERT**, ses deux points bas sont corrigés.
 
 **Non fait dans ce round** : longueur minimale imposée à `ADMIN_ACCESS_CODE` (proposée par `securite`, non faite pour ne pas bloquer Camille avant qu'elle ait choisi sa phrase). Une connexion consomme maintenant 2 des 8 essais par IP. Activation réelle avec son téléphone — **à tester par Camille** (son code d'accès est refusé depuis le 2026-10-23 : valeur à vérifier dans Vercel).
+
+## 38. ✅ Admin : tableau de bord sur le modèle de l'image de Camille (2026-10-23)
+
+**Contexte / demande** : Camille a montré l'image d'un tableau de bord (« je veux la version finale comme sur l'image »). Elle a accepté le plan (≈ 650 k), puis la maquette : « maquette OK » (https://claude.ai/artifact/M75jd86KJkbjrTEXWRPBKn).
+
+**Ce qui a été fait**
+- `src/lib/crm/tableau.ts` (fonctions pures, sans import) calcule :
+  - les 4 tuiles sur 7, 30 ou 90 jours : nouvelles demandes et période précédente, rappels en retard, rendez-vous des 7 prochains jours, part des demandes devenues clientes ;
+  - la courbe des 12 dernières semaines (lundi à dimanche, heure de Montréal) et la provenance des demandes ;
+  - « À appeler maintenant » : « Urgente » pour une demande jamais contactée depuis plus de 24 h, « Haute » pour une demande jamais contactée ou à relancer, « Normale » pour un rappel en retard ;
+  - les rendez-vous d'aujourd'hui et de demain, et ceux « à confirmer ».
+
+  Les stages sont exclus des chiffres (parité avec `SUJETS_HORS_PROSPECTION`).
+- `src/components/vsw/admin-tableau.tsx` dessine l'écran : tuiles, petites courbes, barres et anneaux en SVG (aucune bibliothèque), bandeau des brouillons à approuver, alertes, et les trois cartes du bas.
+- `src/app/admin/page.tsx` :
+  - menu à gauche : Aujourd'hui, Demandes, Tâches, Rendez-vous, Clients, Brouillons à approuver, Courriels et relances, Stagiaires ;
+  - recherche par nom, courriel, téléphone ou entreprise, et sélecteur de période ;
+  - les anciens onglets restent, comme pages du menu.
+- `src/app/vsw.css` : classes `.adm-*`, faites uniquement de jetons (clair et sombre), avec un menu replié en rangées sur téléphone. Le menu du site, le pied de page et la bulle sont masqués dans l'admin.
+- Aucune modification de la base ni des routes : l'écran calcule tout à partir des données que `/api/admin/data` envoyait déjà.
+
+**Vérification technique** : `npm run verify` vert (58 tests dont 7 nouveaux, 10 avertissements connus). Le test a échoué quand deux règles ont été cassées volontairement, puis est repassé. Captures prises sur ordinateur, en sombre, sur téléphone (390 px, sans défilement horizontal), à vide et avec une recherche, avec des réponses d'API simulées. `qa-agent` (Opus, ≈ 76 k) **VERT**. Corrigé ensuite, à sa demande : un seul `<main>` sur la page, le compteur « Rendez-vous » du menu égal à la liste, la barre du jour qui ne compte que les rendez-vous à venir, la case « tâche faite » qui revient décochée si l'action échoue. Laissé tel quel : la tuile « Rappels en retard » compte aussi les rappels des stagiaires, qu'il faut rappeler eux aussi.
+
+**Non fait dans ce round** :
+- Les rendez-vous ne sont que des **demandes** : le site ne confirme aucun créneau et n'a pas d'agenda. L'heure vient du texte écrit par le calendrier de /rdv ; une demande faite par la bulle IA apparaît « à confirmer ». Branchement à un agenda (Google Agenda, Zoho) : à décider par Camille.
+- Pages Événements, Contenu du site, Équipe et Statistiques : laissées de côté, faute de données.
+- `/api/admin/data` ne lit que les 200 demandes les plus récentes : à élargir quand il y en aura davantage.
+- Écran réel avec de vraies demandes : **à tester par Camille**.
