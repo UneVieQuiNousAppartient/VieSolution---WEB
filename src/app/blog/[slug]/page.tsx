@@ -7,7 +7,7 @@ import { JsonLd } from '@/components/vsw/json-ld';
 import { BlogTexte } from '@/components/vsw/blog-texte';
 import { SERVICES_NAV } from '@/components/vsw/nav';
 import { articleParSlug, articles, dateLisible } from '@/lib/blog';
-import { cheminArticle } from '@/lib/blog-markdown';
+import { cheminArticle, clePilier } from '@/lib/blog-markdown';
 import { metierParSlug } from '@/lib/metiers';
 import { SITE_URL } from '@/lib/site';
 
@@ -65,11 +65,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           mainEntityOfPage: `${SITE_URL}/blog/${a.slug}`,
         }}
       />
-      <article className="section blog-article" style={{ borderTop: 'none', paddingTop: 72 }}>
+      <article className="section blog-article" data-pilier={clePilier(a.pilier)} style={{ borderTop: 'none', paddingTop: 72 }}>
         <div className="container blog-grille">
           <div className="blog-principal">
             <nav className="fil-ariane" aria-label="Fil d’Ariane">
-              <Link href="/blog">Blog</Link> <span aria-hidden="true">›</span> <span>{a.pilier}</span>
+              <Link href="/blog">Blog</Link> <span aria-hidden="true">›</span> <span className="blog-pastille">{a.pilier}</span>
             </nav>
             <h1 className="blog-titre">{a.titre}</h1>
             <p className="blog-meta">

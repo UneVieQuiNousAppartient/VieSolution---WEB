@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 44.
+**Dernière mise à jour : 2026-10-23** — dernière section : 47.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -902,5 +902,60 @@ Laissé tel quel :
 
 `qa-agent` (Opus, ≈ 80 k) **ROUGE puis corrigé** : les parts 20 / 9 / 7 / 6 % viennent de l'analyse des conversations de Claude, pas de l'enquête auprès de 9 700 répondants (attribution corrigée dans « 5 tâches » et « Claude ou ChatGPT », et dans les sources) ; « environ deux fois moins » au lieu de « un peu moins vite » ; « aide davantage ceux qui débutent » ramené à l'étude sur le service à la clientèle ; `lienPermis` refuse aussi `/\…` (tests ajoutés). Le reste : vert (chiffres, rendu sans HTML brut, routes, plan du site, menu, CSS).
 
+Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, venant des noms de fichiers) corrigées : adresses vérifiées (`slugValide`) et encodées (`cheminArticle`), tests ajoutés ; CodeQL vert. Fusionnée (PR #16) et en ligne le 2026-10-23.
+
 **Coût** : estimé ≈ 250 k (série) + ≈ 100 k (pages) ; réel ≈ 560 k (rédaction ≈ 190 k, recherche et vérification ≈ 80 k, pages et tests ≈ 130 k, `qa-agent` ≈ 80 k, corrections ≈ 80 k).
+
+## 45. ✅ Couleurs plus vives sur tout le site, palette B (2026-10-23)
+
+**Contexte / demande** : « mettre plus de couleur plus vive », sur tout le site, mêmes teintes plus saturées. Maquette SiteCouleurs (A aujourd'hui, B plus vif, C très vif) : Camille choisit **B**.
+
+**Ce qui a été fait** (`src/app/vsw.css`, bloc « Couleurs plus vives, palette B » en fin de fichier, thème clair seulement) : sarcelle et violet plus saturés (`--accent`, `--accent-2`, `--accent-vif`, `--accent-soft`, `--accent-glow`) ; sections alternées plus colorées (`--bg-1`, `--bg-2`, `--bg-band`, `--tray`) ; bouton principal en dégradé sarcelle → violet ; mot en couleur du hero plus vif ; icônes sur pastille colorée (services, menu, avantages), une couleur par pilier (sarcelle, vert, violet) ; titres de piliers et surtitres en couleur. Thème sombre inchangé.
+
+**Vérification technique** : `npm run verify` vert. Captures de l'accueil (hero, solutions, section métier). `qa-agent` (Opus, ≈ 45 k) **ROUGE puis corrigé**, contrastes recalculés (sRGB, WCAG) : texte blanc sur le bouton 4,99 et 6,74 (le départ à 0,53 donnait 4,41, la couleur sortant de l'espace sRGB) ; `--accent` abaissé à 0,49 (≥ 4,55 sur blanc et sur les sections pâles) ; `--ok` du pilier Zoho à 0,49 (≥ 4,96) ; règle `.eyebrow` en double retirée.
+
+**Non fait dans ce round** : à regarder par Camille sur son téléphone et son ordinateur (aperçu de la PR).
+
+**Coût** : estimé ≈ 50 k ; réel ≈ 120 k (session ≈ 75 k + `qa-agent` ≈ 45 k).
+
+## 46. ✅ Blog en couleur, compilation des réalisations sur À propos, phrase du stage (2026-10-23)
+
+**Contexte / demande** (Camille) : « blog n'a pas de couleur, il faut en mettre même dans les articles » ; « À propos : il manque une image ou une petite vidéo, une compilation de ce que l'on a déjà fait » ; la phrase « On forme des jeunes en informatique, en IA et sur Zoho — apprenez le métier sur de vrais mandats clients » « ne rassure pas : seulement parler de l'offre de stagiaire, on ne rajoute pas plus ».
+
+**Ce qui a été fait**
+- **Blog** : une couleur par pilier (`clePilier`, attribut `data-pilier` : sarcelle IA, vert Zoho, violet Web). Cartes avec bande et fond teintés, pastille du pilier ; article avec halo de couleur en haut, pastille dans le fil d'Ariane, plan teinté, barre de couleur devant chaque titre, « À retenir » en dégradé, blocs du côté soulignés de la couleur du pilier.
+- **À propos** : (remplacée ensuite par la vidéo, § 47) la case photo vide est remplacée par une compilation (`about-compilation.tsx`) des vrais sites (3) et écrans de CRM (4), déjà publiés dans la bande de l'accueil, en fondu enchaîné CSS (4 s par image), avec légende et lien vers Réalisations. Avec « réduire les animations » : première image seule, fixe.
+- **Stage** : bannière de À propos (`interns-section.tsx`) réduite à l'offre : « Vous êtes aux études en informatique, en IA ou en administration ? Découvrez notre offre de stage. » ; paragraphe « Nous formons aussi la relève… » retiré de `about.tsx`.
+
+**Vérification technique** : `npm run verify` vert ; test de `clePilier` ajouté. Captures du Blog, d'un article et de À propos (deux images de la compilation) ; aucun débordement à 390 px.
+
+**Non fait dans ce round**
+- « relève » reste dans `benefits-section.tsx` (« On forme vos gens — et la relève — ») et `pricing-section.tsx` (« Formations trimestrielles (équipe & relève) ») : à décider par Camille.
+- Pas de vraie vidéo (MP4) : un fondu d'images en CSS, plus léger. Une vidéo pourra remplacer la compilation si Camille en fournit une.
+- Accord des clients (Ben's, Khí) pour leurs captures : toujours à obtenir par Camille (mêmes images que la bande de l'accueil).
+
+`qa-agent` (Opus, ≈ 35 k) **ROUGE puis corrigé** : texte de la pastille du pilier sous 4,5:1 sur les fonds teintés (3,43 à 4,69) → couleur du pilier mêlée à 20 % de noir en thème clair (5,38 à 7,26). Le reste vert : légende de la compilation ≥ 9,88:1, une seule image annoncée, animation coupée si réduite, « 3 sites et 4 écrans » calculé.
+
+**Coût** : estimé ≈ 60 k ; réel ≈ 105 k (session ≈ 70 k + `qa-agent` ≈ 35 k).
+
+## 47. ✅ Vidéo de présentation sur À propos, avec musique chaleureuse (2026-10-23)
+
+**Contexte / demande** : « ou alors une vidéo qui montre l'évolution, ce que l'on ramène aux PME ». Camille donne le découpage en 4 actes (constat, enjeu, solution, chute et appel), ses messages et l'appel « Réservez votre appel découverte gratuit de 30 minutes ». Choix : vraie vidéo MP4 ; essai avec voix de synthèse libre (Siwis, CC-BY 4.0, accent de France) envoyé, puis « mets juste un son chaleureux pour le site » ; sur le site, sourdine et bouton « Activer le son ».
+
+**Ce qui a été fait**
+- **Vidéo** (56 s, 16:9) fabriquée ici : page animée (scratchpad `video/scene.html`, mêmes jetons de couleur, polices du site) rendue image par image (Playwright) puis encodée (ffmpeg). Textes : ceux de Camille et du site ; images : vrais écrans du CRM (Leads, Aujourd'hui). Aucun chiffre, client ni témoignage inventé.
+- **Musique** composée par programme (accords doux, piano léger, crescendo à l'acte 3, résolution à la fin) : aucun droit à payer ni crédit à afficher.
+- **Fichiers** : `public/videos/presentation.webm` (VP9 + Opus, 2,3 Mo), `presentation.mp4` (H.264 + AAC, 2,5 Mo), `presentation.webp` (image d'attente). Version 1080p avec musique et version avec voix Siwis remises à Camille pour les réseaux sociaux.
+- **Site** : `video-presentation.tsx` remplace la compilation d'images (§ 46, retirée avant mise en ligne) dans `about.tsx` : lecture automatique en sourdine, en boucle ; boutons « Pause / Lecture » (WCAG 2.2.2) et « Activer le son » (repart du début avec le son), icônes cachées aux lecteurs d'écran ; « réduire les animations » : pas de lecture automatique, image finale et bouton « Lecture ».
+
+**Vérification technique** : `npm run verify` vert ; la vidéo se lit en sourdine dans le navigateur de test (WebM ; le MP4 sert à Safari) ; aucun débordement à 390 px.
+
+**Non fait dans ce round**
+- Voix : non retenue pour le site. Si Camille enregistre sa voix plus tard, elle se mixe en quelques minutes.
+- Vidéo sur l'accueil : non demandée pour l'instant.
+- À écouter par Camille : la musique (je ne peux pas l'écouter moi-même).
+
+`qa-agent` (Opus, ≈ 45 k) **ROUGE puis corrigé** : il manquait un bouton Pause (contenu en boucle, WCAG 2.2.2) ; libellé faux avec « réduire les animations » ; double annonce du bouton (aria-pressed retiré) ; icônes lues à voix haute. Le reste vert : fichiers servis, 56 s avec piste audio, contraste du bouton ≥ 10:1, aucun fait inventé.
+
+**Coût** : estimé ≈ 120 k ; réel ≈ 180 k (session ≈ 135 k + `qa-agent` ≈ 45 k).
 

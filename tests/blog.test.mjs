@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { ancre, cheminArticle, lienPermis, slugValide, lireCorps, lireEnTete, lireLigne, minutesDeLecture, planDe } from '../src/lib/blog-markdown.ts';
+import { ancre, cheminArticle, clePilier, lienPermis, slugValide, lireCorps, lireEnTete, lireLigne, minutesDeLecture, planDe } from '../src/lib/blog-markdown.ts';
 
 const DOSSIER = new URL('../src/content/blog/', import.meta.url);
 const articles = readdirSync(DOSSIER).filter((f) => f.endsWith('.md')).map((f) => ({ slug: f.slice(0, -3), source: readFileSync(new URL(f, DOSSIER), 'utf8') }));
@@ -62,6 +62,12 @@ test('adresse d’article : seuls les noms simples passent, et le chemin est enc
   for (const s of ['javascript:x', '../x', 'a b', 'A', '-x', 'x-', '']) assert.equal(slugValide(s), false, s);
   assert.equal(cheminArticle('a/b'), '/blog/a%2Fb');
   for (const a of articles) assert.ok(slugValide(a.slug), a.slug);
+});
+
+test('couleur de pilier', () => {
+  assert.equal(clePilier('IA et automatisation'), 'ia');
+  assert.equal(clePilier('Zoho'), 'zoho');
+  assert.equal(clePilier('Web et visibilité'), 'web');
 });
 
 test('minutesDeLecture : au moins 1', () => {

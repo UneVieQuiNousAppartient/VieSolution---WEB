@@ -1,9 +1,11 @@
+import { VideoPresentation } from './video-presentation';
+
 export function About() {
   return (
     <section id="apropos" className="section">
       <div className="container">
         <div className="about-wrap reveal">
-          <div className="about-photo"></div>
+          <VideoPresentation />
           <div className="about-content">
             <div className="eyebrow">Qui sommes-nous</div>
             <h2>Un studio québécois, à votre service.</h2>
@@ -22,11 +24,6 @@ export function About() {
             <p>
               Vous avez un irritant à automatiser, une gestion éparpillée à centraliser,
               une équipe à former ? Parlons-en pendant un appel découverte gratuit.
-            </p>
-            <p>
-              Nous formons aussi la relève : des jeunes en informatique, en IA et en
-              administration apprennent le métier au sein du studio, sur de vrais
-              mandats clients, avec Zoho et les outils d&apos;IA d&apos;aujourd&apos;hui.
             </p>
             <div className="about-stats">
               <div className="about-stat"><strong>IA + Zoho</strong><span>Deux expertises, un studio</span></div>
