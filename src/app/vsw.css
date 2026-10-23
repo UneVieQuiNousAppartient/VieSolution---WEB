@@ -4732,3 +4732,15 @@ body:has(.adm-page) .chat-panel { display: none; }
 .adm-evt-liste-ins .adm-avis-boutons { align-items: flex-start; }
 .adm-evt-nom { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .adm-evt-question { font-size: 14px; color: var(--fg-1); overflow-wrap: anywhere; }
+
+/* ── Google Agenda (étape C) : page /rdv et carte de l'admin ── */
+.booking-etat { margin: 16px 0 0; font-size: 14px; color: var(--fg-2); }
+.adm-agenda { margin-bottom: 18px; }
+.adm-agenda h2 { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.adm-agenda-sous-titre { margin: 6px 0 0; font-size: 15px; font-weight: 600; color: var(--fg-0); }
+.adm-agenda-jours { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.adm-evt-form .adm-agenda-jour { flex-direction: row; align-items: center; gap: 6px; font-weight: 400; }
+.adm-agenda-jour input { width: 18px; height: 18px; accent-color: var(--accent); }
+.adm-agenda-apercu { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; color: var(--fg-1); font-size: 14px; }
+.booking-loi25 { font-size: 12.5px; }
+.booking-loi25 a { color: var(--accent); }

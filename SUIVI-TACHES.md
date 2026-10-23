@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 51.
+**Dernière mise à jour : 2026-10-23** — dernière section : 52.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1033,4 +1033,21 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Non fait dans ce round** : vérification anti-robot à l'inscription (Turnstile ou confirmation par lien — nouveau service, décision de Camille ; risque limité par la page cachée et les limites par adresse) ; prévenir les inscrits quand la date change ; renvoyer une confirmation depuis l'admin ; en-têtes de sécurité du site (CSP, Referrer-Policy — sur tout le site, à part) ; retirer l'ancienne fonction `vsw_inscrire` ; bouton « Écrire à tous les inscrits » ; invitation .ics jointe au courriel (lien sur la page seulement) ; liste d'attente d'un atelier complet ; prix et paiement (décision de Camille à venir) ; envoi aux personnes qui ont coché « prochains ateliers » (consentement gardé, rien n'est envoyé). **À donner par Camille** : l'adresse des ateliers en personne. **À tester par Camille** : créer un atelier, s'y inscrire avec son courriel, recevoir la confirmation, libérer sa place.
 
 **Coût réel** : ≈ 420 k (session ≈ 250 k, `securite` ≈ 84 k, `qa-agent` ≈ 101 k).
+
+## 52. ✅ Étape C : Google Agenda — vrais créneaux libres sur /rdv, rendez-vous avec Google Meet, demande dans le CRM (2026-10-23)
+
+**Contexte / demande** : « L'ÉTAPE C ». Choix de Camille : « Branché au site et au CRM » (≈ 350 k), disponibilités « samedi et dimanche aussi », « Google Meet automatique ». Pas-à-pas Google Cloud donné à Camille (projet, Google Calendar API, écran de consentement publié « En production », client OAuth Web, redirection `https://viesolutionweb.ca/api/admin/google/retour`, `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` dans Vercel).
+
+**Ce qui a été fait** :
+- `src/lib/agenda.ts` (règles pures : réglages, créneaux libres moins les périodes occupées, changements d'heure, réservation, événement Google) et `src/lib/agenda-etat.ts` (jeton « state » signé, 10 min) + `tests/agenda.test.mjs` (9 tests).
+- `src/lib/agenda-google.ts` : OAuth sans dépendance ; jeton de renouvellement CHIFFRÉ avec `ADMIN_SECRET` dans `vsw_settings` (`google_refresh_token`, `google_compte`) ; freeBusy ; création de l'événement avec Meet et invitation envoyée par Google ; déconnexion avec révocation. Aucun changement de schéma (lignes de `vsw_settings`).
+- Routes : `/api/admin/google/connecter` (session admin → Google, cookie d'état SameSite=Lax), `/api/admin/google/retour` (état vérifié), `/api/admin/agenda` (état, heures, déconnexion), `/api/rdv/creneaux` (heures libres seulement), `/api/rdv/reserver` (piège à robots, 3 par adresse et par jour, 40 pour le site, créneau revérifié contre l'agenda, verrou par créneau, rendez-vous Google + `contact_requests` « rdv-decouverte » → fiche, tâche et accusé de réception des rendez-vous, comme avant).
+- `/rdv` (`booking.tsx`) : calendrier des vrais créneaux, téléphone et sujet facultatifs, confirmation avec la date ; sans Google branché, l'ancien formulaire de demande reste. Couleur d'erreur en dur remplacée par `var(--danger)`.
+- Admin, onglet Rendez-vous : carte « Google Agenda » (connecter, reconnecter, déconnecter ; jours, heures, durée, délai, horizon ; 6 prochains créneaux). Défauts : 7 jours sur 7, 9 h à 17 h, 30 min, 24 h d'avance, 30 jours.
+
+**Vérification technique** : `npm run verify` vert (139 tests). Captures avec créneaux d'exemple : /rdv et la carte de l'admin, 375 px sans débordement. `qa-agent` (Opus) ROUGE puis corrigé : message « créneau pris » visible (hors du formulaire), ligne du créneau au format lu par l'admin (`creneauPourCrm`, testé avec `lireCreneau`), plus de cache public des créneaux, durée affichée selon les réglages, « notre agenda ». `securite` (Opus) ROUGE puis corrigé : invitation Google à texte FIXE (rien de ce qu'écrit le visiteur ; nom, téléphone, sujet seulement dans le CRM), plafond du site (20 par jour) compté après validation du créneau, verrou par créneau de 10 minutes (l'agenda relu à chaque demande fait foi), 120 lectures des créneaux par adresse et par heure + agenda relu au plus toutes les 60 s, révocation par le corps de la requête et signalée, cache du jeton lié à la connexion actuelle ; Loi 25 : mention sous le bouton et paragraphe « Réservation d'un appel en ligne » dans la politique de confidentialité (**à relire par Camille**). Contre-vérification `securite` : VERT. Risque restant accepté jusqu'à décision de Camille : sans confirmation du courriel, quelqu'un peut faire envoyer une invitation au texte fixe à une adresse (3 par adresse, 20 par jour) et occuper de faux créneaux.
+
+**Coût réel** : ≈ 330 k (session ≈ 140 k, `qa-agent` ≈ 95 k, `securite` ≈ 95 k).
+
+**Non fait dans ce round** : confirmation du courriel avant de créer le rendez-vous (proposée par `securite`, change le parcours du client : décision de Camille) ; texte de l'accusé de réception des rendez-vous (« je vous confirme l'heure sous 24 h ouvrables ») à ajuster maintenant que Google confirme tout de suite (texte à approuver par Camille) ; évaluation des facteurs relatifs à la vie privée pour Google (hors Québec) **[à confirmer par Camille]** ; annulation ou déplacement d'un rendez-vous depuis le site (Google l'offre dans l'invitation) ; plusieurs agendas ; aperçu Vercel (« Preview ») : la redirection Google est celle de viesolutionweb.ca, la connexion se fait en production. **À faire par Camille** : le pas-à-pas Google Cloud, puis « Connecter Google Agenda » dans l'admin (onglet Rendez-vous), puis une réservation d'essai.
 
