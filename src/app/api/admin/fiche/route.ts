@@ -4,7 +4,7 @@
 //   POST { op: 'note', id, texte }          → note dans l'historique
 //   POST { op: 'coordonnees', id, … }       → nom, courriel, téléphone, entreprise
 //   POST { op: 'tache', id, titre, echeance } → tâche à 9 h (heure de Montréal) le jour choisi
-//   POST { op: 'envoyer', id, sujet, corps, brouillon? } → courriel envoyé par Resend, contact noté
+//   POST { op: 'envoyer', id, sujet, corps, brouillon?, modele? } → courriel envoyé par Resend, contact noté
 //   POST { op: 'accord', id }               → accord pour les courriels de suivi noté (fiche ajoutée à la main)
 // Accès : session complète de l'admin (code + double vérification) ; service_role côté serveur.
 import { createHash } from 'node:crypto';
@@ -13,6 +13,8 @@ import { isAuthed } from '@/lib/admin-auth';
 import { getAdminClient, hasServiceKey } from '@/lib/supabase/admin';
 import { journaliser, noterContact, recalculerProchaineAction } from '@/lib/crm/fiche';
 import { envoyerCourrielFiche, type Lead } from '@/lib/crm/moteur';
+import { modelesPour } from '@/lib/crm/boite';
+import { MODELES_REPONSE } from '@/lib/crm/suggestion';
 import { instantLocal } from '@/lib/crm/tableau';
 import {
   TEXTE_ACCORD_MANUEL,
@@ -51,7 +53,7 @@ export async function GET(req: NextRequest) {
     db.from('vsw_lead_activities').select('id, type, content, author, created_at').eq('lead_id', id).order('created_at', { ascending: false }).limit(100),
     db.from('vsw_lead_tasks').select('id, title, due_at, done_at, created_at').eq('lead_id', id).order('done_at', { ascending: true, nullsFirst: true }).order('due_at', { ascending: true }).limit(50),
     db.from('vsw_outreach_drafts').select('id, kind, subject, body, status, created_at').eq('target_id', id).order('created_at', { ascending: false }).limit(20),
-    db.from('vsw_email_messages').select('id, direction, subject, snippet, received_at, created_at').eq('lead_id', id).order('created_at', { ascending: false }).limit(50),
+    db.from('vsw_email_messages').select('id, direction, subject, snippet, received_at, created_at, traite_at, ignore_at').eq('lead_id', id).order('created_at', { ascending: false }).limit(50),
   ]);
   const erreur = lead.error || activites.error || taches.error || brouillons.error || courriels.error;
   if (erreur) {
@@ -59,7 +61,14 @@ export async function GET(req: NextRequest) {
     return refus('Fiche illisible pour le moment.', 500);
   }
   if (!lead.data) return refus('fiche introuvable', 404);
+  let modeles: Awaited<ReturnType<typeof modelesPour>> = [];
+  try {
+    modeles = await modelesPour(db, lead.data.name);
+  } catch (e) {
+    console.error('[admin] fiche, modèles :', e instanceof Error ? e.message : e);
+  }
   return NextResponse.json({
+    modeles,
     lead: lead.data,
     activites: activites.data ?? [],
     taches: taches.data ?? [],
@@ -116,6 +125,20 @@ export async function POST(req: NextRequest) {
         await db.from('vsw_lead_tasks').insert({ lead_id: lead.id, title: `Recontacter ${d.nom}`, due_at: due, created_by: 'admin' });
         await recalculerProchaineAction(db, lead.id);
       }
+      if (d.courriel) {
+        // Courriels déjà reçus de cette adresse (boîte de réception) : rangés dans la nouvelle fiche.
+        const { data: ranges } = await db
+          .from('vsw_email_messages')
+          .update({ lead_id: lead.id })
+          .is('lead_id', null)
+          .eq('direction', 'in')
+          .ilike('from_email', d.courriel.replace(/[\\%_]/g, (c) => `\\${c}`))
+          .select('id, subject');
+        // Même historique que « Créer une demande avec ce courriel » dans la boîte.
+        for (const m of ranges ?? []) {
+          await journaliser(db, { lead_id: lead.id, type: 'email_in', content: `Courriel reçu : ${m.subject || '(sans objet)'}`, author: 'prospect', meta: { message: m.id } });
+        }
+      }
       await audit(db, 'lead_creer', lead.id, { provenance: d.provenance, accord: d.accord });
       return NextResponse.json({ ok: true, id: lead.id });
     }
@@ -164,7 +187,9 @@ export async function POST(req: NextRequest) {
       const brouillon = typeof body.brouillon === 'string' && UUID.test(body.brouillon) ? body.brouillon : null;
       // Même texte renvoyé deux fois (double clic) dans les 24 h : un seul envoi (idempotence Resend).
       const empreinte = createHash('sha256').update(`${v.valeur.sujet}\n${v.valeur.corps}`).digest('hex').slice(0, 24);
-      const r = await envoyerCourrielFiche(db, lead as Lead, v.valeur.sujet, v.valeur.corps, `vsw-fiche-${id}-${empreinte}`);
+      // Modèle inséré (bouton « Réserver un appel » selon le modèle) ; un brouillon de première réponse = first_reply.
+      const modele = typeof body.modele === 'string' && MODELES_REPONSE.some((m) => m.cle === body.modele) ? body.modele : brouillon ? 'first_reply' : null;
+      const r = await envoyerCourrielFiche(db, lead as Lead, v.valeur.sujet, v.valeur.corps, `vsw-fiche-${id}-${empreinte}`, { modele });
       if ('refus' in r) return refus(r.refus, 422);
       if (r.deja) return NextResponse.json({ ok: true });
       if (brouillon) {
@@ -173,6 +198,8 @@ export async function POST(req: NextRequest) {
       }
       // Courriel envoyé par Camille : contact humain — arrête les relances automatiques.
       await noterContact(db, id, 'courriel', `Courriel envoyé depuis la fiche : ${v.valeur.sujet}`);
+      // Les courriels reçus de cette personne sont répondus : ils sortent de « À répondre ».
+      await db.from('vsw_email_messages').update({ traite_at: maintenant }).eq('lead_id', id).eq('direction', 'in').is('traite_at', null).is('ignore_at', null);
       await audit(db, 'lead_envoyer', id, { brouillon });
     } else if (body.op === 'accord') {
       if (!lead.email) return refus('Cette fiche n’a pas de courriel.');

@@ -4266,3 +4266,28 @@ body:has(.adm-page) .chat-panel { display: none; }
 .adm-case { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; }
 .adm-case > input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
 .adm-case > span { flex: 1 1 200px; }
+
+/* Admin, étape B : boîte de réception (maquette validée le 2026-10-23) */
+.adm-boite { display: grid; grid-template-columns: minmax(260px, 360px) 1fr; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .adm-boite { grid-template-columns: 1fr; } }
+.adm-boite-liste { padding: 14px; gap: 10px; }
+.adm-boite-liste .adm-periodes { align-self: flex-start; flex-wrap: wrap; }
+.adm-conversations { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.adm-conversation {
+  width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 12px; text-align: left;
+  border: 1px solid transparent; border-radius: var(--radius); background: transparent; font: inherit; color: var(--fg-0); cursor: pointer;
+}
+.adm-conversation:hover { background: var(--bg-1); }
+.adm-conversation.actif { background: var(--accent-soft); border-color: color-mix(in oklch, var(--accent) 30%, transparent); }
+.adm-conversation:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.adm-conversation-tete { display: flex; justify-content: space-between; gap: 8px; min-width: 0; }
+.adm-conversation-tete strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.adm-conversation-sujet { display: flex; align-items: center; gap: 6px; font-size: 14px; min-width: 0; overflow-wrap: anywhere; }
+.adm-conversation-extrait { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.adm-boite-fil { min-height: 320px; }
+.adm-messages { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.adm-message { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid var(--line-soft); border-radius: var(--radius); background: var(--surface); }
+.adm-message-nous { background: var(--bg-1); margin-left: clamp(0px, 6%, 48px); }
+.adm-reponse { padding-top: 14px; border-top: 1px solid var(--line-soft); }
+.adm-suggestion { background: color-mix(in oklch, var(--accent-2) 7%, transparent); border-color: color-mix(in oklch, var(--accent-2) 25%, transparent); }
+.adm-modeles { display: flex; flex-direction: column; gap: 12px; }

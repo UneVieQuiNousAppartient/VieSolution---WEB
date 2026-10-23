@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 39.
+**Dernière mise à jour : 2026-10-23** — dernière section : 40.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -702,3 +702,57 @@ Laissé tel quel :
 - La recherche `ilike` de `desabonnerAdresse` (antérieure à ce lot) n'échappe pas « * ». C'est sans effet pour les demandes du site, car le formulaire valide le courriel.
 
 **Non fait dans ce round** : aucun courriel réellement envoyé depuis la fiche, et aucune fiche réellement créée — **à tester par Camille**, avec son adresse. Les courriels reçus des prospects viendront à l'étape B.
+
+## 40. ✅ Admin, étape B : boîte de réception, courriels aux couleurs du site, modèles de réponse, suggestion IA (2026-10-23)
+
+**Contexte / demande** : étape B du chantier « Admin complet ». Accords de Camille :
+- « fusionne, maquette B OK, avec la mise en page et les modèles ; l'IA va aider à formuler des réponses, il faut qu'elle soit canalisée, donc c'est mieux d'avoir des templates » ;
+- « oui aux 4, Haiku 4.5 » : colonnes `traite_at` et `ignore_at`, réglages Resend et Cloudflare faits par elle, l'IA choisit parmi les modèles sans rien inventer, modèle Haiku. On garde Haiku 5.5, celui du clavardage ;
+- « les modèles sont bons », plus le modèle 6 de prospection (« modèle 6 OK ») ;
+- signature « Camille Yvan, Fondateur · Développeur et formateur IA » ;
+- bouton « Réserver un appel » « pas pour tout ».
+
+**Ce qui a été fait**
+- **Base**, migration `vsw_boite_reception_modeles`, tables `vsw_` seulement, recopiée dans `setup-crm-vsw.sql` :
+  - colonnes `traite_at` et `ignore_at` de `vsw_email_messages` ;
+  - index unique partiel sur `resend_id` pour les courriels reçus ;
+  - index de la boîte ;
+  - les 6 modèles `modele_*`.
+- **Habillage des courriels** (`src/lib/crm/gabarit-courriel.ts`, `public/courriel/logo.png`) : logo, signature encadrée et bouton « Réserver un appel » seulement pour les accusés, les relances, la première réponse, la relance après un appel et la prospection. Il s'applique aux relances, aux accusés et à tout envoi depuis l'admin. Le pied légal donne la bonne raison selon la provenance (`raisonPied`).
+- **Réception** (`src/app/api/courriels/entrant/route.ts`, règles pures dans `src/lib/crm/entrant.ts`) :
+  - webhook Resend `email.received`, avec signature Svix vérifiée (5 min, temps constant) et corps limité à 256 Ko ;
+  - texte lu chez Resend, courriel rangé une seule fois et relié à la fiche dont l'adresse correspond exactement ;
+  - copie vers `notify_email` (Gmail de Camille), avec en-tête `Auto-Submitted`, pas de boucle (notre domaine, adresse d'alerte) et 30 copies par jour au plus ;
+  - réponses automatiques (absence, infolettre) rangées « ignorées », sans alerte ni copie ;
+  - expéditeur en échec DMARC ou DKIM+SPF jamais rangé dans une fiche.
+- **Règle du moteur** (revue qa) : la réponse d'une personne **n'est pas un contact humain**. Elle arrête seulement les relances 1 et 2 (`sansReponseRecue`) ; l'alerte 24 h et la tâche d'appel du 7ᵉ jour attendent la réponse de Camille.
+- **Boîte de réception** (`/api/admin/courriels`, `src/lib/crm/boite.ts`, `src/components/vsw/admin-boite.tsx`, menu avec le nombre de conversations à répondre) :
+  - filtres « À répondre », « Tout » et « Inconnus » ;
+  - réponse dans le même fil (`In-Reply-To`), qui marque la conversation traitée et note un contact ;
+  - « Marquer comme traité », « Ignorer », « Créer une demande avec ce courriel » ;
+  - répondre à quelqu'un qui nous a écrit est permis (LCAP) ; sinon, même règle d'accord que la fiche.
+- **Modèles** : « Insérer un modèle » dans la boîte et dans la fiche. Section « Courriels » sur la fiche. Éditeur des modèles dans « Courriels et relances » (`/api/admin/modeles`) ; l'ancienne version reste dans le journal.
+- **Suggestion IA** (`/api/admin/courriels/suggestion`, `src/lib/crm/suggestion.ts`, Haiku 5.5) :
+  - outil strict à liste fermée de modèles, ou « aucun » ;
+  - courriel reçu balisé comme donnée ;
+  - proposition écartée si elle contient un montant ;
+  - crochets restants signalés, ainsi que les chiffres absents des sources et les liens absents du modèle ;
+  - 80 suggestions par jour au plus.
+
+  **Éteinte par défaut** (réglage `ia_courriels` de `vsw_settings`) tant que la politique de confidentialité n'en parle pas (Loi 25).
+
+**Vérification technique**
+- `npm run verify` vert : 80 tests (dont `tests/crm-entrant.test.mjs` et `tests/crm-suggestion.test.mjs`), 14 avertissements eslint, dont 4 nouveaux du type déjà connu E01.
+- Le test « la réponse d'un prospect n'est pas un contact humain » a échoué avant la correction et passe après.
+- Aperçu réel d'un courriel habillé, sur ordinateur et sur téléphone de 375 px.
+- `qa-agent` (Opus, ≈ 109 k) ROUGE sur la règle du contact, corrigé. `securite` (Opus, ≈ 98 k) À CORRIGER, sans rien de critique : boucles et quota, expéditeur usurpé, filtre des destinataires, liens glissés dans la suggestion, taille du corps, classe de caractères, `includes`, tout corrigé. Le point Loi 25 est traité par la suggestion éteinte.
+- **À tester par Camille, après la mise en ligne et ses réglages** : un vrai courriel à info@ (réception, copie Gmail, réponse depuis l'admin, fil chez le destinataire).
+
+**Non fait dans ce round**
+- Texte « Courriels que vous nous écrivez » de la politique de confidentialité (Resend, copie Gmail, aide à la rédaction par Anthropic, durée de conservation) et évaluation des facteurs relatifs à la vie privée : à valider par Camille, puis allumer `ia_courriels`.
+- Réglages de Camille : réception Resend activée sur viesolutionweb.ca, ligne MX dans Cloudflare, webhook `email.received` vers `/api/courriels/entrant`, `RESEND_WEBHOOK_SECRET` dans Vercel, redéploiement.
+- Non vérifié : que Resend fournit bien les en-têtes (`Auto-Submitted`, `Authentication-Results`) dans `GET /emails/receiving/{id}`. Sans eux, seules les réponses automatiques reconnaissables à leur objet sont écartées, et l'expéditeur n'est pas contrôlé.
+- Laissé tel quel (revue securite, faible) : une personne dont la fiche a plus de 6 mois et qui nous réécrit ne peut pas recevoir de réponse depuis l'admin (consentement tacite calculé sur la création de la fiche) ; elle peut être appelée.
+- Pièces jointes : listées seulement, à ouvrir dans Gmail ou dans Resend.
+
+**Coût** : estimé ≈ 720 k (600 k + 120 k d'habillage et de modèles) ; réel ≈ 550 k (agents ≈ 207 k + session ≈ 350 k).

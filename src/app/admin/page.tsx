@@ -11,6 +11,8 @@ import { Icon } from '@/components/vsw/icon';
 import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
 import { FicheDemande } from '@/components/vsw/admin-fiche';
 import { NouvelleDemande } from '@/components/vsw/admin-nouvelle';
+import { BoiteReception } from '@/components/vsw/admin-boite';
+import { EditeurModeles } from '@/components/vsw/admin-modeles';
 import { STATUTS } from '@/lib/crm/regles';
 import { PERIODES, construireTableau, estRdv, estStage, type Periode } from '@/lib/crm/tableau';
 import type { Aujourdhui } from '@/lib/crm/aujourdhui';
@@ -31,6 +33,8 @@ type Notif = { id: string; title: string; body: string; created_at: string };
 type Data = {
   leads: Lead[]; drafts: Draft[]; tasks: Task[]; notifications: Notif[];
   aujourdhui: Aujourdhui; regles: RegleAffichee[];
+  /** Courriels reçus ni traités ni ignorés (boîte de réception). */
+  boite?: number;
 };
 
 type Act = (type: string, id: string, value?: string) => void;
@@ -363,6 +367,7 @@ export default function AdminPage() {
   const menu: { titre: string; vues: [Vue, string, number | undefined, boolean?][] }[] = [
     { titre: 'Pilotage', vues: [
       ['aujourdhui', 'Aujourd’hui', data?.aujourdhui.total],
+      ['boite', 'Boîte de réception', data?.boite],
       ['leads', 'Demandes', compteurs?.demandes],
       ['tasks', 'Tâches', compteurs?.taches],
       ['rdv', 'Rendez-vous', compteurs?.rdv],
@@ -375,7 +380,7 @@ export default function AdminPage() {
     ] },
   ];
   const titres: Record<Vue, string> = {
-    aujourdhui: 'Bonjour, Camille', leads: 'Demandes', clients: 'Clients', rdv: 'Demandes de rendez-vous',
+    aujourdhui: 'Bonjour, Camille', boite: 'Boîte de réception', leads: 'Demandes', clients: 'Clients', rdv: 'Demandes de rendez-vous',
     stages: 'Stagiaires', drafts: 'Brouillons à approuver', tasks: 'Tâches', regles: 'Courriels et relances',
   };
   const date = new Intl.DateTimeFormat('fr-CA', { timeZone: 'America/Toronto', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
@@ -454,6 +459,8 @@ export default function AdminPage() {
               <TableauDeBord t={tableau} aujourdhui={data.aujourdhui} act={act} busy={busy} ouvrir={ouvrir} ouvrirFiche={ouvrirFiche} leadParId={leadById} />
             )}
 
+            {tab === 'boite' && <BoiteReception onOuvrirFiche={ouvrirFiche} onChange={load} />}
+
             {tab === 'regles' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <p style={{ color: 'var(--fg-2)', fontSize: 14, lineHeight: 1.6, margin: 0 }}>
@@ -499,6 +506,7 @@ export default function AdminPage() {
                     )}
                   </div>
                 ))}
+                <EditeurModeles />
               </div>
             )}
 
