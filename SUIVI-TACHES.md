@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 49.
+**Dernière mise à jour : 2026-10-23** — dernière section : 50.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -997,4 +997,21 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Pour Camille** : sur le site, le nom publié est « Marie T. » (prénom + initiale, annoncé dans le formulaire), plus protecteur que le nom complet ; et la phrase « Camille vous répond personnellement » (note de 3 ou moins) est une promesse à valider.
 
 **Coût** : estimé ≈ 250 k ; réel ≈ 330 k (session ≈ 190 k + `securite` ≈ 60 k + `qa-agent` ≈ 80 k).
+
+## 50. ✅ Étape D : statistiques de l'admin (visites, articles du Blog, avis, courriels) (2026-10-23)
+
+**Contexte / demande** : « ET CONTINUEZ AVEC : C… D : statistiques… » ; Camille a choisi les 4 chiffres (visites du site, articles du Blog les plus lus, avis et témoignages, courriels). Accord sur la nouvelle table `vsw_page_views` et sur l'arrêt de l'écriture dans `site_page_views` (table de CSF utilisée par erreur jusqu'ici) — « Oui, allez-y » (≈ 150 k).
+
+**Ce qui a été fait** :
+- Migration `vsw_page_views` appliquée en production (RLS activé, aucune politique, `REVOKE ALL` anon / authenticated), recopiée dans `supabase/setup-crm-vsw.sql`. Les 83 lignes de `site_page_views` (CSF) n'ont pas été touchées.
+- `src/lib/stats.ts` (règles pures) + `tests/stats.test.mjs` (6 tests ; vérifiés en cassant une fois l'exclusion de `/admin`) : chemin sans paramètres, `/admin` et `/api` jamais comptés, domaine d'origine seulement, type d'appareil, robots ignorés, 30 jours de calendrier à l'heure de Montréal (changements d'heure compris), courriels envoyés / reçus.
+- `POST /api/visite` (public) : rien qui identifie le visiteur (ni cookie, ni IP, ni navigateur complet) ; 300 pages par empreinte d'adresse et par heure, 20 000 par jour pour le site ; répond toujours 204. `track-pageview.tsx` l'appelle (provenance notée à l'arrivée seulement).
+- `GET /api/admin/stats` (session admin complète) : lecture par pages de 1000, titres des articles du Blog (`outputFileTracingIncludes` dans `next.config.ts`).
+- Onglet « Statistiques » de l'admin (`admin-stats.tsx`, menu « Suivi ») : 4 tuiles, pages vues par jour sur 30 jours (tableau lisible par les lecteurs d'écran), articles les plus lus, pages les plus vues, provenance. Styles par jetons, fin de `vsw.css`.
+
+**Vérification technique** : `npm run verify` vert (117 tests, 0 erreur de lint). Captures avec données d'essai : bureau, 375 px (aucun débordement), thème sombre. `securite` (Opus) VERT, corrigé : JSON du site seulement (`Sec-Fetch-Site`), rien sans `CRON_SECRET`. `qa-agent` (Opus) VERT, corrigé : Camille connectée à l'admin n'est pas comptée, date en dur retirée, tri stable de la pagination, avis sur 30 jours.
+
+**Non fait dans ce round** : les visites ne comptent qu'à partir de la mise en ligne de ce lot (rien n'est repris de la table de CSF) ; pas de comparaison avec la période précédente ; pas d'export. Suggestions des revues, à décider : durée de conservation des visites (aujourd'hui sans limite) ; afficher « plafond atteint » si les 20 000 pages du jour sont épuisées ; ne garder que les chemins qui existent (faux chemins possibles, sans danger) ; calcul côté base si le volume grossit ; une phrase sur la mesure d'audience dans la politique de confidentialité ; iPad récents comptés « ordinateur ».
+
+**Coût réel** : ≈ 230 k (session ≈ 100 k, `securite` ≈ 55 k, `qa-agent` ≈ 73 k). **À tester par Camille** : ouvrir l'onglet Statistiques après quelques visites.
 

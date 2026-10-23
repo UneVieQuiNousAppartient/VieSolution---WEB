@@ -31,7 +31,7 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 `/` (accueil), `/services` (les 9 solutions en 3 piliers), `/ia`, `/accueil-ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`,
 `/referencement`, `/metiers` et `/metiers/<slug>` (8 métiers, données dans `src/lib/metiers.ts`), `/devis` (« Combien ça coûte ? » :
 démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/avis` (témoignages, table `vsw_avis`, modération dans l'onglet « Avis » de `/admin`), `/a-propos`, `/rdv`, `/contact`,
-`/emplois` (offre de stage ; ancienne `/postuler-stagiaire`), `/admin` (+ pages légales).
+`/emplois` (offre de stage ; ancienne `/postuler-stagiaire`), `/admin` (+ pages légales ; onglet « Statistiques » : visites dans `vsw_page_views` par `/api/visite`, sans cookie ni donnée personnelle — `site_page_views` est à CSF, ne plus y écrire).
 Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 
 ## CRM (réplique du modèle KHI EDUC, isolé par préfixe vsw_)

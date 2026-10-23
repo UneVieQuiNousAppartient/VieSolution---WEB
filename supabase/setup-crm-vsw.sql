@@ -682,6 +682,23 @@ ALTER TABLE vsw_avis ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON vsw_avis FROM anon, authenticated;
 
 -- ============================================================================
+-- VISITES DU SITE (étape D, accord de Camille du 2026-10-23, migration vsw_page_views) :
+-- chaque page vue → POST /api/visite (service_role) ; lues par l'onglet « Statistiques ».
+-- Sans cookie, sans IP, sans navigateur complet : la page, le domaine d'où vient le visiteur,
+-- le type d'appareil. Remplace l'écriture dans site_page_views (table de CSF, plus touchée).
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS vsw_page_views (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  chemin text NOT NULL CHECK (char_length(chemin) BETWEEN 1 AND 200),
+  source text CHECK (source IS NULL OR char_length(source) <= 100),
+  appareil text NOT NULL DEFAULT 'ordinateur' CHECK (appareil IN ('mobile', 'tablette', 'ordinateur')),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS vsw_page_views_created_idx ON vsw_page_views (created_at DESC);
+ALTER TABLE vsw_page_views ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON vsw_page_views FROM anon, authenticated;
+
+-- ============================================================================
 -- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
 --    « Authorization: Bearer <CRON_SECRET> » (variable d'environnement Vercel).
 --    Projet Vercel « vie-solution-web » (équipe viesolution, où le cron horaire de KHI se déploie

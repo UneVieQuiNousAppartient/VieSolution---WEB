@@ -4654,3 +4654,18 @@ body:has(.adm-page) .chat-panel { display: none; }
 .adm-avis-message { margin: 0; padding: 12px 14px; border-radius: var(--radius); background: var(--bg-1); line-height: 1.6; color: var(--fg-0); }
 .adm-erreur { margin: 0; color: var(--danger); font-size: 14px; }
 .adm-avis-supprimer { margin-left: auto; color: var(--danger); }
+
+/* ── Onglet « Statistiques » de l'admin (étape D) ── */
+.adm-stats { display: grid; gap: 20px; }
+.adm-stats h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: 17px; font-weight: 600; }
+.adm-stats-graphe { display: flex; align-items: flex-end; gap: 3px; height: 140px; margin-top: 14px; }
+.adm-stats-colonne { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; }
+.adm-stats-colonne > span { display: block; width: 100%; min-height: 2px; border-radius: 3px 3px 0 0; background: var(--accent); }
+.adm-stats-axe { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; }
+.adm-stats-grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 16px; }
+.adm-stats-liste ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.adm-stats-liste li { display: grid; grid-template-columns: minmax(0, 1fr) 72px auto; align-items: center; gap: 10px; font-size: 14px; }
+.adm-stats-nom { overflow-wrap: anywhere; }
+.adm-stats-barre { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.adm-stats-barre > span { display: block; height: 100%; background: var(--accent-2); }
+.adm-stats-total { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }

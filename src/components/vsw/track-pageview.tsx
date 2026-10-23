@@ -2,22 +2,25 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
 
-/** Analytics légères : enregistre chaque page vue dans site_page_views (sans cookie, sans donnée personnelle). */
+/** Statistiques légères (étape D) : chaque page vue part vers /api/visite (table vsw_page_views),
+ *  sans cookie ni donnée personnelle. Les pages de l'admin ne sont pas comptées. */
+// La provenance ne compte qu'à l'arrivée sur le site : les pages suivantes viennent du site lui-même.
+let arrivee = true;
+
 export function TrackPageview() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!pathname) return;
-    supabase
-      .from('site_page_views')
-      .insert({
-        path: pathname,
-        referrer: document.referrer ? document.referrer.slice(0, 500) : null,
-        user_agent: navigator.userAgent.slice(0, 300),
-      })
-      .then(() => {});
+    if (!pathname || pathname.startsWith('/admin')) return;
+    const referent = arrivee ? document.referrer || '' : '';
+    arrivee = false;
+    fetch('/api/visite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chemin: pathname, referent }),
+      keepalive: true,
+    }).catch(() => undefined);
   }, [pathname]);
 
   return null;

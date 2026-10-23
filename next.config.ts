@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // L'onglet « Statistiques » lit les titres des articles du Blog pendant l'exécution.
+  outputFileTracingIncludes: { '/api/admin/stats': ['./src/content/blog/**'] },
   async redirects() {
     return [
       // Anciennes pages (ancien design) → nouvelles pages
