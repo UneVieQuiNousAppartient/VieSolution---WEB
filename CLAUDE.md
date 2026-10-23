@@ -30,7 +30,7 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 
 `/` (accueil), `/services` (les 9 solutions en 3 piliers), `/ia`, `/accueil-ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`,
 `/referencement`, `/metiers` et `/metiers/<slug>` (8 métiers, données dans `src/lib/metiers.ts`), `/devis` (« Combien ça coûte ? » :
-démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/a-propos`, `/rdv`, `/contact`,
+démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/avis` (témoignages, table `vsw_avis`, modération dans l'onglet « Avis » de `/admin`), `/a-propos`, `/rdv`, `/contact`,
 `/emplois` (offre de stage ; ancienne `/postuler-stagiaire`), `/admin` (+ pages légales).
 Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 
@@ -98,8 +98,8 @@ EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
 
 - Coordonnées du site (données par Camille le 2026-10-22) : **info@viesolutionweb.ca** et **(438) 506-5243**, partout.
 - Aucun montant sur le site public (décision de Camille, 2026-10-17) : les prix sont donnés par écrit après l'appel découverte.
-- Témoignages `site_testimonials` : exemples non publiés (`publie = false`) —
-  ne publier que de vrais témoignages.
+- Témoignages : depuis le 2026-10-23, table `vsw_avis` (formulaire `/avis`, publiés par Camille dans l'admin) ;
+  `site_testimonials` (sans préfixe) n'est plus lue. Ne publier que de vrais témoignages.
 
 ## Conventions de travail (préférences de Camille)
 

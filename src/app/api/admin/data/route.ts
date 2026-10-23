@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   const db = getAdminClient();
 
   const depuis = new Date(Date.now() - 90 * 86_400_000).toISOString();
-  const [leads, drafts, tasks, notifications, boite] = await Promise.all([
+  const [leads, drafts, tasks, notifications, boite, avis] = await Promise.all([
     db.from('vsw_leads').select('*').order('created_at', { ascending: false }).limit(200),
     db.from('vsw_outreach_drafts').select('*').order('created_at', { ascending: false }).limit(100),
     db.from('vsw_lead_tasks').select('*').is('done_at', null).order('due_at', { ascending: true }).limit(200),
@@ -28,6 +28,8 @@ export async function GET(req: NextRequest) {
     // Boîte de réception : courriels reçus ni traités ni ignorés (même fenêtre que /api/admin/courriels),
     // comptés par conversation comme dans la boîte (une personne qui écrit 3 fois compte pour 1).
     db.from('vsw_email_messages').select('lead_id, from_email, to_email, direction').eq('direction', 'in').is('traite_at', null).is('ignore_at', null).gte('received_at', depuis).limit(500),
+    // Avis en attente de vérification (étape E) : compteur du menu.
+    db.from('vsw_avis').select('id', { count: 'exact', head: true }).eq('statut', 'en_attente'),
   ]);
 
   const firstError = leads.error || drafts.error || tasks.error || notifications.error;
@@ -62,5 +64,6 @@ export async function GET(req: NextRequest) {
     regles,
     // Colonnes traite_at / ignore_at absentes (SQL de l'étape B pas encore passé) : 0, sans bloquer l'admin.
     boite: boite.error ? 0 : new Set((boite.data ?? []).map(cleConversation)).size,
+    avis: avis.error ? 0 : avis.count ?? 0,
   });
 }
