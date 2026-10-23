@@ -87,8 +87,9 @@ EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
   (accord de Camille, `SUIVI-TACHES.md` § 29) ; projet Vercel `vie-solution-web` créé le 2026-10-21 (équipe `viesolution`, relié
   au dépôt ; KHI s'y déploie déjà avec un cron horaire dans son `vercel.json`) — variables d'environnement à
   saisir par Camille ; secours pg_cron en fin de fichier SQL.
-- Pas encore en ligne : la branche de production Vercel est la branche par défaut du dépôt
-  (`claude/nextjs-web-project-RPcId`) ; aucun domaine branché.
+- En ligne depuis le 2026-10-22 sur `vie-solution-web.vercel.app` (PR #1 fusionnée) : la branche de production Vercel est la branche
+  par défaut du dépôt (`claude/nextjs-web-project-RPcId`) ; domaine **viesolutionweb.ca** branché le
+  2026-10-23 (`www` redirige en 308, `SUIVI-TACHES.md` § 34-35).
 - Domaine : **viesolutionweb.ca** (confirmé par Camille le 2026-10-21) — écrit une seule fois, dans `src/lib/site.ts`.
 
 ## [à confirmer] avant mise en ligne — ne pas inventer, demander à Camille

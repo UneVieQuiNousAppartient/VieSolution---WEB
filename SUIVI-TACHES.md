@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-22** — dernière section : 33.
+**Dernière mise à jour : 2026-10-23** — dernière section : 35.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -567,3 +567,28 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 
 **Non fait dans ce round** : coordonnées dans la fiche JSON-LD (à proposer à Camille). Sinon rien de plus. La suite, c'est la fusion de la PR #1 et la mise en ligne.
 
+## 34. ✅ Mise en ligne : fusion de la PR #1 (2026-10-22)
+
+**Contexte / demande** : Camille a dit « fusionne » après avoir saisi les variables d'environnement dans Vercel.
+
+**Ce qui a été fait**
+- PR #1 fusionnée dans la branche de production `claude/nextjs-web-project-RPcId` ; Vercel l'a déployée.
+- Contrôle en ligne sur `vie-solution-web.vercel.app` : pages en 200, coordonnées justes, `/api/chat` en GET répond `actif: true`, `/api/cron/tick` refuse sans secret (401).
+- Clavardage IA : chaque appel reçoit une erreur 400 de l'API (la bulle se replie sur ses réponses toutes faites). Cause probable : crédits du compte Anthropic. PR #7 ouverte pour journaliser le motif exact (sans le contenu des messages).
+
+**Vérification technique** : contrôle des pages et des journaux Vercel ; PR #7 : CodeQL vert.
+
+**Non fait dans ce round** : cause de l'erreur 400 non prouvée (PR #7 à fusionner, crédits à vérifier par Camille) ; activation de la double vérification de `/admin` (**à faire par Camille**) ; test d'un formulaire de contact en production (**à tester par Camille**).
+
+## 35. ✅ Domaine viesolutionweb.ca branché (2026-10-23)
+
+**Contexte / demande** : Camille a accepté de brancher le domaine, puis a ajouté les lignes DNS dans Cloudflare (« DNS faits »).
+
+**Ce qui a été fait**
+- Projet Vercel `vie-solution-web` : `viesolutionweb.ca` et `www.viesolutionweb.ca` ajoutés ; `www` redirige en 308 vers `viesolutionweb.ca`.
+- Lignes données à Camille et vérifiées : A `@` → `216.150.1.1` et `216.150.16.1`, CNAME `www` → `6790139f978fdc0b.vercel-dns-016.com`, nuage gris.
+- Certificat : rien d'automatique après 10 min ; demandé à Vercel (`cert_P7LMt6nmjhxoE2eZ8DXt6Zjc`, renouvellement automatique), servi aussitôt.
+
+**Vérification technique** : `get_domain_config` : `misconfigured: false` ; en HTTPS, `/`, `/ia`, `/zoho`, `/devis`, `/realisations`, `/a-propos`, `/rdv`, `/contact`, `/postuler-stagiaire`, `/admin` et la politique de confidentialité répondent 200 ; `www` → 308 ; `/api/chat` → `actif: true` ; cron sans secret → 401 ; `og:url` = `https://viesolutionweb.ca`.
+
+**Non fait dans ce round** : CNAME `rsend` (Resend) et renvoi Cloudflare Email Routing de info@ (aucun MX) — **à faire par Camille** ; adresse d'alerte `notify_email` à recevoir de Camille.
