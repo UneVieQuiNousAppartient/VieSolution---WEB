@@ -4569,22 +4569,17 @@ body:has(.adm-page) .chat-panel { display: none; }
 .blog-cote-bloc { border-top: 3px solid var(--pilier); }
 .blog-cote-bloc a:hover { color: var(--pilier); }
 
-/* Compilation de nos réalisations, page À propos (2026-10-23) : fondu enchaîné, 4 s par image. */
-.about-compilation { margin: 0; position: sticky; top: 96px; }
-.about-compilation-cadre { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-soft); background: var(--surface); box-shadow: 0 30px 60px -32px color-mix(in oklch, var(--accent) 55%, transparent); }
-.about-compilation-ecran { position: relative; aspect-ratio: 4 / 3.4; background: var(--bg-2); }
-.about-diapo { position: absolute; inset: 0; opacity: 0; animation: about-fondu calc(var(--diapos) * 4s) infinite; animation-delay: calc(var(--i) * 4s); }
-.about-diapo:first-child { opacity: 1; }
-@keyframes about-fondu { 0% { opacity: 0; } 3% { opacity: 1; } 14% { opacity: 1; } 18% { opacity: 0; } 100% { opacity: 0; } }
-.about-diapo-legende {
-  position: absolute; left: 12px; bottom: 12px; padding: 7px 12px; border-radius: 999px; font-size: 13px;
-  background: color-mix(in oklch, var(--fg-0) 82%, transparent); color: var(--bg-0);
+/* Vidéo de présentation, page À propos (2026-10-23) : remplace la compilation d'images. */
+.video-presentation { margin: 0; position: sticky; top: 96px; }
+.video-presentation-cadre { position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-soft); background: var(--bg-2); box-shadow: 0 30px 60px -32px color-mix(in oklch, var(--accent) 55%, transparent); }
+.video-presentation video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.video-presentation-boutons { position: absolute; right: 12px; top: 12px; display: flex; gap: 8px; }
+.video-presentation-bouton {
+  padding: 9px 16px; border-radius: 999px; border: 0; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--bg-0);
+  background: color-mix(in oklch, var(--fg-0) 84%, transparent); transition: background-color 160ms var(--vsw-ease);
 }
-.about-diapo-legende strong { margin-right: 4px; }
-.about-compilation figcaption { margin-top: 12px; font-size: 14px; color: var(--fg-2); }
-.about-compilation figcaption a { color: var(--accent-ink); font-weight: 600; text-decoration: none; }
-@media (max-width: 900px) { .about-compilation { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .about-diapo { animation: none; }
-  .about-diapo:not(:first-child) { display: none; }
-}
+.video-presentation-bouton:hover { background: var(--fg-0); }
+.video-presentation-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.video-presentation figcaption { margin-top: 12px; font-size: 14px; color: var(--fg-2); line-height: 1.5; }
+@media (max-width: 900px) { .video-presentation { position: static; } }

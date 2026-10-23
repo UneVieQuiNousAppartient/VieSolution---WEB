@@ -1,11 +1,11 @@
-import { AboutCompilation } from './about-compilation';
+import { VideoPresentation } from './video-presentation';
 
 export function About() {
   return (
     <section id="apropos" className="section">
       <div className="container">
         <div className="about-wrap reveal">
-          <AboutCompilation />
+          <VideoPresentation />
           <div className="about-content">
             <div className="eyebrow">Qui sommes-nous</div>
             <h2>Un studio québécois, à votre service.</h2>

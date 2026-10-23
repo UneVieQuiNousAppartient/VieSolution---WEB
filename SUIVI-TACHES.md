@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 46.
+**Dernière mise à jour : 2026-10-23** — dernière section : 47.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -924,7 +924,7 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Ce qui a été fait**
 - **Blog** : une couleur par pilier (`clePilier`, attribut `data-pilier` : sarcelle IA, vert Zoho, violet Web). Cartes avec bande et fond teintés, pastille du pilier ; article avec halo de couleur en haut, pastille dans le fil d'Ariane, plan teinté, barre de couleur devant chaque titre, « À retenir » en dégradé, blocs du côté soulignés de la couleur du pilier.
-- **À propos** : la case photo vide est remplacée par une compilation (`about-compilation.tsx`) des vrais sites (3) et écrans de CRM (4), déjà publiés dans la bande de l'accueil, en fondu enchaîné CSS (4 s par image), avec légende et lien vers Réalisations. Avec « réduire les animations » : première image seule, fixe.
+- **À propos** : (remplacée ensuite par la vidéo, § 47) la case photo vide est remplacée par une compilation (`about-compilation.tsx`) des vrais sites (3) et écrans de CRM (4), déjà publiés dans la bande de l'accueil, en fondu enchaîné CSS (4 s par image), avec légende et lien vers Réalisations. Avec « réduire les animations » : première image seule, fixe.
 - **Stage** : bannière de À propos (`interns-section.tsx`) réduite à l'offre : « Vous êtes aux études en informatique, en IA ou en administration ? Découvrez notre offre de stage. » ; paragraphe « Nous formons aussi la relève… » retiré de `about.tsx`.
 
 **Vérification technique** : `npm run verify` vert ; test de `clePilier` ajouté. Captures du Blog, d'un article et de À propos (deux images de la compilation) ; aucun débordement à 390 px.
@@ -937,4 +937,25 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 `qa-agent` (Opus, ≈ 35 k) **ROUGE puis corrigé** : texte de la pastille du pilier sous 4,5:1 sur les fonds teintés (3,43 à 4,69) → couleur du pilier mêlée à 20 % de noir en thème clair (5,38 à 7,26). Le reste vert : légende de la compilation ≥ 9,88:1, une seule image annoncée, animation coupée si réduite, « 3 sites et 4 écrans » calculé.
 
 **Coût** : estimé ≈ 60 k ; réel ≈ 105 k (session ≈ 70 k + `qa-agent` ≈ 35 k).
+
+## 47. ✅ Vidéo de présentation sur À propos, avec musique chaleureuse (2026-10-23)
+
+**Contexte / demande** : « ou alors une vidéo qui montre l'évolution, ce que l'on ramène aux PME ». Camille donne le découpage en 4 actes (constat, enjeu, solution, chute et appel), ses messages et l'appel « Réservez votre appel découverte gratuit de 30 minutes ». Choix : vraie vidéo MP4 ; essai avec voix de synthèse libre (Siwis, CC-BY 4.0, accent de France) envoyé, puis « mets juste un son chaleureux pour le site » ; sur le site, sourdine et bouton « Activer le son ».
+
+**Ce qui a été fait**
+- **Vidéo** (56 s, 16:9) fabriquée ici : page animée (scratchpad `video/scene.html`, mêmes jetons de couleur, polices du site) rendue image par image (Playwright) puis encodée (ffmpeg). Textes : ceux de Camille et du site ; images : vrais écrans du CRM (Leads, Aujourd'hui). Aucun chiffre, client ni témoignage inventé.
+- **Musique** composée par programme (accords doux, piano léger, crescendo à l'acte 3, résolution à la fin) : aucun droit à payer ni crédit à afficher.
+- **Fichiers** : `public/videos/presentation.webm` (VP9 + Opus, 2,3 Mo), `presentation.mp4` (H.264 + AAC, 2,5 Mo), `presentation.webp` (image d'attente). Version 1080p avec musique et version avec voix Siwis remises à Camille pour les réseaux sociaux.
+- **Site** : `video-presentation.tsx` remplace la compilation d'images (§ 46, retirée avant mise en ligne) dans `about.tsx` : lecture automatique en sourdine, en boucle ; boutons « Pause / Lecture » (WCAG 2.2.2) et « Activer le son » (repart du début avec le son), icônes cachées aux lecteurs d'écran ; « réduire les animations » : pas de lecture automatique, image finale et bouton « Lecture ».
+
+**Vérification technique** : `npm run verify` vert ; la vidéo se lit en sourdine dans le navigateur de test (WebM ; le MP4 sert à Safari) ; aucun débordement à 390 px.
+
+**Non fait dans ce round**
+- Voix : non retenue pour le site. Si Camille enregistre sa voix plus tard, elle se mixe en quelques minutes.
+- Vidéo sur l'accueil : non demandée pour l'instant.
+- À écouter par Camille : la musique (je ne peux pas l'écouter moi-même).
+
+`qa-agent` (Opus, ≈ 45 k) **ROUGE puis corrigé** : il manquait un bouton Pause (contenu en boucle, WCAG 2.2.2) ; libellé faux avec « réduire les animations » ; double annonce du bouton (aria-pressed retiré) ; icônes lues à voix haute. Le reste vert : fichiers servis, 56 s avec piste audio, contraste du bouton ≥ 10:1, aucun fait inventé.
+
+**Coût** : estimé ≈ 120 k ; réel ≈ 180 k (session ≈ 135 k + `qa-agent` ≈ 45 k).
 
