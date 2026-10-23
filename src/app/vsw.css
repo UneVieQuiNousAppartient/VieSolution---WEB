@@ -4528,3 +4528,63 @@ body:has(.adm-page) .chat-panel { display: none; }
 :root:not([data-theme="dark"]) .svc-pilier:nth-child(2) .svc-pilier-titre { color: var(--ok); }
 :root:not([data-theme="dark"]) .svc-pilier:nth-child(3) .svc-pilier-titre { color: var(--accent-2); }
 
+
+/* Blog en couleur (demande de Camille, 2026-10-23) : une couleur par pilier (sarcelle IA, vert Zoho,
+   violet Web) sur les cartes, l'en-tête de l'article, le plan, les titres et les encadrés. */
+[data-pilier="ia"] { --pilier: var(--accent); }
+[data-pilier="zoho"] { --pilier: var(--ok); }
+[data-pilier="web"] { --pilier: var(--accent-2); }
+.blog-pastille {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in oklch, var(--pilier, var(--accent)) 14%, transparent);
+  color: var(--pilier, var(--accent)); font-weight: 600;
+}
+:root:not([data-theme="dark"]) .blog-pastille { color: color-mix(in oklch, var(--pilier, var(--accent)) 80%, black); }   /* ≥ 5,38:1 sur les fonds teintés */
+.blog-carte {
+  border-top: 4px solid var(--pilier);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--pilier) 8%, var(--surface)), var(--surface) 55%);
+}
+.blog-carte:hover { border-color: var(--pilier); box-shadow: 0 18px 36px -22px var(--pilier); }
+.blog-carte-meta { color: var(--fg-2); }
+.blog-carte strong { color: var(--fg-0); }
+.blog-carte .pm-lien { color: var(--pilier); }
+.blog-article {
+  background:
+    radial-gradient(40% 340px at 6% 0%, color-mix(in oklch, var(--pilier) 18%, transparent), transparent 70%),
+    radial-gradient(36% 300px at 96% 4%, color-mix(in oklch, var(--accent-2) 12%, transparent), transparent 70%);
+}
+.blog-article .fil-ariane .blog-pastille { font-size: 13px; }
+.blog-h2 { position: relative; padding-left: 16px; }
+.blog-h2::before { content: ""; position: absolute; left: 0; top: 0.18em; bottom: 0.18em; width: 5px; border-radius: 4px; background: linear-gradient(180deg, var(--pilier, var(--accent)), var(--accent-2)); }
+.blog-h2--retenir, .blog-h2--sources { padding-left: 20px; }
+.blog-h2--retenir::before, .blog-h2--sources::before { display: none; }
+.blog-plan { border-color: color-mix(in oklch, var(--pilier) 30%, transparent); background: color-mix(in oklch, var(--pilier) 6%, var(--surface)); }
+.blog-plan .blog-encadre-titre, .blog-article .blog-encadre-titre { color: var(--pilier); }
+.blog-h2--retenir, .blog-h2--retenir + ul {
+  background: linear-gradient(135deg, color-mix(in oklch, var(--pilier) 13%, var(--surface)), color-mix(in oklch, var(--accent-2) 10%, var(--surface)));
+  border-color: color-mix(in oklch, var(--pilier) 28%, transparent);
+}
+.blog-h2--retenir { color: var(--fg-0); }
+.blog-texte strong { color: var(--fg-0); }
+.blog-cote-bloc { border-top: 3px solid var(--pilier); }
+.blog-cote-bloc a:hover { color: var(--pilier); }
+
+/* Compilation de nos réalisations, page À propos (2026-10-23) : fondu enchaîné, 4 s par image. */
+.about-compilation { margin: 0; position: sticky; top: 96px; }
+.about-compilation-cadre { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line-soft); background: var(--surface); box-shadow: 0 30px 60px -32px color-mix(in oklch, var(--accent) 55%, transparent); }
+.about-compilation-ecran { position: relative; aspect-ratio: 4 / 3.4; background: var(--bg-2); }
+.about-diapo { position: absolute; inset: 0; opacity: 0; animation: about-fondu calc(var(--diapos) * 4s) infinite; animation-delay: calc(var(--i) * 4s); }
+.about-diapo:first-child { opacity: 1; }
+@keyframes about-fondu { 0% { opacity: 0; } 3% { opacity: 1; } 14% { opacity: 1; } 18% { opacity: 0; } 100% { opacity: 0; } }
+.about-diapo-legende {
+  position: absolute; left: 12px; bottom: 12px; padding: 7px 12px; border-radius: 999px; font-size: 13px;
+  background: color-mix(in oklch, var(--fg-0) 82%, transparent); color: var(--bg-0);
+}
+.about-diapo-legende strong { margin-right: 4px; }
+.about-compilation figcaption { margin-top: 12px; font-size: 14px; color: var(--fg-2); }
+.about-compilation figcaption a { color: var(--accent-ink); font-weight: 600; text-decoration: none; }
+@media (max-width: 900px) { .about-compilation { position: static; } }
+@media (prefers-reduced-motion: reduce) {
+  .about-diapo { animation: none; }
+  .about-diapo:not(:first-child) { display: none; }
+}

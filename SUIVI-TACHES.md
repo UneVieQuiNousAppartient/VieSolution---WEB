@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 45.
+**Dernière mise à jour : 2026-10-23** — dernière section : 46.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -917,4 +917,24 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Non fait dans ce round** : à regarder par Camille sur son téléphone et son ordinateur (aperçu de la PR).
 
 **Coût** : estimé ≈ 50 k ; réel ≈ 120 k (session ≈ 75 k + `qa-agent` ≈ 45 k).
+
+## 46. ✅ Blog en couleur, compilation des réalisations sur À propos, phrase du stage (2026-10-23)
+
+**Contexte / demande** (Camille) : « blog n'a pas de couleur, il faut en mettre même dans les articles » ; « À propos : il manque une image ou une petite vidéo, une compilation de ce que l'on a déjà fait » ; la phrase « On forme des jeunes en informatique, en IA et sur Zoho — apprenez le métier sur de vrais mandats clients » « ne rassure pas : seulement parler de l'offre de stagiaire, on ne rajoute pas plus ».
+
+**Ce qui a été fait**
+- **Blog** : une couleur par pilier (`clePilier`, attribut `data-pilier` : sarcelle IA, vert Zoho, violet Web). Cartes avec bande et fond teintés, pastille du pilier ; article avec halo de couleur en haut, pastille dans le fil d'Ariane, plan teinté, barre de couleur devant chaque titre, « À retenir » en dégradé, blocs du côté soulignés de la couleur du pilier.
+- **À propos** : la case photo vide est remplacée par une compilation (`about-compilation.tsx`) des vrais sites (3) et écrans de CRM (4), déjà publiés dans la bande de l'accueil, en fondu enchaîné CSS (4 s par image), avec légende et lien vers Réalisations. Avec « réduire les animations » : première image seule, fixe.
+- **Stage** : bannière de À propos (`interns-section.tsx`) réduite à l'offre : « Vous êtes aux études en informatique, en IA ou en administration ? Découvrez notre offre de stage. » ; paragraphe « Nous formons aussi la relève… » retiré de `about.tsx`.
+
+**Vérification technique** : `npm run verify` vert ; test de `clePilier` ajouté. Captures du Blog, d'un article et de À propos (deux images de la compilation) ; aucun débordement à 390 px.
+
+**Non fait dans ce round**
+- « relève » reste dans `benefits-section.tsx` (« On forme vos gens — et la relève — ») et `pricing-section.tsx` (« Formations trimestrielles (équipe & relève) ») : à décider par Camille.
+- Pas de vraie vidéo (MP4) : un fondu d'images en CSS, plus léger. Une vidéo pourra remplacer la compilation si Camille en fournit une.
+- Accord des clients (Ben's, Khí) pour leurs captures : toujours à obtenir par Camille (mêmes images que la bande de l'accueil).
+
+`qa-agent` (Opus, ≈ 35 k) **ROUGE puis corrigé** : texte de la pastille du pilier sous 4,5:1 sur les fonds teintés (3,43 à 4,69) → couleur du pilier mêlée à 20 % de noir en thème clair (5,38 à 7,26). Le reste vert : légende de la compilation ≥ 9,88:1, une seule image annoncée, animation coupée si réduite, « 3 sites et 4 écrans » calculé.
+
+**Coût** : estimé ≈ 60 k ; réel ≈ 105 k (session ≈ 70 k + `qa-agent` ≈ 35 k).
 

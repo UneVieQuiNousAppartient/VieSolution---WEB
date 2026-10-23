@@ -57,6 +57,9 @@ export const slugValide = (slug: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(sl
 /** Chemin d'un article, encodé (un nom de fichier n'entre jamais tel quel dans un lien). */
 export const cheminArticle = (slug: string) => `/blog/${encodeURIComponent(slug)}`;
 
+/** Couleur d'un pilier (attribut data-pilier) : IA → sarcelle, Zoho → vert, Web → violet. */
+export const clePilier = (pilier: string) => (pilier === 'Zoho' ? 'zoho' : pilier.startsWith('Web') ? 'web' : 'ia');
+
 /** Lien permis : adresse interne (« /… », sans « // ») ou https. Le reste reste du texte. */
 export const lienPermis = (href: string) => /^\/(?![/\\])/.test(href) || /^https:\/\/[^\s]+$/.test(href);
 
