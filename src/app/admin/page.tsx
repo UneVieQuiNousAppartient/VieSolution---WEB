@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { encode } from 'uqr';
 import { Icon } from '@/components/vsw/icon';
+import { AdminAvis } from '@/components/vsw/admin-avis';
 import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
 import { FicheDemande } from '@/components/vsw/admin-fiche';
 import { NouvelleDemande } from '@/components/vsw/admin-nouvelle';
@@ -35,6 +36,7 @@ type Data = {
   aujourdhui: Aujourdhui; regles: RegleAffichee[];
   /** Courriels reçus ni traités ni ignorés (boîte de réception). */
   boite?: number;
+  avis?: number;
 };
 
 type Act = (type: string, id: string, value?: string) => void;
@@ -375,13 +377,14 @@ export default function AdminPage() {
     { titre: 'Suivi', vues: [
       ['clients', 'Clients', compteurs?.clients],
       ['drafts', 'Brouillons à approuver', pending.length, true],
+      ['avis', 'Avis', data?.avis, true],
       ['regles', 'Courriels et relances', undefined],
       ['stages', 'Stagiaires', compteurs?.stages],
     ] },
   ];
   const titres: Record<Vue, string> = {
     aujourdhui: 'Bonjour, Camille', boite: 'Boîte de réception', leads: 'Demandes', clients: 'Clients', rdv: 'Demandes de rendez-vous',
-    stages: 'Stagiaires', drafts: 'Brouillons à approuver', tasks: 'Tâches', regles: 'Courriels et relances',
+    stages: 'Stagiaires', drafts: 'Brouillons à approuver', tasks: 'Tâches', regles: 'Courriels et relances', avis: 'Avis et témoignages',
   };
   const date = new Intl.DateTimeFormat('fr-CA', { timeZone: 'America/Toronto', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
   const ouvrir = (v: Vue) => { setTab(v); setFicheId(null); window.scrollTo({ top: 0 }); };
@@ -460,6 +463,7 @@ export default function AdminPage() {
             )}
 
             {tab === 'boite' && <BoiteReception onOuvrirFiche={ouvrirFiche} onChange={load} />}
+            {tab === 'avis' && <AdminAvis onChange={load} />}
 
             {tab === 'regles' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

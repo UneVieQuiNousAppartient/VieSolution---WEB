@@ -660,6 +660,28 @@ SELECT d, 540, 1020 FROM generate_series(1, 5) AS d
 WHERE NOT EXISTS (SELECT 1 FROM vsw_availability_windows);
 
 -- ============================================================================
+-- AVIS ET TÉMOIGNAGES (étape E, accord de Camille du 2026-10-23, migration vsw_avis) :
+-- formulaire public de /avis → /api/avis (service_role), modération dans l'onglet « Avis ».
+-- site_testimonials (sans préfixe) n'est pas touchée. RLS sans politique : serveur seulement.
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS vsw_avis (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  nom text NOT NULL CHECK (char_length(nom) BETWEEN 2 AND 80),
+  metier text CHECK (metier IS NULL OR char_length(metier) <= 60),
+  note smallint NOT NULL CHECK (note BETWEEN 1 AND 5),
+  message text NOT NULL CHECK (char_length(message) BETWEEN 10 AND 1500),
+  statut text NOT NULL DEFAULT 'en_attente' CHECK (statut IN ('en_attente', 'publie', 'refuse')),
+  consentement_at timestamptz NOT NULL,
+  consentement_texte text NOT NULL,
+  source text CHECK (source IS NULL OR char_length(source) <= 20),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  statut_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS vsw_avis_statut_idx ON vsw_avis (statut, created_at DESC);
+ALTER TABLE vsw_avis ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON vsw_avis FROM anon, authenticated;
+
+-- ============================================================================
 -- 5. PASSAGE HORAIRE — Vercel Cron (vercel.json) appelle GET /api/cron/tick avec
 --    « Authorization: Bearer <CRON_SECRET> » (variable d'environnement Vercel).
 --    Projet Vercel « vie-solution-web » (équipe viesolution, où le cron horaire de KHI se déploie

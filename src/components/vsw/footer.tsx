@@ -51,6 +51,7 @@ export function VswFooter() {
             <Link href="/blog">Blog</Link>
             <Link href="/a-propos">À propos</Link>
             <Link href="/emplois">Emplois</Link>
+            <Link href="/avis">Laisser un avis</Link>
             <Link href="/contact">Contact</Link>
           </div>
           <div>

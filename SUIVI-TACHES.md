@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 48.
+**Dernière mise à jour : 2026-10-23** — dernière section : 49.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -959,7 +959,7 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Coût** : estimé ≈ 120 k ; réel ≈ 180 k (session ≈ 135 k + `qa-agent` ≈ 45 k).
 
-## 48. ✅ Vidéo aussi sur l'accueil ; « relève » retirée partout (2026-10-23)
+## 48. ✅ Vidéo aussi sur l'accueil ; « relève » retirée partout (2026-10-23) (fusionnée, PR #18)
 
 **Contexte / demande** : à « je retire “relève” des deux derniers endroits, et la vidéo aussi sur l'accueil ? », Camille répond « OUIIII ».
 
@@ -972,4 +972,29 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Non fait dans ce round** : relecture du nouveau titre par Camille. Note : `qa-agent` (Opus, ≈ 35 k, VERT) a tourné juste après le commit, pas avant (écart à la règle, sans conséquence).
 
 **Coût** : estimé ≈ 20 k ; réel ≈ 60 k (session ≈ 25 k + `qa-agent` ≈ 35 k).
+
+## 49. ✅ Étape E : page Avis, onglet « Avis » de l'admin, témoignages de l'accueil (2026-10-23)
+
+**Contexte / demande** : « il nous faut une page commentaire comme sur KHI » ; maquette SiteAvis validée (WhatsApp, code QR, admin comme KHI). Décisions de Camille (§ 43) : table `vsw_avis` acceptée ; texte de consentement accepté ; affichage nom, métier, note ; liens Google et Facebook fournis plus tard ; WhatsApp au (438) 506-5243 (à régler dans l'admin).
+
+**Ce qui a été fait**
+- **Base** : migration `vsw_avis` (appliquée le 2026-10-23, recopiée dans `setup-crm-vsw.sql`) : nom, métier, note 1-5, message, statut (en attente / publié / refusé), preuve du consentement (date + texte), source (`qr`). RLS activé, aucune politique, droits retirés à `anon` et `authenticated` : serveur seulement. `site_testimonials` n'est pas touchée (ni lue).
+- **Règles pures** `src/lib/avis.ts` + `tests/avis.test.mjs` (12 tests, vérifiés en cassant la règle du consentement) : validation, nom publié « Marie T. », chiffres, lien WhatsApp, liens https seulement, réglages.
+- **API** : `/api/avis` (GET : publiés, prénom + initiale ; liens de la page — POST : témoignage « en attente », piège à robots, 3 par adresse et 40 par jour au total, empreinte d'IP seulement, alerte à `notify_email`) ; `/api/admin/avis` (session complète : liste, publier / refuser / remettre en attente, réglages Google / Facebook / WhatsApp, journal d'audit).
+- **Page `/avis`** (`avis-formulaire.tsx`) : étoiles, message d'écoute si 3 ou moins (vers Contact), plateformes offertes à tous (règle de Google), formulaire avec consentement obligatoire.
+- **Admin** : onglet « Avis » (`admin-avis.tsx`, compteur des avis en attente dans le menu) : 4 chiffres, code QR de `/avis?src=qr` (PNG 1200 px et SVG, fait avec `uqr`, déjà dans le site : **aucune nouvelle dépendance**, au lieu de `qrcode`), copie du lien, réglages des boutons, filtres, actions.
+- **Accueil** : la section Témoignages lit `/api/avis` (au lieu de `site_testimonials`) et invite à laisser un avis ; « Laisser un avis » dans le pied de page ; `/avis` dans le plan du site.
+
+**Vérification technique** : `npm run verify` vert (110 tests). Page `/avis` à 1280 et 390 px. Envoi réel d'un avis : à faire sur l'aperçu (le serveur local n'a pas les clés de la base).
+
+**Non fait dans ce round**
+- À faire par Camille dans l'onglet Avis : lien Google (« Demander des avis »), page Facebook, numéro WhatsApp.
+- « Avis en attente » sur l'écran « Aujourd'hui » : seulement dans le menu pour l'instant.
+- Statistiques des avis (note moyenne par mois) : avec l'étape D.
+
+`securite` (Opus, ≈ 60 k) **VERT** ; corrigé : le compteur du site ne monte plus quand l'adresse a dépassé sa limite (sinon une seule adresse bloquait le formulaire pour la journée) ; bouton « Supprimer définitivement » dans l'onglet (retrait promis par le consentement, Loi 25 ; le journal garde seulement l'identifiant). `qa-agent` (Opus, ≈ 80 k) **VERT** ; corrigé : longueurs comptées en caractères (émojis), cache public ramené à 30 s, étoiles annoncées (`role="img"`), commentaire du plan du site.
+
+**Pour Camille** : sur le site, le nom publié est « Marie T. » (prénom + initiale, annoncé dans le formulaire), plus protecteur que le nom complet ; et la phrase « Camille vous répond personnellement » (note de 3 ou moins) est une promesse à valider.
+
+**Coût** : estimé ≈ 250 k ; réel ≈ 330 k (session ≈ 190 k + `securite` ≈ 60 k + `qa-agent` ≈ 80 k).
 

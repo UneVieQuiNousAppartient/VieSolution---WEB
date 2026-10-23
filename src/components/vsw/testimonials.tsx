@@ -1,34 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import Link from 'next/link';
 
-type Testimonial = {
-  id: string;
-  auteur: string;
-  role: string | null;
-  citation: string;
-  note: number | null;
-};
+type Testimonial = { id: string; nom: string; metier: string | null; message: string; note: number };
 
 /**
- * Témoignages chargés depuis Supabase (table site_testimonials, publie = true).
- * La section ne s'affiche que s'il existe des témoignages publiés.
+ * Témoignages publiés par Camille dans l'onglet « Avis » de l'admin (table vsw_avis, lue par /api/avis :
+ * prénom et initiale seulement). Remplace site_testimonials le 2026-10-23 (étape E). La section ne
+ * s'affiche que s'il existe des témoignages publiés.
  */
 export function Testimonials() {
   const [items, setItems] = useState<Testimonial[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from('site_testimonials')
-      .select('id, auteur, role, citation, note')
-      .eq('publie', true)
-      .order('ordre', { ascending: true })
-      .limit(6)
-      .then(({ data, error }) => {
-        if (!cancelled && !error && data) setItems(data as Testimonial[]);
-      });
+    fetch('/api/avis')
+      .then((r) => (r.ok ? r.json() : { avis: [] }))
+      .then((j: { avis?: Testimonial[] }) => {
+        if (!cancelled && Array.isArray(j.avis)) setItems(j.avis);
+      })
+      .catch(() => undefined);
     return () => {
       cancelled = true;
     };
@@ -45,7 +37,8 @@ export function Testimonials() {
             <h2>Ils ont repris<br />le contrôle.</h2>
           </div>
           <p className="desc">
-            Des entreprises québécoises qui travaillent déjà avec nous.
+            Des entreprises québécoises qui travaillent déjà avec nous.{' '}
+            <Link href="/avis">Vous êtes client ? Laissez un avis <span aria-hidden="true">→</span></Link>
           </p>
         </div>
         <div className="testimonials-grid">
@@ -56,10 +49,10 @@ export function Testimonials() {
                   {'★'.repeat(t.note)}
                 </div>
               ) : null}
-              <blockquote>« {t.citation} »</blockquote>
+              <blockquote>« {t.message} »</blockquote>
               <figcaption>
-                <strong>{t.auteur}</strong>
-                {t.role ? <span>{t.role}</span> : null}
+                <strong>{t.nom}</strong>
+                {t.metier ? <span>{t.metier}</span> : null}
               </figcaption>
             </figure>
           ))}
