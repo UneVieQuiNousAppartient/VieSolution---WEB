@@ -57,11 +57,16 @@ CREATE TABLE IF NOT EXISTS vsw_leads (
   email_opt_out_source TEXT,
   estimator JSONB,
   CONSTRAINT vsw_leads_status_check
-    CHECK (status IN ('Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu')),
+    CHECK (status IN ('Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu')),
   CONSTRAINT vsw_leads_email_opt_out_source_check
     CHECK (email_opt_out_source IS NULL OR email_opt_out_source IN ('lien', 'one-click', 'admin'))
 );
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_status ON vsw_leads (status, created_at DESC);
+-- Étape « Prospect » (accord de Camille du 2026-10-23, migration vsw_leads_etape_prospect) : pour une
+-- base créée avant cette date, la règle des étapes est remplacée.
+ALTER TABLE vsw_leads DROP CONSTRAINT IF EXISTS vsw_leads_status_check;
+ALTER TABLE vsw_leads ADD CONSTRAINT vsw_leads_status_check
+  CHECK (status IN ('Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'));
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_email ON vsw_leads (lower(email));
 CREATE INDEX IF NOT EXISTS idx_vsw_leads_next_action ON vsw_leads (next_action_at);
 
@@ -154,6 +159,13 @@ CREATE TABLE IF NOT EXISTS vsw_email_messages (
   attachments JSONB NOT NULL DEFAULT '[]'
 );
 CREATE INDEX IF NOT EXISTS idx_vsw_email_messages_lead ON vsw_email_messages (lead_id, received_at DESC);
+-- Boîte de réception (étape B, accord de Camille du 2026-10-23 : « oui aux 4 »).
+ALTER TABLE vsw_email_messages ADD COLUMN IF NOT EXISTS traite_at TIMESTAMPTZ;
+ALTER TABLE vsw_email_messages ADD COLUMN IF NOT EXISTS ignore_at TIMESTAMPTZ;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_vsw_email_messages_resend_in
+  ON vsw_email_messages (resend_id) WHERE direction = 'in' AND resend_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_vsw_email_messages_boite
+  ON vsw_email_messages (received_at DESC) WHERE direction = 'in';
 
 CREATE TABLE IF NOT EXISTS vsw_automation_rules (
   key TEXT PRIMARY KEY,
@@ -614,6 +626,24 @@ INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
   -- proposé et accepté par Camille le 2026-10-22 (« ajoute l'accusé pour les rdv »).
   ('accuse_rdv', 'fr', 'Votre demande d''appel est bien arrivée',
    E'Bonjour {{prenom}},\n\nMerci, votre demande d''appel est bien arrivée. Je vous confirme l''heure par courriel sous 24 h ouvrables.\n\nAu plaisir,\nCamille, Vie Solution Web')
+ON CONFLICT (key, lang) DO NOTHING;
+
+-- Modèles de réponse (textes approuvés par Camille le 2026-10-23 : « les modeles sont bon »,
+-- « modèle 6 OK »). Les crochets se remplissent à la main (ou par la suggestion de l'IA, à partir
+-- de la conversation et de la fiche seulement). La prospection ne part qu'avec un accord noté.
+INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
+  ('modele_confirmer_appel', 'fr', 'Votre appel découverte est confirmé',
+   E'Bonjour {{prenom}},\n\nMerci, c''est noté : je vous appelle [jour et heure].\n\nPour que ce moment vous soit vraiment utile, vous pouvez me dire en une phrase ce qui vous prend le plus de temps aujourd''hui. Je préparerai l''appel en conséquence.\n\nAu plaisir,\nCamille'),
+  ('modele_soumission', 'fr', 'Votre soumission, comme promis',
+   E'Bonjour {{prenom}},\n\nMerci encore pour notre échange. Comme promis, voici la soumission pour [projet] : [lien vers la soumission].\n\nElle reprend ce dont nous avons parlé : [résumé en une ou deux phrases]. Prenez le temps de la lire tranquillement. Si un point ne vous convient pas, on l''ajuste ensemble, avant de commencer.\n\nJe reste disponible pour toute question.\n\nAu plaisir,\nCamille'),
+  ('modele_relance_appel', 'fr', 'Suite à notre appel',
+   E'Bonjour {{prenom}},\n\nMerci pour le temps que vous m''avez accordé [jour de l''appel]. J''ai repensé à ce que vous m''avez dit au sujet de [sujet], et je crois sincèrement qu''on peut vous simplifier la vie.\n\nAvez-vous eu l''occasion d''y réfléchir ? Si une question vous trotte dans la tête, je suis là.\n\nAu plaisir,\nCamille'),
+  ('modele_merci_recommandation', 'fr', 'Un grand merci',
+   E'Bonjour {{prenom}},\n\nJe tenais à vous remercier sincèrement d''avoir parlé de Vie Solution Web à [nom de la personne recommandée]. Votre confiance me touche beaucoup.\n\nJe prendrai grand soin de cette personne, comme je l''ai fait avec vous.\n\nMerci encore,\nCamille'),
+  ('modele_reorienter', 'fr', 'Votre demande à Vie Solution Web',
+   E'Bonjour {{prenom}},\n\nMerci beaucoup d''avoir pensé à nous. Après avoir lu votre demande, je crois honnêtement que nous ne sommes pas les mieux placés pour vous aider avec [sujet]. [Piste ou ressource à suggérer, si vous en avez une.]\n\nJe vous souhaite sincèrement de trouver la bonne solution. Et si un autre besoin se présente, notre porte reste grande ouverte.\n\nAu plaisir,\nCamille'),
+  ('modele_prospection', 'fr', 'Une idée pour [entreprise]',
+   E'Bonjour {{prenom}},\n\nJe m''appelle Camille Yvan. J''aide les PME et les travailleurs autonomes du Québec à se libérer des tâches répétitives grâce à l''IA et à Zoho. [Comment vous avez connu la personne ou son entreprise.]\n\nJ''ai pensé à vous parce que [raison précise, tirée de ce que vous savez de son entreprise]. J''aimerais beaucoup comprendre comment vous gérez [sujet] aujourd''hui.\n\nSi le sujet vous intéresse, un appel découverte de 30 minutes, gratuit et sans engagement, permet d''y voir plus clair : {{lien_rdv}}\n\nEt si ce n''est pas pour vous, un simple mot en réponse suffit : je ne vous relancerai pas.\n\nAu plaisir,\nCamille')
 ON CONFLICT (key, lang) DO NOTHING;
 
 -- postal_address : adresse postale du pied des relances (LCAP), donnée par Camille le 2026-10-21

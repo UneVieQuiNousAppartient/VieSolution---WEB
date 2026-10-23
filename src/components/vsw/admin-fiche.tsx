@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { STATUTS } from '@/lib/crm/regles';
 import { SOURCES, cleSource } from '@/lib/crm/tableau';
 import { accordManquant } from '@/lib/crm/saisie';
+import { ChoixModele, type ModeleInsere } from '@/components/vsw/admin-boite';
 
 const tel = (n: string) => `tel:${encodeURIComponent(n)}`;
 const mailto = (c: string) => `mailto:${encodeURIComponent(c)}`;
@@ -17,12 +18,13 @@ type Act = (type: string, id: string, value?: string) => Promise<boolean>;
 type LeadFiche = {
   id: string; name: string; email: string; phone: string; company: string | null; need: string;
   status: string; source: string; service_interest: string; created_at: string;
-  last_contact_at: string | null; email_opt_out_at: string | null; consent_at: string | null;
+  last_contact_at: string | null; email_opt_out_at: string | null; consent_at: string | null; tags?: string[] | null;
 };
 type Activite = { id: string; type: string; content: string; author: string; created_at: string };
 type Tache = { id: string; title: string; due_at: string | null; done_at: string | null };
 type Brouillon = { id: string; kind: string; subject: string; body: string; status: string; created_at: string };
-type DonneesFiche = { lead: LeadFiche; activites: Activite[]; taches: Tache[]; brouillons: Brouillon[] };
+type Courriel = { id: string; direction: string; subject: string; snippet: string; received_at: string; traite_at: string | null; ignore_at: string | null };
+type DonneesFiche = { lead: LeadFiche; activites: Activite[]; taches: Tache[]; brouillons: Brouillon[]; courriels: Courriel[]; modeles: ModeleInsere[] };
 
 const FUSEAU = 'America/Toronto';
 const dateHeure = (iso: string | null) =>
@@ -31,7 +33,7 @@ const libelleSource = (source: string) => SOURCES.find((s) => s.cle === cleSourc
 
 const COULEUR_TYPE: Record<string, string> = {
   form: 'var(--fg-3)', note: 'var(--fg-1)', automation: 'var(--accent-2)', appel: 'var(--accent)',
-  courriel: 'var(--accent)', sms: 'var(--accent)', rdv: 'var(--ok)', tache: 'var(--warn)', systeme: 'var(--fg-3)',
+  courriel: 'var(--accent)', email_in: 'var(--accent)', sms: 'var(--accent)', rdv: 'var(--ok)', tache: 'var(--warn)', systeme: 'var(--fg-3)',
 };
 
 async function poster(corps: Record<string, unknown>) {
@@ -51,7 +53,7 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
   const [edition, setEdition] = useState<null | { nom: string; courriel: string; telephone: string; entreprise: string }>(null);
   const [note, setNote] = useState('');
   const [tache, setTache] = useState({ titre: '', echeance: '' });
-  const [reponse, setReponse] = useState<null | { sujet: string; corps: string; brouillon: string | null }>(null);
+  const [reponse, setReponse] = useState<null | { sujet: string; corps: string; brouillon: string | null; modele?: string | null }>(null);
 
   const charger = useCallback(async () => {
     const res = await fetch(`/api/admin/fiche?id=${encodeURIComponent(id)}`);
@@ -174,6 +176,7 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
                 <dt>Relances</dt>
                 <dd>
                   {l.email_opt_out_at ? 'Arrêtées (désabonnement)'
+                    : l.status === 'Prospect' ? 'Aucune : prospect, vous le contactez vous-même'
                     : l.last_contact_at ? 'Arrêtées : un contact a été noté'
                       : cleSource(l.source) === 'manuel' && !l.consent_at ? 'Aucune : ajoutée à la main, sans accord noté'
                         : 'Actives tant qu’aucun contact n’est noté'}
@@ -215,15 +218,19 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
                 <form className="adm-formulaire" onSubmit={async (e) => {
                   e.preventDefault();
                   if (!window.confirm(`Envoyer ce courriel à ${l.email} ?`)) return;
-                  if (await faire({ op: 'envoyer', sujet: reponseAffichee.sujet, corps: reponseAffichee.corps, brouillon: reponseAffichee.brouillon }, 'Courriel envoyé. Les relances automatiques sont arrêtées pour cette personne.')) setReponse(null);
+                  if (await faire({ op: 'envoyer', sujet: reponseAffichee.sujet, corps: reponseAffichee.corps, brouillon: reponseAffichee.brouillon, modele: reponseAffichee.modele ?? null }, 'Courriel envoyé. Les relances automatiques sont arrêtées pour cette personne.')) setReponse(null);
                 }}>
+                  <ChoixModele modeles={d.modeles ?? []} disabled={occupe} onChoisir={(m) => {
+                    if (reponseAffichee.corps.trim() && !window.confirm('Remplacer le texte en cours par ce modèle ?')) return;
+                    setReponse({ ...reponseAffichee, sujet: m.sujet, corps: m.corps, modele: m.cle });
+                  }} />
                   <label className="adm-champ">Objet
                     <input value={reponseAffichee.sujet} onChange={(e) => setReponse({ ...reponseAffichee, sujet: e.target.value })} />
                   </label>
                   <label className="adm-champ">Message
                     <textarea rows={9} value={reponseAffichee.corps} onChange={(e) => setReponse({ ...reponseAffichee, corps: e.target.value })} />
                   </label>
-                  <span className="adm-gris">Envoyé à {l.email} depuis l’adresse d’envoi du site. Le pied de courriel (adresse postale, lien de désabonnement) est ajouté automatiquement.</span>
+                  <span className="adm-gris">Envoyé à {l.email} depuis l’adresse d’envoi du site. Votre signature, le logo et le pied de courriel (adresse postale, lien de désabonnement) sont ajoutés automatiquement.</span>
                   <div className="adm-ligne-actions">
                     <button type="submit" className="adm-bouton adm-bouton-violet" disabled={occupe}>Envoyer maintenant</button>
                     {brouillon && (
@@ -246,6 +253,27 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
         </div>
 
         <div className="adm-colonne">
+          {d.courriels?.length > 0 && (
+            <section className="adm-carte">
+              <h2 className="adm-titre-carte">Courriels</h2>
+              <ol className="adm-historique">
+                {d.courriels.map((c) => (
+                  <li key={c.id}>
+                    <span className="adm-puce-ronde" style={{ background: c.direction === 'in' ? 'var(--accent)' : 'var(--fg-3)' }} />
+                    <span className="adm-ligne-texte">
+                      <span><strong>{c.direction === 'in' ? 'Reçu' : 'Envoyé'}</strong> · {c.subject || '(sans objet)'}
+                        {c.direction === 'in' && !c.traite_at && !c.ignore_at && <span className="adm-pastille adm-pastille-accent" style={{ marginLeft: 6 }}>À répondre</span>}
+                      </span>
+                      <span className="adm-gris adm-texte-long">{c.snippet}</span>
+                      <span className="adm-gris">{dateHeure(c.received_at)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <span className="adm-gris">Pour lire un courriel reçu en entier et y répondre : menu « Boîte de réception ».</span>
+            </section>
+          )}
+
           <section className="adm-carte">
             <h2 className="adm-titre-carte">Tâches</h2>
             {ouvertes.length === 0 && <p className="adm-vide">Aucune tâche ouverte.</p>}
@@ -291,7 +319,7 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
                   <span className="adm-puce-ronde" style={{ background: COULEUR_TYPE[a.type] ?? 'var(--fg-3)' }} />
                   <span className="adm-ligne-texte">
                     <span className="adm-texte-long">{a.content}</span>
-                    <span className="adm-gris">{dateHeure(a.created_at)} · {a.author === 'admin' ? 'vous' : a.author === 'site-web' ? 'site web' : 'automatique'}</span>
+                    <span className="adm-gris">{dateHeure(a.created_at)} · {a.author === 'admin' ? 'vous' : a.author === 'site-web' ? 'site web' : a.author === 'prospect' ? 'la personne' : 'automatique'}</span>
                   </span>
                 </li>
               ))}

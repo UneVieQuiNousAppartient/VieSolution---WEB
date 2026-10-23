@@ -25,12 +25,21 @@ export type LeadTableau = {
   created_at: string;
   status_changed_at: string | null;
   last_contact_at: string | null;
+  tags?: string[] | null;
 };
 export type TacheTableau = { id: string; lead_id: string; title: string; due_at: string | null };
 export type BrouillonTableau = { status: string };
 
 export const estStage = (l: Pick<LeadTableau, 'service_interest'>) =>
   (SUJETS_STAGE as readonly string[]).includes(String(l.service_interest || '').trim());
+/** Étiquette posée sur une fiche de prospection : elle reste quand la fiche passe à « Contacté », « Client »… */
+export const ETIQUETTE_PROSPECTION = 'prospection';
+/**
+ * Fiche de prospection (personne que Camille est allée chercher) : à part dans les statistiques des demandes
+ * reçues et du taux de conversion (accord de Camille du 2026-10-23) ; comptée dans les clients gagnés.
+ */
+export const estProspection = (l: Pick<LeadTableau, 'status' | 'tags'>) =>
+  l.status === 'Prospect' || (l.tags ?? []).includes(ETIQUETTE_PROSPECTION);
 export const estRdv = (l: Pick<LeadTableau, 'service_interest'>) => String(l.service_interest || '').trim() === 'rdv-decouverte';
 
 // --- dates, heure de Montréal -------------------------------------------------------------
@@ -144,6 +153,7 @@ export type Tableau = {
   rendezVous: { lead: LeadTableau; creneau: string; demain: boolean }[];
   rdvAConfirmer: { lead: LeadTableau; moment: string | null }[];
   brouillons: number;
+  prospection: { enCours: number; gagnes: number };
   compteurs: { demandes: number; clients: number; rdv: number; stages: number; taches: number };
 };
 
@@ -160,7 +170,9 @@ export function construireTableau(
   const debut = n - periode * J;
   const prospects = d.leads.filter((l) => !estStage(l));
   const entre = (x: string | null, de: number, a: number) => x !== null && x >= iso(de) && x < iso(a);
-  const recues = prospects.filter((l) => entre(l.created_at, debut, n + 1));
+  // Demandes reçues : sans la prospection (ce ne sont pas des demandes), pour un taux de conversion juste.
+  const demandes = prospects.filter((l) => !estProspection(l));
+  const recues = demandes.filter((l) => entre(l.created_at, debut, n + 1));
 
   // Nouvelles demandes : la période, la précédente, et 8 tranches égales pour la petite courbe.
   const tranches = 8;
@@ -171,7 +183,7 @@ export function construireTableau(
   const jamaisContactee = (l: LeadTableau) => l.status === 'Nouveau' && !l.last_contact_at;
   const nouvelles = {
     n: recues.length,
-    precedent: prospects.filter((l) => entre(l.created_at, debut - periode * J, debut)).length,
+    precedent: demandes.filter((l) => entre(l.created_at, debut - periode * J, debut)).length,
     serie,
     jamaisContactees: recues.filter(jamaisContactee).length,
   };
@@ -219,7 +231,7 @@ export function construireTableau(
   const lundis = Array.from({ length: 12 }, (_, i) => debutDeSemaine(new Date(lundi + (i - 11) * 7 * J + 12 * H)).getTime());
   const semaines = lundis.map((de, i) => {
     const a = i === 11 ? n + 1 : lundis[i + 1];
-    const semaine = prospects.filter((l) => entre(l.created_at, de, a));
+    const semaine = demandes.filter((l) => entre(l.created_at, de, a));
     return { debut: iso(de), etiquette: etiquetteJour(new Date(de)), demandes: semaine.length, rdv: semaine.filter(estRdv).length };
   });
 
@@ -252,6 +264,11 @@ export function construireTableau(
     rendezVous,
     rdvAConfirmer,
     brouillons: d.brouillons.filter((b) => b.status === 'pending').length,
+    // Prospection, à part : en cours (ni cliente ni perdue) et devenues clientes dans la période.
+    prospection: {
+      enCours: prospects.filter((l) => estProspection(l) && !FERMES.includes(l.status)).length,
+      gagnes: prospects.filter((l) => estProspection(l) && l.status === 'Client' && entre(l.status_changed_at, debut, n + 1)).length,
+    },
     compteurs: {
       demandes: prospects.length,
       clients: prospects.filter((l) => l.status === 'Client').length,

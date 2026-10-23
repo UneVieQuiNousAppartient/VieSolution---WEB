@@ -14,6 +14,8 @@ export type Courriel = {
   headers?: Record<string, string>;
   /** Clé d'idempotence Resend : un même envoi rejoué dans les 24 h ne part qu'une fois. */
   cle?: string;
+  /** Adresse de réponse propre à ce courriel (sinon EMAIL_REPLY_TO). */
+  replyTo?: string;
 };
 
 /** Résultat : identifiant Resend, ou échec « permanent » (adresse refusée…) ou « temporaire » (panne, quota). */
@@ -39,7 +41,7 @@ export async function envoyerCourriel(c: Courriel): Promise<ResultatEnvoi> {
         subject: c.subject,
         html: c.html,
         ...(c.text ? { text: c.text } : {}),
-        ...(process.env.EMAIL_REPLY_TO ? { reply_to: process.env.EMAIL_REPLY_TO } : {}),
+        ...(c.replyTo || process.env.EMAIL_REPLY_TO ? { reply_to: c.replyTo || process.env.EMAIL_REPLY_TO } : {}),
         ...(c.headers && Object.keys(c.headers).length ? { headers: c.headers } : {}),
       }),
     });

@@ -5,9 +5,9 @@
 // coché ; validation serveur : validerNouvelleDemande (src/lib/crm/saisie.ts).
 
 import { useEffect, useRef, useState } from 'react';
-import { PROVENANCES_MANUELLES } from '@/lib/crm/saisie';
+import { PROVENANCES_DEMANDE, PROVENANCES_MANUELLES } from '@/lib/crm/saisie';
 
-const VIDE = { nom: '', courriel: '', telephone: '', entreprise: '', provenance: PROVENANCES_MANUELLES[0] as string, besoin: '', rappel: '', dejaParle: false, accord: false };
+const VIDE = { nom: '', courriel: '', telephone: '', entreprise: '', provenance: PROVENANCES_MANUELLES[0] as string, besoin: '', rappel: '', dejaParle: false, accord: false, prospect: false };
 
 export function NouvelleDemande({ onFermer, onCreee }: { onFermer: () => void; onCreee: (id: string) => void }) {
   const [f, setF] = useState(VIDE);
@@ -57,7 +57,7 @@ export function NouvelleDemande({ onFermer, onCreee }: { onFermer: () => void; o
           <button type="button" className="adm-bouton adm-bouton-discret" aria-label="Fermer" onClick={onFermer}>×</button>
         </div>
         <p className="adm-gris" style={{ margin: 0, fontSize: 14 }}>
-          Pour une personne qui vous a appelée, écrit directement ou été recommandée. Aucun courriel automatique ne part sans votre accord.
+          Pour une personne qui vous a appelée, écrit directement ou été recommandée, ou pour un prospect que vous allez contacter. Aucun courriel automatique ne part sans votre accord.
         </p>
         <div className="adm-grille-champs">
           {champ('nom', 'Nom *')}
@@ -78,6 +78,18 @@ export function NouvelleDemande({ onFermer, onCreee }: { onFermer: () => void; o
         </label>
         <fieldset className="adm-groupe">
           <legend>Et ensuite ?</legend>
+          <label className="adm-case">
+            <input type="checkbox" checked={f.prospect} onChange={(e) => setF({
+              ...f,
+              prospect: e.target.checked,
+              // Un prospect n'a rien demandé : « Appel reçu » ou « Courriel reçu » ne lui vont pas (refusé par le serveur).
+              provenance: e.target.checked && (PROVENANCES_DEMANDE as readonly string[]).includes(f.provenance) ? 'Autre' : f.provenance,
+            })} />
+            <span>
+              C’est un prospect : je vais le contacter moi-même
+              <span className="adm-gris" style={{ display: 'block' }}>Étape « Prospect » : aucun courriel automatique. Au premier contact noté, la fiche passe à « Contacté ». Compté à part dans les statistiques.</span>
+            </span>
+          </label>
           <label className="adm-case">
             <input type="checkbox" checked={avecRappel} onChange={(e) => setAvecRappel(e.target.checked)} />
             <span>Me rappeler de recontacter cette personne le</span>

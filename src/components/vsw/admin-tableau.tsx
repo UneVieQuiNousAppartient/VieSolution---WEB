@@ -8,7 +8,7 @@ import type { Aujourdhui } from '@/lib/crm/aujourdhui';
 import { SOURCES, cleSource, type LeadTableau, type RaisonAppel, type Tableau } from '@/lib/crm/tableau';
 
 type Act = (type: string, id: string, value?: string) => unknown;
-export type Vue = 'aujourdhui' | 'leads' | 'clients' | 'rdv' | 'stages' | 'drafts' | 'tasks' | 'regles';
+export type Vue = 'aujourdhui' | 'boite' | 'leads' | 'clients' | 'rdv' | 'stages' | 'drafts' | 'tasks' | 'regles';
 
 const FUSEAU = 'America/Toronto';
 
@@ -195,7 +195,8 @@ export function TableauDeBord({ t, aujourdhui, act, busy, ouvrir, ouvrirFiche, l
         </Tuile>
         <Tuile titre="Devenues clientes" valeur={t.clients.taux === null ? '—' : `${t.clients.taux} %`}
           pastille={t.clients.gagnes ? <Pastille ton="ok">+{t.clients.gagnes}</Pastille> : undefined}
-          detail={t.clients.sur ? `${t.clients.n} sur ${t.clients.sur} · demandes des ${t.periode} derniers jours` : 'aucune demande dans la période'}>
+          detail={`${t.clients.sur ? `${t.clients.n} sur ${t.clients.sur} · demandes des ${t.periode} derniers jours` : 'aucune demande dans la période'}${
+            t.prospection.enCours || t.prospection.gagnes ? ` · prospection à part : ${t.prospection.enCours} en cours${t.prospection.gagnes ? `, ${t.prospection.gagnes} devenue${t.prospection.gagnes > 1 ? 's' : ''} cliente${t.prospection.gagnes > 1 ? 's' : ''}` : ''}` : ''}`}>
           <Anneau part={(t.clients.taux ?? 0) / 100} couleur="var(--accent-2)" />
         </Tuile>
       </div>

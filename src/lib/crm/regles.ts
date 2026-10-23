@@ -13,11 +13,16 @@
 export const FUSEAU = 'America/Toronto';
 
 /** Étapes d'un dossier (contrainte vsw_leads_status_check de supabase/setup-crm-vsw.sql). */
-export const STATUTS = ['Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'] as const;
+// « Prospect » (accord de Camille du 2026-10-23) : une personne que Camille va chercher elle-même.
+// Aucun courriel automatique (sansCourrielAutomatique) ; au premier contact noté, elle passe à « Contacté ».
+export const STATUTS = ['Prospect', 'Nouveau', 'Contacté', 'RDV', 'Qualifié', 'Client', 'À relancer', 'Perdu'] as const;
 export type Statut = (typeof STATUTS)[number];
 export const estStatut = (s: unknown): s is Statut => typeof s === 'string' && (STATUTS as readonly string[]).includes(s);
 
 /** Activités qui comptent comme un contact HUMAIN (saisi par l'équipe), et auteurs qui n'en sont jamais. */
+// La réponse d'un prospect (email_in, boîte de réception) n'en est PAS un : elle n'arrête que les relances 1
+// et 2 (moteur.ts, aRepondu) ; l'alerte 24 h et la tâche d'appel du 7ᵉ jour attendent la réponse de Camille
+// (revue qa du 2026-10-23 : un « Merci ! » ou un message d'absence ne doit pas faire taire les alertes).
 export const TYPES_CONTACT = ['appel', 'courriel', 'sms', 'rdv', 'email_out'] as const;
 export const AUTEURS_AUTOMATIQUES = ['système', 'site-web'] as const;
 
@@ -117,9 +122,12 @@ export const plusRecente = (...isos: (string | null | undefined)[]): string | nu
 
 /** Ce statut se fait-il « remonter » en Contacté par un contact humain ? (RDV, Qualifié, Client ne reculent pas.) */
 export const statutApresContact = (statut: string, genre: 'appel' | 'courriel' | 'sms' | 'rdv'): Statut | null => {
-  if (genre === 'rdv') return ['Nouveau', 'Contacté', 'À relancer'].includes(statut) ? 'RDV' : null;
-  return ['Nouveau', 'À relancer'].includes(statut) ? 'Contacté' : null;
+  if (genre === 'rdv') return ['Prospect', 'Nouveau', 'Contacté', 'À relancer'].includes(statut) ? 'RDV' : null;
+  return ['Prospect', 'Nouveau', 'À relancer'].includes(statut) ? 'Contacté' : null;
 };
+
+/** Étape « Prospect » : jamais de courriel automatique (accusé, relances), quoi que disent la source ou l'accord. */
+export const sansCourrielAutomatique = (lead: { status: string }) => lead.status === 'Prospect';
 
 // --- Courriels ---------------------------------------------------------------------
 
@@ -163,15 +171,16 @@ export type Expediteur = { nom: string; adressePostale: string; site: string };
  * Pied « loi anti-pourriel » : identité, adresse postale, moyen de joindre (le site), lien de
  * désabonnement. Sans adresse ou sans lien, pas de pied : `pretAEnvoyer` empêche alors l'envoi.
  */
-export const piedLcap = (exp: Expediteur, lienDesabonnement: string) => {
+export const piedLcap = (exp: Expediteur, lienDesabonnement: string, raison?: string) => {
   const site = exp.site.replace(/^https:\/\//, '');
+  const pourquoi = raison ?? `vous nous avez écrit depuis ${site}`;
   const texte =
-    `—\nVous recevez ce courriel parce que vous nous avez écrit depuis ${site}.\n` +
+    `—\nVous recevez ce courriel parce que ${pourquoi}.\n` +
     `${exp.nom} · ${exp.adressePostale} · ${site}\n` +
     `Ne plus recevoir de relances : ${lienDesabonnement}`;
   const html =
     `<p style="margin:24px 0 0;padding-top:14px;border-top:1px solid #DDE3EA;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#5B6472">` +
-    `Vous recevez ce courriel parce que vous nous avez écrit depuis ${echapper(site)}.<br>` +
+    `Vous recevez ce courriel parce que ${echapper(pourquoi)}.<br>` +
     `${echapper(exp.nom)} · ${echapper(exp.adressePostale)} · <a href="${echapper(exp.site)}" style="color:#5B6472">${echapper(site)}</a><br>` +
     `<a href="${echapper(lienDesabonnement)}" style="color:#5B6472">Ne plus recevoir de relances</a></p>`;
   return { texte, html };
@@ -228,6 +237,16 @@ export const estDemandeProspect = (lead: DemandeSite) => estDemandeDuSite(lead) 
  */
 export const recoitRelances = (lead: DemandeSite & { consent_at?: string | null }) =>
   !estHorsProspection(lead) && (estDemandeDuSite(lead) || Boolean(lead.consent_at));
+
+/**
+ * Raison donnée dans le pied légal : formulaire du site, accord noté dans l'admin, ou demande reçue
+ * par téléphone ou par courriel (fiche ajoutée à la main, saisie.ts).
+ */
+export const raisonPied = (lead: { source?: string | null; consent_at?: string | null }, site: string) => {
+  if (estDemandeDuSite(lead)) return `vous nous avez écrit depuis ${site.replace(/^https:\/\//, '')}`;
+  if (String(lead.source || '').startsWith('admin —') && lead.consent_at) return 'vous avez accepté de recevoir nos courriels';
+  return 'vous nous avez contactés';
+};
 
 /** Demande d'appel découverte (calendrier de /rdv ou clavardage IA) : sujet « rdv-decouverte ». */
 export const estDemandeRdv = (lead: DemandeSite) => String(lead.service_interest || '').trim() === 'rdv-decouverte';
