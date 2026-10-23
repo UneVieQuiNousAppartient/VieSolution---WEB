@@ -8,7 +8,7 @@ import type { Aujourdhui } from '@/lib/crm/aujourdhui';
 import { SOURCES, cleSource, type LeadTableau, type RaisonAppel, type Tableau } from '@/lib/crm/tableau';
 
 type Act = (type: string, id: string, value?: string) => unknown;
-export type Vue = 'aujourdhui' | 'boite' | 'leads' | 'clients' | 'rdv' | 'stages' | 'drafts' | 'tasks' | 'regles' | 'avis';
+export type Vue = 'aujourdhui' | 'boite' | 'leads' | 'clients' | 'rdv' | 'stages' | 'drafts' | 'tasks' | 'regles' | 'avis' | 'stats';
 
 const FUSEAU = 'America/Toronto';
 
