@@ -113,12 +113,14 @@ export const SOURCES = [
   { cle: 'chatbot', libelle: 'Bulle de clavardage' },
   { cle: 'devis', libelle: '« Combien ça coûte ? »' },
   { cle: 'audit', libelle: 'Diagnostic' },
+  { cle: 'manuel', libelle: 'Ajoutée à la main' },
   { cle: 'autre', libelle: 'Autres' },
 ] as const;
 export type CleSource = (typeof SOURCES)[number]['cle'];
 
-/** « site web — rdv » → 'rdv' ; tout le reste → 'autre'. */
+/** « site web — rdv » → 'rdv' ; « admin — … » (ajout à la main, saisie.ts) → 'manuel' ; le reste → 'autre'. */
 export const cleSource = (source: string | null | undefined): CleSource => {
+  if (String(source || '').startsWith('admin —')) return 'manuel';
   const fin = String(source || '').split('—').pop()?.trim() ?? '';
   return (SOURCES.some((s) => s.cle === fin) ? fin : 'autre') as CleSource;
 };

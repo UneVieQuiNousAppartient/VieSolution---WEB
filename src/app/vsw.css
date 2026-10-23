@@ -4224,3 +4224,45 @@ body:has(.adm-page) .chat-panel { display: none; }
   .adm-menu-bas { margin: 0; padding: 0; border: none; flex-direction: row; }
   .adm-contenu { padding-top: 20px; }
 }
+
+/* Admin, étape A : fiche détaillée et fenêtre « Nouvelle demande » (maquette validée le 2026-10-23) */
+.adm-pastille-violet { color: var(--accent-2); background: color-mix(in oklch, var(--accent-2) 12%, transparent); }
+.adm-lien-nom { font-weight: 600; font-size: 15px; color: var(--fg-0); text-decoration: none; text-align: left; }
+.adm-lien-nom:hover { color: var(--accent); text-decoration: underline; }
+.adm-fiche-nom { margin: 0 0 4px; font-family: var(--font-display); font-size: clamp(26px, 3vw, 32px); font-weight: 700; }
+.adm-titre-carte { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.adm-texte-long { margin: 0; line-height: 1.6; color: var(--fg-1); white-space: pre-wrap; overflow-wrap: anywhere; }
+.adm-grille-fiche { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; align-items: start; }
+.adm-colonne { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.adm-dl { margin: 0; display: grid; grid-template-columns: minmax(90px, 120px) 1fr; gap: 10px 14px; font-size: 14px; }
+.adm-dl dt { color: var(--fg-2); }
+.adm-dl dd { margin: 0; overflow-wrap: anywhere; }
+.adm-dl a { color: var(--accent); }
+.adm-formulaire { display: flex; flex-direction: column; gap: 12px; }
+.adm-formulaire-ligne { flex-direction: row; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+.adm-formulaire-ligne input:not([type="date"]) { flex: 1 1 200px; }
+.adm-champ { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: var(--fg-1); }
+.adm-champ input, .adm-champ select, .adm-champ textarea, .adm-formulaire > textarea, .adm-formulaire-ligne input, .adm-case input[type="date"] {
+  box-sizing: border-box; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); font: inherit; font-size: 15px; font-weight: 400; color: var(--fg-0);
+}
+.adm-champ textarea, .adm-formulaire > textarea { padding: 10px 12px; line-height: 1.55; resize: vertical; }
+.adm-champ input:focus, .adm-champ select:focus, .adm-champ textarea:focus, .adm-formulaire > textarea:focus, .adm-formulaire-ligne input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.adm-historique { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.adm-historique li { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line-soft); }
+.adm-puce-ronde { width: 10px; height: 10px; margin-top: 6px; border-radius: 999px; flex: none; }
+
+.adm-voile {
+  position: fixed; inset: 0; z-index: 80; display: flex; justify-content: center; align-items: flex-start;
+  padding: 48px 16px; overflow-y: auto; background: color-mix(in oklch, var(--fg-0) 45%, transparent);
+}
+.adm-modale {
+  width: 100%; max-width: 620px; box-sizing: border-box; background: var(--surface); color: var(--fg-0);
+  border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow-sm);
+}
+.adm-grille-champs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.adm-groupe { margin: 0; padding: 14px; border: 1px solid var(--line-soft); border-radius: var(--radius); display: flex; flex-direction: column; gap: 12px; }
+.adm-groupe legend { padding: 0 6px; font-size: 13px; font-weight: 600; }
+.adm-case { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; }
+.adm-case > input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
+.adm-case > span { flex: 1 1 200px; }

@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 38.
+**Dernière mise à jour : 2026-10-23** — dernière section : 39.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -650,3 +650,55 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 - Pages Événements, Contenu du site, Équipe et Statistiques : laissées de côté, faute de données.
 - `/api/admin/data` ne lit que les 200 demandes les plus récentes : à élargir quand il y en aura davantage.
 - Écran réel avec de vraies demandes : **à tester par Camille**.
+
+## 39. ✅ Admin, étape A : fiche détaillée, ajout à la main, envoi depuis l'admin (2026-10-23)
+
+**Contexte / demande** : Camille veut « tout » l'admin. Le chantier complet a été accepté (« oui, 1,75 M »), en 6 étapes :
+- A (≈ 370 k) : fiche détaillée, ajout à la main, envoi de la première réponse ;
+- B (≈ 600 k) : boîte de réception par Resend, qui remplacera le renvoi Cloudflare de info@ ;
+- C (≈ 300 k) : Google Agenda ;
+- D (≈ 100 k) : statistiques ;
+- E (≈ 80 k) : témoignages ;
+- F (≈ 300 k) : événements avec page publique et inscriptions.
+
+Pas de page Équipe : Camille est seule dans l'admin. Maquette A acceptée : « maquette A OK » (https://claude.ai/artifact/M75jd86KJkbjrTEXWRPBKn). Décision de Camille : **aucune relance automatique** pour une fiche ajoutée à la main, sauf si l'accord est coché.
+
+**Ce qui a été fait**
+- `src/lib/crm/saisie.ts` (pur, testé) : validations des coordonnées, de la nouvelle demande, de la note, de la tâche et de la réponse ; provenances manuelles ; source « admin — … ».
+- `src/lib/crm/regles.ts` : `recoitRelances` (demandes du site sans les stages, ou fiche ajoutée à la main avec `consent_at`). Elle est utilisée par les relances 1 et 2 de `moteur.ts`.
+- `src/lib/crm/moteur.ts` : `envoyerCourrielFiche`, avec les mêmes garde-fous que les envois automatiques (configuration, désabonnement de l'adresse, consentement LCAP, pied et en-têtes de désabonnement). Le courriel est rangé dans `vsw_email_messages`.
+- `src/app/api/admin/fiche/route.ts` (session complète exigée) :
+  - GET : la fiche, son historique, ses tâches, ses brouillons, ses courriels ;
+  - POST : `creer` (refus si une demande ouverte existe pour le même courriel), `note`, `coordonnees`, `tache` (à 9 h, heure de Montréal), `envoyer` (contact noté, brouillon marqué « envoyé », idempotence en cas de double clic).
+
+  Chaque opération est inscrite dans `vsw_admin_audit_log`.
+- `src/components/vsw/admin-fiche.tsx` et `admin-nouvelle.tsx`, raccordés dans `src/app/admin/page.tsx` :
+  - le nom ouvre la fiche partout (liste, tableau de bord, brouillons, tâches) ;
+  - bouton « + Nouvelle demande » ;
+  - provenance « Ajoutée à la main » sur l'anneau du tableau de bord.
+
+  Classes `.adm-*` ajoutées dans `vsw.css`, avec les jetons seulement.
+- Aucun changement de schéma : toutes les colonnes existaient déjà.
+
+**Vérification technique** :
+- `npm run verify` vert (65 tests ; 11 avertissements, dont 1 nouveau du type déjà connu E01).
+- Tests de mutation : en cassant une règle, le test correspondant échoue.
+- Captures de la fiche et de la fenêtre (bureau, sombre, téléphone 390 px sans défilement horizontal) avec une API simulée ; le contenu envoyé à l'API a été contrôlé.
+- `qa-agent` (Opus, ≈ 79 k) **VERT**. `securite` (Opus, ≈ 70 k) **ORANGE**, sans rien de bloquant.
+
+Corrigé à la suite des revues, en prenant toujours l'option la plus prudente :
+- **Loi anti-pourriel** : aucun courriel ne peut partir depuis la fiche à une personne ajoutée à la main qui n'a rien demandé elle-même (recommandation, événement, réseaux sociaux, autre) tant que son accord n'est pas noté (`accordManquant`). Bouton « Cette personne m'a donné son accord » (opération `accord`). « Appel reçu » et « Courriel reçu » restent permis : la personne a elle-même fait une demande.
+- « * » refusé dans les courriels saisis (joker de recherche).
+- Brouillon déjà envoyé ou rejeté : il n'est plus réécrit.
+- Double clic : le courriel n'est noté qu'une fois.
+- Liens `tel:` et `mailto:` encodés.
+- Expéditeur décrit sans adresse écrite en dur.
+- Formulations neutres (« cette personne »).
+- Le curseur reste en place dans la fenêtre.
+
+Laissé tel quel :
+- La modification du courriel d'une fiche ne vérifie pas les doublons.
+- La fenêtre ne garde pas le focus quand on appuie sur Tab.
+- La recherche `ilike` de `desabonnerAdresse` (antérieure à ce lot) n'échappe pas « * ». C'est sans effet pour les demandes du site, car le formulaire valide le courriel.
+
+**Non fait dans ce round** : aucun courriel réellement envoyé depuis la fiche, et aucune fiche réellement créée — **à tester par Camille**, avec son adresse. Les courriels reçus des prospects viendront à l'étape B.
