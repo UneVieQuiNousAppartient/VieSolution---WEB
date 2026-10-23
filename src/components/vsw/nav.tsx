@@ -57,6 +57,7 @@ export const METIERS_NAV: readonly ServiceNavItem[] = METIERS.map((m) => ({
  */
 export const NAV_LINKS: readonly NavLinkItem[] = [
   { href: '/devis', label: 'Prix' },
+  { href: '/blog', label: 'Blog' },
   { href: '/a-propos', label: 'À propos' },
 ];
 

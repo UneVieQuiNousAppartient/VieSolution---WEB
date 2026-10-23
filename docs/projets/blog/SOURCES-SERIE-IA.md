@@ -35,7 +35,7 @@ https://www.anthropic.com/research/economic-index-june-2026-report
 - « large majorities of people report productivity gains in speed, scope, and quality of their work
   (86%, 82%, and 69%, respectively) ».
 - 27 % disent économiser sur des services qu'ils auraient autrement achetés.
-- Au travail, Claude produit surtout des documents et rapports (20 % des conversations), des
+- Analyse des conversations de Claude (chapitre distinct de l'enquête, à ne pas attribuer aux 9 700 répondants) : au travail, Claude produit surtout des documents et rapports (20 % des conversations), des
   explications (9 %), des brouillons de courriels (7 %), des analyses et résumés (6 %).
 
 ## S4 — Brynjolfsson, Li et Raymond, « Generative AI at Work », Quarterly Journal of Economics, 2025

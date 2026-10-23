@@ -53,6 +53,7 @@ const SITE = [
     ...METIERS.map((m) => `${m.titre} : /metiers/${m.slug}`),
     'Réalisations : /realisations',
     'Emplois et stages : /emplois',
+    'Blog (conseils simples : IA, Claude et ChatGPT, Zoho, rendez-vous) : /blog',
     'Contact : /contact',
     `${APPEL.libelle} (appel découverte gratuit de 30 minutes, sans engagement) : ${APPEL.href}`,
     `${ECRIT.libelle} : ${ECRIT.href}`,
