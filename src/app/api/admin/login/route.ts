@@ -1,4 +1,7 @@
 // Connexion à /admin : code d'accès + code à 6 chiffres (ou code de secours).
+//   POST { code }       → { otp_requis: true } si la double vérification est active (aucune session),
+//                         ou session « activation seulement » si elle ne l'est pas encore ;
+//   POST { code, otp }  → session complète.
 // Essais limités (revue de sécurité du 2026-10-21) :
 //   - 8 essais par adresse IP par fenêtre de 15 minutes, quels qu'ils soient ;
 //   - 20 échecs du code à 6 chiffres au total par 15 minutes (code d'accès juste, second facteur
@@ -56,11 +59,20 @@ export async function POST(req: NextRequest) {
       return res;
     }
 
+    // Connexion en deux écrans (demande de Camille, 2026-10-23) : le code d'accès seul, juste, demande
+    // le second facteur sans poser de session ni compter d'échec du code à 6 chiffres.
+    const otp = typeof body?.otp === 'string' ? body.otp.trim() : '';
+    // Cette réponse confirme le code d'accès : elle est journalisée pour que Camille voie toute
+    // confirmation (revue de sécurité du 2026-10-23).
+    if (!otp) {
+      await journal(db, 'login_code_ok', ip);
+      return NextResponse.json({ otp_requis: true });
+    }
+
     if ((await lireCompteur(db, CLE_ECHECS, FENETRE_S)) >= MAX_ECHECS_SECOND_FACTEUR) {
       return NextResponse.json({ error: 'Trop d’essais de code à 6 chiffres. Réessayez dans 15 minutes.' }, { status: 429 });
     }
 
-    const otp = typeof body?.otp === 'string' ? body.otp.trim() : '';
     let ok = false;
     let parSecours = false;
     const pas = verifierTotp(secret, otp);

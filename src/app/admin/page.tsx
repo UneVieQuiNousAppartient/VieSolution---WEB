@@ -5,6 +5,7 @@
 // vérification (cookie httpOnly).
 
 import { useCallback, useEffect, useState } from 'react';
+import { encode } from 'uqr';
 import { Icon } from '@/components/vsw/icon';
 import { STATUTS } from '@/lib/crm/regles';
 import type { Aujourdhui } from '@/lib/crm/aujourdhui';
@@ -59,6 +60,25 @@ const box: React.CSSProperties = {
   borderRadius: 'var(--radius-lg)', padding: 20,
 };
 
+const lienDiscret: React.CSSProperties = {
+  background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'var(--accent)', font: 'inherit',
+};
+
+/** Code QR du lien otpauth, dessiné dans le navigateur (le secret ne part vers aucun service externe).
+ *  Noir sur blanc dans les deux thèmes : c'est ce que les applications d'authentification lisent le mieux. */
+function CodeQr({ texte }: { texte: string }) {
+  const { data, size } = encode(texte, { ecc: 'M', border: 4 });
+  let d = '';
+  data.forEach((ligne, y) => ligne.forEach((plein, x) => { if (plein) d += `M${x} ${y}h1v1h-1z`; }));
+  return (
+    <svg viewBox={`0 0 ${size} ${size}`} width={208} height={208} shapeRendering="crispEdges" role="img"
+      aria-label="Code QR à scanner avec votre application d'authentification"
+      style={{ display: 'block', margin: '0 auto 18px', background: '#fff', borderRadius: 8 }}>
+      <path d={d} fill="#000" />
+    </svg>
+  );
+}
+
 function fmtDate(s: string | null) {
   if (!s) return '—';
   return new Date(s).toLocaleString('fr-CA', { dateStyle: 'short', timeStyle: 'short' });
@@ -68,6 +88,9 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [code, setCode] = useState('');
   const [otp, setOtp] = useState('');
+  // Connexion en deux écrans : le code d'accès, puis le code à 6 chiffres (ou un code de secours).
+  const [etapeConnexion, setEtapeConnexion] = useState<'code' | 'otp'>('code');
+  const [secours, setSecours] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   // Double vérification : 'activer' (session « code seulement »), puis 'codes' (codes de secours à noter)
@@ -95,18 +118,26 @@ export default function AdminPage() {
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (etapeConnexion === 'otp' && !otp.trim()) {
+      setError(secours ? 'Entrez un de vos codes de secours.' : 'Entrez le code à 6 chiffres affiché par votre application.');
+      return;
+    }
     setBusy(true);
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, otp }),
+      body: JSON.stringify(etapeConnexion === 'otp' ? { code, otp } : { code }),
     });
     setBusy(false);
     const json = await res.json().catch(() => ({}));
     if (!res.ok) { setError(json.error || 'Erreur'); return; }
     setError('');
     setOtp('');
-    if (json.activer_mfa) { setMfaEtape('activer'); return; }
+    if (json.otp_requis) { setEtapeConnexion('otp'); return; }
+    setEtapeConnexion('code');
+    setSecours(false);
+    setCode(''); // le code d'accès ne reste pas en mémoire une fois la connexion faite
+    if (json.activer_mfa) { setMfaEtape('activer'); commencerMfa(); return; }
     if (json.code_secours_utilise) setInfo('Connexion faite avec un code de secours : il ne servira plus. S’il vous en reste peu, réactivez la double vérification avec votre nouveau téléphone.');
     setAuthed(true);
     load();
@@ -186,37 +217,32 @@ export default function AdminPage() {
       <section className="section" style={{ borderTop: 'none', minHeight: '70vh' }}>
         <div className="container" style={{ maxWidth: 520 }}>
           <div className="eyebrow">{'Admin'}</div>
-          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 12px' }}>Activer la double vérification</h1>
-          <p style={{ color: 'var(--fg-2)', fontSize: 15, lineHeight: 1.6 }}>
-            En plus du code d&apos;accès, l&apos;admin demandera un code à 6 chiffres affiché par une application sur
-            votre téléphone. À faire une seule fois.
-          </p>
+          <h1 className="display" style={{ fontSize: 32, margin: '20px 0 24px' }}>Activer la double vérification</h1>
           <div style={box}>
             {!mfa ? (
-              <>
-                <p style={{ margin: '0 0 16px', fontSize: 14, lineHeight: 1.6 }}>
-                  1. Installez une application d&apos;authentification gratuite : Google Authenticator, Microsoft
-                  Authenticator ou 1Password.
-                </p>
-                <button className="btn btn-primary" disabled={busy} onClick={commencerMfa}
-                  style={{ width: '100%', justifyContent: 'center' }}>
-                  {busy ? '…' : 'C’est fait, continuer'}
-                </button>
-              </>
+              <button className="btn btn-primary" disabled={busy} onClick={commencerMfa}
+                style={{ width: '100%', justifyContent: 'center' }}>
+                {busy ? '…' : 'Afficher le code QR'}
+              </button>
             ) : (
               <form onSubmit={confirmerMfa}>
-                <p style={{ margin: '0 0 10px', fontSize: 14, lineHeight: 1.6 }}>
-                  2. Ajoutez Vie Solution Web à l&apos;application. Sur ce téléphone :{' '}
-                  <a href={mfa.lien} style={{ color: 'var(--accent)', fontWeight: 600 }}>ajouter à mon application</a>.
+                <p style={{ margin: '0 0 14px', fontSize: 14, lineHeight: 1.6 }}>
+                  Scannez ce code avec Google Authenticator ou Microsoft Authenticator.
                 </p>
-                <p style={{ margin: '0 0 6px', fontSize: 14, lineHeight: 1.6 }}>
-                  Ou, dans l&apos;application, choisissez « Saisir une clé de configuration » et tapez cette clé :
-                </p>
-                <p className="mono" style={{ margin: '0 0 18px', fontSize: 15, letterSpacing: '0.06em', color: 'var(--fg-0)', wordBreak: 'break-word' }}>
-                  {mfa.lisible}
-                </p>
+                <CodeQr texte={mfa.lien} />
+                <details style={{ margin: '0 0 18px', fontSize: 13, color: 'var(--fg-2)' }}>
+                  <summary style={{ cursor: 'pointer' }}>Impossible de scanner ?</summary>
+                  <p style={{ margin: '10px 0 6px', lineHeight: 1.6 }}>
+                    Sur ce téléphone :{' '}
+                    <a href={mfa.lien} style={{ color: 'var(--accent)', fontWeight: 600 }}>ajouter à mon application</a>.
+                    Ou choisissez « Saisir une clé de configuration » et tapez cette clé :
+                  </p>
+                  <p className="mono" style={{ margin: 0, fontSize: 15, letterSpacing: '0.06em', color: 'var(--fg-0)', wordBreak: 'break-word' }}>
+                    {mfa.lisible}
+                  </p>
+                </details>
                 <div className="form-field">
-                  <label htmlFor="mfa-code">3. Entrez le code à 6 chiffres affiché</label>
+                  <label htmlFor="mfa-code">Code à 6 chiffres affiché</label>
                   <input id="mfa-code" inputMode="numeric" autoComplete="one-time-code" value={mfaCode}
                     onChange={(e) => setMfaCode(e.target.value)} autoFocus />
                 </div>
@@ -265,28 +291,41 @@ export default function AdminPage() {
           <div className="eyebrow">{'Admin'}</div>
           <h1 className="display" style={{ fontSize: 36, margin: '20px 0 24px' }}>Espace admin</h1>
           <form onSubmit={login} style={box}>
-            <div className="form-field">
-              <label htmlFor="code">Code d&apos;accès</label>
-              <input
-                id="code" type="password" value={code}
-                onChange={(e) => setCode(e.target.value)} autoFocus
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="otp">Code à 6 chiffres de votre application</label>
-              <input
-                id="otp" inputMode="numeric" autoComplete="one-time-code" value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-              />
-              <span style={{ fontSize: 12, color: 'var(--fg-3)' }}>
-                Première connexion : laissez vide, on l&apos;active ensuite. Téléphone perdu : entrez un code de secours.
-              </span>
-            </div>
-            {error && <p style={{ color: 'oklch(0.75 0.18 25)', fontSize: 13 }}>{error}</p>}
+            {etapeConnexion === 'code' ? (
+              <div className="form-field">
+                <label htmlFor="code">Code d&apos;accès</label>
+                <input
+                  id="code" type="password" value={code}
+                  onChange={(e) => setCode(e.target.value)} autoFocus
+                />
+              </div>
+            ) : (
+              <div className="form-field">
+                <label htmlFor="otp">{secours ? 'Code de secours' : 'Code à 6 chiffres de votre application'}</label>
+                <input
+                  key={secours ? 'secours' : 'otp'}
+                  id="otp" inputMode={secours ? 'text' : 'numeric'} autoComplete="one-time-code" value={otp}
+                  onChange={(e) => setOtp(e.target.value)} autoFocus
+                />
+              </div>
+            )}
+            {error && <p role="alert" style={{ color: 'var(--danger)', fontSize: 13 }}>{error}</p>}
             <button type="submit" className="btn btn-primary" disabled={busy}
               style={{ width: '100%', justifyContent: 'center' }}>
               {busy ? '…' : 'Entrer'}
             </button>
+            {etapeConnexion === 'otp' && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginTop: 14, fontSize: 13 }}>
+                <button type="button" style={lienDiscret}
+                  onClick={() => { setEtapeConnexion('code'); setSecours(false); setOtp(''); setError(''); }}>
+                  ← Code d&apos;accès
+                </button>
+                <button type="button" style={lienDiscret}
+                  onClick={() => { setSecours((s) => !s); setOtp(''); setError(''); }}>
+                  {secours ? 'Utiliser l’application' : 'Téléphone perdu ?'}
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </section>
