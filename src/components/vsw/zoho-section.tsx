@@ -12,8 +12,8 @@ const ZOHO_PILLARS = [
   {
     num: '02',
     title: 'Formation & adoption',
-    desc: "Un outil ne vaut que s'il est utilisé. On forme votre équipe — et la relève — à travailler avec Zoho au quotidien, jusqu'à l'autonomie complète.",
-    items: ['Ateliers pratiques', 'Parcours par rôle', 'Formation de jeunes talents'],
+    desc: "Un outil ne vaut que s'il est utilisé. On forme votre équipe à travailler avec Zoho au quotidien, jusqu'à l'autonomie complète.",
+    items: ['Ateliers pratiques', 'Parcours par rôle'],
   },
   {
     num: '03',
@@ -78,7 +78,7 @@ export function ZohoSection() {
 
           <div className="ai-pillars">
             {ZOHO_PILLARS.map((p) => (
-              <div className="ai-pillar" key={p.num}>
+              <div className="ai-pillar" key={p.num} id={p.num === '02' ? 'formation' : undefined}>
                 <div className="ai-pillar-num">{p.num} · Volet</div>
                 <h4>{p.title}</h4>
                 <p>{p.desc}</p>

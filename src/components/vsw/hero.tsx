@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
 import { SitesBand } from './sites-band';
-import { METIERS } from './metiers-section';
+import { METIERS } from '@/lib/metiers';
 import { APPEL } from './appel';
 
 /*

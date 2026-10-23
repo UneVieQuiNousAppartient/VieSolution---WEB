@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import { RevealInit } from '@/components/vsw/reveal-init';
 import { PageHeader } from '@/components/vsw/page-header';
-import { Portfolio } from '@/components/vsw/portfolio';
+import { RealisationsGrid } from '@/components/vsw/realisations-grid';
+import { OutilsGalerie } from '@/components/vsw/outils-galerie';
 import { CTASection } from '@/components/vsw/cta-section';
 
+/* Réalisations (refonte du 2026-10-23, maquette validée par Camille) : seulement les vrais projets,
+   rangés par pilier : les sites, puis les écrans des CRM sur mesure. Les cas d'usage d'exemple
+   (cadres d'image vides) sont retirés ; les captures Zoho s'ajouteront quand Camille les donnera. */
 export const metadata: Metadata = {
-  title: "Cas d'usage",
+  title: 'Réalisations',
   description:
-    "Exemples concrets de mandats IA et Zoho : automatisation, agents, implantation CRM et formation pour entreprises québécoises.",
+    "Les sites et les CRM sur mesure bâtis par Vie Solution Web pour des entreprises québécoises.",
 };
 
 export default function RealisationsPage() {
@@ -15,19 +19,20 @@ export default function RealisationsPage() {
     <>
       <RevealInit />
       <PageHeader
-        eyebrow="Cas d'usage"
+        eyebrow="Réalisations"
         title={
           <>
-            Ce qu&apos;on peut<br />bâtir ensemble.
+            Ce qu&apos;on a<br />déjà bâti.
           </>
         }
-        lede="Des exemples concrets de mandats IA et Zoho pour des entreprises québécoises de toutes tailles — du travailleur autonome à la PME établie."
+        lede="Des sites et des CRM sur mesure, bâtis pour des entreprises d'ici. Chaque projet part de leur façon de travailler."
       />
-      <Portfolio showHead={false} />
+      <RealisationsGrid />
+      <OutilsGalerie />
       <CTASection
         text={
           <>
-            Votre entreprise ressemble à l&apos;un de ces cas ? <em>Parlons-en</em> — l&apos;appel
+            Votre entreprise a besoin d&apos;un outil comme ceux-ci ? <em>Parlons-en</em> : l&apos;appel
             découverte est gratuit.
           </>
         }

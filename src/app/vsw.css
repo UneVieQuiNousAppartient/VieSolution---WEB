@@ -3018,7 +3018,8 @@ html { scroll-behavior: smooth; }
   line-height: 1.2;
 }
 
-/* 1. Menu flottant : barre détachée, coins arrondis, ombre douce */
+/* 1. Menu flottant : barre détachée, coins arrondis, ombre douce (remplacé le 2026-10-23 par la barre
+   pleine largeur, en fin de fichier) */
 .nav {
   top: 12px;
   width: min(1200px, calc(100% - 32px));
@@ -3256,7 +3257,7 @@ html { scroll-behavior: smooth; }
 .svc-card:hover { border-color: var(--accent-40); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
 .svc-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .svc-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-.svc-card h3 {
+.svc-card h3, .svc-card h4 {
   margin: 0;
   font-family: var(--font-display);
   font-size: 21px;
@@ -3636,82 +3637,8 @@ html[data-theme="dark"] .hero h1 .highlight { background-image: linear-gradient(
 :root .section--nuit .btn-primary:hover,
 :root:not([data-theme="dark"]) .section--nuit .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 
-/* Menu « Services » (nav-services.tsx) */
-.nav-services { position: relative; }
-.nav-services-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 2px;
-  border: 0;
-  background: none;
-  font: inherit;
-  font-size: 14px;
-  color: var(--fg-2);
-  cursor: pointer;
-}
-.nav-services-btn:hover,
-.nav-services-btn[aria-expanded="true"] { color: var(--accent-ink); }
-.nav-services-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
-.nav-services-chev { font-size: 10px; transition: transform 160ms var(--vsw-ease); }
-.nav-services-btn[aria-expanded="true"] .nav-services-chev { transform: rotate(180deg); }
-.nav-services-panel {
-  position: absolute;
-  top: calc(100% + 16px);
-  left: -24px;
-  width: 640px;
-  padding: 12px;
-  border-radius: 18px;
-  border: 1px solid var(--line-soft);
-  background: var(--surface);
-  box-shadow: 0 30px 60px -28px color-mix(in oklch, var(--fg-0) 45%, transparent);
-  z-index: 60;
-}
-.nav-services-panel::before { content: ""; position: absolute; inset: -18px 0 auto 0; height: 18px; }   /* pont pour la souris */
-.nav-services-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-@media (max-width: 860px) {   /* tablette : une colonne, le panneau ne dépasse plus à droite */
-  .nav-services-panel { width: min(360px, calc(100vw - 32px)); }
-  .nav-services-list { grid-template-columns: 1fr; }
-}
-.nav-services-item {
-  display: flex;
-  gap: 12px;
-  padding: 11px 12px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: var(--fg-0);
-  white-space: normal !important;
-}
-.nav-services-item:hover,
-.nav-services-item:focus-visible { background: var(--accent-soft); outline: none; }
-.nav-services-icone {
-  flex: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-.nav-services-item strong { display: block; color: var(--fg-0); font-size: 14px; font-weight: 600; line-height: 1.3; }
-.nav-services-item small { display: block; font-size: 12.5px; color: var(--fg-2); line-height: 1.35; margin-top: 2px; }
-.nav-services-pied {
-  margin-top: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--bg-1);
-  font-size: 13.5px;
-  color: var(--fg-1) !important;
-  text-decoration: none;
-}
-.nav-services-pied strong { color: var(--accent-ink); font-weight: 600; }
-.nav-services-pied:hover strong { text-decoration: underline; }
-/* Menu mobile : « Services » dépliable */
+/* Menus de la barre : voir « Barre pleine largeur » plus bas (nav-deroulant.tsx) */
+/* Menu mobile : « Services » et « Métiers » dépliables */
 .nav-menu-sous-btn {
   width: 100%;
   display: flex;
@@ -4291,3 +4218,189 @@ body:has(.adm-page) .chat-panel { display: none; }
 .adm-reponse { padding-top: 14px; border-top: 1px solid var(--line-soft); }
 .adm-suggestion { background: color-mix(in oklch, var(--accent-2) 7%, transparent); border-color: color-mix(in oklch, var(--accent-2) 25%, transparent); }
 .adm-modeles { display: flex; flex-direction: column; gap: 12px; }
+
+/* Accueil, refonte du 2026-10-23 : « C'est pour vous si… » réunie autour du métier
+   (pour-vous-section.tsx, maquette validée par Camille). Reprend .pv-* et .metier-label. */
+.pm-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start; }
+#metiers { scroll-margin-top: 72px; }
+.pm-choix-titre { margin: 0 0 10px; font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); }
+.pm-choix ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pm-metier {
+  display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px;
+  border: 1px solid var(--line-soft); border-radius: var(--radius); background: var(--surface);
+  color: var(--fg-0); font-size: 15px; text-decoration: none; transition: background 160ms, border-color 160ms;
+}
+.pm-metier svg { color: var(--accent); flex: none; }
+.pm-metier:hover { border-color: var(--line); background: var(--bg-1); }
+.pm-metier:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pm-metier[aria-current="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-ink); font-weight: 600; }
+.pm-metier[aria-current="true"] svg { color: var(--on-ink); }
+.pm-metier--autre { border-style: dashed; color: var(--fg-1); }
+.pm-fiche {
+  min-width: 0; border: 1px solid var(--line-soft); border-radius: var(--radius-xl); background: var(--bg-1);
+  padding: clamp(20px, 3vw, 32px); display: flex; flex-direction: column; gap: 22px;
+}
+.pm-fiche-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 10px 20px; }
+.pm-fiche-tete h3 { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.6vw, 30px); }
+.pm-fiche .metier-precision { margin: 4px 0 0; font-size: var(--fs-small); color: var(--fg-2); max-width: 60ch; line-height: 1.55; }
+.pm-lien { color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none; }
+.pm-lien:hover { text-decoration: underline; }
+.pm-trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.pm-bloc { background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius-lg); padding: 18px; }
+.pm-bloc p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--fg-1); }
+.pm-tags { padding-right: 0; }
+.pm-tag-ia { background: color-mix(in oklch, var(--accent-2) 12%, transparent); color: var(--accent-2); text-decoration: none; }
+.pm-tag-ia:hover { text-decoration: underline; }
+.pm-fiche .metier-note { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: var(--fs-small); color: var(--fg-2); line-height: 1.55; }
+.pm-sous-titre { margin: 0 0 -8px; font-weight: 600; font-size: 15px; color: var(--fg-0); }
+.pm-fiche .pv-bilan { margin-top: 0; }
+.pm-benefices { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.pm-benefices li { display: flex; flex-direction: column; gap: 2px; padding: 14px 18px; border-radius: var(--radius-lg); background: var(--accent-soft); }
+.pm-benefices span { font-size: var(--fs-small); color: var(--fg-2); }
+@media (max-width: 1024px) {
+  .pm-layout { grid-template-columns: minmax(0, 1fr); }
+  .pm-choix { min-width: 0; }
+  .pm-choix ul { flex-direction: row; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+  .pm-choix li { flex: none; scroll-snap-align: start; }
+  .pm-trio { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .pm-benefices { grid-template-columns: 1fr; }
+}
+
+/* Services rangés en 3 piliers (services.tsx, refonte du 2026-10-23) */
+.svc-pilier { display: flex; flex-direction: column; gap: 10px; }
+.svc-pilier + .svc-pilier { margin-top: 14px; }
+.svc-pilier-titre {
+  margin: 4px 4px 0; font-family: var(--font-mono); font-size: var(--fs-eyebrow); font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.svc-pilier:nth-child(2) .svc-pilier-titre { color: var(--ok); }
+.svc-pilier:nth-child(3) .svc-pilier-titre { color: var(--accent-2); }
+
+/* Barre pleine largeur et grands menus (refonte du 2026-10-23, inspirée de Supabase et Vercel,
+   maquette validée par Camille). Remplace la barre flottante du lot Agnos (§14). */
+.nav {
+  top: 0;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  border-radius: 0;
+  background: color-mix(in oklch, var(--surface) 90%, transparent);
+  box-shadow: none;
+}
+.nav.scrolled { box-shadow: var(--shadow-xs); margin-bottom: 0; }
+.nav > .nav-inner { position: relative; height: 64px; padding: 0 var(--container-pad, 24px); max-width: 1240px; gap: 28px; justify-content: flex-start; }
+.nav.scrolled .nav-inner { height: 60px; }
+.nav .nav-links { gap: 26px; flex: 1; }
+.nav .nav-cta { margin-left: auto; min-height: 38px; padding: 7px 16px; border-radius: 10px; }
+@media (max-width: 640px) {
+  .nav { width: 100%; margin-top: 0; top: 0; }
+  .nav > .nav-inner { padding: 0 12px 0 16px; justify-content: space-between; }
+  .nav-menu-panel:not([hidden]) { top: 100%; height: calc(100dvh - 100%); border: 0; border-top: 1px solid var(--line-soft); border-radius: 0; box-shadow: none; }
+}
+.nav-deroulant { position: static; }
+.nav-deroulant-btn {
+  display: inline-flex; align-items: center; gap: 5px; padding: 8px 2px; border: 0; background: none;
+  font: inherit; font-size: 14px; color: var(--fg-2); cursor: pointer;
+}
+.nav-deroulant-btn:hover, .nav-deroulant-btn[aria-expanded="true"] { color: var(--fg-0); }
+.nav-deroulant-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.nav-deroulant-chev { font-size: 10px; transition: transform 160ms var(--vsw-ease); }
+.nav-deroulant-btn[aria-expanded="true"] .nav-deroulant-chev { transform: rotate(180deg); }
+.nav-deroulant-panel {
+  position: absolute; top: calc(100% - 4px); left: 50%; translate: -50% 0;
+  width: min(1000px, calc(100vw - 32px)); border-radius: 14px; border: 1px solid var(--line-soft);
+  background: var(--surface); box-shadow: 0 30px 60px -28px color-mix(in oklch, var(--fg-0) 45%, transparent);
+  overflow: hidden; z-index: 60;
+}
+.nav-deroulant-panel::before { content: ""; position: absolute; inset: -14px 0 auto 0; height: 14px; }   /* pont pour la souris */
+.nav-panneau { list-style: none; margin: 0; padding: 14px; display: grid; gap: 4px; }
+.nav-panneau--services { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 0.9fr); gap: 0; padding: 0; }
+.nav-panneau--metiers { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.nav-colonne { padding: 16px 12px; border-right: 1px solid var(--line-soft); }
+.nav-colonne ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.nav-colonne-titre { display: block; margin: 0 8px 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.nav-colonne:nth-child(2) .nav-colonne-titre { color: var(--ok); }
+.nav-colonne:nth-child(3) .nav-colonne-titre { color: var(--accent-2); }
+.nav-element { display: flex; gap: 12px; padding: 9px 10px; border-radius: 10px; text-decoration: none; color: var(--fg-0); white-space: normal !important; }
+.nav-element:hover, .nav-element:focus-visible { background: var(--bg-1); outline: none; }
+.nav-element-icone { flex: none; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--accent); border: 1px solid var(--line-soft); background: var(--bg-0); }
+.nav-element strong { display: block; color: var(--fg-0); font-size: 14px; font-weight: 600; line-height: 1.3; }
+.nav-element small { display: block; font-size: 12.5px; color: var(--fg-2); line-height: 1.4; margin-top: 2px; }
+.nav-vedette { display: flex; flex-direction: column; gap: 8px; padding: 16px; background: var(--bg-1); text-decoration: none; color: var(--fg-0); white-space: normal !important; }
+.nav-vedette .nav-colonne-titre { margin: 0; color: var(--fg-2); }
+.nav-vedette img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-radius: 8px; border: 1px solid var(--line-soft); }
+.nav-vedette strong { font-size: 14px; }
+.nav-vedette small { font-size: 12.5px; color: var(--fg-2); line-height: 1.45; }
+.nav-vedette-lien { font-size: 13px; font-weight: 600; color: var(--accent-ink); }
+.nav-vedette:hover .nav-vedette-lien { text-decoration: underline; }
+.nav-panneau-pied {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding: 12px 22px;
+  border-top: 1px solid var(--line-soft); background: var(--bg-1); font-size: 13px; color: var(--fg-2);
+}
+.nav-panneau-pied a { color: var(--fg-2); text-decoration: none; white-space: normal !important; }
+.nav-panneau-pied strong { color: var(--accent-ink); font-weight: 600; }
+.nav-panneau-pied a:hover strong { text-decoration: underline; }
+@media (max-width: 1100px) {
+  .nav-panneau--services { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nav-vedette { display: none; }
+  .nav-panneau--metiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .nav-panneau--services { grid-template-columns: 1fr; }
+  .nav-colonne { border-right: 0; border-bottom: 1px solid var(--line-soft); }
+}
+.nav-menu-pilier { margin: 10px 0 2px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.nav-menu-sous ul { list-style: none; margin: 0; padding: 0; }
+
+/* Pied de page en colonnes par pilier (footer.tsx, refonte du 2026-10-23) : marque + 3 piliers + Entreprise + Nous joindre */
+.footer--premium .footer-inner { grid-template-columns: 1.5fr repeat(5, minmax(0, 1fr)); gap: 32px; }
+@media (max-width: 1100px) {
+  .footer--premium .footer-inner { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .footer--premium .footer-inner > :first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .footer--premium .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+  .footer--premium .footer-inner > :nth-child(-n + 2) { grid-column: auto; }
+  .footer--premium .footer-inner > :first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 400px) {
+  .footer--premium .footer-inner { grid-template-columns: 1fr; }
+}
+
+/* Bande « Ce qu'on a déjà bâti » : type de chaque carte (sites-band.tsx, 2026-10-23) */
+.site-card-nom { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.site-card-type { flex: none; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-2); }
+
+/* Pages /metiers et /metiers/<slug> (refonte du 2026-10-23) */
+.metiers-index { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.metiers-index-carte {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 22px;
+  border: 1px solid var(--line-soft); border-radius: var(--radius-lg); background: var(--surface);
+  color: var(--fg-0); text-decoration: none; box-shadow: var(--shadow-xs); transition: border-color 200ms, transform 200ms;
+}
+.metiers-index-carte:hover { border-color: var(--line); transform: translateY(-2px); }
+.metiers-index-carte:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.metiers-index-carte strong { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.metiers-index-carte small { font-size: var(--fs-small); color: var(--fg-2); }
+.metiers-index-gruge { font-size: 14px; line-height: 1.55; color: var(--fg-1); flex: 1; }
+.metiers-index-autre { margin: 28px 0 0; color: var(--fg-2); max-width: 64ch; }
+.fil-ariane { margin-bottom: 18px; font-size: 14px; color: var(--fg-2); }
+.fil-ariane a { color: var(--accent); text-decoration: none; }
+.fil-ariane a:hover { text-decoration: underline; }
+.metier-page-precision { margin: -6px 0 12px; font-size: 15px; color: var(--fg-2); }
+.metier-page-appel { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.metier-page-appel-note { color: var(--fg-2); font-size: 14px; }
+.metier-page-trio { align-items: start; }
+.metier-page-services { list-style: none; margin: 12px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line-soft); display: flex; flex-direction: column; gap: 6px; }
+.metier-page-services a { color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none; }
+.metier-page-services a:hover { text-decoration: underline; }
+.metier-page-temps { margin-top: 12px !important; font-weight: 400 !important; color: var(--fg-1) !important; }
+.metier-page-note { margin: 16px 0 0; font-size: var(--fs-small); color: var(--fg-2); max-width: 70ch; line-height: 1.6; }
+.metier-page-h2 { margin: 48px 0 18px; font-family: var(--font-display); font-size: clamp(26px, 3vw, 34px); }
+.metier-page-autres-titre { margin: 0 0 12px; font-family: var(--font-mono); font-size: var(--fs-eyebrow); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); }
+.metier-page-autres { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.metier-page-autres a { text-decoration: none; font-size: 14px; }
+.metier-page-autres a:hover { color: var(--accent); }

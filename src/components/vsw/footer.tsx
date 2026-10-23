@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { LogoMark } from './logo-mark';
-import { SERVICES_NAV } from './nav';
+import { PILIERS_NAV } from './nav';
 import { APPEL } from './appel';
 import { Icon } from './icon';
 import { RESEAUX } from '@/lib/site';
 
 /* Pied de page premium (option A validée par Camille le 2026-10-22) : fond nuit (.section--nuit),
+   colonnes par pilier depuis la refonte du 2026-10-23 (Stagiaires → page Emplois, Prix → Entreprise),
    slogan en dégradé, bouton d'appel, grand nom en filigrane. Icônes sociales tirées de RESEAUX
    (src/lib/site.ts) : affichées seulement quand Camille a donné le lien. */
 const ICONES: Record<(typeof RESEAUX)[number]['nom'], string> = {
@@ -34,19 +35,21 @@ export function VswFooter() {
               {APPEL.libelle} <Icon name="arrow" size={14} />
             </Link>
           </div>
-          <div>
-            <h5>Services</h5>
-            {SERVICES_NAV.map((sv) => (
-              <Link key={sv.href} href={sv.href}>{sv.label}</Link>
-            ))}
-            <Link href="/devis">Prix : combien ça coûte ?</Link>
-          </div>
+          {PILIERS_NAV.map((p) => (
+            <div key={p.pilier}>
+              <h5>{p.pilier}</h5>
+              {p.services.map((sv) => (
+                <Link key={sv.href} href={sv.href}>{sv.label}</Link>
+              ))}
+            </div>
+          ))}
           <div>
             <h5>Entreprise</h5>
-            <Link href="/a-propos">À propos</Link>
+            <Link href="/metiers">Métiers</Link>
             <Link href="/realisations">Réalisations</Link>
-            <Link href="/#partenaires">Partenaires</Link>
-            <Link href="/postuler-stagiaire">Stagiaires</Link>
+            <Link href="/devis">Prix</Link>
+            <Link href="/a-propos">À propos</Link>
+            <Link href="/emplois">Emplois</Link>
             <Link href="/contact">Contact</Link>
           </div>
           <div>

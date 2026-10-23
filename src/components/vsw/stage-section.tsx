@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { Icon } from './icon';
 
-/* Programme de stage — textes de /postuler-stagiaire, repris tels quels sur l'accueil (demande de
-   Camille, 2026-10-22 : « mettre dans l'accueil cette partie pour les stagiaires »). */
+/* Programme de stage — textes de /postuler-stagiaire. Sur l'accueil le 2026-10-22, puis sur la page
+   /emplois depuis la refonte du 2026-10-23 (demande de Camille), avec la précision « sous la
+   supervision de Camille, qui valide tout ce qui est livré » (son choix). */
 export const OFFRES_STAGE = [
   {
     title: 'Mentorat individuel',
@@ -10,7 +11,7 @@ export const OFFRES_STAGE = [
   },
   {
     title: 'Projets clients réels',
-    desc: "Pas de mandats fictifs : vous contribuez à des automatisations, des implantations Zoho et des agents IA livrés à de vrais clients québécois.",
+    desc: "Pas de mandats fictifs : vous contribuez à des automatisations, des implantations Zoho et des agents IA livrés à de vrais clients québécois, sous la supervision de Camille, qui valide tout ce qui est livré.",
   },
   {
     title: "IA & Zoho appliqués",
@@ -43,7 +44,7 @@ export function StageSection() {
           ))}
         </div>
         <div className="stage-appel reveal">
-          <Link href="/postuler-stagiaire" className="btn btn-primary btn-lg">
+          <Link href="/emplois" className="btn btn-primary btn-lg">
             Postuler comme stagiaire <Icon name="arrow" size={14} aria-hidden="true" />
           </Link>
         </div>

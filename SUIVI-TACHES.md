@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 41.
+**Dernière mise à jour : 2026-10-23** — dernière section : 42.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -793,3 +793,72 @@ Laissé tel quel :
 - Pas d'onglet « Prospects » séparé : les prospects apparaissent dans « Demandes », avec leur étape.
 
 **Coût** : estimé ≈ 100 k ; réel ≈ 230 k (agents ≈ 136 k + session ≈ 95 k), à cause du correctif de sécurité et de ses tests.
+
+## 42. ✅ Réorganisation du site public : menus Services et Métiers, solutions en 3 piliers, section métier unique, pages /services, /metiers, /emplois (2026-10-23)
+
+**Contexte / demande** : Camille veut « mieux organiser ce que l'on a déjà », sans réécrire les textes ni perdre d'affaires. Plan validé dans la maquette (tableaux `SiteAccueil`, `SiteNavigation`, `SiteMetier`, `SiteExemples` de l'artefact Design), puis « ok » et « tu as mon autorisation jusqu'à la fin ». Points de Camille :
+- le hero ne change pas ;
+- la bande qui défile est gardée, avec en plus les écrans du CRM (et de Zoho plus tard) ;
+- « C'est pour vous si… », « Avant / après » et « Pour votre métier » deviennent une seule section ;
+- l'offre de stage passe sur une page « Emplois », avec « sous la supervision de Camille, qui valide tout ce qui est livré » ;
+- un menu inspiré de Supabase et Vercel : Services ▾, Métiers ▾, Prix, À propos, « Appel de découverte gratuit ».
+
+**Ce qui a été fait**
+- **Données** : `src/lib/metiers.ts` est la source unique des 8 métiers, des 7 situations et des 3 bénéfices. Chaque métier y reçoit 3 situations choisies pour lui, ses pages de service, et `rdvIa` (prise de rendez-vous par l'IA). Les textes viennent des anciens `metiers-section.tsx` et `avant-apres-section.tsx`, retirés.
+- **Accueil** (`src/app/page.tsx`), dans l'ordre de Camille : Hero (inchangé) → Nos solutions → section métier → Démarrer simplement → Comment on travaille → Pourquoi nous → Partenaires → Témoignages → FAQ → appel final (un seul bouton).
+- **Nos solutions** (`services.tsx`) : 9 cartes en 3 piliers (`PILIERS`).
+  - IA et automatisation : Automatisation et IA, Accueil IA, Formation IA.
+  - Zoho : Implantation Zoho, Formation Zoho.
+  - Web et visibilité : Sites, CRM sur mesure, Référencement.
+  - « Formation IA et Zoho » est séparée en deux cartes (`/ia#formation`, `/zoho#formation`).
+- **Section métier** (`pour-vous-section.tsx`, `id="metiers"`) : on choisit son métier, une fiche montre ce qui gruge, ce qu'on améliore, le temps retrouvé et ce qu'on installe, avec 3 situations à cocher et la jauge. Le métier « Autre ou PME » montre les 7 situations.
+  - Étiquettes IA ajoutées : « IA qui prend les rendez-vous (clavardage ou téléphone) » pour les métiers à rendez-vous, et « Assistant IA pour les petites tâches du quotidien » pour les 8.
+  - Le « Je suis… » du hero ouvre la fiche du bon métier (`#metier-<slug>`).
+  - Sans JavaScript, chaque métier est un lien vers sa page.
+- **Menu** :
+  - `nav-services.tsx` devient `nav-deroulant.tsx`, un menu déroulant générique ;
+  - Services ▾ : 3 colonnes, une carte « Réalisations », « Tous les services → » ;
+  - Métiers ▾ : les 8 métiers, « Tous les métiers → » ;
+  - le menu mobile (`nav-menu.tsx`) a les mêmes sous-menus ;
+  - bouton « Appel de découverte gratuit » (`APPEL.court`).
+- **Pied de page** : colonnes par pilier, puis Entreprise (Métiers, Réalisations, Prix, À propos, Emplois, Contact).
+- **Nouvelles pages**, accessibles par le menu, le pied de page et les liens de l'accueil :
+  - `/services` : les 3 piliers et Démarrer simplement ;
+  - `/metiers` : les 8 cartes ;
+  - `/metiers/<slug>` : 8 pages statiques. Chacune a un fil d'Ariane, ce qui gruge, ce qu'on installe (avec les liens vers les services) et ce que ça change, les situations, la démarche et les autres métiers.
+  - `/emplois` remplace `/postuler-stagiaire`, redirigée en 308.
+  - `/services` n'est plus redirigée vers l'accueil (les sous-adresses de l'ancien design vont vers `/ia`) ; `/solutions` mène à `/services`.
+- **Réalisations** :
+  - la bande qui défile mêle sites et écrans du CRM sur mesure (`ECRANS` de `outils-galerie.tsx`) et mène à `/realisations` ;
+  - `/realisations` montre les sites et la galerie d'écrans ;
+  - l'ancien `portfolio.tsx` est retiré.
+- **Stagiaires** : les mentions des jeunes sont retirées des pages de vente (`ai-section.tsx`, `zoho-section.tsx`). La carte « Démarrer » devient « Mise en place d'un logiciel de gestion (Zoho ou CRM sur mesure) ». Le bouton « Décrire ma situation par écrit » reste seulement sur Prix (`/devis`) ; la page Contact est déjà le formulaire écrit.
+- Le plan du site (`PUBLIC_ROUTES`, `src/lib/site.ts`) et les connaissances de la bulle de clavardage listent les nouvelles pages.
+- Le lien Blog et le choix FR/EN ne sont pas dans le menu (accord de Camille). Le Blog viendra avec 3 vrais articles, le FR/EN avec une vraie version anglaise, sur le modèle Lingui de KHI.
+
+**Vérification technique**
+- `npm run verify` vert : 89 tests, dont 5 nouveaux dans `tests/metiers.test.mjs` (slugs uniques, 3 situations valides par métier, toutes utilisées, services existants, liste `rdvIa`, mention AMF).
+- Captures sur 1280 px et 390 px : accueil, deux menus, section métier, page métier, `/metiers`, `/services`, `/realisations`, `/emplois`. Aucun débordement horizontal.
+- Un débordement réglé en cours de route : la colonne de la fiche métier grandissait avec la liste, réglé par `minmax(0,1fr)` et `min-width: 0`.
+- `qa-agent` (Opus, ≈ 96 k) **VERT** : redirections, 200 sur toutes les nouvelles routes, 404 sur un métier inconnu, plan du site, 43 liens internes et toutes les ancres, coordonnées, aucun montant, un seul h1 par page, CSS en jetons seulement. Corrigé ensuite :
+  - un `aria-live` en double sur la fiche métier (le lecteur d'écran relisait toute la fiche) ;
+  - Ctrl/Cmd + clic sur un métier ouvre de nouveau sa page ;
+  - le commentaire et le suivi disaient « Contact et Prix » : le bouton écrit n'est que sur Prix.
+
+**Non fait dans ce round**
+- Captures de Zoho (données fictives ou masquées, accord du client, décision sur le logo).
+- Faits réels et accord des clients pour des fiches de réalisation détaillées.
+- Blog (3 articles) et version anglaise : chantiers à part.
+- « relève » reste dans `pricing-section` et `about.tsx` (hors pages de vente visées).
+- Anciennes pages `src/app/services/*` et `src/app/solutions/*` de l'ancien design : toujours dans le dépôt, inaccessibles (redirigées). À retirer dans un lot de ménage.
+- Règles CSS mortes de l'ancienne section « Avant / après » (`pv-outro`) laissées dans `vsw.css`.
+- `tests/metiers.test.mjs` recopie la liste des pages de service au lieu de l'importer du menu (remarque mineure du `qa-agent`).
+- `StageSection` n'est plus affichée nulle part (seul `OFFRES_STAGE` sert) ; son lien pointe maintenant vers `/emplois`.
+- Textes écrits par Claude, à relire par Camille :
+  - le titre et l'intro de `/services` ;
+  - l'intro de `/realisations` ;
+  - les descriptions courtes des métiers et des services dans le menu.
+- À tester par Camille : les menus sur son téléphone.
+
+**Coût** : estimé ≈ 250 k ; réel ≈ 450 k (session, y compris les rondes de maquette) + `qa-agent`.
+

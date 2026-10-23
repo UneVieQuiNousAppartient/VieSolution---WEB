@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/vsw/page-header';
 import { ServiceDetailSection } from '@/components/vsw/service-detail-section';
 import { OutilsGalerie } from '@/components/vsw/outils-galerie';
 import { CTASection } from '@/components/vsw/cta-section';
-import { ECRIT } from '@/components/vsw/appel';
+import { APPEL } from '@/components/vsw/appel';
 
 export const metadata: Metadata = {
   title: 'CRM et outils sur mesure',
@@ -54,8 +54,8 @@ export default function CrmSurMesurePage() {
             explique clairement où elles sont hébergées.
           </>
         }
-        boutonLibelle={ECRIT.libelle}
-        boutonLien={ECRIT.href}
+        boutonLibelle={APPEL.libelle}
+        boutonLien={APPEL.href}
       />
       <OutilsGalerie />
       <CTASection

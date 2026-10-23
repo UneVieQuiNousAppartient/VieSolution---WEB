@@ -20,8 +20,8 @@ const CARTES: Record<Variant, Carte[]> = {
       href: '/ia#demarrer',
     },
     {
-      title: 'Mise en place d’un logiciel de gestion (Zoho)',
-      desc: 'On installe Zoho pour vos clients et vos factures. Un seul endroit, au lieu de cinq.',
+      title: 'Mise en place d’un logiciel de gestion (Zoho ou CRM sur mesure)',
+      desc: 'On installe Zoho, ou on bâtit votre CRM sur mesure, pour vos clients et vos factures. Un seul endroit, au lieu de cinq.',
       items: ['Carnet de clients (CRM)', 'Facturation (Books)', 'Transfert de vos données existantes'],
       href: '/zoho#demarrer',
     },
