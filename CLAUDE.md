@@ -30,7 +30,7 @@ Langue : français québécois (vouvoiement). Tout le contenu visible est en fra
 
 `/` (accueil), `/services` (les 9 solutions en 3 piliers), `/ia`, `/accueil-ia`, `/zoho`, `/sites-web`, `/crm-sur-mesure`,
 `/referencement`, `/metiers` et `/metiers/<slug>` (8 métiers, données dans `src/lib/metiers.ts`), `/devis` (« Combien ça coûte ? » :
-démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/avis` (témoignages, table `vsw_avis`, modération dans l'onglet « Avis » de `/admin`), `/a-propos`, `/rdv`, `/contact`,
+démarche de prix, formulaire de situation, niveaux d'accompagnement sans montant), `/realisations`, `/blog` et `/blog/<slug>` (articles approuvés par Camille, `src/content/blog/*.md`), `/avis` (témoignages, table `vsw_avis`, modération dans l'onglet « Avis » de `/admin`), `/a-propos`, `/rdv` (créneaux libres de Google Agenda quand il est connecté — `src/lib/agenda*.ts`, jeton chiffré dans `vsw_settings`, carte « Google Agenda » de l'onglet Rendez-vous ; sinon ancien formulaire de demande), `/contact`,
 `/emplois` (offre de stage ; ancienne `/postuler-stagiaire`), `/evenements` (ateliers réservés d'abord aux clients : page cachée, noindex, lien envoyé par Camille ; tables `vsw_evenements` / `vsw_inscriptions`, onglet « Événements » de l'admin), `/admin` (+ pages légales ; onglet « Statistiques » : visites dans `vsw_page_views` par `/api/visite`, sans cookie ni donnée personnelle — `site_page_views` est à CSF, ne plus y écrire).
 Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
 
@@ -80,6 +80,8 @@ RESEND_API_KEY=<clé Resend>
 ANTHROPIC_API_KEY=<clé Claude (Anthropic) — assistant IA de la bulle de clavardage, /api/chat ; sans elle, réponses toutes faites>
 EMAIL_FROM=Vie Solution Web <adresse d'un domaine vérifié dans Resend>
 EMAIL_REPLY_TO=<adresse qui reçoit les réponses des prospects>
+GOOGLE_CLIENT_ID=<client OAuth « Application Web » de Google Cloud — Google Agenda de /rdv>
+GOOGLE_CLIENT_SECRET=<son code secret — jamais côté client>
 ```
 
 ## État (au 2026-10-10 ; SQL du CRM : 2026-10-22)

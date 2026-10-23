@@ -11,6 +11,7 @@ import { Icon } from '@/components/vsw/icon';
 import { AdminAvis } from '@/components/vsw/admin-avis';
 import { AdminStats } from '@/components/vsw/admin-stats';
 import { AdminEvenements } from '@/components/vsw/admin-evenements';
+import { AdminAgenda } from '@/components/vsw/admin-agenda';
 import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
 import { FicheDemande } from '@/components/vsw/admin-fiche';
 import { NouvelleDemande } from '@/components/vsw/admin-nouvelle';
@@ -133,6 +134,8 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+  // Retour de Google (« Connecter Google Agenda ») : ouvrir l'onglet Rendez-vous, où est la carte Google Agenda.
+  useEffect(() => { if (new URLSearchParams(window.location.search).has('google')) setTab('rdv'); }, []);
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -520,6 +523,7 @@ export default function AdminPage() {
               </div>
             )}
 
+            {tab === 'rdv' && <AdminAgenda />}
             {(tab === 'leads' || tab === 'clients' || tab === 'rdv' || tab === 'stages') && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {listeLeads.length === 0 && (

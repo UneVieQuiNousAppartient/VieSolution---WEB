@@ -28,6 +28,15 @@ export default function PolitiqueConfidentialitePage() {
           N&apos;écrivez pas de renseignements sensibles dans la conversation.
         </p>
 
+        <p>
+          <strong>Réservation d&apos;un appel en ligne.</strong> Quand vous réservez un appel découverte sur
+          la page Rendez-vous, votre adresse courriel et l&apos;heure choisie sont transmises à Google
+          (Google Agenda et Google Meet), l&apos;entreprise américaine qui gère notre agenda, pour créer le
+          rendez-vous et vous envoyer l&apos;invitation avec le lien de la rencontre ; Google les traite selon
+          ses propres conditions. Votre nom, votre téléphone et le sujet indiqué restent dans notre suivi
+          des demandes. Pour faire retirer le rendez-vous de notre agenda, écrivez-nous.
+        </p>
+
         <h2>2. Utilisation des informations</h2>
         <p>Les informations collectées sont utilisées pour :</p>
         <ul>
