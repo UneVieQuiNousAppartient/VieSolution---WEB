@@ -3,7 +3,7 @@
 // statiques). Règles de lecture pures et testées : src/lib/blog-markdown.ts.
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { lireCorps, lireEnTete, minutesDeLecture, planDe, type Bloc, type EnTete } from './blog-markdown';
+import { lireCorps, lireEnTete, minutesDeLecture, planDe, slugValide, type Bloc, type EnTete } from './blog-markdown';
 
 export type Article = EnTete & { slug: string; blocs: Bloc[]; minutes: number; plan: { id: string; texte: string }[] };
 
@@ -14,7 +14,7 @@ let cache: Article[] | null = null;
 export function articles(): Article[] {
   if (cache) return cache;
   cache = readdirSync(DOSSIER)
-    .filter((f) => f.endsWith('.md'))
+    .filter((f) => f.endsWith('.md') && slugValide(f.slice(0, -3)))
     .map((f) => {
       const { enTete, corps } = lireEnTete(readFileSync(join(DOSSIER, f), 'utf8'));
       const blocs = lireCorps(corps);

@@ -7,6 +7,7 @@ import { JsonLd } from '@/components/vsw/json-ld';
 import { BlogTexte } from '@/components/vsw/blog-texte';
 import { SERVICES_NAV } from '@/components/vsw/nav';
 import { articleParSlug, articles, dateLisible } from '@/lib/blog';
+import { cheminArticle } from '@/lib/blog-markdown';
 import { metierParSlug } from '@/lib/metiers';
 import { SITE_URL } from '@/lib/site';
 
@@ -114,7 +115,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <div className="blog-cote-bloc">
               <p className="blog-encadre-titre">À lire aussi</p>
               <ul>
-                {autres.map((x) => <li key={x.slug}><Link href={`/blog/${x.slug}`}>{x.titre}</Link></li>)}
+                {autres.map((x) => <li key={x.slug}><Link href={cheminArticle(x.slug)}>{x.titre}</Link></li>)}
               </ul>
             </div>
           </aside>

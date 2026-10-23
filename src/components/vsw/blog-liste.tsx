@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { PILIERS } from './services';
+import { cheminArticle } from '@/lib/blog-markdown';
 
 /* Cartes des articles du Blog, filtrées par pilier (maquette validée par Camille le 2026-10-23).
    Sans JavaScript, toutes les cartes s'affichent ; les filtres ne servent qu'à l'écran. */
@@ -24,7 +25,7 @@ export function BlogListe({ articles }: { articles: CarteArticle[] }) {
       <ul className="blog-cartes">
         {visibles.map((a) => (
           <li key={a.slug}>
-            <Link href={`/blog/${a.slug}`} className="blog-carte">
+            <Link href={cheminArticle(a.slug)} className="blog-carte">
               <span className="blog-carte-meta">{a.pilier} · {a.minutes} min</span>
               <strong>{a.titre}</strong>
               <span className="blog-carte-resume">{a.resume}</span>

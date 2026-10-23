@@ -51,6 +51,12 @@ export function lireEnTete(source: string): { enTete: EnTete; corps: string } {
   };
 }
 
+/** Adresse d'article : minuscules, chiffres et traits d'union seulement (nom du fichier). */
+export const slugValide = (slug: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
+
+/** Chemin d'un article, encodé (un nom de fichier n'entre jamais tel quel dans un lien). */
+export const cheminArticle = (slug: string) => `/blog/${encodeURIComponent(slug)}`;
+
 /** Lien permis : adresse interne (« /… », sans « // ») ou https. Le reste reste du texte. */
 export const lienPermis = (href: string) => /^\/(?![/\\])/.test(href) || /^https:\/\/[^\s]+$/.test(href);
 
