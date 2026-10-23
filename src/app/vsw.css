@@ -3018,8 +3018,8 @@ html { scroll-behavior: smooth; }
   line-height: 1.2;
 }
 
-/* 1. Menu flottant : barre détachée, coins arrondis, ombre douce (remplacé le 2026-10-23 par la barre
-   pleine largeur, en fin de fichier) */
+/* 1. Menu flottant : barre détachée, coins arrondis, ombre douce (gardé à la refonte du 2026-10-23,
+   à la demande de Camille ; grands menus en fin de fichier) */
 .nav {
   top: 12px;
   width: min(1200px, calc(100% - 32px));
@@ -4278,27 +4278,14 @@ body:has(.adm-page) .chat-panel { display: none; }
 .svc-pilier:nth-child(2) .svc-pilier-titre { color: var(--ok); }
 .svc-pilier:nth-child(3) .svc-pilier-titre { color: var(--accent-2); }
 
-/* Barre pleine largeur et grands menus (refonte du 2026-10-23, inspirée de Supabase et Vercel,
-   maquette validée par Camille). Remplace la barre flottante du lot Agnos (§14). */
-.nav {
-  top: 0;
-  width: 100%;
-  margin: 0;
-  border: 0;
-  border-bottom: 1px solid var(--line-soft);
-  border-radius: 0;
-  background: color-mix(in oklch, var(--surface) 90%, transparent);
-  box-shadow: none;
-}
-.nav.scrolled { box-shadow: var(--shadow-xs); margin-bottom: 0; }
-.nav > .nav-inner { position: relative; height: 64px; padding: 0 var(--container-pad, 24px); max-width: 1240px; gap: 28px; justify-content: flex-start; }
-.nav.scrolled .nav-inner { height: 60px; }
+/* Barre flottante et grands menus (refonte du 2026-10-23, menus inspirés de Supabase et Vercel). Le
+   2026-10-23, Camille préfère la barre flottante du lot Agnos (§14) : elle revient (règles « 1. Menu
+   flottant » plus haut), avec les grands menus et des animations (voir « Animations du menu » plus bas). */
+.nav > .nav-inner { position: relative; gap: 28px; justify-content: flex-start; }
 .nav .nav-links { gap: 26px; flex: 1; }
-.nav .nav-cta { margin-left: auto; min-height: 38px; padding: 7px 16px; border-radius: 10px; }
+.nav .nav-cta { margin-left: auto; }
 @media (max-width: 640px) {
-  .nav { width: 100%; margin-top: 0; top: 0; }
-  .nav > .nav-inner { padding: 0 12px 0 16px; justify-content: space-between; }
-  .nav-menu-panel:not([hidden]) { top: 100%; height: calc(100dvh - 100%); border: 0; border-top: 1px solid var(--line-soft); border-radius: 0; box-shadow: none; }
+  .nav > .nav-inner { justify-content: space-between; }
 }
 .nav-deroulant { position: static; }
 .nav-deroulant-btn {
@@ -4404,3 +4391,44 @@ body:has(.adm-page) .chat-panel { display: none; }
 .metier-page-autres { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .metier-page-autres a { text-decoration: none; font-size: 14px; }
 .metier-page-autres a:hover { color: var(--accent); }
+
+/* Animations du menu (2026-10-23, demande de Camille) : arrivée de la barre, ouverture des grands menus
+   et du menu mobile, reflet au survol. Coupées par prefers-reduced-motion (fin de ce bloc). */
+@keyframes nav-arrivee { from { opacity: 0; transform: translateY(-10px); } }
+@keyframes nav-panneau-entree { from { opacity: 0; transform: translateY(-8px) scale(0.985); } }
+@keyframes nav-element-entree { from { opacity: 0; transform: translateY(4px); } }
+@keyframes nav-mobile-entree { from { opacity: 0; transform: translateY(-12px); } }
+.nav { animation: nav-arrivee 420ms var(--vsw-ease) both; transition: box-shadow 240ms var(--vsw-ease), background-color 240ms var(--vsw-ease), margin-bottom 240ms var(--vsw-ease); }
+.nav.scrolled { background: color-mix(in oklch, var(--surface) 96%, transparent); }
+.nav-deroulant-panel:not([hidden]) { transform-origin: top center; animation: nav-panneau-entree 220ms var(--vsw-ease) both; }
+.nav-deroulant-panel:not([hidden]) .nav-element,
+.nav-deroulant-panel:not([hidden]) .nav-vedette { animation: nav-element-entree 260ms var(--vsw-ease) both; }
+.nav-deroulant-panel:not([hidden]) li:nth-child(2) > .nav-element,
+.nav-deroulant-panel:not([hidden]) .nav-colonne:nth-child(2) .nav-element { animation-delay: 30ms; }
+.nav-deroulant-panel:not([hidden]) li:nth-child(3) > .nav-element,
+.nav-deroulant-panel:not([hidden]) .nav-colonne:nth-child(3) .nav-element { animation-delay: 60ms; }
+.nav-deroulant-panel:not([hidden]) li:nth-child(n + 4) > .nav-element,
+.nav-deroulant-panel:not([hidden]) .nav-vedette { animation-delay: 90ms; }
+/* Décalage au survol par `translate` : `transform` reste à l'animation d'entrée. */
+.nav-element { transition: background-color 160ms var(--vsw-ease), translate 160ms var(--vsw-ease); }
+.nav-element:hover { translate: 2px 0; }
+.nav-element-icone { transition: color 160ms var(--vsw-ease), border-color 160ms var(--vsw-ease); }
+.nav-element:hover .nav-element-icone { border-color: var(--accent); }
+.nav-links > a, .nav-deroulant-btn { position: relative; }
+.nav-links > a::after, .nav-deroulant-btn::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; border-radius: 2px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 200ms var(--vsw-ease);
+}
+.nav-links > a:hover::after, .nav-deroulant-btn:hover::after, .nav-deroulant-btn[aria-expanded="true"]::after { transform: scaleX(1); }
+.nav .nav-cta { transition: transform 200ms var(--vsw-ease), box-shadow 200ms var(--vsw-ease); }
+.nav .nav-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.nav-menu-panel:not([hidden]) { animation: nav-mobile-entree 260ms var(--vsw-ease) both; }
+.nav-menu-sous:not([hidden]) { animation: nav-element-entree 200ms var(--vsw-ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  .nav, .nav-deroulant-panel:not([hidden]), .nav-deroulant-panel:not([hidden]) .nav-element,
+  .nav-deroulant-panel:not([hidden]) .nav-vedette, .nav-menu-panel:not([hidden]), .nav-menu-sous:not([hidden]) { animation: none; }
+  .nav-element:hover { translate: none; }
+  .nav .nav-cta:hover { transform: none; }
+  .nav-links > a::after, .nav-deroulant-btn::after { transition: none; }
+}
+

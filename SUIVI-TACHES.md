@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 42.
+**Dernière mise à jour : 2026-10-23** — dernière section : 43.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -794,7 +794,7 @@ Laissé tel quel :
 
 **Coût** : estimé ≈ 100 k ; réel ≈ 230 k (agents ≈ 136 k + session ≈ 95 k), à cause du correctif de sécurité et de ses tests.
 
-## 42. ✅ Réorganisation du site public : menus Services et Métiers, solutions en 3 piliers, section métier unique, pages /services, /metiers, /emplois (2026-10-23)
+## 42. ✅ Réorganisation du site public (fusionnée, PR #14, en ligne le 2026-10-23) : menus Services et Métiers, solutions en 3 piliers, section métier unique, pages /services, /metiers, /emplois (2026-10-23)
 
 **Contexte / demande** : Camille veut « mieux organiser ce que l'on a déjà », sans réécrire les textes ni perdre d'affaires. Plan validé dans la maquette (tableaux `SiteAccueil`, `SiteNavigation`, `SiteMetier`, `SiteExemples` de l'artefact Design), puis « ok » et « tu as mon autorisation jusqu'à la fin ». Points de Camille :
 - le hero ne change pas ;
@@ -861,4 +861,24 @@ Laissé tel quel :
 - À tester par Camille : les menus sur son téléphone.
 
 **Coût** : estimé ≈ 250 k ; réel ≈ 450 k (session, y compris les rondes de maquette) + `qa-agent`.
+
+## 43. ✅ Menu flottant de retour, avec animations (2026-10-23)
+
+**Contexte / demande** : Camille aimait le menu flottant du lot Agnos (§ 14), remplacé par une barre pleine largeur à la réorganisation (§ 42) : « mon menu flottant je l'aimais, si on peut rajouter des animations ». Plan annoncé (≈ 60 k), accord « oui oui ».
+
+**Ce qui a été fait** (`src/app/vsw.css` seulement)
+- La surcharge « barre pleine largeur » est retirée : les règles « 1. Menu flottant » reprennent effet (barre détachée, coins arrondis, ombre ; panneau mobile flottant). Les grands menus Services et Métiers sont gardés.
+- Animations, toutes en CSS : arrivée de la barre au chargement ; ouverture des grands menus en fondu et glissement, éléments en cascade ; trait sous les liens au survol ; léger décalage des éléments et soulèvement du bouton d'appel au survol ; menu mobile et sous-menus qui glissent ; barre plus opaque au défilement (thème clair).
+- Tout est coupé par `prefers-reduced-motion`. Aucune dépendance.
+
+**Vérification technique** : `npm run verify` vert (89 tests). Captures à 1440 px (barre, menu Services pendant et après l'animation, barre au défilement) et à 390 px (menu mobile) ; aucun débordement (390 px).
+
+**Non fait dans ce round** : à tester par Camille sur son téléphone et son ordinateur (le ressenti des animations ne se voit pas sur une capture).
+
+**Décisions de Camille notées le même jour** (réponses aux questions, 2026-10-23), pour les chantiers suivants :
+- Blog : ses 3 sujets proposés (IA par où commencer ; rappels de rendez-vous ; Zoho ou CRM sur mesure), relus par elle avant publication ; lien « Blog » au menu seulement avec les 3 articles approuvés.
+- Version anglaise : français inchangé à la racine, anglais sous `/en` ; relecture par Camille.
+- Page Avis (étape E) : nouvelle table `vsw_avis` acceptée (`site_testimonials`, sans préfixe, n'est pas touchée) ; texte de consentement à la publication accepté ; affichage nom, métier, note ; WhatsApp et code QR comme KHI ; bibliothèque `qrcode` acceptée ; liens Google et Facebook fournis plus tard (cases dans l'admin).
+
+**Coût** : estimé ≈ 60 k ; réel ≈ 130 k (session ≈ 70 k + `qa-agent` ≈ 60 k, VERT ; ses remarques corrigées : transition de la marge, décalage au survol par `translate`, ligne de l'état).
 
