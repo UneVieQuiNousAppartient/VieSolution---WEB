@@ -1,20 +1,23 @@
 'use client';
 
-// Admin Vie Solution Web — équivalent léger de l'admin KHI EDUC : « Aujourd'hui » (quoi faire ce
-// jour-là), leads, brouillons à approuver, tâches, relances automatiques. Accès : code + double
-// vérification (cookie httpOnly).
+// Admin Vie Solution Web : tableau de bord « Aujourd'hui » (src/components/vsw/admin-tableau.tsx),
+// demandes, clients, rendez-vous, stages, brouillons à approuver, tâches, relances automatiques, dans un
+// menu à gauche (maquette validée par Camille le 2026-10-23). Accès : code + double vérification
+// (cookie httpOnly).
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { encode } from 'uqr';
 import { Icon } from '@/components/vsw/icon';
+import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
 import { STATUTS } from '@/lib/crm/regles';
+import { PERIODES, construireTableau, estRdv, estStage, type Periode } from '@/lib/crm/tableau';
 import type { Aujourdhui } from '@/lib/crm/aujourdhui';
 import type { RegleAffichee } from '@/lib/crm/moteur';
 
 type Lead = {
   id: string; name: string; email: string; phone: string; company: string | null;
   service_interest: string; need: string; status: string; source: string;
-  created_at: string; last_contact_at: string | null; email_opt_out_at: string | null;
+  created_at: string; status_changed_at: string | null; last_contact_at: string | null; email_opt_out_at: string | null;
 };
 type Draft = {
   id: string; target_id: string; kind: string; subject: string; body: string;
@@ -99,7 +102,9 @@ export default function AdminPage() {
   const [mfaCode, setMfaCode] = useState('');
   const [codesSecours, setCodesSecours] = useState<string[]>([]);
   const [data, setData] = useState<Data | null>(null);
-  const [tab, setTab] = useState<'aujourdhui' | 'leads' | 'drafts' | 'tasks' | 'regles'>('aujourdhui');
+  const [tab, setTab] = useState<Vue>('aujourdhui');
+  const [periode, setPeriode] = useState<Periode>(30);
+  const [recherche, setRecherche] = useState('');
   const [delais, setDelais] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [openDraft, setOpenDraft] = useState<string | null>(null);
@@ -211,6 +216,22 @@ export default function AdminPage() {
   };
 
   const leadById = (id: string) => data?.leads.find((l) => l.id === id);
+
+  const tableau = useMemo(
+    () => (data ? construireTableau({ leads: data.leads, taches: data.tasks, brouillons: data.drafts }, periode) : null),
+    [data, periode],
+  );
+  // Listes « Demandes », « Clients », « Rendez-vous », « Stagiaires », filtrées par la recherche.
+  const listeLeads = useMemo(() => {
+    const q = recherche.trim().toLowerCase();
+    return (data?.leads ?? [])
+      .filter((l) =>
+        tab === 'clients' ? l.status === 'Client'
+          : tab === 'rdv' ? estRdv(l)
+            : tab === 'stages' ? estStage(l)
+              : !estStage(l))
+      .filter((l) => !q || [l.name, l.email, l.phone, l.company ?? ''].some((x) => x.toLowerCase().includes(q)));
+  }, [data, tab, recherche]);
 
   if (mfaEtape === 'activer') {
     return (
@@ -334,155 +355,92 @@ export default function AdminPage() {
 
   const pending = data?.drafts.filter((d) => d.status === 'pending') ?? [];
 
+  const compteurs = tableau?.compteurs;
+  const menu: { titre: string; vues: [Vue, string, number | undefined, boolean?][] }[] = [
+    { titre: 'Pilotage', vues: [
+      ['aujourdhui', 'Aujourd’hui', data?.aujourdhui.total],
+      ['leads', 'Demandes', compteurs?.demandes],
+      ['tasks', 'Tâches', compteurs?.taches],
+      ['rdv', 'Rendez-vous', compteurs?.rdv],
+    ] },
+    { titre: 'Suivi', vues: [
+      ['clients', 'Clients', compteurs?.clients],
+      ['drafts', 'Brouillons à approuver', pending.length, true],
+      ['regles', 'Courriels et relances', undefined],
+      ['stages', 'Stagiaires', compteurs?.stages],
+    ] },
+  ];
+  const titres: Record<Vue, string> = {
+    aujourdhui: 'Bonjour, Camille', leads: 'Demandes', clients: 'Clients', rdv: 'Demandes de rendez-vous',
+    stages: 'Stagiaires', drafts: 'Brouillons à approuver', tasks: 'Tâches', regles: 'Courriels et relances',
+  };
+  const date = new Intl.DateTimeFormat('fr-CA', { timeZone: 'America/Toronto', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+  const ouvrir = (v: Vue) => { setTab(v); window.scrollTo({ top: 0 }); };
+
   return (
-    <section className="section" style={{ borderTop: 'none' }}>
-      <div className="container">
-        <div className="eyebrow">{'Admin — suivi des leads'}</div>
-        <h1 className="display" style={{ fontSize: 'clamp(28px,4vw,44px)', margin: '18px 0 24px' }}>
-          Tableau de bord
-        </h1>
-
-        {info && (
-          <div style={{ ...box, marginBottom: 20 }}>
-            <p style={{ margin: 0, fontSize: 14 }}>{info}</p>
+    <div className="adm-page">
+      <nav className="adm-menu" aria-label="Menu de l’admin">
+        <div className="adm-marque">
+          <span className="adm-marque-nom">Vie Solution Web</span>
+          <span className="adm-gris">Tableau de bord</span>
+        </div>
+        {menu.map((g) => (
+          <div key={g.titre} className="adm-menu-groupe">
+            <span className="adm-menu-titre">{g.titre}</span>
+            {g.vues.map(([v, libelle, n, violet]) => (
+              <button key={v} type="button" className={'adm-menu-lien' + (tab === v ? ' actif' : '')}
+                aria-current={tab === v ? 'page' : undefined} onClick={() => ouvrir(v)}>
+                {libelle}
+                {n ? <span className={'adm-menu-compte' + (violet ? ' violet' : '')}>{n}</span> : null}
+              </button>
+            ))}
           </div>
-        )}
+        ))}
+        <div className="adm-menu-bas">
+          <button type="button" className="adm-menu-lien" onClick={load} disabled={busy}>Rafraîchir</button>
+          <button type="button" className="adm-menu-lien" onClick={logout}>Se déconnecter</button>
+        </div>
+      </nav>
 
-        {error && (
-          <div style={{ ...box, borderColor: 'oklch(0.6 0.15 25)', marginBottom: 20 }}>
-            <p style={{ margin: 0, fontSize: 14 }}>{error}</p>
+      <div className="adm-contenu">
+        <div className="adm-entete">
+          <div>
+            <h1>{titres[tab]}</h1>
+            {tab === 'aujourdhui' && (
+              <span className="adm-gris">{date.charAt(0).toUpperCase() + date.slice(1)} · voici ce qui demande votre attention</span>
+            )}
           </div>
-        )}
+          <div className="adm-entete-outils">
+            <form role="search" className="adm-recherche"
+              onSubmit={(e) => { e.preventDefault(); if (!['leads', 'clients', 'rdv', 'stages'].includes(tab)) ouvrir('leads'); }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+              </svg>
+              <input type="search" value={recherche} onChange={(e) => setRecherche(e.target.value)}
+                placeholder="Chercher un nom, un courriel…" aria-label="Chercher une demande" />
+            </form>
+            {tab === 'aujourdhui' && (
+              <div className="adm-periodes" role="group" aria-label="Période">
+                {PERIODES.map((p) => (
+                  <button key={p} type="button" aria-pressed={periode === p} className={periode === p ? 'actif' : ''}
+                    onClick={() => setPeriode(p)}>
+                    {p} jours
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {info && <div className="adm-carte"><p style={{ margin: 0, fontSize: 14 }}>{info}</p></div>}
+        {error && <div className="adm-carte" role="alert" style={{ borderColor: 'var(--danger)' }}><p style={{ margin: 0, fontSize: 14 }}>{error}</p></div>}
+        {!data && !error && <p className="adm-gris">Chargement…</p>}
 
         {data && (
           <>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 28 }}>
-              {[
-                ['Leads', data.leads.length],
-                ['Nouveaux', data.leads.filter((l) => l.status === 'Nouveau').length],
-                ['Brouillons à approuver', pending.length],
-                ['Tâches ouvertes', data.tasks.length],
-              ].map(([label, n]) => (
-                <div key={label as string} style={box}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontSize: 30, color: 'var(--fg-0)' }}>{n}</div>
-                  <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
-              {([
-                ['aujourdhui', `Aujourd’hui (${data.aujourdhui.total})`],
-                ['leads', 'Leads'],
-                ['drafts', `Brouillons (${pending.length})`],
-                ['tasks', 'Tâches'],
-                ['regles', 'Relances'],
-              ] as const).map(([k, label]) => (
-                <button key={k} className={'calc-option' + (tab === k ? ' active' : '')} onClick={() => setTab(k)}>
-                  {label}
-                </button>
-              ))}
-              <button className="calc-option" onClick={load} disabled={busy} style={{ marginLeft: 'auto' }}>
-                Rafraîchir
-              </button>
-              <button className="calc-option" onClick={logout}>
-                Se déconnecter
-              </button>
-            </div>
-
-            {tab === 'aujourdhui' && (() => {
-              const a = data.aujourdhui;
-              const titre = (t: string, n: number) => (
-                <h2 style={{ fontSize: 17, margin: '26px 0 10px', color: 'var(--fg-0)' }}>
-                  {t} <span className="mono" style={{ fontSize: 12, color: 'var(--fg-3)' }}>({n})</span>
-                </h2>
-              );
-              const ficheCourte = (l: Lead | Aujourdhui['sansContact'][number] | null) =>
-                l ? (
-                  <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>
-                    {l.name} · <a href={`mailto:${l.email}`} style={{ color: 'var(--accent)' }}>{l.email}</a>
-                    {l.phone ? <> · <a href={`tel:${l.phone}`} style={{ color: 'var(--accent)' }}>{l.phone}</a></> : null} · {l.status}
-                  </div>
-                ) : null;
-              if (a.total === 0) {
-                return <div style={box}><p style={{ margin: 0 }}>Rien à faire pour l&apos;instant. Les nouvelles demandes apparaîtront ici.</p></div>;
-              }
-              const tache = (t: Aujourdhui['enRetard'][number], retard: boolean) => (
-                <div key={t.id} style={{ ...box, borderColor: retard ? 'var(--danger)' : 'var(--line-soft)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div>
-                      <div style={{ color: 'var(--fg-0)', fontWeight: 500 }}>{t.title}</div>
-                      <div className="mono" style={{ fontSize: 11, color: retard ? 'var(--danger)' : 'var(--fg-3)' }}>
-                        {retard ? 'En retard — ' : ''}échéance {fmtDate(t.due_at)}
-                      </div>
-                      {ficheCourte(t.lead)}
-                    </div>
-                    <button className="calc-option" disabled={busy} onClick={() => act('task_done', t.id)}>
-                      <Icon name="check" size={13} /> Fait
-                    </button>
-                  </div>
-                  {t.lead && <ActionsFiche lead={t.lead} act={act} busy={busy} />}
-                </div>
-              );
-              return (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {a.enRetard.length > 0 && <>{titre('En retard', a.enRetard.length)}{a.enRetard.map((t) => tache(t, true))}</>}
-                  {a.duJour.length > 0 && <>{titre('À faire aujourd’hui', a.duJour.length)}{a.duJour.map((t) => tache(t, false))}</>}
-                  {a.sansContact.length > 0 && (
-                    <>
-                      {titre('Demandes sans contact depuis 24 h', a.sansContact.length)}
-                      {a.sansContact.map((l) => (
-                        <div key={l.id} style={box}>
-                          {ficheCourte(l)}
-                          <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)', marginTop: 4 }}>Reçue {fmtDate(l.created_at)} · {l.source}</div>
-                          <ActionsFiche lead={l} act={act} busy={busy} />
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {a.aRelancer.length > 0 && (
-                    <>
-                      {titre('À relancer', a.aRelancer.length)}
-                      {a.aRelancer.map((l) => (
-                        <div key={l.id} style={box}>
-                          {ficheCourte(l)}
-                          <ActionsFiche lead={l} act={act} busy={busy} />
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {a.brouillons.length > 0 && (
-                    <>
-                      {titre('Réponses prêtes à approuver', a.brouillons.length)}
-                      {a.brouillons.map((b) => (
-                        <div key={b.id} style={{ ...box, display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                          <div>
-                            <div style={{ color: 'var(--fg-0)' }}>{b.subject}</div>
-                            {ficheCourte(b.lead)}
-                          </div>
-                          <button className="calc-option" onClick={() => setTab('drafts')}>Voir le brouillon</button>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  {a.alertes.length > 0 && (
-                    <>
-                      {titre('Alertes', a.alertes.length)}
-                      {a.alertes.map((n) => (
-                        <div key={n.id} style={{ ...box, display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                          <div>
-                            <div style={{ color: 'var(--fg-0)' }}>{n.title}</div>
-                            {n.body && <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>{n.body}</div>}
-                            <div className="mono" style={{ fontSize: 11, color: 'var(--fg-3)' }}>{fmtDate(n.created_at)}</div>
-                          </div>
-                          <button className="calc-option" disabled={busy} onClick={() => act('notif_read', n.id)}>Lu</button>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              );
-            })()}
+            {tab === 'aujourdhui' && tableau && (
+              <TableauDeBord t={tableau} aujourdhui={data.aujourdhui} act={act} busy={busy} ouvrir={ouvrir} leadParId={leadById} />
+            )}
 
             {tab === 'regles' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -532,10 +490,12 @@ export default function AdminPage() {
               </div>
             )}
 
-            {tab === 'leads' && (
+            {(tab === 'leads' || tab === 'clients' || tab === 'rdv' || tab === 'stages') && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {data.leads.length === 0 && <p style={{ color: 'var(--fg-2)' }}>Aucun lead pour l&apos;instant.</p>}
-                {data.leads.map((l) => (
+                {listeLeads.length === 0 && (
+                  <p style={{ color: 'var(--fg-2)' }}>{recherche.trim() ? 'Aucun résultat pour cette recherche.' : 'Rien ici pour l’instant.'}</p>
+                )}
+                {listeLeads.map((l) => (
                   <div key={l.id} style={{ ...box, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
                     <div>
                       <strong style={{ color: 'var(--fg-0)' }}>{l.name}</strong>
@@ -640,6 +600,6 @@ export default function AdminPage() {
           </>
         )}
       </div>
-    </section>
+    </div>
   );
 }
