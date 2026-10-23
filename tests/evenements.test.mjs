@@ -112,7 +112,7 @@ test('courriels : prénom sûr, lieu privé seulement dans le courriel', () => {
   const e = { titre: 'Atelier', genre: 'en_ligne', debut: '2026-11-12T17:00:00Z', fin: '2026-11-12T18:00:00Z', lieu_public: '', lieu_prive: 'https://meet.example/abc' };
   const c = courrielConfirmation(e, 'Marie Tremblay', 'https://viesolutionweb.ca/evenements/liberer?i=1&t=x');
   assert.ok(c.texte.startsWith('Bonjour Marie,'));
-  assert.ok(c.texte.includes('https://meet.example/abc'));
+  assert.ok(c.texte.split('\n').some((l) => l === 'En ligne : https://meet.example/abc'));
   assert.ok(c.texte.includes('Jeudi 12 novembre 2026, 12 h à 13 h'));
   assert.ok(courrielConfirmation(e, 'https://faux.example', '').texte.startsWith('Bonjour,'));
   assert.ok(courrielRappel(e, 'Marie', 'l').sujet.startsWith("C'est demain !"));
