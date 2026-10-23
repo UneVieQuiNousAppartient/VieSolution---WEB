@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 50.
+**Dernière mise à jour : 2026-10-23** — dernière section : 51.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1014,4 +1014,23 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Non fait dans ce round** : les visites ne comptent qu'à partir de la mise en ligne de ce lot (rien n'est repris de la table de CSF) ; pas de comparaison avec la période précédente ; pas d'export. Suggestions des revues, à décider : durée de conservation des visites (aujourd'hui sans limite) ; afficher « plafond atteint » si les 20 000 pages du jour sont épuisées ; ne garder que les chemins qui existent (faux chemins possibles, sans danger) ; calcul côté base si le volume grossit ; une phrase sur la mesure d'audience dans la politique de confidentialité ; iPad récents comptés « ordinateur ».
 
 **Coût réel** : ≈ 230 k (session ≈ 100 k, `securite` ≈ 55 k, `qa-agent` ≈ 73 k). **À tester par Camille** : ouvrir l'onglet Statistiques après quelques visites.
+
+## 51. ✅ Étape F : événements — ateliers réservés aux clients, inscription, confirmation, rappel, onglet de l'admin (2026-10-23)
+
+**Contexte / demande** : « F : événements (page publique et inscriptions) » ; Camille a choisi : en ligne et en personne, rappel par courriel, « pas toujours gratuits » mais aucun prix pour l'instant (« pas de détails pour l'instant », paiement « on verra plus tard »). Maquette SiteEvenements : « OUI », « ce sera offert d'abord juste à nos clients » → page cachée + lien (choix de Camille). Accord sur les deux tables : « OUI » (≈ 350 k).
+
+**Ce qui a été fait** :
+- Migrations `vsw_evenements` et `vsw_inscriptions_nettoyage` appliquées (RLS sans politique, `REVOKE` anon / authenticated) ; fonction `vsw_inscrire` (verrou sur l'atelier, places comptées, réinscription après annulation, service_role seulement). Miroir dans `supabase/setup-crm-vsw.sql`.
+- `src/lib/evenements.ts` (règles pures, sans import) et `src/lib/evenements-jeton.ts` (lien « libérer ma place », HMAC) + `tests/evenements.test.mjs` (11 tests ; vérifiés en cassant une fois la règle « rappel à partir de 9 h »).
+- Pages cachées (noindex, ni menu, ni pied de page, ni sitemap) : `/evenements` (liste, filtre en ligne / en personne, état vide vers Contact), `/evenements/<atelier>` (renseignements publics, inscription, .ics), `/evenements/liberer` (un clic pour libérer sa place). Le lieu privé (adresse, lien de visioconférence) n'est envoyé que par courriel.
+- `POST /api/evenements/inscription` : piège à robots, 5 par adresse et par jour, 300 par jour pour le site, accord gardé ; confirmation envoyée tout de suite. Déjà inscrit : même réponse, sans courriel.
+- Rappel la veille à partir de 9 h par le passage horaire (`envoyerRappels`, réservé avant l'envoi, libéré si l'envoi échoue). Courriels habillés, pied avec adresse postale et « Libérer ma place » ; notés dans `vsw_email_messages`.
+- Onglet « Événements » de l'admin : chiffres, lien de la page à copier, créer / modifier (brouillon puis publication ; publication impossible sans adresse ou lien), retirer de la page, annuler (le courriel d'annulation est montré avant l'envoi), inscrits (CSV, fiche client si le courriel correspond, annuler ou remettre une inscription).
+- Les inscrits ne créent pas de fiche « Demandes » (aucune relance de vente par erreur) — simplification annoncée à Camille.
+
+**Vérification technique** : `npm run verify` vert (129 tests). Captures avec données d'exemple (page d'aperçu locale retirée avant le commit) : liste, page d'atelier, admin, 375 px sans débordement. Fonction `vsw_inscrire2` essayée en base dans une transaction annulée (inscription, complet, preuve « prochains ateliers ») : rien n'est resté. `securite` (Opus) VERT ; corrigé : date et texte de l'accord « prochains ateliers » gardés (`avertir_at`, `avertir_texte`, migration `vsw_inscriptions_avertir_preuve`), « complet » vérifié avant « déjà inscrit » (on ne devine plus qui est inscrit) — nouvelle fonction `vsw_inscrire2`, l'ancienne `vsw_inscrire` reste en base sans être appelée (sa suppression demandait une confirmation). `qa-agent` (Opus) VERT ; corrigé : message après l'inscription, refus de repasser en brouillon un atelier avec inscrits, rappel remis à zéro si la date change, places contrôlées en remettant une inscription, pas de doublon si « Publier » est refusé, « dans moins d'un jour », textes longs coupés à 375 px, test du rappel au retour à l'heure normale.
+
+**Non fait dans ce round** : vérification anti-robot à l'inscription (Turnstile ou confirmation par lien — nouveau service, décision de Camille ; risque limité par la page cachée et les limites par adresse) ; prévenir les inscrits quand la date change ; renvoyer une confirmation depuis l'admin ; en-têtes de sécurité du site (CSP, Referrer-Policy — sur tout le site, à part) ; retirer l'ancienne fonction `vsw_inscrire` ; bouton « Écrire à tous les inscrits » ; invitation .ics jointe au courriel (lien sur la page seulement) ; liste d'attente d'un atelier complet ; prix et paiement (décision de Camille à venir) ; envoi aux personnes qui ont coché « prochains ateliers » (consentement gardé, rien n'est envoyé). **À donner par Camille** : l'adresse des ateliers en personne. **À tester par Camille** : créer un atelier, s'y inscrire avec son courriel, recevoir la confirmation, libérer sa place.
+
+**Coût réel** : ≈ 420 k (session ≈ 250 k, `securite` ≈ 84 k, `qa-agent` ≈ 101 k).
 
