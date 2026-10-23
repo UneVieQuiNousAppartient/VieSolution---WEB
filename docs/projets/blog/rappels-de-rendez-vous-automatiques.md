@@ -23,9 +23,9 @@ Un rappel automatique, c'est un message qui part tout seul avant le rendez-vous.
 
 Le principe est simple :
 
-- **Le rappel.** Un message est envoyé avant le rendez-vous. [à confirmer : canaux offerts, courriel et/ou texto]
-- **La confirmation.** Le client confirme qu'il sera là. La confirmation et le rappel partent tout seuls. [à confirmer : confirmation par le client dans le message]
-- **L'annulation.** Si le client ne peut pas venir, il le dit plus tôt. La plage se libère et peut être offerte à quelqu'un d'autre. [à confirmer : annulation par le client]
+- **Le rappel.** Un message part par courriel ou par texto avant le rendez-vous.
+- **La confirmation.** Le client confirme qu'il sera là. La confirmation et le rappel partent tout seuls.
+- **L'annulation.** Si le client ne peut pas venir, il le dit plus tôt. La plage se libère et peut être offerte à quelqu'un d'autre.
 
 Ce qui compte pour le client : savoir quand, où et comment se préparer. Ce qui compte pour vous : moins d'appels de rappel, et un agenda plus fiable.
 
