@@ -969,7 +969,7 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Vérification technique** : `npm run verify` vert ; capture de la section ; aucun débordement à 390 px.
 
-**Non fait dans ce round** : —
+**Non fait dans ce round** : relecture du nouveau titre par Camille. Note : `qa-agent` (Opus, ≈ 35 k, VERT) a tourné juste après le commit, pas avant (écart à la règle, sans conséquence).
 
-**Coût** : estimé ≈ 20 k ; réel ≈ 25 k (session).
+**Coût** : estimé ≈ 20 k ; réel ≈ 60 k (session ≈ 25 k + `qa-agent` ≈ 35 k).
 
