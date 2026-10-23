@@ -45,6 +45,10 @@ test('expéditeur : nom et adresse, rien de douteux', () => {
 test('texte lisible tiré du HTML', () => {
   assert.equal(texteDepuisHtml('<p>Bonjour&nbsp;Camille,</p><p>Jeudi <b>10 h</b> ?<br>Merci</p><script>alert(1)</script>'), 'Bonjour Camille,\n\nJeudi 10 h ?\nMerci');
   assert.equal(texteDepuisHtml('L&#39;IA &amp; Zoho &#x2014; ok'), "L'IA & Zoho — ok");
+  assert.equal(texteDepuisHtml('a<scr<script>ipt>alert(1)</script>b'), 'ascrb', 'balises imbriquées : le script part au complet, aucune balise ne reste');
+  assert.ok(!/[<>]/.test(texteDepuisHtml('<<b>i>x</b>>')), 'aucun chevron ne reste');
+  assert.equal(texteDepuisHtml('x&#99999999;y&#x110000;z&#0;'), 'xyz', 'code de caractère invalide : ignoré, sans exception');
+  assert.equal(texteDepuisHtml('2 &lt; 3'), '2 < 3', 'une entité décodée reste du texte');
   assert.equal(texteRecu('  texte brut  ', '<p>html</p>'), 'texte brut');
   assert.equal(texteRecu('', '<p>html</p>'), 'html');
   assert.equal(texteRecu(null, null), '');

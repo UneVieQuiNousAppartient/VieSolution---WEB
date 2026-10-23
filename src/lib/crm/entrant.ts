@@ -51,18 +51,34 @@ export function lireExpediteur(brut: unknown): { nom: string; adresse: string } 
 
 const ENTITES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" };
 
-/** Texte lisible d'un courriel HTML (quand le texte brut manque) : balises retirées, paragraphes gardés. */
+/** Répète un remplacement jusqu'à ce que le texte ne change plus (balises imbriquées, ex. « <scr<script>ipt> »). */
+function jusquaStable(texte: string, motif: RegExp, par: string) {
+  let avant: string;
+  do {
+    avant = texte;
+    texte = texte.replace(motif, par);
+  } while (texte !== avant);
+  return texte;
+}
+
+/** Caractère d'une entité numérique, ou rien si le code est invalide (jamais d'exception sur un courriel piégé). */
+const caractere = (code: number) => (Number.isInteger(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '');
+
+/**
+ * Texte lisible d'un courriel HTML (quand le texte brut manque) : balises retirées, paragraphes gardés.
+ * Le résultat est du TEXTE : il est toujours échappé à l'affichage (React, texteEnHtml).
+ */
 export function texteDepuisHtml(html: string): string {
-  return html
-    .replace(/<(script|style|head)[\s\S]*?<\/\1>/gi, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/(p|div|li|tr|h[1-6]|blockquote)>/gi, '\n\n')
-    .replace(/<[^>]+>/g, '')
+  let t = jusquaStable(html, /<(script|style|head)\b[\s\S]*?<\/\1\s*>/gi, '');
+  t = t.replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|li|tr|h[1-6]|blockquote)\s*>/gi, '\n\n');
+  t = jusquaStable(t, /<[^<>]*>/g, '');
+  return t
+    .replace(/[<>]/g, '')
     .replace(/&(#\d+|#x[0-9a-f]+|[a-z]+|#39);/gi, (e, c: string) => {
       const k = c.toLowerCase();
       if (ENTITES[k] !== undefined) return ENTITES[k];
-      if (k.startsWith('#x')) return String.fromCodePoint(parseInt(k.slice(2), 16));
-      if (k.startsWith('#')) return String.fromCodePoint(Number(k.slice(1)));
+      if (k.startsWith('#x')) return caractere(parseInt(k.slice(2), 16));
+      if (k.startsWith('#')) return caractere(Number(k.slice(1)));
       return e;
     })
     .replace(/[ \t]+\n/g, '\n')
