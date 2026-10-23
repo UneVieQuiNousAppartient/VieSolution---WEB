@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 36.
+**Dernière mise à jour : 2026-10-23** — dernière section : 37.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -605,3 +605,20 @@ Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en enti
 **Vérification technique** : `POST https://viesolutionweb.ca/api/chat` : « Bonjour, que faites-vous ? » → présentation du studio et question sur le métier ; « Combien coûte une implantation Zoho ? » → aucun montant, renvoi vers l'appel découverte et demande du nom et du courriel.
 
 **Non fait dans ce round** : suppression de l'ancienne clé et plafond de dépenses mensuel dans la console Anthropic — **à faire par Camille** ; essai complet d'une demande de rendez-vous par la bulle — **à tester par Camille** (après le renvoi de info@).
+
+## 37. ✅ Admin : connexion en deux écrans et code QR à l'activation (2026-10-23)
+
+**Contexte / demande** : Camille trouvait la page de connexion trop chargée, et voulait un code QR (« oui aux deux », nouvelle dépendance acceptée). Puis : « même dans la page du QR il y a beaucoup trop d'info ».
+
+**Ce qui a été fait**
+- `src/app/api/admin/login/route.ts` : un code d'accès juste sans code à 6 chiffres renvoie `{ otp_requis: true }`, sans session ni échec compté ; cette confirmation est journalisée (`login_code_ok`, revue `securite`).
+- `src/app/admin/page.tsx` :
+  - écran 1 : le code d'accès seul ;
+  - écran 2 : le code à 6 chiffres, avec « Téléphone perdu ? » (code de secours) et « ← Code d'accès » ;
+  - message si le champ est vide, et le code d'accès effacé de la mémoire après la connexion ;
+  - activation : le code QR s'affiche tout de suite, avec une seule phrase et le champ « Code à 6 chiffres » ; le lien et la clé à taper restent sous « Impossible de scanner ? ».
+- Le code QR est dessiné dans le navigateur avec `uqr@0.1.3` (MIT, aucune dépendance, version exacte) : le secret ne part vers aucun service externe. Noir sur blanc dans les deux thèmes, marge de 4 modules.
+
+**Vérification technique** : `npm run verify` vert (51 tests, 10 avertissements connus) ; captures des 4 états avec réponses d'API simulées ; QR décodé par jsQR, identique au lien otpauth. `qa-agent` (Opus, ≈ 48 k) **VERT** ; `securite` (Opus, ≈ 54 k) **VERT**, ses deux points bas sont corrigés.
+
+**Non fait dans ce round** : longueur minimale imposée à `ADMIN_ACCESS_CODE` (proposée par `securite`, non faite pour ne pas bloquer Camille avant qu'elle ait choisi sa phrase). Une connexion consomme maintenant 2 des 8 essais par IP. Activation réelle avec son téléphone — **à tester par Camille** (son code d'accès est refusé depuis le 2026-10-23 : valeur à vérifier dans Vercel).
