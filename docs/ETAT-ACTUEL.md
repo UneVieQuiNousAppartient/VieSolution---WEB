@@ -1,11 +1,12 @@
 # État actuel — Vie Solution Web
 
-**Mis à jour : 2026-10-22.** Premier fichier lu par chaque session (après `CLAUDE.md`, avant `docs/ERREURS-CONNUES.md`). ≤ 40 lignes : on remplace, on n'empile pas. Historique : `SUIVI-TACHES.md` (par `grep`, jamais en entier).
+**Mis à jour : 2026-10-23.** Premier fichier lu par chaque session (après `CLAUDE.md`, avant `docs/ERREURS-CONNUES.md`). ≤ 40 lignes : on remplace, on n'empile pas. Historique : `SUIVI-TACHES.md` (par `grep`, jamais en entier).
 
 Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — installée le 2026-10-17.
 
 ## Chantiers en cours
-- **Site plus accessible aux PME et travailleurs autonomes** : livré sur la branche `claude/brave-euler-68e7pl`, PR #1 en brouillon (https://github.com/UneVieQuiNousAppartient/VieSolution---WEB/pull/1), `qa-agent` VERT, `npm run verify` vert. Livré : métiers et partenaires (§3), thème clair (§4), prix sur mesure (§5), animations (§6), sélecteur « Je suis… » (§7). Issues #2 (sections invisibles sans JS) et #3 (menu mobile) ouvertes.
+- **EN LIGNE** sur **https://viesolutionweb.ca** depuis le 2026-10-23 (PR #1 fusionnée le 2026-10-22, § 34-35). Reste : erreur 400 du clavardage IA (crédits Anthropic à vérifier par Camille ; PR #7 journalise le motif, attend « fusionne ») ; double vérification de `/admin` à activer par Camille ; CNAME `rsend` et renvoi de info@ (Cloudflare Email Routing) à faire par Camille ; adresse `notify_email` à recevoir ; formulaire de contact à tester par Camille.
+- **Site plus accessible aux PME et travailleurs autonomes** : livré sur la branche `claude/brave-euler-68e7pl`, PR #1 fusionnée le 2026-10-22, `qa-agent` VERT, `npm run verify` vert. Livré : métiers et partenaires (§3), thème clair (§4), prix sur mesure (§5), animations (§6), sélecteur « Je suis… » (§7). Issue #2 (sections invisibles sans JS) ouverte ; #3 fermée (§8).
 - **Finition premium** livrée (§8 ; issue #3 fermée) et **lot design 21st.dev** livré (§9 : panneau « Avant / après » aligné + bascule mobile, frise du processus, carte d'appel à l'action, hero en deux tons). Restent les éléments de Camille : logo définitif, photos, témoignage. Option : passer « La différence » sur le même panneau (≈ 30 k).
 - **Offre élargie** livrée (§10) : 5ᵉ service « CRM et outils sur mesure », FAQ « J'ai déjà un logiciel… », formation IA pour petites entreprises avec le badge Claude Academy de Camille (sans date), **logo ampoule** (variante de viesolution.ca). **Plus tard** (demande de Camille) : gestion des réseaux sociaux et vidéos.
 - **Sites et applications web** ajoutés aux services (§11) ; mention « Québec · IA & Zoho » retirée sous le logo. À prévoir : exemples de sites dans « Cas d'usage » quand Camille en aura.
@@ -17,7 +18,6 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - **Prochain chantier, après la mise en ligne (accord de principe de Camille, 2026-10-22)** : boîte de réception dans `/admin` — réponses des prospects reçues par Resend et rangées dans la fiche, réponse et envoi depuis la fiche (fil conservé, contact humain noté), historique des messages envoyés et reçus, brouillon de réponse proposé par l'IA et validé par Camille avant envoi. ≈ 500 k à 700 k jetons, plan et `securite` obligatoires. D'ici là : réponses vers une boîte existante (renvoi Cloudflare de info@ proposé).
 - **Intégration de CRM existants** (demande de Camille) : petit lot de textes, en attente de la liste des CRM qu'elle accepte. Attend la relecture de Camille et son mot pour fusionner.
 - **Suivi des demandes inspiré de KHI** (§16) : lot 1 livré (base, moteur horaire `/api/cron/tick`, relances J2/J5 activées par Camille (§17), adresse postale enregistrée, désabonnement LCAP). **Double vérification de /admin** livrée (§18) — nouvelle variable `ADMIN_SECRET` ; l'activer dès la mise en ligne. Next.js mis à jour en 16.4.2 (§20, issue #4). **Lot 2** livré (§19) : onglet « Aujourd'hui », boutons de contact et de désabonnement, onglet « Relances ».
-- **Mise en ligne** : SQL `supabase/setup-crm-vsw.sql` exécuté le 2026-10-22 (§29), projet Vercel `vie-solution-web` créé (§17 : variables à saisir par Camille, domaine à brancher), Resend à configurer (domaine viesolutionweb.ca), variables `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`.
 
 ## Décisions qui attendent Camille
 - Partenaires : accord de Ben's, VieSolution et Khí pour l'affichage de leur logo ; texte « ce qu'on a fait pour eux » à rédiger ou non.
@@ -35,4 +35,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**34**
+**36**
