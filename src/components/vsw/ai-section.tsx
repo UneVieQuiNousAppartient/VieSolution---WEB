@@ -41,8 +41,7 @@ export function AISection() {
             <p>
               On vous aide à utiliser l&apos;IA dans votre quotidien, que vous soyez seul ou en
               équipe. D&apos;abord comprendre, ensuite essayer, puis bâtir ensemble des façons de
-              faire qui vous sauvent du temps. On forme aussi des jeunes en informatique et en
-              IA dans notre studio.
+              faire qui vous sauvent du temps.
             </p>
           </div>
 

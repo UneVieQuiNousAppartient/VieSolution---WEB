@@ -7,7 +7,7 @@ import { SERVICES } from '@/components/vsw/services';
 import { FAQS } from '@/components/vsw/faq-section';
 import { ENGAGEMENTS } from '@/components/vsw/engagements-section';
 import { ETAPES, FACTEURS, CONCLUSION_PRIX } from '@/components/vsw/comment-prix-section';
-import { METIERS } from '@/components/vsw/metiers-section';
+import { METIERS } from '@/lib/metiers';
 import { OFFRES_STAGE } from '@/components/vsw/stage-section';
 import { SERVICES_NAV, NAV_LINKS } from '@/components/vsw/nav';
 import { APPEL, ECRIT } from '@/components/vsw/appel';
@@ -41,13 +41,19 @@ const SITE = [
   '## Questions fréquentes',
   ...FAQS.map((f) => `Q : ${f.q}\nR : ${f.a}`),
   '',
-  '## Programme de stage (page /postuler-stagiaire)',
+  '## Programme de stage (page /emplois)',
   ...OFFRES_STAGE.map((o) => `- ${o.title} : ${o.desc}`),
   '',
   '## Pages du site',
   liste([
     ...SERVICES_NAV.map((s) => `${s.label} : ${s.href}`),
     ...NAV_LINKS.map((l) => `${l.label} : ${l.href}`),
+    'Tous les services : /services',
+    'Tous les métiers : /metiers',
+    ...METIERS.map((m) => `${m.titre} : /metiers/${m.slug}`),
+    'Réalisations : /realisations',
+    'Emplois et stages : /emplois',
+    'Contact : /contact',
     `${APPEL.libelle} (appel découverte gratuit de 30 minutes, sans engagement) : ${APPEL.href}`,
     `${ECRIT.libelle} : ${ECRIT.href}`,
     'Politique de confidentialité : /politique-confidentialite',

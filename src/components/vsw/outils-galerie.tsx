@@ -7,7 +7,7 @@ import Image from 'next/image';
  * données fictives). Accord de Camille le 2026-10-22 pour les montrer, KHI nommé.
  * Images enregistrées dans public/realisations/outils/ (rendu 1920 × 1200, haut de l'écran).
  */
-const ECRANS = [
+export const ECRANS = [
   {
     client: 'VieSolution',
     titre: 'Aujourd’hui',

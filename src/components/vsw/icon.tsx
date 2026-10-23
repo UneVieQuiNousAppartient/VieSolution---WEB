@@ -4,7 +4,7 @@ export type IconName =
   | 'arrow' | 'play' | 'calendar' | 'chat' | 'close' | 'send' | 'code'
   | 'layout' | 'bolt' | 'mail' | 'phone' | 'pin' | 'chev-l' | 'chev-r'
   | 'check' | 'clock' | 'vid' | 'logo' | 'grid' | 'users' | 'globe'
-  // Icônes propres aux métiers (metiers-section.tsx, sélecteur « Je suis… » du hero)
+  // Icônes propres aux métiers (src/lib/metiers.ts, sélecteur « Je suis… » du hero)
   | 'briefcase-chart' | 'house-key' | 'tooth' | 'heart-pulse' | 'calculator'
   | 'hammer' | 'house-sign' | 'storefront';
 

@@ -6,12 +6,13 @@
  */
 export const APPEL = {
   libelle: 'Réserver mon appel gratuit',
-  /* Barre du haut seulement : la place manque. */
-  court: 'Appel gratuit',
+  /* Barre du haut seulement (refonte du 2026-10-23, choix de Camille). */
+  court: 'Appel de découverte gratuit',
   href: '/rdv',
 } as const;
 
-/* Pour la personne qui n'est pas prête à choisir une heure. */
+/* Pour la personne qui n'est pas prête à choisir une heure. Seulement sur Prix (/devis) depuis la
+   refonte du 2026-10-23 (un seul bouton ailleurs ; la page Contact est déjà le formulaire écrit). */
 export const ECRIT = {
   libelle: 'Décrire ma situation par écrit',
   href: '/devis#situation',

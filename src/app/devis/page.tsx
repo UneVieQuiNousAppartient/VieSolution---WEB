@@ -29,6 +29,7 @@ export default function DevisPage() {
       <SituationForm />
       <PricingSection />
       <CTASection
+        ecrit
         text={
           <>
             Une question sur le prix ? On y répond <em>franchement</em>, à l&apos;appel

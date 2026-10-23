@@ -1,6 +1,60 @@
-import Link from 'next/link';
-import { Icon, type IconName } from './icon';
-import { APPEL } from './appel';
+// Métiers accompagnés et situations « C'est pour vous si… » : une seule source pour l'accueil
+// (section réunie autour du métier, maquette validée par Camille le 2026-10-23), le menu « Métiers »,
+// les pages /metiers et l'assistant du site. Données pures, testées par tests/metiers.test.mjs.
+import type { IconName } from '@/components/vsw/icon';
+
+/**
+ * Situations à cocher : les 6 de « C'est pour vous si… » et celle du rapport mensuel, venue
+ * d'« Avant / après » (fusion du 2026-10-23 : rien n'est perdu). L'ordre sert d'index à Metier.situations.
+ */
+export const SITUATIONS: { icone: IconName; avant: string; apres: string }[] = [
+  {
+    icone: 'send',
+    avant: 'Vous faites vos factures le soir ou la fin de semaine.',
+    apres: 'La facture part toute seule à la fin du travail. Vous la vérifiez d’un clic.',
+  },
+  {
+    icone: 'mail',
+    avant: 'Vous répondez aux mêmes questions par courriel, encore et encore.',
+    apres: 'Un assistant IA prépare la réponse. Vous la relisez et l’envoyez.',
+  },
+  {
+    icone: 'users',
+    avant: 'Vos clients sont notés un peu partout : un cahier, un fichier Excel, votre téléphone.',
+    apres: 'Tous vos clients au même endroit, dans un carnet de clients en ligne.',
+  },
+  {
+    icone: 'clock',
+    avant: 'Vous oubliez parfois de relancer une soumission ou un paiement.',
+    apres: 'Un rappel vous avertit, ou un courriel de relance est préparé pour vous.',
+  },
+  {
+    icone: 'layout',
+    avant: 'Vous refaites le même rapport chaque mois.',
+    apres: 'Vos chiffres se mettent à jour seuls, sur un seul écran.',
+  },
+  {
+    icone: 'bolt',
+    avant: "Vous entendez parler de l'IA, mais vous ne savez pas par où commencer.",
+    apres: 'On choisit avec vous un premier usage simple, et on vous forme.',
+  },
+  {
+    icone: 'grid',
+    avant: 'Vous voulez un logiciel de gestion, mais vous avez peur d’un gros projet compliqué.',
+    apres: 'On commence petit : un premier pas, à votre rythme.',
+  },
+];
+
+/** Les 3 bénéfices d'« Avant / après », gardés sous la fiche du métier. */
+export const BENEFICES: [string, string][] = [
+  ['Moins de ressaisie', 'chaque information entre une seule fois'],
+  ['Tout est suivi', 'rappels et relances préparés pour vous'],
+  ['Clients mieux servis', 'des réponses plus rapides, par les mêmes personnes'],
+];
+
+/** Étiquettes d'IA ajoutées à « Ce qu'on installe » (demande de Camille du 2026-10-23). */
+export const IA_RDV = { libelle: 'IA qui prend les rendez-vous (clavardage ou téléphone)', href: '/accueil-ia' } as const;
+export const IA_TACHES = { libelle: 'Assistant IA pour les petites tâches du quotidien', href: '/ia' } as const;
 
 export type Metier = {
   slug: string; // ancre de la carte : id="metier-<slug>" (sélecteur « Je suis… » du hero)
@@ -12,6 +66,10 @@ export type Metier = {
   tags: string[]; // 2 ou 3 étiquettes
   note?: string; // mention conformité (cartes 1 à 4)
   icon: IconName; // icône propre au métier (icon.tsx)
+  resume: string; // ligne courte du menu « Métiers » (maquette validée par Camille le 2026-10-23)
+  situations: number[]; // index dans SITUATIONS : les 3 situations à cocher de ce métier
+  rdvIa: boolean; // étiquette « IA qui prend les rendez-vous » (métiers à rendez-vous)
+  services: string[]; // pages de service liées (href de SERVICES_NAV)
 };
 
 const NOTE_FINANCE =
@@ -28,6 +86,10 @@ export const METIERS: Metier[] = [
     tags: ['Rappels de suivi', 'Notes de rencontre préparées', 'Dossier client unique'],
     note: NOTE_FINANCE,
     icon: 'briefcase-chart',
+    resume: 'Suivis annuels et conformité, sans y passer vos soirées',
+    situations: [2, 3, 5],
+    rdvIa: true,
+    services: ['/ia', '/accueil-ia', '/zoho'],
   },
   {
     slug: 'courtier-hypothecaire',
@@ -38,6 +100,10 @@ export const METIERS: Metier[] = [
     tags: ['Liste de documents à fournir', 'Relances automatiques', 'Suivi des dossiers'],
     note: NOTE_FINANCE,
     icon: 'house-key',
+    resume: 'Des dossiers complets du premier coup',
+    situations: [3, 1, 2],
+    rdvIa: true,
+    services: ['/ia', '/accueil-ia', '/zoho'],
   },
   {
     slug: 'clinique-dentaire',
@@ -48,6 +114,10 @@ export const METIERS: Metier[] = [
     tags: ['Rappels de rendez-vous', 'Formulaires en ligne', 'Réponses aux questions courantes'],
     note: "Les dossiers de vos patients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins.",
     icon: 'tooth',
+    resume: 'Rappels et formulaires envoyés tout seuls',
+    situations: [1, 3, 5],
+    rdvIa: true,
+    services: ['/accueil-ia', '/ia'],
   },
   {
     slug: 'clinique-de-soins',
@@ -59,6 +129,10 @@ export const METIERS: Metier[] = [
     tags: ['Prise de rendez-vous en ligne', 'Rappels automatiques', 'Suivi après la visite'],
     note: "Les dossiers de vos clients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins.",
     icon: 'heart-pulse',
+    resume: 'Réservations et rappels sans quitter vos soins',
+    situations: [1, 2, 0],
+    rdvIa: true,
+    services: ['/accueil-ia', '/ia'],
   },
   {
     slug: 'cabinet-comptable',
@@ -69,6 +143,10 @@ export const METIERS: Metier[] = [
     temps: 'Pour analyser et conseiller, plutôt que trier des reçus.',
     tags: ['Collecte de documents', 'Relances des pièces manquantes', 'Facturation simplifiée'],
     icon: 'calculator',
+    resume: 'Les pièces justificatives arrivent au bon endroit',
+    situations: [0, 4, 6],
+    rdvIa: false,
+    services: ['/ia', '/zoho', '/crm-sur-mesure'],
   },
   {
     slug: 'construction',
@@ -79,6 +157,10 @@ export const METIERS: Metier[] = [
     temps: 'Pour être sur le chantier le jour, et à la maison le soir.',
     tags: ['Soumissions plus rapides', 'Suivi des chantiers', 'Relances de paiement'],
     icon: 'hammer',
+    resume: 'Soumissions plus rapides, relances qui ne se perdent plus',
+    situations: [0, 3, 6],
+    rdvIa: false,
+    services: ['/ia', '/zoho'],
   },
   {
     slug: 'agent-immobilier',
@@ -88,6 +170,10 @@ export const METIERS: Metier[] = [
     temps: 'Pour les visites et les gens, pas pour la paperasse.',
     tags: ['Réponses aux demandes', 'Suivi des acheteurs et vendeurs', 'Dossier client unique'],
     icon: 'house-sign',
+    resume: 'Une réponse rapide à chaque demande',
+    situations: [1, 2, 3],
+    rdvIa: true,
+    services: ['/accueil-ia', '/ia', '/zoho'],
   },
   {
     slug: 'commerce-restaurant',
@@ -98,72 +184,11 @@ export const METIERS: Metier[] = [
     temps: 'Pour être avec vos clients et votre équipe, plutôt que derrière un écran.',
     tags: ['Réservations et commandes', 'Réponses aux courriels', 'Infolettre simple'],
     icon: 'storefront',
+    resume: 'Réservations, commandes et courriels sous contrôle',
+    situations: [1, 4, 5],
+    rdvIa: true,
+    services: ['/accueil-ia', '/ia', '/sites-web'],
   },
 ];
 
-export function MetiersSection() {
-  return (
-    <section id="metiers" className="section section--band">
-      <div className="container">
-        <div className="section-head reveal">
-          <div>
-            <div className="eyebrow">{'Pour votre métier'}</div>
-            <h2>Un meilleur service pour vos clients.<br />Plus de temps pour vous.</h2>
-          </div>
-          <p className="desc">
-            On part de votre métier. On regarde ce qui vous gruge, on améliore le service que vous
-            offrez à vos clients, et vous retrouvez du temps. L&apos;IA, Zoho et l&apos;automatisation
-            sont nos outils pour y arriver.
-          </p>
-        </div>
-        <div className="benefits-grid metiers-grid reveal">
-          {METIERS.map((m) => (
-            <div className="benefit metier-card" id={`metier-${m.slug}`} key={m.slug}>
-              <div className="benefit-icon">
-                <Icon name={m.icon} size={20} />
-              </div>
-              <div className="metier-titres">
-                <h4>{m.titre}</h4>
-                {m.precision && <p className="metier-precision">{m.precision}</p>}
-              </div>
-              <div className="metier-gruge">
-                <div className="metier-label">Ce qui vous gruge</div>
-                <p>{m.gruge}</p>
-              </div>
-              <div className="metier-ameliore">
-                <div className="metier-label">Ce qu&apos;on améliore</div>
-                <p><span aria-hidden="true">→ </span>{m.ameliore}</p>
-              </div>
-              <details className="metier-plus">
-                <summary>Le temps retrouvé et ce qu&apos;on installe</summary>
-                <div className="metier-plus-body">
-                  <div>
-                    <div className="metier-label">Le temps retrouvé</div>
-                    <p>{m.temps}</p>
-                  </div>
-                  <div className="service-tags">
-                    {m.tags.map((t) => (
-                      <span className="service-tag" key={t}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  {m.note && <p className="metier-note">{m.note}</p>}
-                </div>
-              </details>
-            </div>
-          ))}
-        </div>
-        <div className="pv-outro reveal">
-          <p>
-            Un autre métier ? Si vous servez des clients, on regarde
-            ensemble ce qui vous gruge et ce qu&apos;on peut améliorer.
-          </p>
-          <Link href={APPEL.href} className="btn btn-ghost">
-            {APPEL.libelle} <Icon name="arrow" size={14} />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
+export const metierParSlug = (slug: string) => METIERS.find((m) => m.slug === slug) ?? null;

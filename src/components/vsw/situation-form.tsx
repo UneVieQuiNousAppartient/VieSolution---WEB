@@ -11,7 +11,7 @@ import { Icon } from './icon';
 import { FACTEURS, CONCLUSION_PRIX } from './comment-prix-section';
 import { APPEL } from './appel';
 
-/* Les 8 métiers de metiers-section.tsx (titres des cartes), + « Autre ». */
+/* Les 8 métiers de src/lib/metiers.ts (titres des cartes), + « Autre ». */
 const METIERS = [
   'Conseiller financier',
   'Courtier hypothécaire',

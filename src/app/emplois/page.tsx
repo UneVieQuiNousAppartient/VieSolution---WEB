@@ -5,25 +5,27 @@ import { RevealInit } from '@/components/vsw/reveal-init';
 import { InternApplyForm } from '@/components/vsw/intern-apply-form';
 import { OFFRES_STAGE } from '@/components/vsw/stage-section';
 
+/* Page Emplois (refonte du 2026-10-23, demande de Camille) : l'offre de stage quitte l'accueil et
+   vient ici, avec le formulaire de candidature ; l'ancienne adresse /postuler-stagiaire y mène (308).
+   D'autres postes pourront s'y ajouter. Lien : pied de page (Entreprise) et À propos. */
 export const metadata: Metadata = {
-  title: 'Postuler comme stagiaire',
+  title: 'Emplois et stages',
   description:
     "Vie Solution Web accueille des stagiaires en informatique, en IA et sur Zoho pour apprendre le métier sur de vrais mandats clients québécois.",
 };
 
-
-export default function PostulerStagiairePage() {
+export default function EmploisPage() {
   return (
     <>
       <RevealInit />
       <section className="section" style={{ paddingTop: 96, borderTop: 'none' }}>
         <div className="container">
           <p className="retour">
-            <Link href="/#stagiaires">
-              <Icon name="arrow" size={14} style={{ transform: 'rotate(180deg)' }} aria-hidden="true" /> Retour à l&apos;accueil
+            <Link href="/a-propos">
+              <Icon name="arrow" size={14} style={{ transform: 'rotate(180deg)' }} aria-hidden="true" /> À propos de Vie Solution Web
             </Link>
           </p>
-          <div className="eyebrow">{'Programme de stage'}</div>
+          <div className="eyebrow">{'Emplois · Programme de stage'}</div>
           <h1
             className="display"
             style={{ fontSize: 'clamp(36px, 5vw, 60px)', margin: '24px 0 20px', maxWidth: 780 }}

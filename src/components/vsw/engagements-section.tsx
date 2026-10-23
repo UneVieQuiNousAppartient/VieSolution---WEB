@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Icon, type IconName } from './icon';
-import { METIERS } from './metiers-section';
+import { METIERS } from '@/lib/metiers';
 import { APPEL } from './appel';
 
 /*

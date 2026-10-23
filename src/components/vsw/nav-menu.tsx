@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icon';
-import type { NavLinkItem, ServiceNavItem } from './nav';
+import type { NavLinkItem, PilierNav, ServiceNavItem } from './nav';
 import { APPEL } from './appel';
 
 const PANEL_ID = 'nav-menu-panel';
@@ -13,9 +13,14 @@ const PANEL_ID = 'nav-menu-panel';
  * Fermeture : bouton, touche Échap, clic sur un lien. Défilement du corps bloqué quand ouvert ;
  * le focus revient au bouton à la fermeture. Style : vsw.css (« pme-accessible — premium »).
  */
-export function NavMenu({ links, services }: { links: readonly NavLinkItem[]; services: readonly ServiceNavItem[] }) {
+export function NavMenu({ links, piliers, metiers }: {
+  links: readonly NavLinkItem[];
+  piliers: readonly PilierNav[];
+  metiers: readonly ServiceNavItem[];
+}) {
   const [open, setOpen] = useState(false);
-  const [servicesOuverts, setServicesOuverts] = useState(false);
+  // Un seul sous-menu ouvert à la fois : « Services » ou « Métiers ».
+  const [sousMenu, setSousMenu] = useState<null | 'services' | 'metiers'>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
 
@@ -70,18 +75,49 @@ export function NavMenu({ links, services }: { links: readonly NavLinkItem[]; se
             <button
               type="button"
               className="nav-menu-sous-btn"
-              aria-expanded={servicesOuverts}
+              aria-expanded={sousMenu === 'services'}
               aria-controls="nav-menu-services"
-              onClick={() => setServicesOuverts((o) => !o)}
+              onClick={() => setSousMenu((m) => (m === 'services' ? null : 'services'))}
             >
-              Services <span aria-hidden="true">{servicesOuverts ? '▴' : '▾'}</span>
+              Services <span aria-hidden="true">{sousMenu === 'services' ? '▴' : '▾'}</span>
             </button>
-            <ul id="nav-menu-services" className="nav-menu-sous" hidden={!servicesOuverts}>
-              {services.map((s) => (
-                <li key={s.href}>
-                  <Link href={s.href} onClick={close}>{s.label}</Link>
+            <ul id="nav-menu-services" className="nav-menu-sous" hidden={sousMenu !== 'services'}>
+              {piliers.map((p) => (
+                <li key={p.pilier}>
+                  <p className="nav-menu-pilier">{p.pilier}</p>
+                  <ul>
+                    {p.services.map((s) => (
+                      <li key={s.href}>
+                        <Link href={s.href} onClick={close}>{s.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               ))}
+              <li>
+                <Link href="/services" onClick={close}><strong>Tous les services →</strong></Link>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <button
+              type="button"
+              className="nav-menu-sous-btn"
+              aria-expanded={sousMenu === 'metiers'}
+              aria-controls="nav-menu-metiers"
+              onClick={() => setSousMenu((m) => (m === 'metiers' ? null : 'metiers'))}
+            >
+              Métiers <span aria-hidden="true">{sousMenu === 'metiers' ? '▴' : '▾'}</span>
+            </button>
+            <ul id="nav-menu-metiers" className="nav-menu-sous" hidden={sousMenu !== 'metiers'}>
+              {metiers.map((m) => (
+                <li key={m.href}>
+                  <Link href={m.href} onClick={close}>{m.label}</Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/metiers" onClick={close}><strong>Tous les métiers →</strong></Link>
+              </li>
             </ul>
           </li>
           {links.map((l) => (
@@ -93,7 +129,7 @@ export function NavMenu({ links, services }: { links: readonly NavLinkItem[]; se
           ))}
         </ul>
         <Link href={APPEL.href} className="btn btn-primary btn-lg nav-menu-cta" onClick={close}>
-          {APPEL.libelle} <Icon name="arrow" size={14} />
+          {APPEL.court} <Icon name="arrow" size={14} />
         </Link>
       </div>
     </>

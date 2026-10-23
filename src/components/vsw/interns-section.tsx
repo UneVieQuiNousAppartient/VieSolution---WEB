@@ -10,8 +10,8 @@ export function InternsSection() {
               On <em>forme des jeunes</em> en informatique, en IA et sur Zoho — apprenez
               le métier sur de vrais mandats clients.
             </div>
-            <Link href="/postuler-stagiaire" className="btn btn-primary btn-lg">
-              Postuler comme stagiaire
+            <Link href="/emplois" className="btn btn-primary btn-lg">
+              Voir l&apos;offre de stage
             </Link>
           </div>
         </div>
