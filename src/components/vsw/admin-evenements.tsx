@@ -11,6 +11,8 @@ type Evt = { id: string; slug: string; titre: string; genre: Genre; debut: strin
 type Ins = { id: string; evenement_id: string; nom: string; courriel: string; entreprise: string | null; question: string | null; avertir: boolean; statut: 'confirmee' | 'annulee'; confirmation_envoyee_at: string | null; rappel_envoye_at: string | null; created_at: string; fiche: string | null };
 type Saisie = { titre: string; genre: Genre; debut: string; fin: string; lieu_public: string; lieu_prive: string; places: string; presentation: string };
 
+/** Adresse des ateliers en personne, donnée par Camille le 2026-10-24 : proposée d'office, modifiable. */
+const ADRESSE_ATELIERS = { lieu_public: 'Longueuil', lieu_prive: '40, rue de l’Église, Longueuil (Québec) J4K 1H9' };
 const VIDE: Saisie = { titre: '', genre: 'en_ligne', debut: '', fin: '', lieu_public: '', lieu_prive: '', places: '20', presentation: '' };
 const ETAT: Record<Evt['statut'], [string, string]> = { brouillon: ['Brouillon', 'adm-pastille-warn'], publie: ['Publié', 'adm-pastille-ok'], annule: ['Annulé', 'adm-pastille-danger'] };
 const LIEN_PAGE = `${SITE_URL}/evenements`;
@@ -52,7 +54,7 @@ function Formulaire({ depart, onFini }: { depart: Evt | null; onFini: () => void
       <h2>{depart ? 'Modifier l’atelier' : 'Nouvel atelier'}</h2>
       <label>Titre<input required maxLength={120} {...champ('titre')} /></label>
       <div className="adm-periodes" role="group" aria-label="Type d’atelier">
-        {GENRES.map((g) => <button key={g} type="button" aria-pressed={v.genre === g} className={v.genre === g ? 'actif' : ''} onClick={() => setV({ ...v, genre: g })}>{LIBELLE_GENRE[g]}</button>)}
+        {GENRES.map((g) => <button key={g} type="button" aria-pressed={v.genre === g} className={v.genre === g ? 'actif' : ''} onClick={() => setV(g === 'en_personne' && !v.lieu_prive.trim() ? { ...v, genre: g, ...ADRESSE_ATELIERS, lieu_public: v.lieu_public || ADRESSE_ATELIERS.lieu_public } : g === 'en_ligne' && v.lieu_prive === ADRESSE_ATELIERS.lieu_prive ? { ...v, genre: g, lieu_prive: '', lieu_public: '' } : { ...v, genre: g })}>{LIBELLE_GENRE[g]}</button>)}
       </div>
       <div className="adm-evt-deux">
         <label>Début (heure de Montréal)<input type="datetime-local" required {...champ('debut')} /></label>

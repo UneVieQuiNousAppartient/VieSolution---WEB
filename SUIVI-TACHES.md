@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 52.
+**Dernière mise à jour : 2026-10-24** — dernière section : 54.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1050,4 +1050,34 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Coût réel** : ≈ 330 k (session ≈ 140 k, `qa-agent` ≈ 95 k, `securite` ≈ 95 k).
 
 **Non fait dans ce round** : confirmation du courriel avant de créer le rendez-vous (proposée par `securite`, change le parcours du client : décision de Camille) ; texte de l'accusé de réception des rendez-vous (« je vous confirme l'heure sous 24 h ouvrables ») à ajuster maintenant que Google confirme tout de suite (texte à approuver par Camille) ; évaluation des facteurs relatifs à la vie privée pour Google (hors Québec) **[à confirmer par Camille]** ; annulation ou déplacement d'un rendez-vous depuis le site (Google l'offre dans l'invitation) ; plusieurs agendas ; aperçu Vercel (« Preview ») : la redirection Google est celle de viesolutionweb.ca, la connexion se fait en production. **À faire par Camille** : le pas-à-pas Google Cloud, puis « Connecter Google Agenda » dans l'admin (onglet Rendez-vous), puis une réservation d'essai.
+
+## 53. ✅ Suites de l'étape C : accusé des rendez-vous, adresse des ateliers, brouillon d'évaluation Loi 25 (2026-10-24)
+
+**Contexte / demande** : réponses de Camille : paragraphe Google de la politique « va avec la recommandation » (accepté tel quel) ; nouvel accusé des rendez-vous « vas y » ; évaluation Loi 25 « recommande moi », puis « vas y » ; adresse des ateliers « 40 rue de l'eglise Longueuil J4k 1H9 » ; captures Zoho « prendre des images zoho en ligne » (déconseillé, voir plus bas).
+
+**Ce qui a été fait** :
+- Gabarit `accuse_rdv` mis à jour en base (objet « Votre appel découverte est bien noté » ; texte valable avec ou sans Google : invitation Meet déjà reçue si l'heure a été choisie dans le calendrier, sinon confirmation sous 24 h ouvrables), recopié dans `supabase/setup-crm-vsw.sql`.
+- Onglet Événements : l'adresse « 40, rue de l'Église, Longueuil (Québec) J4K 1H9 » (lieu affiché « Longueuil ») se remplit d'office pour un atelier en personne ; accent et majuscules du code postal ajoutés, signalés à Camille.
+- `docs/loi25/EFVP-fournisseurs.md` : brouillon d'évaluation des facteurs relatifs à la vie privée pour les fournisseurs hors Québec (Vercel, Resend, Google, Anthropic, Cloudflare ; Supabase est au Canada, ca-central-1, vérifié). Points `[à confirmer]` à vérifier par Camille avant signature.
+
+**Vérification technique** : `tsc` et `eslint` du fichier modifié ; mise à jour du gabarit relue en base.
+
+**Non fait dans ce round** : captures Zoho — prendre des images sur Internet est déconseillé (visuels de Zoho, encadrés par ses règles de marque pour partenaires) ; options proposées : illustrations dessinées (recommandé), captures de son propre compte, visuels officiels demandés à Zoho — en attente du choix de Camille. Site en anglais et page « Sécurité et Loi 25 » : en attente de sa réponse. Constat de l'évaluation : aucune durée de conservation appliquée par le CRM et pas de bouton de suppression d'une fiche — à décider.
+
+## 54. ✅ Illustrations Zoho, page « Sécurité et Loi 25 », suppression d'une fiche et conservation (2026-10-24)
+
+**Contexte / demande** : Camille : images Zoho « B, des illustrations dessinées par nous » ; page Sécurité et Loi 25 « oui » ; suppression d'une fiche et durée de conservation « oui », puis « Oui, comme décrit » (bouton sur la fiche, liste des fiches de plus de 24 mois à supprimer soi-même, rien d'automatique, ≈ 150 k) ; anglais « Par étapes » (étape 1 ≈ 800 k, chantier à part).
+
+**Ce qui a été fait** :
+- `/zoho` : section « À quoi ça ressemble » (`zoho-apercu.tsx`) — trois illustrations dessinées (suivi des ventes en colonnes, tableau de bord, facture) avec des données d'exemple ; aucun logo, aucune capture, aucun montant.
+- `/securite` (nouvelle page, pied de page et plan du site) : responsable, ce qui est recueilli, où (base au Canada, services hors Québec), protections réelles, droits (réponse dans les 30 jours, comme la loi le prévoit), incidents. **À relire par Camille.**
+- Effacement (Loi 25) : `src/lib/crm/conservation.ts` (pur) + `tests/conservation.test.mjs` (5 tests) ; `src/lib/crm/effacement.ts` (toutes les fiches de l'adresse, brouillons, notifications, passages des relances, courriels reçus et envoyés, rendez-vous, inscriptions, candidatures ; notifications sans fiche et journal « adresse:… » anonymisés ; empreinte HMAC dans `vsw_privacy_requests`, statut en cours → fait, identifiant de clé) ; bouton « Supprimer définitivement » sur la fiche (`op: 'effacer'`) ; carte « Conservation (Loi 25) » dans l'onglet Demandes (`/api/admin/conservation`, revérification des 24 mois côté serveur) ; moteur : les adresses effacées ne reçoivent plus aucun courriel automatique (`CarteAvecEffaces`, lecture paginée), Camille peut encore répondre à la main.
+
+**Vérification technique** : `npm run verify` vert (144 tests). Captures /zoho et /securite, 375 px sans débordement. `qa-agent` (Opus) ROUGE puis corrigé (erreur de lecture ignorée dans `desabonnes`) ; `securite` (Opus) ROUGE puis corrigé (journal et notifications, pagination, page publique « évaluation en cours », registre, espaces autour de l'adresse, envoi manuel) — contre-vérification ROUGE pour deux restes, corrigés sans nouveau passage (règle : une révision au plus) : titre des notifications avec l'adresse même quand l'expéditeur a un nom, identifiant de clé conservé à la fin, erreurs de lecture contrôlées.
+
+**Coût réel** : ≈ 400 k (session ≈ 170 k, `qa-agent` ≈ 85 k, `securite` ≈ 125 k + 90 k du premier passage combiné).
+
+**Mise à jour du 2026-10-24** : formulaires d'origine — Camille : « on avait différencié » (CSF a ses propres tables) ; vérifié en base : le seul déclencheur et la seule fonction sur `contact_requests`, `chatbot_leads`, `estimateur_requests`, `audit_requests` sont ceux du CRM → `EFFACER_FORMULAIRES_SITE = true`, exception écrite dans `CLAUDE.md`.
+
+**Non fait dans ce round** : anciennes adresses après un changement de courriel ; `vsw_faq_suggestions.email` (table inutilisée) ; notifications anciennes au titre sans adresse (à supprimer à la main si besoin) ; poser `UNSUBSCRIBE_SECRET` en production et ne plus le changer (l'empreinte en dépend) — **à faire par Camille**. Site en anglais : étape 1 à planifier (plan court avant le code).
 

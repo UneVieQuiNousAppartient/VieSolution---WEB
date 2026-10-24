@@ -40,6 +40,8 @@ import {
   texteEnHtml,
 } from './regles';
 import { entetesDesabonnement, lienDesabonnement, secretDesabonnement } from './jeton';
+import { empreintesEffacees } from './effacement';
+import { empreinteCourriel } from './conservation';
 import { AVEC_BOUTON, habiller, sansSignature } from './gabarit-courriel';
 import { envoyerCourriel, expediteurConfigure, resendConfigure } from './envoi';
 import { creerTache, journaliser } from './fiche';
@@ -239,7 +241,7 @@ export async function envoyerCourrielFiche(
     site: SITE_URL,
   });
   if (pret) return { refus: `Envoi impossible pour le moment : ${pret}.` };
-  const liste = await desabonnes(db);
+  const liste = await desabonnes(db, { effaces: false });
   if (liste === null) return { refus: 'Envoi impossible pour le moment : liste des désabonnements illisible.' };
   const retenue = raisonDeRetenue(avecDesabonnementAdresse(lead, liste));
   if (retenue) return { refus: `Aucun courriel ne peut partir à cette personne (${retenue}).` };
@@ -599,13 +601,46 @@ async function lireReglages(db: SupabaseClient): Promise<Reglages> {
 }
 
 /** Adresses désabonnées (courriel en minuscules → date), ou null si illisible : alors rien n'est envoyé. */
-async function desabonnes(db: SupabaseClient) {
-  const { data, error } = await db.from('vsw_leads').select('email, email_opt_out_at').not('email_opt_out_at', 'is', null);
-  if (error) {
-    console.error('[crm] désabonnements illisibles :', error.message);
+/**
+ * Adresses désabonnées (relances) et personnes effacées (Loi 25). Lecture paginée (Supabase rend
+ * 1000 lignes au plus par requête). Les effacées ne sont connues que par l'empreinte de leur courriel :
+ * la carte la calcule à la demande pour chaque fiche consultée. `effaces: false` pour un envoi écrit à
+ * la main par Camille (une personne effacée qui revient peut recevoir sa réponse).
+ */
+async function desabonnes(db: SupabaseClient, { effaces = true } = {}) {
+  try {
+    const carte = new Map<string, string>();
+    for (let debut = 0; ; debut += 1000) {
+      const { data, error } = await db.from('vsw_leads').select('email, email_opt_out_at').not('email_opt_out_at', 'is', null).order('id').range(debut, debut + 999);
+      if (error) throw new Error(error.message);
+      for (const r of data || []) carte.set(String(r.email || '').trim().toLowerCase(), r.email_opt_out_at as string);
+      if (!data || data.length < 1000) break;
+    }
+    if (!effaces) return carte;
+    const empreintes = await empreintesEffacees(db);
+    if (!empreintes.size) return carte;
+    const cle = secretDesabonnement();
+    return new CarteAvecEffaces(carte, empreintes, (email) => empreinteCourriel(email, cle));
+  } catch (e) {
+    console.error('[crm] désabonnements illisibles :', e instanceof Error ? e.message : e);
     return null;
   }
-  return new Map((data || []).map((r) => [String(r.email || '').trim().toLowerCase(), r.email_opt_out_at as string]));
+}
+
+/** Carte des désabonnements qui reconnaît aussi les adresses effacées, par leur empreinte. */
+class CarteAvecEffaces extends Map<string, string> {
+  constructor(base: Map<string, string>, private empreintes: Set<string>, private empreinte: (email: string) => string) {
+    super(base);
+  }
+  get size() {
+    return super.size + this.empreintes.size;
+  }
+  get(email: string) {
+    const d = super.get(email);
+    if (d) return d;
+    const h = email ? this.empreinte(email) : '';
+    return h && this.empreintes.has(h) ? new Date(0).toISOString() : undefined;
+  }
 }
 
 // --- exécution -------------------------------------------------------------------------------

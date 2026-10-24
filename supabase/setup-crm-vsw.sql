@@ -623,9 +623,10 @@ INSERT INTO vsw_email_templates (key, lang, subject, body) VALUES
   ('accuse_reception', 'fr', 'Nous avons bien reçu votre demande',
    E'Bonjour {{prenom}},\n\nMerci d''avoir pris le temps de nous écrire. Votre demande est bien arrivée, et je la lirai avec attention.\n\nJe vous reviens personnellement sous 24 h ouvrables. Si c''est plus simple pour vous, vous pouvez aussi choisir dès maintenant le moment de notre appel gratuit : {{lien_rdv}}\n\nAu plaisir,\nCamille, Vie Solution Web'),
   -- Accusé de réception d'une demande de rendez-vous (même règle, gabarit « accuse_rdv ») : texte
-  -- proposé et accepté par Camille le 2026-10-22 (« ajoute l'accusé pour les rdv »).
-  ('accuse_rdv', 'fr', 'Votre demande d''appel est bien arrivée',
-   E'Bonjour {{prenom}},\n\nMerci, votre demande d''appel est bien arrivée. Je vous confirme l''heure par courriel sous 24 h ouvrables.\n\nAu plaisir,\nCamille, Vie Solution Web')
+  -- proposé et accepté par Camille le 2026-10-22 (« ajoute l'accusé pour les rdv ») ; nouveau texte
+  -- accepté le 2026-10-24 (« vas y ») depuis Google Agenda (étape C), appliqué en base le même jour.
+  ('accuse_rdv', 'fr', 'Votre appel découverte est bien noté',
+   E'Bonjour {{prenom}},\n\nMerci de votre confiance : votre demande d''appel est bien arrivée.\n\nSi vous avez choisi votre heure dans notre calendrier, c''est déjà réglé : l''invitation avec le lien Google Meet est dans votre boîte de réception (jetez un œil aux courriels indésirables au besoin). Sinon, je vous confirme l''heure par courriel sous 24 h ouvrables.\n\nJ''ai bien hâte de discuter avec vous.\n\nAu plaisir,\nCamille, Vie Solution Web')
 ON CONFLICT (key, lang) DO NOTHING;
 
 -- Modèles de réponse (textes approuvés par Camille le 2026-10-23 : « les modeles sont bon »,

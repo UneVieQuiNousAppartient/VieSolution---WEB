@@ -6,12 +6,14 @@
 //   POST { op: 'tache', id, titre, echeance } → tâche à 9 h (heure de Montréal) le jour choisi
 //   POST { op: 'envoyer', id, sujet, corps, brouillon?, modele? } → courriel envoyé par Resend, contact noté
 //   POST { op: 'accord', id }               → accord pour les courriels de suivi noté (fiche ajoutée à la main)
+//   POST { op: 'effacer', id }              → effacement de la personne (Loi 25, crm/effacement.ts)
 // Accès : session complète de l'admin (code + double vérification) ; service_role côté serveur.
 import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthed } from '@/lib/admin-auth';
 import { getAdminClient, hasServiceKey } from '@/lib/supabase/admin';
 import { journaliser, noterContact, recalculerProchaineAction } from '@/lib/crm/fiche';
+import { effacerPersonne } from '@/lib/crm/effacement';
 import { envoyerCourrielFiche, type Lead } from '@/lib/crm/moteur';
 import { modelesPour } from '@/lib/crm/boite';
 import { MODELES_REPONSE } from '@/lib/crm/suggestion';
@@ -203,6 +205,11 @@ export async function POST(req: NextRequest) {
       // Les courriels reçus de cette personne sont répondus : ils sortent de « À répondre ».
       await db.from('vsw_email_messages').update({ traite_at: maintenant }).eq('lead_id', id).eq('direction', 'in').is('traite_at', null).is('ignore_at', null);
       await audit(db, 'lead_envoyer', id, { brouillon });
+    } else if (body.op === 'effacer') {
+      const bilan = await effacerPersonne(db, id);
+      // Le journal garde l'identifiant et les nombres, jamais le nom ni le courriel effacés.
+      await audit(db, 'lead_effacer', id, bilan);
+      return NextResponse.json({ ok: true, bilan });
     } else if (body.op === 'accord') {
       if (!lead.email) return refus('Cette fiche n’a pas de courriel.');
       if (lead.consent_at) return NextResponse.json({ ok: true });

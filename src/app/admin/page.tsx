@@ -12,6 +12,7 @@ import { AdminAvis } from '@/components/vsw/admin-avis';
 import { AdminStats } from '@/components/vsw/admin-stats';
 import { AdminEvenements } from '@/components/vsw/admin-evenements';
 import { AdminAgenda } from '@/components/vsw/admin-agenda';
+import { AdminConservation } from '@/components/vsw/admin-conservation';
 import { TableauDeBord, type Vue } from '@/components/vsw/admin-tableau';
 import { FicheDemande } from '@/components/vsw/admin-fiche';
 import { NouvelleDemande } from '@/components/vsw/admin-nouvelle';
@@ -557,6 +558,7 @@ export default function AdminPage() {
                 ))}
               </div>
             )}
+            {tab === 'leads' && <AdminConservation onChange={load} />}
 
             {tab === 'drafts' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

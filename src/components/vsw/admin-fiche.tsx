@@ -327,6 +327,24 @@ export function FicheDemande({ id, act, busy, onRetour, onChange }: {
           </section>
         </div>
       </div>
+
+      {/* Droit à l'effacement (Loi 25, accord de Camille du 2026-10-24) : tout ce qui concerne la personne. */}
+      <section className="adm-carte adm-effacer" aria-label="Supprimer définitivement">
+        <h2 className="adm-titre-carte">Supprimer définitivement</h2>
+        <p className="adm-gris">
+          Pour une demande d’effacement (Loi 25) : efface toutes les fiches de cette adresse, leurs notes, tâches, brouillons et courriels,
+          ses inscriptions aux ateliers, rendez-vous et candidatures. Seule une empreinte du courriel reste : plus aucun courriel automatique
+          ne lui part (vous pouvez encore lui répondre à la main si elle vous réécrit). À faire vous-même : son avis publié (onglet Avis),
+          son rendez-vous dans Google Agenda, et la copie de ses courriels dans votre boîte Gmail.
+        </p>
+        <button type="button" className="adm-bouton adm-bouton-contour adm-avis-supprimer" disabled={occupe} onClick={async () => {
+          if (!window.confirm(`Supprimer définitivement ${l.name}${l.email ? ` (${l.email})` : ''} et tout ce qui la concerne ? Cette action ne peut pas être annulée.`)) return;
+          const r = await poster({ op: 'effacer', id });
+          if (!r.ok) { setErreur(r.erreur); return; }
+          onChange();
+          onRetour();
+        }}>Supprimer définitivement cette personne</button>
+      </section>
     </div>
   );
 }

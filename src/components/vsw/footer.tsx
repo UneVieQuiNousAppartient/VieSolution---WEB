@@ -79,6 +79,8 @@ export function VswFooter() {
             <Link href="/politique-confidentialite">Politique de confidentialité</Link>
             {' · '}
             <Link href="/conditions-utilisation">Conditions d&apos;utilisation</Link>
+            {' · '}
+            <Link href="/securite">Sécurité et Loi 25</Link>
           </div>
         </div>
         <p className="footer-geant" aria-hidden="true">Vie Solution Web</p>
