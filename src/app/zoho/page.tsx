@@ -3,6 +3,7 @@ import { RevealInit } from '@/components/vsw/reveal-init';
 import { PageHeader } from '@/components/vsw/page-header';
 import { ZohoSection } from '@/components/vsw/zoho-section';
 import { DemarrerSection } from '@/components/vsw/demarrer-section';
+import { ZohoApercu } from '@/components/vsw/zoho-apercu';
 import { CTASection } from '@/components/vsw/cta-section';
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function ZohoPage() {
       />
       <DemarrerSection variant="zoho" />
       <ZohoSection />
+      <ZohoApercu />
       <CTASection
         text={
           <>

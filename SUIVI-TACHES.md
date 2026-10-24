@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-24** — dernière section : 53.
+**Dernière mise à jour : 2026-10-24** — dernière section : 54.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1063,4 +1063,19 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Vérification technique** : `tsc` et `eslint` du fichier modifié ; mise à jour du gabarit relue en base.
 
 **Non fait dans ce round** : captures Zoho — prendre des images sur Internet est déconseillé (visuels de Zoho, encadrés par ses règles de marque pour partenaires) ; options proposées : illustrations dessinées (recommandé), captures de son propre compte, visuels officiels demandés à Zoho — en attente du choix de Camille. Site en anglais et page « Sécurité et Loi 25 » : en attente de sa réponse. Constat de l'évaluation : aucune durée de conservation appliquée par le CRM et pas de bouton de suppression d'une fiche — à décider.
+
+## 54. ✅ Illustrations Zoho, page « Sécurité et Loi 25 », suppression d'une fiche et conservation (2026-10-24)
+
+**Contexte / demande** : Camille : images Zoho « B, des illustrations dessinées par nous » ; page Sécurité et Loi 25 « oui » ; suppression d'une fiche et durée de conservation « oui », puis « Oui, comme décrit » (bouton sur la fiche, liste des fiches de plus de 24 mois à supprimer soi-même, rien d'automatique, ≈ 150 k) ; anglais « Par étapes » (étape 1 ≈ 800 k, chantier à part).
+
+**Ce qui a été fait** :
+- `/zoho` : section « À quoi ça ressemble » (`zoho-apercu.tsx`) — trois illustrations dessinées (suivi des ventes en colonnes, tableau de bord, facture) avec des données d'exemple ; aucun logo, aucune capture, aucun montant.
+- `/securite` (nouvelle page, pied de page et plan du site) : responsable, ce qui est recueilli, où (base au Canada, services hors Québec), protections réelles, droits (réponse dans les 30 jours, comme la loi le prévoit), incidents. **À relire par Camille.**
+- Effacement (Loi 25) : `src/lib/crm/conservation.ts` (pur) + `tests/conservation.test.mjs` (5 tests) ; `src/lib/crm/effacement.ts` (toutes les fiches de l'adresse, brouillons, notifications, passages des relances, courriels reçus et envoyés, rendez-vous, inscriptions, candidatures ; notifications sans fiche et journal « adresse:… » anonymisés ; empreinte HMAC dans `vsw_privacy_requests`, statut en cours → fait, identifiant de clé) ; bouton « Supprimer définitivement » sur la fiche (`op: 'effacer'`) ; carte « Conservation (Loi 25) » dans l'onglet Demandes (`/api/admin/conservation`, revérification des 24 mois côté serveur) ; moteur : les adresses effacées ne reçoivent plus aucun courriel automatique (`CarteAvecEffaces`, lecture paginée), Camille peut encore répondre à la main.
+
+**Vérification technique** : `npm run verify` vert (144 tests). Captures /zoho et /securite, 375 px sans débordement. `qa-agent` (Opus) ROUGE puis corrigé (erreur de lecture ignorée dans `desabonnes`) ; `securite` (Opus) ROUGE puis corrigé (journal et notifications, pagination, page publique « évaluation en cours », registre, espaces autour de l'adresse, envoi manuel) — contre-vérification ROUGE pour deux restes, corrigés sans nouveau passage (règle : une révision au plus) : titre des notifications avec l'adresse même quand l'expéditeur a un nom, identifiant de clé conservé à la fin, erreurs de lecture contrôlées.
+
+**Coût réel** : ≈ 400 k (session ≈ 170 k, `qa-agent` ≈ 85 k, `securite` ≈ 125 k + 90 k du premier passage combiné).
+
+**Non fait dans ce round** : effacement des formulaires d'origine (`contact_requests`, `chatbot_leads`, `estimateur_requests`, `audit_requests`) — tables sans préfixe du projet partagé avec CSF : `EFFACER_FORMULAIRES_SITE = false` tant que Camille n'a pas confirmé que CSF n'y écrit jamais ; anciennes adresses après un changement de courriel ; `vsw_faq_suggestions.email` (table inutilisée) ; notifications anciennes au titre sans adresse (à supprimer à la main si besoin) ; poser `UNSUBSCRIBE_SECRET` en production et ne plus le changer (l'empreinte en dépend) — **à faire par Camille**. Site en anglais : étape 1 à planifier (plan court avant le code).
 

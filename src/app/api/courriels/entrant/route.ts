@@ -167,7 +167,8 @@ export async function POST(req: NextRequest) {
     await db.from('vsw_notifications').insert({
       recipient: 'admin',
       type: 'email_in',
-      title: `Courriel reçu de ${fiche?.name || c.expediteur.nom || c.expediteur.adresse}${nonVerifie ? ' (expéditeur non vérifié)' : ''}`,
+      // Sans fiche : l'adresse est toujours dans le titre, pour que l'effacement (Loi 25) retrouve la notification.
+      title: `Courriel reçu de ${fiche?.name || (c.expediteur.nom ? `${c.expediteur.nom} (${c.expediteur.adresse})` : c.expediteur.adresse)}${nonVerifie ? ' (expéditeur non vérifié)' : ''}`,
       body: c.sujet || '(sans objet)',
       lead_id: fiche?.id ?? null,
     });

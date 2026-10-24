@@ -28,7 +28,7 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Prix : plus aucun montant sur le site (décision du 2026-10-17) ; les 3 niveaux d'accompagnement gardent leurs noms, sans montant.
 - Avis (`vsw_avis`) : nom publié « Marie T. » et promesse « Camille vous répond personnellement » à confirmer ; ne publier que de vrais témoignages.
 - Loi 25 : relire et signer `docs/loi25/EFVP-fournisseurs.md` (points [à confirmer]) ; durée de conservation et bouton de suppression d'une fiche à décider ; confirmer le courriel avant un rendez-vous Google (oui/non).
-- Captures Zoho : illustrations dessinées, captures de son compte, ou visuels officiels de Zoho ? (pas d'images prises sur Internet).
+- Effacement : CSF écrit-il dans contact_requests, chatbot_leads, estimateur_requests, audit_requests ? (sinon on les efface aussi) ; relire /securite.
 - Clavardage IA (Loi 25) : évaluation et entente pour le transfert à Anthropic (hors Québec), durée de conservation à écrire dans la politique ; date « Janvier 2025 » de la politique à corriger.
 
 ## Rappels
@@ -37,4 +37,4 @@ Méthode : version 1.2.0 (dépôt `methode-travail`, fichier `VERSION`) — inst
 - Hook Git : `git config core.hooksPath .githooks` sur chaque clone.
 
 ## Prochaine entrée du suivi
-**54**
+**55**

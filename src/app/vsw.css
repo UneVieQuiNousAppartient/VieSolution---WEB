@@ -4744,3 +4744,40 @@ body:has(.adm-page) .chat-panel { display: none; }
 .adm-agenda-apercu { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; color: var(--fg-1); font-size: 14px; }
 .booking-loi25 { font-size: 12.5px; }
 .booking-loi25 a { color: var(--accent); }
+
+/* ── Page /zoho : « À quoi ça ressemble » — illustrations dessinées (pas de capture ni de visuel Zoho) ── */
+.zoho-apercu-grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 860px) { .zoho-apercu-grille { grid-template-columns: minmax(0, 1fr); } }
+.za-fenetre { margin: 0; min-width: 0; display: flex; flex-direction: column; border-radius: var(--radius-lg); border: 1px solid var(--line-soft); background: var(--surface); box-shadow: var(--shadow-sm); overflow: hidden; }
+.za-large { grid-column: 1 / -1; }
+.za-barre { display: flex; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line-soft); background: var(--bg-1); }
+.za-barre span { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.za-fenetre figcaption { padding: 12px 16px 16px; font-size: 14px; color: var(--fg-2); }
+.za-kanban { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 12px; padding: 16px; overflow-x: auto; }
+.za-colonne { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 12px; background: var(--bg-1); }
+.za-colonne-tete { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--fg-1); }
+.za-colonne-tete b { padding: 0 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 12px; }
+.za-carte { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 10px; border: 1px solid var(--line-soft); background: var(--surface); font-size: 13px; }
+.za-carte strong { color: var(--fg-0); }
+.za-carte span { color: var(--fg-2); font-size: 12px; }
+.za-colonne:last-child .za-carte { border-color: color-mix(in oklch, var(--ok) 40%, transparent); }
+.za-tableau { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.za-chiffres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.za-chiffres div { padding: 10px; border-radius: 10px; background: var(--bg-1); display: flex; flex-direction: column; gap: 2px; }
+.za-chiffres span { font-size: 12px; color: var(--fg-2); }
+.za-chiffres b { font-family: var(--font-display); font-size: 22px; color: var(--fg-0); }
+.za-graphe { height: 110px; display: flex; align-items: flex-end; gap: 8px; }
+.za-graphe span { flex: 1; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, var(--accent), color-mix(in oklch, var(--accent-2) 70%, var(--accent))); }
+.za-facture { padding: 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.za-facture-tete { display: flex; justify-content: space-between; align-items: center; color: var(--fg-0); }
+.za-paye { padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: color-mix(in oklch, var(--ok) 14%, transparent); color: color-mix(in oklch, var(--ok) 70%, var(--fg-0)); }
+.za-ligne { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line-soft); color: var(--fg-1); }
+.za-total { color: var(--fg-0); font-weight: 600; }
+
+/* ── Page /securite (Sécurité et Loi 25) ── */
+.legal-colonne { max-width: 780px; display: flex; flex-direction: column; gap: 4px; }
+.legal-colonne h2 { margin: 26px 0 6px; font-family: var(--font-display); font-size: 22px; color: var(--fg-0); }
+.legal-colonne p, .legal-colonne li { font-size: 16px; line-height: 1.7; color: var(--fg-1); }
+.legal-colonne p { margin: 0 0 8px; }
+.legal-colonne ul { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 6px; }
+.legal-colonne a { color: var(--accent); }
