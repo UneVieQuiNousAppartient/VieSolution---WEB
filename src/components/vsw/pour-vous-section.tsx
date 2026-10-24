@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Icon } from './icon';
 import { APPEL } from './appel';
 import { BENEFICES, IA_RDV, IA_TACHES, METIERS, SITUATIONS, metierParSlug } from '@/lib/metiers';
+import { lienLangue, t, type Lang } from '@/lib/i18n';
 
 /*
  * « C'est pour vous si… » réunie avec « Avant / après » et « Pour votre métier » (maquette validée
@@ -18,11 +19,11 @@ import { BENEFICES, IA_RDV, IA_TACHES, METIERS, SITUATIONS, metierParSlug } from
  */
 const AUTRE = 'autre';
 
-const phrase = (n: number, total: number) => {
-  if (n === 0) return 'Une seule de ces phrases vous ressemble ? Un appel de 30 minutes suffit pour voir par où commencer.';
-  if (n === 1) return 'Une seule ? On commence par celle-là. Un appel de 30 minutes suffit pour voir comment.';
-  if (n === total) return 'Toutes ? On commence par la plus pressante, une étape à la fois.';
-  return 'vous ressemblent. Bonne nouvelle : on peut commencer par une seule.';
+const bilan = (lang: Lang, n: number, total: number) => {
+  if (n === 0) return t(lang, "Une seule de ces phrases vous ressemble ? Un appel de 30 minutes suffit pour voir par où commencer.");
+  if (n === 1) return t(lang, "Une seule ? On commence par celle-là. Un appel de 30 minutes suffit pour voir comment.");
+  if (n === total) return t(lang, "Toutes ? On commence par la plus pressante, une étape à la fois.");
+  return t(lang, "vous ressemblent. Bonne nouvelle : on peut commencer par une seule.");
 };
 
 /** « #metier-clinique-dentaire » → « clinique-dentaire », si ce métier existe. */
@@ -31,7 +32,7 @@ const slugDuLien = (hash: string) => {
   return s.startsWith('metier-') && metierParSlug(s.slice(7)) ? s.slice(7) : null;
 };
 
-export function PourVousSection() {
+export function PourVousSection({ lang = 'fr' }: { lang?: Lang }) {
   const [choix, setChoix] = useState<string>(AUTRE);
   const [coches, setCoches] = useState<boolean[]>(() => SITUATIONS.map(() => false));
 
@@ -64,44 +65,43 @@ export function PourVousSection() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'C’est pour vous si…'}</div>
+            <div className="eyebrow">{t(lang, "C’est pour vous si…")}</div>
             <h2>
-              Vous vous reconnaissez ?<br />
-              <span className="pourquoi-accent">Voici ce qui change.</span>
+              {t(lang, "Vous vous reconnaissez ?")}<br />
+              <span className="pourquoi-accent">{t(lang, "Voici ce qui change.")}</span>
             </h2>
           </div>
           <p className="desc">
-            Vous êtes bon dans votre métier, mais l&apos;administration vous gruge. Choisissez votre
-            métier, cochez ce qui vous ressemble : on commence là.
+            {t(lang, "Vous êtes bon dans votre métier, mais l'administration vous gruge. Choisissez votre métier, cochez ce qui vous ressemble : on commence là.")}
           </p>
         </div>
 
         <div className="pm-layout reveal">
-          <nav className="pm-choix" aria-label="Votre métier">
-            <p className="pm-choix-titre">Votre métier</p>
+          <nav className="pm-choix" aria-label={t(lang, "Votre métier")}>
+            <p className="pm-choix-titre">{t(lang, "Votre métier")}</p>
             <ul>
               {METIERS.map((m) => (
                 <li key={m.slug}>
                   <Link
                     id={`metier-${m.slug}`}
-                    href={`/metiers/${m.slug}`}
+                    href={lienLangue(lang, `/metiers/${m.slug}`)}
                     className="pm-metier"
                     aria-current={choix === m.slug ? 'true' : undefined}
                     onClick={(e) => choisir(e, m.slug)}
                   >
                     <Icon name={m.icon} size={18} aria-hidden="true" />
-                    <span>{m.titre}</span>
+                    <span>{t(lang, m.titre)}</span>
                   </Link>
                 </li>
               ))}
               <li>
                 <Link
-                  href="/metiers"
+                  href={lienLangue(lang, '/metiers')}
                   className="pm-metier pm-metier--autre"
                   aria-current={choix === AUTRE ? 'true' : undefined}
                   onClick={(e) => choisir(e, AUTRE)}
                 >
-                  <span>Autre métier ou PME</span>
+                  <span>{t(lang, "Autre métier ou PME")}</span>
                 </Link>
               </li>
             </ul>
@@ -112,49 +112,48 @@ export function PourVousSection() {
               <>
                 <div className="pm-fiche-tete">
                   <div>
-                    <h3>{metier.titre}</h3>
-                    {metier.precision && <p className="metier-precision">{metier.precision}</p>}
+                    <h3>{t(lang, metier.titre)}</h3>
+                    {metier.precision && <p className="metier-precision">{t(lang, metier.precision)}</p>}
                   </div>
-                  <Link href={`/metiers/${metier.slug}`} className="pm-lien">
-                    Voir comment on aide : {metier.titre} <span aria-hidden="true">→</span>
+                  <Link href={lienLangue(lang, `/metiers/${metier.slug}`)} className="pm-lien">
+                    {t(lang, "Voir comment on aide : {metier}", { metier: t(lang, metier.titre) })} <span aria-hidden="true">→</span>
                   </Link>
                 </div>
                 <div className="pm-trio">
                   <div className="pm-bloc">
-                    <div className="metier-label">Ce qui vous gruge</div>
-                    <p>{metier.gruge}</p>
+                    <div className="metier-label">{t(lang, "Ce qui vous gruge")}</div>
+                    <p>{t(lang, metier.gruge)}</p>
                   </div>
                   <div className="pm-bloc metier-ameliore">
-                    <div className="metier-label">Ce qu&apos;on améliore</div>
-                    <p><span aria-hidden="true">→ </span>{metier.ameliore}</p>
+                    <div className="metier-label">{t(lang, "Ce qu'on améliore")}</div>
+                    <p><span aria-hidden="true">→ </span>{t(lang, metier.ameliore)}</p>
                   </div>
                   <div className="pm-bloc">
-                    <div className="metier-label">Le temps retrouvé</div>
-                    <p>{metier.temps}</p>
+                    <div className="metier-label">{t(lang, "Le temps retrouvé")}</div>
+                    <p>{t(lang, metier.temps)}</p>
                   </div>
                 </div>
                 <div>
-                  <div className="metier-label">Ce qu&apos;on installe</div>
+                  <div className="metier-label">{t(lang, "Ce qu'on installe")}</div>
                   <div className="service-tags pm-tags">
-                    {metier.tags.map((t) => <span className="service-tag" key={t}>{t}</span>)}
-                    {metier.rdvIa && <Link href={IA_RDV.href} className="service-tag pm-tag-ia">{IA_RDV.libelle}</Link>}
-                    <Link href={IA_TACHES.href} className="service-tag pm-tag-ia">{IA_TACHES.libelle}</Link>
+                    {metier.tags.map((tag) => <span className="service-tag" key={tag}>{t(lang, tag)}</span>)}
+                    {metier.rdvIa && <Link href={lienLangue(lang, IA_RDV.href)} className="service-tag pm-tag-ia">{t(lang, IA_RDV.libelle)}</Link>}
+                    <Link href={lienLangue(lang, IA_TACHES.href)} className="service-tag pm-tag-ia">{t(lang, IA_TACHES.libelle)}</Link>
                   </div>
-                  {metier.note && <p className="metier-note">{metier.note}</p>}
+                  {metier.note && <p className="metier-note">{t(lang, metier.note)}</p>}
                 </div>
-                <p className="pm-sous-titre">Vous vous reconnaissez aussi ? Cochez</p>
+                <p className="pm-sous-titre">{t(lang, "Vous vous reconnaissez aussi ? Cochez")}</p>
               </>
             ) : (
               <div className="pm-fiche-tete">
                 <div>
-                  <h3>Autre métier ou PME</h3>
+                  <h3>{t(lang, "Autre métier ou PME")}</h3>
                   <p className="metier-precision">
-                    Si vous servez des clients, on regarde ensemble ce qui vous gruge et ce qu&apos;on peut
-                    améliorer. Cochez ce qui vous ressemble.
+                    {t(lang, "Si vous servez des clients, on regarde ensemble ce qui vous gruge et ce qu'on peut améliorer. Cochez ce qui vous ressemble.")}
                   </p>
                 </div>
-                <Link href="/metiers" className="pm-lien">
-                  Tous les métiers <span aria-hidden="true">→</span>
+                <Link href={lienLangue(lang, '/metiers')} className="pm-lien">
+                  {t(lang, "Tous les métiers")} <span aria-hidden="true">→</span>
                 </Link>
               </div>
             )}
@@ -169,8 +168,8 @@ export function PourVousSection() {
                         <span className="pv-icone" aria-hidden="true"><Icon name={s.icone} size={20} /></span>
                         <span className="pv-case" aria-hidden="true"><Icon name="check" size={14} /></span>
                       </span>
-                      <span className="pv-avant">{s.avant}</span>
-                      <span className="pv-apres"><span aria-hidden="true">→</span> {s.apres}</span>
+                      <span className="pv-avant">{t(lang, s.avant)}</span>
+                      <span className="pv-apres"><span aria-hidden="true">→</span> {t(lang, s.apres)}</span>
                     </button>
                   </li>
                 );
@@ -180,16 +179,16 @@ export function PourVousSection() {
             <div className="pv-bilan section--nuit">
               <div>
                 <p className="pv-bilan-phrase" aria-live="polite" aria-atomic="true">
-                  {n > 0 && <strong>{n} sur {visibles.length}</strong>}
+                  {n > 0 && <strong>{t(lang, "{n} sur {total}", { n, total: visibles.length })}</strong>}
                   {n > 0 ? (n > 1 && n < visibles.length ? ' ' : ' · ') : ''}
-                  {phrase(n, visibles.length)}
+                  {bilan(lang, n, visibles.length)}
                 </p>
                 <span className="pv-jauge" aria-hidden="true">
                   {visibles.map((i, k) => <i key={i} data-on={k < n || undefined} />)}
                 </span>
               </div>
-              <Link href={APPEL.href} className="btn btn-primary btn-lg">
-                {APPEL.libelle} <Icon name="arrow" size={14} />
+              <Link href={lienLangue(lang, APPEL.href)} className="btn btn-primary btn-lg">
+                {t(lang, APPEL.libelle)} <Icon name="arrow" size={14} />
               </Link>
             </div>
           </div>
@@ -198,8 +197,8 @@ export function PourVousSection() {
         <ul className="pm-benefices reveal">
           {BENEFICES.map(([titre, detail]) => (
             <li key={titre}>
-              <strong>{titre}</strong>
-              <span>{detail}</span>
+              <strong>{t(lang, titre)}</strong>
+              <span>{t(lang, detail)}</span>
             </li>
           ))}
         </ul>

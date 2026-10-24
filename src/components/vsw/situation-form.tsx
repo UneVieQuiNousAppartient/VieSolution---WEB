@@ -10,31 +10,32 @@ import { checkRateLimit } from '@/lib/utils/security';
 import { Icon } from './icon';
 import { FACTEURS, CONCLUSION_PRIX } from './comment-prix-section';
 import { APPEL } from './appel';
+import { lienLangue, phrase, t, type Lang } from '@/lib/i18n';
 
 /* Les 8 métiers de src/lib/metiers.ts (titres des cartes), + « Autre ». */
 const METIERS = [
-  'Conseiller financier',
-  'Courtier hypothécaire',
-  'Clinique dentaire',
-  'Clinique de soins',
-  'Cabinet comptable',
-  'Entrepreneur en construction',
-  'Agent immobilier',
-  'Commerce ou restaurant',
-  'Autre',
+  phrase("Conseiller financier"),
+  phrase("Courtier hypothécaire"),
+  phrase("Clinique dentaire"),
+  phrase("Clinique de soins"),
+  phrase("Cabinet comptable"),
+  phrase("Entrepreneur en construction"),
+  phrase("Agent immobilier"),
+  phrase("Commerce ou restaurant"),
+  phrase("Autre"),
 ];
 
 const situationSchema = z.object({
-  metier: z.string().min(1, 'Choisissez votre métier (ou « Autre »)'),
-  description: z.string().trim().min(10, 'Décrivez en quelques mots ce qui vous prend du temps (10 caractères minimum)'),
-  nom: z.string().trim().min(2, 'Le nom doit contenir au moins 2 caractères'),
-  email: z.string().trim().email('Adresse courriel invalide'),
+  metier: z.string().min(1, phrase("Choisissez votre métier (ou « Autre »)")),
+  description: z.string().trim().min(10, phrase("Décrivez en quelques mots ce qui vous prend du temps (10 caractères minimum)")),
+  nom: z.string().trim().min(2, phrase("Le nom doit contenir au moins 2 caractères")),
+  email: z.string().trim().email(phrase("Adresse courriel invalide")),
   telephone: z.string().optional(),
 });
 
 type SituationData = z.infer<typeof situationSchema>;
 
-export function SituationForm() {
+export function SituationForm({ lang = 'fr' }: { lang?: Lang }) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
 
@@ -53,7 +54,7 @@ export function SituationForm() {
     const pot = form?.elements.namedItem('website') as HTMLInputElement | null | undefined;
     if (pot?.value) return;
     if (!checkRateLimit('situation', 3, 300000)) {
-      setError('Trop de tentatives. Veuillez patienter quelques minutes.');
+      setError(t(lang, "Trop de tentatives. Veuillez patienter quelques minutes."));
       return;
     }
     try {
@@ -69,7 +70,7 @@ export function SituationForm() {
       });
       setSent(true);
     } catch {
-      setError('Une erreur est survenue. Veuillez réessayer.');
+      setError(t(lang, "Une erreur est survenue. Veuillez réessayer."));
     }
   };
 
@@ -78,16 +79,15 @@ export function SituationForm() {
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'Décrivez-nous votre situation'}</div>
+            <div className="eyebrow">{t(lang, "Décrivez-nous votre situation")}</div>
             <h2>
-              Dites-nous ce qui
+              {t(lang, "Dites-nous ce qui")}
               <br />
-              vous gruge.
+              {t(lang, "vous gruge.")}
             </h2>
           </div>
           <p className="desc">
-            C&apos;est court, promis. On vous revient sous 24h ouvrables avec une première idée de
-            premier pas.
+            {t(lang, "C'est court, promis. On vous revient sous 24h ouvrables avec une première idée de premier pas.")}
           </p>
         </div>
         <div className="situation-layout">
@@ -97,49 +97,49 @@ export function SituationForm() {
                 <div className="form-success-icon">
                   <Icon name="check" size={24} />
                 </div>
-                <h3>Merci !</h3>
-                <p>On vous revient sous 24h ouvrables.</p>
+                <h3>{t(lang, "Merci !")}</h3>
+                <p>{t(lang, "On vous revient sous 24h ouvrables.")}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <div className="form-field">
-                  <label htmlFor="s-metier">Votre métier</label>
+                  <label htmlFor="s-metier">{t(lang, "Votre métier")}</label>
                   <select id="s-metier" aria-invalid={!!errors.metier} {...register('metier')}>
                     <option value="" disabled>
-                      Choisissez votre métier
+                      {t(lang, "Choisissez votre métier")}
                     </option>
                     {METIERS.map((m) => (
                       <option key={m} value={m}>
-                        {m}
+                        {t(lang, m)}
                       </option>
                     ))}
                   </select>
-                  {errors.metier && <span className="field-error">{errors.metier.message}</span>}
+                  {errors.metier && <span className="field-error">{t(lang, errors.metier.message ?? '')}</span>}
                 </div>
                 <div className="form-field">
-                  <label htmlFor="s-desc">Ce qui vous prend le plus de temps</label>
+                  <label htmlFor="s-desc">{t(lang, "Ce qui vous prend le plus de temps")}</label>
                   <textarea
                     id="s-desc"
-                    placeholder="Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine… Dites-nous aussi quels outils vous utilisez déjà (Excel, Zoho, un autre logiciel)."
+                    placeholder={t(lang, "Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine… Dites-nous aussi quels outils vous utilisez déjà (Excel, Zoho, un autre logiciel).")}
                     aria-invalid={!!errors.description}
                     {...register('description')}
                   ></textarea>
-                  {errors.description && <span className="field-error">{errors.description.message}</span>}
+                  {errors.description && <span className="field-error">{t(lang, errors.description.message ?? '')}</span>}
                 </div>
                 <div className="form-row">
                   <div className="form-field">
-                    <label htmlFor="s-nom">Nom</label>
+                    <label htmlFor="s-nom">{t(lang, "Nom")}</label>
                     <input id="s-nom" type="text" autoComplete="name" aria-invalid={!!errors.nom} {...register('nom')} />
-                    {errors.nom && <span className="field-error">{errors.nom.message}</span>}
+                    {errors.nom && <span className="field-error">{t(lang, errors.nom.message ?? '')}</span>}
                   </div>
                   <div className="form-field">
-                    <label htmlFor="s-email">Courriel</label>
+                    <label htmlFor="s-email">{t(lang, "Courriel")}</label>
                     <input id="s-email" type="email" autoComplete="email" aria-invalid={!!errors.email} {...register('email')} />
-                    {errors.email && <span className="field-error">{errors.email.message}</span>}
+                    {errors.email && <span className="field-error">{t(lang, errors.email.message ?? '')}</span>}
                   </div>
                 </div>
                 <div className="form-field">
-                  <label htmlFor="s-tel">Téléphone (facultatif)</label>
+                  <label htmlFor="s-tel">{t(lang, "Téléphone (facultatif)")}</label>
                   <input id="s-tel" type="tel" autoComplete="tel" {...register('telephone')} />
                 </div>
                 {/* Honeypot */}
@@ -153,10 +153,10 @@ export function SituationForm() {
                 )}
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
-                    {isSubmitting ? 'Envoi…' : 'Envoyer ma situation'} <Icon name="send" size={14} />
+                    {isSubmitting ? t(lang, "Envoi…") : t(lang, "Envoyer ma situation")} <Icon name="send" size={14} />
                   </button>
-                  <Link href={APPEL.href} className="btn btn-ghost btn-lg">
-                    {APPEL.libelle}
+                  <Link href={lienLangue(lang, APPEL.href)} className="btn btn-ghost btn-lg">
+                    {t(lang, APPEL.libelle)}
                   </Link>
                 </div>
               </form>
@@ -164,13 +164,13 @@ export function SituationForm() {
           </div>
           {/* Réassurance : les 3 étapes de « Comment on établit un prix » (textes existants, round 7) */}
           <aside className="situation-aside reveal">
-            <h3 className="situation-aside-title">Ce qui fait varier le prix</h3>
+            <h3 className="situation-aside-title">{t(lang, "Ce qui fait varier le prix")}</h3>
             <ul className="situation-facteurs">
               {FACTEURS.map((x) => (
-                <li key={x}>{x}</li>
+                <li key={x}>{t(lang, x)}</li>
               ))}
             </ul>
-            <p className="situation-aside-note">{CONCLUSION_PRIX}</p>
+            <p className="situation-aside-note">{t(lang, CONCLUSION_PRIX)}</p>
           </aside>
         </div>
       </div>

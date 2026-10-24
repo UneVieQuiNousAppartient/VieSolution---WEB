@@ -4,6 +4,7 @@
 // 120 lectures par adresse et par heure ; l'agenda est relu au plus toutes les 60 s (agenda-google.ts).
 import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import { phrase } from '@/lib/i18n-regles';
 import { getAdminClient, hasServiceKey } from '@/lib/supabase/admin';
 import { compterEssai } from '@/lib/admin/mfa-store';
 import { cleIp } from '@/lib/chat/regles';
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
     const db = getAdminClient();
     const adresse = cleIp(req.headers.get('x-real-ip') || (req.headers.get('x-forwarded-for') || '').split(',')[0]);
     const ip = createHash('sha256').update(`${process.env.CRON_SECRET || ''}:creneaux:${adresse}`).digest('hex').slice(0, 32);
-    if ((await compterEssai(db, `creneaux_h:${ip}`, 3_600)) > 120) return NextResponse.json({ connecte: true, creneaux: [], error: 'Trop de demandes : réessayez dans quelques minutes.' }, { status: 429 });
+    if ((await compterEssai(db, `creneaux_h:${ip}`, 3_600)) > 120) return NextResponse.json({ connecte: true, creneaux: [], error: phrase("Trop de demandes : réessayez dans quelques minutes.") }, { status: 429 });
     const e = await etatConnexion(db);
     if (!e.connecte) return non();
     const maintenant = new Date();

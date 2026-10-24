@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { t, type Lang } from '@/lib/i18n';
 
 /* Vidéo de présentation (demande de Camille, 2026-10-23) : « avant → ce qu'on installe → après »,
    56 s, fabriquée à partir des textes et des vrais écrans du site, musique douce composée pour
    l'occasion (aucun droit à payer). Démarre seule en sourdine (les navigateurs interdisent le son
    automatique) avec les boutons « Activer le son » et « Pause » (WCAG 2.2.2). Avec « réduire les
    animations » : pas de lecture automatique, l'image finale reste affichée, « Lecture » la lance. */
-export function VideoPresentation() {
+export function VideoPresentation({ lang = 'fr' }: { lang?: Lang }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [son, setSon] = useState(false);
   // Sans attribut autoPlay, la vidéo est à l'arrêt au départ ; onPlay et onPause tiennent l'état à jour.
@@ -47,7 +48,7 @@ export function VideoPresentation() {
           loop
           playsInline
           preload="metadata"
-          aria-label="Vidéo de présentation de Vie Solution Web : avant, ce qu'on installe, après"
+          aria-label={t(lang, "Vidéo de présentation de Vie Solution Web : avant, ce qu'on installe, après")}
           onPause={() => setEnPause(true)}
           onPlay={() => setEnPause(false)}
         >
@@ -56,16 +57,15 @@ export function VideoPresentation() {
         </video>
         <div className="video-presentation-boutons">
           <button type="button" className="video-presentation-bouton" onClick={lecture}>
-            <span aria-hidden="true">{enPause ? '▶' : '❚❚'}</span> {enPause ? 'Lecture' : 'Pause'}
+            <span aria-hidden="true">{enPause ? '▶' : '❚❚'}</span> {enPause ? t(lang, "Lecture") : t(lang, "Pause")}
           </button>
           <button type="button" className="video-presentation-bouton" onClick={basculerSon}>
-            <span aria-hidden="true">{son ? '🔇' : '🔊'}</span> {son ? 'Couper le son' : 'Activer le son'}
+            <span aria-hidden="true">{son ? '🔇' : '🔊'}</span> {son ? t(lang, "Couper le son") : t(lang, "Activer le son")}
           </button>
         </div>
       </div>
       <figcaption>
-        En 1 minute : ce qui gruge le temps d&apos;une entreprise, ce qu&apos;on installe (demandes, CRM, IA,
-        Zoho) et ce que ça change.
+        {t(lang, "En 1 minute : ce qui gruge le temps d'une entreprise, ce qu'on installe (demandes, CRM, IA, Zoho) et ce que ça change.")}
       </figcaption>
     </figure>
   );

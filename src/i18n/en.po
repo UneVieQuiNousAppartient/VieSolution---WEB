@@ -1,0 +1,2224 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "— reprenez la main sur la gestion de votre entreprise, avec des outils que vous maîtrisez."
+msgstr "— take back control of running your business, with tools you actually understand."
+
+msgid "— reprenez la main sur la gestion de votre entreprise."
+msgstr "— take back control of running your business."
+
+msgid ", à l'appel découverte gratuit."
+msgstr ", on the free discovery call."
+
+msgid ": on s'en occupe avec le site."
+msgstr ": we'll take care of it along with the website."
+
+msgid "? On en parle lors d'un appel gratuit de 30 minutes."
+msgstr "— let's talk it over on a free 30-minute call."
+
+msgid "? On identifie les gains rapides lors d'un appel gratuit de 30 minutes."
+msgstr "— we'll spot the quick wins on a free 30-minute call."
+
+msgid ". Sur mesure — on en discute à l'appel découverte gratuit."
+msgstr ". Tailored to you — we'll talk it over on the free discovery call."
+
+msgid "(facultatif)"
+msgstr "(optional)"
+
+msgid "{erreur} Écrivez-moi la bonne information, et je refais le résumé."
+msgstr "{erreur} Tell me the right information and I'll redo the summary."
+
+msgid "{jour} {date} {mois} {annee} · {heure}"
+msgstr "{jour}, {mois} {date}, {annee} · {heure}"
+
+msgid "{n} min avec Vie Solution Web"
+msgstr "{n} min with Vie Solution Web"
+
+msgid "{n} minutes"
+msgstr "{n} minutes"
+
+msgid "{n} sur {total}"
+msgstr "{n} of {total}"
+
+msgid "{nom} — ouvrir le site dans un nouvel onglet"
+msgstr "{nom} — open the site in a new tab"
+
+msgid "{nom} (nouvel onglet)"
+msgstr "{nom} (new tab)"
+
+msgid "{note} sur 5"
+msgstr "{note} out of 5"
+
+msgid "{num} · Volet"
+msgstr "{num} · Area"
+
+msgid "✓ Créneau choisi : {creneau}"
+msgstr "✓ Time slot chosen: {creneau}"
+
+msgid "0 jargon"
+msgstr "0 jargon"
+
+msgid "24h"
+msgstr "24 h"
+
+msgid "30 min, sans engagement"
+msgstr "30 min, no commitment"
+
+msgid "30 minutes · gratuit · sans engagement"
+msgstr "30 minutes · free · no commitment"
+
+msgid "30 minutes, gratuit et sans engagement. On comprend votre réalité, vos irritants et vos objectifs avant de parler solution."
+msgstr "30 minutes, free and with no commitment. We get to know your reality, your frustrations and your goals before talking solutions."
+
+msgid "à la fin."
+msgstr "to the finish."
+
+msgid "À propos"
+msgstr "About"
+
+msgid "À quoi ça ressemble"
+msgstr "What it looks like"
+
+msgid "À relancer"
+msgstr "To follow up"
+
+msgid "à votre rythme"
+msgstr "at your own pace"
+
+msgid "Accompagnement continu"
+msgstr "Ongoing support"
+
+msgid "Accompagnement humain"
+msgstr "Human support"
+
+msgid "Accompagnement stratégique"
+msgstr "Strategic guidance"
+
+msgid "Accueil de l’administration"
+msgstr "Admin home"
+
+msgid "Accueil IA : clavardage, rendez-vous et voix"
+msgstr "AI front desk: chat, appointments and voice"
+
+msgid "Accueil IA : clavardage, rendez-vous, voix"
+msgstr "AI front desk: chat, appointments, voice"
+
+msgid "Activer le son"
+msgstr "Turn sound on"
+
+msgid "Adresse"
+msgstr "Address"
+
+msgid "Adresse courriel invalide"
+msgstr "Invalid email address"
+
+msgid "Adresse e-mail invalide"
+msgstr "Invalid email address"
+
+msgid "AEO (assistants IA)"
+msgstr "AEO (AI assistants)"
+
+msgid "Agent IA"
+msgstr "AI agent"
+
+msgid "Agent IA dédié à votre entreprise"
+msgstr "AI agent dedicated to your business"
+
+msgid "Agent immobilier"
+msgstr "Real estate agent"
+
+msgid "Agent vocal"
+msgstr "Voice agent"
+
+msgid "Agrandir l’écran « {titre} » de {client} (nouvel onglet)"
+msgstr "Enlarge the \"{titre}\" screen for {client} (new tab)"
+
+msgid "Aide-mémoire"
+msgstr "Cheat sheet"
+
+msgid "Ajustements et correctifs mensuels"
+msgstr "Monthly adjustments and fixes"
+
+msgid "Amélioration continue"
+msgstr "Continuous improvement"
+
+msgid "Analyse de vos besoins"
+msgstr "Analysis of your needs"
+
+msgid "août"
+msgstr "August"
+
+msgid "Appel à faire"
+msgstr "Call to make"
+
+msgid "Appel de découverte gratuit"
+msgstr "Free discovery call"
+
+msgid "Appel découverte"
+msgstr "Discovery call"
+
+msgid "Appel découverte · 30 min"
+msgstr "Discovery call · 30 min"
+
+msgid "Applications web"
+msgstr "Web applications"
+
+msgid "Après l'implantation, on reste là : support, amélioration continue, nouvelles fonctions et tâches automatiques à mesure que votre entreprise grandit."
+msgstr "After the implementation, we stay with you: support, continuous improvement, new features and automated tasks as your business grows."
+
+msgid "Assistant IA"
+msgstr "AI assistant"
+
+msgid "Assistant IA pour les petites tâches du quotidien"
+msgstr "AI assistant for the small tasks of everyday work"
+
+msgid "Assistant IA sur mesure"
+msgstr "Custom AI assistant"
+
+msgid "Assistant Vie Solution"
+msgstr "Vie Solution assistant"
+
+msgid "Assistants IA sur mesure"
+msgstr "Custom AI assistants"
+
+msgid "Assistants personnalisés"
+msgstr "Personalized assistants"
+
+msgid "Atelier pratique"
+msgstr "Hands-on workshop"
+
+msgid "Ateliers"
+msgstr "Workshops"
+
+msgid "Ateliers pratiques"
+msgstr "Hands-on workshops"
+
+msgid "Au départ, un appel de 30 minutes. Ensuite, on fait le gros du travail. On vous demande surtout de nous montrer comment vous travaillez et de participer à la formation. Le temps exact dépend du projet : on vous le dit clairement avant de commencer."
+msgstr "It starts with a 30-minute call. Then we do the heavy lifting. Mostly, we ask you to show us how you work and to take part in the training. The exact time depends on the project, and we tell you clearly before we begin."
+
+msgid "au même endroit."
+msgstr "in one place."
+
+msgid "Aucun créneau libre pour le moment. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243."
+msgstr "No time slots are free right now. Write to us at info@viesolutionweb.ca or call (438) 506-5243."
+
+msgid "aucune surprise."
+msgstr "no surprises."
+
+msgid "Aujourd’hui"
+msgstr "Today"
+
+msgid "Automatisation des processus"
+msgstr "Process automation"
+
+msgid "Automatisation des processus, agents IA, sites et applications web, référencement SEO et AEO, implantation Zoho et formation pour PME et travailleurs autonomes québécois. Une vie qui vous appartient, des clients mieux servis, plus vite."
+msgstr "Process automation, AI agents, websites and web applications, SEO and AEO, Zoho implementation and training for Quebec small businesses and self-employed professionals. A life that belongs to you, with clients served better and faster."
+
+msgid "Automatisation des processus, assistants IA sur mesure et formation à l'IA pour PME et travailleurs autonomes québécois."
+msgstr "Process automation, custom AI assistants and AI training for Quebec small businesses and self-employed professionals."
+
+msgid "Automatisation et IA"
+msgstr "Automation and AI"
+
+msgid "Automatisation IA"
+msgstr "AI automation"
+
+msgid "Automatisation, IA, sites web et implantation Zoho pour les entreprises québécoises."
+msgstr "Automation, AI, websites and Zoho implementation for Quebec businesses."
+
+msgid "automatiser"
+msgstr "automate"
+
+msgid "Autre"
+msgstr "Other"
+
+msgid "Autre métier ? Voir comment on aide chacun"
+msgstr "Another industry? See how we help each one"
+
+msgid "Autre métier ou PME"
+msgstr "Another industry or small business"
+
+msgid "avant de commencer."
+msgstr "before we begin."
+
+msgid "avec l'IA — à votre mesure, avec vos outils et votre équipe."
+msgstr "with AI — tailored to you, using your tools and your team."
+
+msgid "Avec nous"
+msgstr "With us"
+
+msgid "avril"
+msgstr "April"
+
+msgid "Basé au Québec"
+msgstr "Based in Quebec"
+
+msgid "bâtir ensuite."
+msgstr "build next."
+
+msgid "Beaucoup de réservations aujourd’hui. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243."
+msgstr "Lots of bookings today. Email us at info@viesolutionweb.ca or call (438) 506-5243."
+
+msgid "Besoin"
+msgstr "Need"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Bonjour 👋 Je suis l'assistant de Vie Solution Web. Comment puis-je vous aider aujourd'hui ?"
+msgstr "Hello 👋 I'm the Vie Solution Web assistant. How can I help you today?"
+
+msgid "Bonjour 👋 Je suis l'assistant IA de Vie Solution Web. Posez-moi vos questions sur nos services, ou choisissez une option. Je peux aussi transmettre une demande de rendez-vous."
+msgstr "Hello 👋 I'm the Vie Solution Web AI assistant. Ask me about our services, or pick an option. I can also pass along an appointment request."
+
+msgid "Bonne nouvelle : c'est la question qu'on préfère ! 😊 Pas besoin d'être techno. On commence souvent par une seule chose. Qu'est-ce qui vous prend le plus de temps ?"
+msgstr "Good news: that's the question we like best! 😊 You don't need to be tech-savvy. We often start with just one thing. What takes up the most of your time?"
+
+msgid "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à info@viesolutionweb.ca."
+msgstr "Good question! For a precise answer, the easiest way is to talk it over — the discovery call is free — or to write to us at info@viesolutionweb.ca."
+
+msgid "Bonnes pratiques & limites"
+msgstr "Best practices and limits"
+
+msgid "Bonnes pratiques et limites"
+msgstr "Best practices and limits"
+
+msgid "Books (factures)"
+msgstr "Books (invoices)"
+
+msgid "C'est aussi pour vous. Ces outils sont aujourd'hui abordables et pensés aussi pour les petites entreprises et les travailleurs autonomes. Une petite équipe a même souvent plus à gagner : chaque heure sauvée compte. On adapte tout à votre taille."
+msgstr "It's for you too. These tools are now affordable and designed for small businesses and self-employed professionals as well. A small team often has even more to gain: every hour saved counts. We tailor everything to your size."
+
+msgid "C'est court, promis. On vous revient sous 24h ouvrables avec une première idée de premier pas."
+msgstr "It's short, promise. We'll get back to you within 24 business hours with a first idea for a first step."
+
+msgid "C’est pour vous si…"
+msgstr "This is for you if…"
+
+msgid "C'est quoi l'AEO ?"
+msgstr "What is AEO?"
+
+msgid "C'est réservé : {quand}. L'invitation avec le lien Google Meet arrive dans votre courriel. Au plaisir de vous parler !"
+msgstr "It's booked: {quand}. The invitation with the Google Meet link will arrive in your email. Looking forward to talking with you!"
+
+msgid "C'est souvent la meilleure idée. On choisit une seule chose — votre facturation, vos courriels, votre liste de clients — et on la règle. Vous voyez la différence, puis vous décidez librement de la suite."
+msgstr "That's often the best idea. We pick one thing — your invoicing, your emails, your client list — and sort it out. You see the difference, then you freely decide what comes next."
+
+msgid "Ça doit coûter une fortune ?"
+msgstr "Doesn't it cost a fortune?"
+
+msgid "Ça peut rester simple : on commence par un premier pas, et on en discute à l'appel découverte gratuit. Le prix est toujours sur mesure, donné par écrit avant de commencer, sans frais cachés."
+msgstr "It can stay simple: we start with a first step and talk it over on the free discovery call. The price is always tailored, given in writing before we begin, with no hidden fees."
+
+msgid "Cabinet comptable"
+msgstr "Accounting firm"
+
+msgid "Campaigns (infolettres)"
+msgstr "Campaigns (newsletters)"
+
+msgid "Carnet de clients (CRM)"
+msgstr "Client book (CRM)"
+
+msgid "Ce créneau vient d’être pris. Choisissez-en un autre."
+msgstr "This time slot was just taken. Please choose another one."
+
+msgid "Ce qu'on a déjà bâti : sites et CRM sur mesure"
+msgstr "What we've already built: custom websites and CRMs"
+
+msgid "Ce qu'on améliore"
+msgstr "What we improve"
+
+msgid "Ce qu'on bâtit"
+msgstr "What we build"
+
+msgid "Ce qu'on change dans votre journée."
+msgstr "What we change in your day."
+
+msgid "Ce qu'on installe"
+msgstr "What we set up"
+
+msgid "Ce qu'on vous promet,"
+msgstr "What we promise you,"
+
+msgid "Ce qui engage votre jugement professionnel, un conseil ou une réponse personnalisée, n’est jamais envoyé sans votre validation."
+msgstr "Anything that involves your professional judgment, advice or a personalized answer is never sent without your approval."
+
+msgid "Ce qui fait varier le prix"
+msgstr "What makes the price vary"
+
+msgid "Ce qui vous gruge"
+msgstr "What wears you down"
+
+msgid "Ce qui vous prend le plus de temps"
+msgstr "What takes up the most of your time"
+
+msgid "Chaque client reçoit son suivi au bon moment, et retrouve un conseiller qui se souvient de sa situation."
+msgstr "Each client gets follow-up at the right time and finds an advisor who remembers their situation."
+
+msgid "Chaque demande reçoit une réponse rapide, et chaque acheteur ou vendeur est suivi jusqu'au bout."
+msgstr "Every inquiry gets a quick answer, and every buyer or seller is followed all the way through."
+
+msgid "Chaque entreprise est différente, alors chaque prix l'est aussi. On regarde votre situation, on vous propose un premier pas, et vous connaissez le prix avant de dire oui. Pas de frais cachés."
+msgstr "Every business is different, so every price is too. We look at your situation, suggest a first step, and you know the price before you say yes. No hidden fees."
+
+msgid "chaque information entre une seule fois"
+msgstr "each piece of information is entered only once"
+
+msgid "Chargement des créneaux libres…"
+msgstr "Loading free time slots…"
+
+msgid "ChatGPT"
+msgstr "ChatGPT"
+
+msgid "Choisissez votre métier"
+msgstr "Choose your industry"
+
+msgid "Choisissez votre métier (ou « Autre »)"
+msgstr "Choose your industry (or \"Other\")"
+
+msgid "Choix de l’outil"
+msgstr "Choice of tool"
+
+msgid "clair et prévisible."
+msgstr "clear and predictable."
+
+msgid "Claude ou ChatGPT installés, tâches qui roulent seules"
+msgstr "Claude or ChatGPT set up, tasks that run on their own"
+
+msgid "Clavardage"
+msgstr "Chat"
+
+msgid "Clavardage client"
+msgstr "Client chat"
+
+msgid "Clients"
+msgstr "Clients"
+
+msgid "Clients mieux servis"
+msgstr "Clients served better"
+
+msgid "Clients, en simple"
+msgstr "Clients, made simple"
+
+msgid "Clinique de soins"
+msgstr "Care clinic"
+
+msgid "Clinique dentaire"
+msgstr "Dental clinic"
+
+msgid "Clinique dentaire · site web"
+msgstr "Dental clinic · website"
+
+msgid "Coaching"
+msgstr "Coaching"
+
+msgid "Collecte de documents"
+msgstr "Document collection"
+
+msgid "Combien ça coûte ?"
+msgstr "How much does it cost?"
+
+msgid "Combien de temps ça va me demander ?"
+msgstr "How much of my time will it take?"
+
+msgid "Combien de temps prend une implantation Zoho ?"
+msgstr "How long does a Zoho implementation take?"
+
+msgid "Comment l'IA améliore votre travail"
+msgstr "How AI improves your work"
+
+msgid "Comment on établit un prix"
+msgstr "How we set a price"
+
+msgid "Commerce de détail ou restauration"
+msgstr "Retail or restaurant"
+
+msgid "Commerce ou restaurant"
+msgstr "Shop or restaurant"
+
+msgid "Comprendre d'abord,"
+msgstr "Understand first,"
+
+msgid "Comptabilité et tenue de livres"
+msgstr "Accounting and bookkeeping"
+
+msgid "Concentrez-vous sur votre vrai métier. IA, Zoho, sites web et CRM sur mesure : on choisit les bons outils, on les installe et on vous forme. On s'occupe de la technique."
+msgstr "Focus on your real work. AI, Zoho, websites and custom CRMs: we choose the right tools, set them up and train you. We take care of the technical side."
+
+msgid "Conditions d'utilisation"
+msgstr "Terms of use"
+
+msgid "Confidentialité"
+msgstr "Privacy"
+
+msgid "Configuration de base"
+msgstr "Basic setup"
+
+msgid "Configuration IA de base"
+msgstr "Basic AI setup"
+
+msgid "Confirmé"
+msgstr "Confirmed"
+
+msgid "Connexion à vos outils"
+msgstr "Connecting your tools"
+
+msgid "Conseiller en sécurité financière"
+msgstr "Financial security advisor"
+
+msgid "Conseiller financier"
+msgstr "Financial advisor"
+
+msgid "Construction et rénovation"
+msgstr "Construction and renovation"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Contact direct"
+msgstr "Direct contact"
+
+msgid "Contexte, objectifs, délais souhaités…"
+msgstr "Context, goals, desired timelines…"
+
+msgid "Corriger"
+msgstr "Fix"
+
+msgid "Couper le son"
+msgstr "Mute"
+
+msgid "Courir après les documents manquants et relancer les dossiers en attente vous occupe plus que le conseil lui-même."
+msgstr "Chasing missing documents and following up on pending files takes more of your time than the advice itself."
+
+msgid "Courriel"
+msgstr "Email"
+
+msgid "Courriel reçu"
+msgstr "Email received"
+
+msgid "Courriels types"
+msgstr "Email templates"
+
+msgid "Courtier hypothécaire"
+msgstr "Mortgage broker"
+
+msgid "créer ou à refaire"
+msgstr "built or rebuilt"
+
+msgid "CRM et outils sur mesure"
+msgstr "CRM and custom tools"
+
+msgid "CRM maison"
+msgstr "In-house CRM"
+
+msgid "CRM sur mesure"
+msgstr "Custom CRM"
+
+msgid "CRM, Books, Desk, Campaigns : clients, factures et suivi au même endroit"
+msgstr "CRM, Books, Desk, Campaigns: clients, invoices and follow-up in one place"
+
+msgid "CRM, facturation, soutien client, marketing, inventaire : Zoho réunit toute la gestion de votre entreprise dans une seule plateforme abordable (des logiciels qui se parlent)."
+msgstr "CRM, invoicing, customer support, marketing, inventory: Zoho brings all of your business management together in a single affordable platform (software that talks to each other)."
+
+msgid "Croissance"
+msgstr "Growth"
+
+msgid "D'accord ! Écrivez-moi ce qu'il faut corriger."
+msgstr "Of course! Tell me what needs fixing."
+
+msgid "De quoi voulez-vous parler ?"
+msgstr "What would you like to talk about?"
+
+msgid "décembre"
+msgstr "December"
+
+msgid "Décrire ma situation par écrit"
+msgstr "Describe my situation in writing"
+
+msgid "Décrivez en quelques mots ce qui vous prend du temps (10 caractères minimum)"
+msgstr "Tell us in a few words what takes up your time (10 characters minimum)"
+
+msgid "Décrivez votre projet"
+msgstr "Describe your project"
+
+msgid "Décrivez-nous votre situation"
+msgstr "Tell us about your situation"
+
+msgid "Demande envoyée"
+msgstr "Request sent"
+
+msgid "Demande envoyée ! On confirme votre créneau par courriel sous 24h ouvrables."
+msgstr "Request sent! We'll confirm your time slot by email within 24 business hours."
+
+msgid "Demande envoyée, merci ! On confirme votre rendez-vous par courriel sous 24 h ouvrables."
+msgstr "Request sent, thank you! We'll confirm your appointment by email within 24 business hours."
+
+msgid "Demander ce créneau"
+msgstr "Request this time slot"
+
+msgid "Démarrer simplement"
+msgstr "Start simply"
+
+msgid "Des ateliers concrets pour utiliser l'IA (comme Claude, ChatGPT ou Copilot) au quotidien : courriels, documents, suivi des clients. Avec vos vrais dossiers, sans jargon, et en sachant ce qu'on ne confie pas à une IA."
+msgstr "Hands-on workshops for using AI (like Claude, ChatGPT or Copilot) in your daily work: emails, documents, client follow-up. With your real files, no jargon, and knowing what not to hand over to an AI."
+
+msgid "des clients mieux servis, plus vite."
+msgstr "with clients served better and faster."
+
+msgid "Des dossiers complets du premier coup"
+msgstr "Complete files the first time"
+
+msgid "Des entreprises d'ici"
+msgstr "Businesses from here"
+
+msgid "Des entreprises québécoises qui travaillent déjà avec nous."
+msgstr "Quebec businesses already working with us."
+
+msgid "Des explications claires, en français"
+msgstr "Clear explanations, in French"
+
+msgid "Des factures propres, envoyées plus vite, et un œil clair sur qui vous doit quoi."
+msgstr "Clean invoices sent faster, and a clear view of who owes you what."
+
+msgid "Des factures qui partent et se relancent toutes seules."
+msgstr "Invoices that go out and follow up on their own."
+
+msgid "Des outils IA installés et bâtis pour vous"
+msgstr "AI tools installed and built for you"
+
+msgid "Des outils que vous maîtrisez (IA + Zoho)"
+msgstr "Tools you understand (AI + Zoho)"
+
+msgid "Des projets réels, livrés à des entreprises québécoises. Cliquez sur un logo pour visiter leur site."
+msgstr "Real projects delivered to Quebec businesses. Click a logo to visit their site."
+
+msgid "des réponses plus rapides, par les mêmes personnes"
+msgstr "faster answers, from the same people"
+
+msgid "Des sites"
+msgstr "Websites"
+
+msgid "Desk (soutien)"
+msgstr "Desk (support)"
+
+msgid "Deux expertises, un studio"
+msgstr "Two areas of expertise, one studio"
+
+msgid "Dim"
+msgstr "Sun"
+
+msgid "Dites-nous ce qui"
+msgstr "Tell us what's"
+
+msgid "Dossier client unique"
+msgstr "One client file"
+
+msgid "Du temps et de l’argent réellement gagnés"
+msgstr "Time and money you really save"
+
+msgid "Échangeons sur votre projet, vos objectifs et votre contexte. Sans engagement, en visio ou par téléphone. Vous repartez avec une vision claire des prochaines étapes."
+msgstr "Let's talk about your project, your goals and your context. No commitment, by video or phone. You leave with a clear picture of the next steps."
+
+msgid "Écran « {titre} » de l’outil de {client}"
+msgstr "\"{titre}\" screen from {client}'s tool"
+
+msgid "Écrivez à Vie Solution Web : automatisation, agents IA, implantation Zoho et formation. Réponse sous 24h ouvrables."
+msgstr "Write to Vie Solution Web: automation, AI agents, Zoho implementation and training. We reply within 24 business hours."
+
+msgid "Éducation financière indépendante pour les familles du Québec (Longueuil)."
+msgstr "Independent financial education for Quebec families (Longueuil)."
+
+msgid "Emplois"
+msgstr "Careers"
+
+msgid "En 1 minute"
+msgstr "In 1 minute"
+
+msgid "En 1 minute : ce qui gruge le temps d'une entreprise, ce qu'on installe (demandes, CRM, IA, Zoho) et ce que ça change."
+msgstr "In 1 minute: what eats up a business's time, what we set up (inquiries, CRM, AI, Zoho) and what it changes."
+
+msgid "En cliquant sur « Envoyer ma demande », vous acceptez que Vie Solution Web utilise ces renseignements pour vous recontacter."
+msgstr "By clicking \"Send my request\", you agree that Vie Solution Web may use this information to get back to you."
+
+msgid "En français, sans jargon"
+msgstr "In French, without jargon"
+
+msgid "En ligne"
+msgstr "Online"
+
+msgid "En période de pointe, vous passez vos journées à réclamer des pièces justificatives à vos clients."
+msgstr "In peak season, you spend your days asking clients for supporting documents."
+
+msgid "En savoir plus"
+msgstr "Learn more"
+
+msgid "En vedette"
+msgstr "Featured"
+
+msgid "Entre deux traitements, vous rappelez des clients, confirmez des plages libres et répondez aux mêmes questions."
+msgstr "Between treatments, you call clients back, confirm open slots and answer the same questions."
+
+msgid "Entre le comptoir et les fournisseurs, les courriels, les réservations et les avis en ligne s'accumulent."
+msgstr "Between the counter and the suppliers, emails, bookings and online reviews pile up."
+
+msgid "Entrepreneur en construction"
+msgstr "Construction contractor"
+
+msgid "Entreprise"
+msgstr "Business"
+
+msgid "Entretien mensuel"
+msgstr "Monthly maintenance"
+
+msgid "Envoi…"
+msgstr "Sending…"
+
+msgid "envoyé à J+7"
+msgstr "sent on day 7"
+
+msgid "Envoyée lundi"
+msgstr "Sent Monday"
+
+msgid "Envoyer"
+msgstr "Send"
+
+msgid "Envoyer le message"
+msgstr "Send the message"
+
+msgid "Envoyer ma demande"
+msgstr "Send my request"
+
+msgid "Envoyer ma situation"
+msgstr "Send my situation"
+
+msgid "Équipe"
+msgstr "Team"
+
+msgid "Équipes"
+msgstr "Teams"
+
+msgid "Essentiel"
+msgstr "Essential"
+
+msgid "est un studio indépendant qui accompagne particuliers, travailleurs autonomes et PME dans leur transition numérique. Notre approche : comprendre d'abord, bâtir ensuite."
+msgstr "is an independent studio that supports individuals, self-employed professionals and small businesses through their digital transition. Our approach: understand first, build next."
+
+msgid "Est-ce que ça convient à un cabinet réglementé (finance, santé) ?"
+msgstr "Is this suitable for a regulated practice (finance, health)?"
+
+msgid "et à retrouver du temps ? Un appel de 30 minutes, gratuit et sans engagement."
+msgstr "and get your time back? A free 30-minute call, with no commitment."
+
+msgid "Et mes données dans tout ça ?"
+msgstr "What about my data?"
+
+msgid "et qu'on tient."
+msgstr "and keep."
+
+msgid "Et si je veux juste commencer petit ?"
+msgstr "What if I just want to start small?"
+
+msgid "Étape {num}"
+msgstr "Step {num}"
+
+msgid "Être trouvé sur Google et par les IA"
+msgstr "Be found on Google and by AI"
+
+msgid "Évolution par étapes"
+msgstr "Step-by-step growth"
+
+msgid "Ex. : les relances de clients, les factures, les courriels qui reviennent chaque semaine… Dites-nous aussi quels outils vous utilisez déjà (Excel, Zoho, un autre logiciel)."
+msgstr "E.g. client follow-ups, invoices, the emails that come back every week… Also tell us which tools you already use (Excel, Zoho, another program)."
+
+msgid "Excellente idée ! Je vous redirige vers notre calendrier pour choisir un créneau (appel de 30 min, gratuit)."
+msgstr "Great idea! I'll send you to our calendar to pick a time slot (30-minute call, free)."
+
+msgid "Exemples adaptés à votre métier"
+msgstr "Examples suited to your industry"
+
+msgid "Exemples tirés de votre métier"
+msgstr "Examples drawn from your industry"
+
+msgid "Facturation"
+msgstr "Invoicing"
+
+msgid "Facturation (Books)"
+msgstr "Invoicing (Books)"
+
+msgid "Facturation simplifiée"
+msgstr "Simplified invoicing"
+
+msgid "Facture 1042"
+msgstr "Invoice 1042"
+
+msgid "Fait"
+msgstr "Done"
+
+msgid "FAQ"
+msgstr "FAQ"
+
+msgid "Fermer l'assistant"
+msgstr "Close the assistant"
+
+msgid "février"
+msgstr "February"
+
+msgid "Fiche d’entreprise"
+msgstr "Business profile"
+
+msgid "Forfaits mensuels"
+msgstr "Monthly plans"
+
+msgid "Formation"
+msgstr "Training"
+
+msgid "Formation & adoption"
+msgstr "Training and adoption"
+
+msgid "Formation & suivi"
+msgstr "Training and follow-up"
+
+msgid "Formation à l'IA pour petites entreprises"
+msgstr "AI training for small businesses"
+
+msgid "Formation courte"
+msgstr "Short training"
+
+msgid "Formation de l'équipe"
+msgstr "Team training"
+
+msgid "Formation donnée par Camille Yvan Mbiakop, qui a suivi le cours « AI Fluency for small businesses » de Claude Academy (Anthropic)."
+msgstr "Training given by Camille Yvan Mbiakop, who completed the \"AI Fluency for small businesses\" course from Claude Academy (Anthropic)."
+
+msgid "Formation et accompagnement continus"
+msgstr "Ongoing training and support"
+
+msgid "Formation IA"
+msgstr "AI training"
+
+msgid "Formation IA / Zoho"
+msgstr "AI / Zoho training"
+
+msgid "Formation pratique"
+msgstr "Hands-on training"
+
+msgid "Formation Zoho"
+msgstr "Zoho training"
+
+msgid "Formations trimestrielles de votre équipe"
+msgstr "Quarterly training for your team"
+
+msgid "Formulaire de contact relié à vos outils"
+msgstr "Contact form connected to your tools"
+
+msgid "Formulaires en ligne"
+msgstr "Online forms"
+
+msgid "Formulaires reliés à vos outils"
+msgstr "Forms connected to your tools"
+
+msgid "franchement"
+msgstr "honestly"
+
+msgid "Gagné ✓"
+msgstr "Won ✓"
+
+msgid "Google Meet (lien envoyé par courriel)"
+msgstr "Google Meet (link sent by email)"
+
+msgid "Google Meet ou téléphone"
+msgstr "Google Meet or phone"
+
+msgid "gratuit, {n} minutes."
+msgstr "{n} minutes."
+
+msgid "gratuit, 30 minutes."
+msgstr "30 minutes."
+
+msgid "Gratuit, sans engagement. On regarde votre situation ensemble, puis vous recevez une proposition écrite."
+msgstr "Free, no commitment. We look at your situation together, then you receive a written proposal."
+
+msgid "IA + Zoho"
+msgstr "AI + Zoho"
+
+msgid "IA et automatisation"
+msgstr "AI and automation"
+
+msgid "IA qui prend les rendez-vous (clavardage ou téléphone)"
+msgstr "AI that books appointments (chat or phone)"
+
+msgid "Identification des gains"
+msgstr "Spotting the gains"
+
+msgid "Illustration : facture envoyée et payée, avec rappel automatique"
+msgstr "Illustration: an invoice sent and paid, with an automatic reminder"
+
+msgid "Illustration : suivi des ventes en colonnes — nouveaux, rendez-vous, soumission, clients"
+msgstr "Illustration: sales follow-up in columns — new, appointments, quote, clients"
+
+msgid "Illustration : tableau de bord avec trois chiffres et un graphique des ventes"
+msgstr "Illustration: a dashboard with three figures and a sales chart"
+
+msgid "Ils nous font confiance"
+msgstr "They trust us"
+
+msgid "Ils ont repris"
+msgstr "They took back"
+
+msgid "Implantation"
+msgstr "Implementation"
+
+msgid "Implantation sur mesure"
+msgstr "Custom implementation"
+
+msgid "Implantation Zoho"
+msgstr "Zoho implementation"
+
+msgid "Implantation, configuration et formation Zoho (CRM, Books, Desk, Campaigns) chez les PME québécoises. Votre gestion centralisée au même endroit."
+msgstr "Zoho implementation, setup and training (CRM, Books, Desk, Campaigns) for Quebec small businesses. Your management centralized in one place."
+
+msgid "Import de votre liste de clients"
+msgstr "Import of your client list"
+
+msgid "Indiquez votre nom et votre courriel pour confirmer."
+msgstr "Enter your name and email to confirm."
+
+msgid "Indiquez votre nom et votre courriel pour réserver."
+msgstr "Enter your name and email to book."
+
+msgid "Infolettre simple"
+msgstr "Simple newsletter"
+
+msgid "Installation de Claude"
+msgstr "Claude installation"
+
+msgid "Installation de Claude ou ChatGPT pour votre équipe"
+msgstr "Claude or ChatGPT installed for your team"
+
+msgid "Installation et réglages avec vous"
+msgstr "Installation and settings, done with you"
+
+msgid "Intelligence artificielle"
+msgstr "Artificial intelligence"
+
+msgid "J'ai déjà un logiciel pour mes clients. Faut-il tout changer ?"
+msgstr "I already have software for my clients. Do I have to change everything?"
+
+msgid "janvier"
+msgstr "January"
+
+msgid "Je ne sais pas par où commencer"
+msgstr "I don't know where to start"
+
+msgid "Je ne suis pas techno. Est-ce que c'est pour moi ?"
+msgstr "I'm not tech-savvy. Is this for me?"
+
+msgid "Je préfère en parler"
+msgstr "I'd rather talk about it"
+
+msgid "Je suis…"
+msgstr "I am…"
+
+msgid "Jean Tremblay"
+msgstr "Jean Tremblay"
+
+msgid "jean@exemple.ca"
+msgstr "jean@exemple.ca"
+
+msgid "Jeu"
+msgstr "Thu"
+
+msgid "Jeudi 10 h"
+msgstr "Thursday 10 a.m."
+
+msgid "juillet"
+msgstr "July"
+
+msgid "juin"
+msgstr "June"
+
+msgid "Jus naturels artisanaux de Marieville, en ligne et dans les marchés publics."
+msgstr "Artisanal natural juices from Marieville, online and at public markets."
+
+msgid "L'AEO (optimisation pour les moteurs de réponses) aide votre entreprise à être citée quand quelqu'un pose une question à un assistant IA comme ChatGPT, Claude ou Perplexity, ou dans les réponses IA de Google. C'est le prolongement du SEO, qui vous aide à être trouvé sur Google. On travaille les deux : un site clair, des réponses aux vraies questions de vos clients et des informations que les machines savent lire."
+msgstr "AEO (answer engine optimization) helps your business get cited when someone asks an AI assistant like ChatGPT, Claude or Perplexity a question, or in Google's AI answers. It extends SEO, which helps you get found on Google. We work on both: a clear website, answers to your clients' real questions and information that machines can read."
+
+msgid "L’ampleur du premier pas (une tâche ou plusieurs)"
+msgstr "The size of the first step (one task or several)"
+
+msgid "L'assistant écrit"
+msgstr "The assistant writes"
+
+msgid "L'envoi n'a pas fonctionné. Réessayez, ou choisissez votre heure dans le calendrier."
+msgstr "The message did not go through. Try again, or pick your time in the calendar."
+
+msgid "L'IA dans votre quotidien."
+msgstr "AI in your daily life."
+
+msgid "L'IA et Zoho, ce n'est pas pour les grosses compagnies ?"
+msgstr "Isn't AI and Zoho for big companies?"
+
+msgid "L'IA qui travaille"
+msgstr "AI that works"
+
+msgid "L'IA, c'est vraiment utile pour une petite entreprise ?"
+msgstr "Is AI really useful for a small business?"
+
+msgid "La description est trop longue."
+msgstr "The description is too long."
+
+msgid "La facture part toute seule à la fin du travail. Vous la vérifiez d’un clic."
+msgstr "The invoice goes out on its own at the end of the job. You check it with one click."
+
+msgid "La formation : pour vous seul ou pour une équipe"
+msgstr "Training: for you alone or for a team"
+
+msgid "La réservation en ligne est indisponible. Écrivez-nous à info@viesolutionweb.ca."
+msgstr "Online booking is unavailable. Email us at info@viesolutionweb.ca."
+
+msgid "La réservation n’a pas pu être faite."
+msgstr "The booking could not be made."
+
+msgid "La réservation n’a pas pu être faite. Réessayez dans quelques minutes, ou écrivez-nous à info@viesolutionweb.ca."
+msgstr "The booking could not be made. Try again in a few minutes, or email us at info@viesolutionweb.ca."
+
+msgid "Laisser un avis"
+msgstr "Leave a review"
+
+msgid "le contrôle."
+msgstr "control."
+
+msgid "Le message doit contenir au moins 10 caractères"
+msgstr "The message must contain at least 10 characters"
+
+msgid "Le moment souhaité est trop long."
+msgstr "The preferred time is too long."
+
+msgid "Le nom doit contenir au moins 2 caractères"
+msgstr "The name must contain at least 2 characters"
+
+msgid "Le prix de chaque forfait est établi après l'appel découverte, avant tout engagement."
+msgstr "The price of each plan is set after the discovery call, before any commitment."
+
+msgid "Le prix est fixé avant de commencer"
+msgstr "The price is set before we begin"
+
+msgid "Le temps retrouvé"
+msgstr "The time you get back"
+
+msgid "Le transfert de vos données existantes"
+msgstr "Transferring your existing data"
+
+msgid "Leads"
+msgstr "Leads"
+
+msgid "Lecture"
+msgstr "Play"
+
+msgid "Les créneaux libres de notre agenda (heure de Montréal)"
+msgstr "Free slots in our calendar (Montreal time)"
+
+msgid "Les demandes d'information arrivent à toute heure, et le suivi de chaque acheteur ou vendeur repose sur votre mémoire."
+msgstr "Inquiries come in at all hours, and following up with each buyer or seller depends on your memory."
+
+msgid "Les demandes de vos clients, chacune suivie jusqu’à sa réponse."
+msgstr "Your clients' requests, each one followed until it is answered."
+
+msgid "Les dossiers de vos clients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins."
+msgstr "Your clients' files are sensitive information, handled under Quebec's Law 25. The tools take care of administration, never of care."
+
+msgid "Les dossiers de vos patients sont des renseignements sensibles, traités selon la Loi 25. Les outils s'occupent de l'administration, jamais des soins."
+msgstr "Your patients' files are sensitive information, handled under Quebec's Law 25. The tools take care of administration, never of care."
+
+msgid "Les logiciels à relier entre eux"
+msgstr "The software to connect to each other"
+
+msgid "Les logiciels existent déjà : Zoho, Claude et bien d'autres. Nous, on choisit les bons pour vous, on les installe, on les relie et on vous forme. Et quand rien n'existe, on le bâtit : votre site, votre CRM, vos outils."
+msgstr "The software already exists: Zoho, Claude and many others. We choose the right ones for you, set them up, connect them and train you. And when nothing exists, we build it: your website, your CRM, your tools."
+
+msgid "Les logiciels existent déjà. Notre travail : choisir avec vous les bons, les installer, les relier et vous former."
+msgstr "The software already exists. Our job: choose the right ones with you, install them, connect them and train you."
+
+msgid "Les logiciels Zoho, par besoin"
+msgstr "Zoho software, by need"
+
+msgid "Les outils Zoho"
+msgstr "Zoho tools"
+
+msgid "Les pièces justificatives arrivent au bon endroit"
+msgstr "Supporting documents arrive in the right place"
+
+msgid "Les rappels de rendez-vous, les confirmations et les formulaires de nouveaux patients occupent votre réception toute la journée."
+msgstr "Appointment reminders, confirmations and new-patient forms keep your front desk busy all day."
+
+msgid "Les soumissions se tapent le soir, et les relances de clients ou de paiements passent entre les mailles."
+msgstr "Quotes get typed up in the evening, and client or payment follow-ups slip through the cracks."
+
+msgid "Les suivis annuels, les notes de rencontre et les documents de conformité vous prennent des soirées entières."
+msgstr "Annual follow-ups, meeting notes and compliance documents take up whole evenings."
+
+msgid "Liens"
+msgstr "Links"
+
+msgid "Liens avec vos outils"
+msgstr "Links to your tools"
+
+msgid "Liens entre vos outils"
+msgstr "Links between your tools"
+
+msgid "Liste de documents à fournir"
+msgstr "List of documents to provide"
+
+msgid "Lun"
+msgstr "Mon"
+
+msgid "Lun-Ven, 9h-17h (HE)"
+msgstr "Mon-Fri, 9 a.m.-5 p.m. (ET)"
+
+msgid "mai"
+msgstr "May"
+
+msgid "Mar"
+msgstr "Tue"
+
+msgid "Marketing"
+msgstr "Marketing"
+
+msgid "mars"
+msgstr "March"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Mer"
+msgstr "Wed"
+
+msgid "Merci !"
+msgstr "Thank you!"
+
+msgid "Mes clients vont-ils parler à un robot ?"
+msgstr "Will my clients talk to a robot?"
+
+msgid "Mes courriels et mes textes"
+msgstr "My emails and my texts"
+
+msgid "Mes factures et mes clients"
+msgstr "My invoices and my clients"
+
+msgid "Message envoyé"
+msgstr "Message sent"
+
+msgid "Métiers"
+msgstr "Industries"
+
+msgid "mieux servir vos clients"
+msgstr "serve your clients better"
+
+msgid "Mise en place d’un logiciel de gestion (Zoho ou CRM sur mesure)"
+msgstr "Setting up management software (Zoho or custom CRM)"
+
+msgid "Modèles de factures à votre image"
+msgstr "Invoice templates in your style"
+
+msgid "Moins de ressaisie"
+msgstr "Less re-entering"
+
+msgid "Mois précédent"
+msgstr "Previous month"
+
+msgid "Mois suivant"
+msgstr "Next month"
+
+msgid "Moment souhaité"
+msgstr "Preferred time"
+
+msgid "Navigation principale"
+msgstr "Main navigation"
+
+msgid "Neuf façons de vous"
+msgstr "Nine ways to"
+
+msgid "Nom"
+msgstr "Name"
+
+msgid "Nom complet"
+msgstr "Full name"
+
+msgid "Non précisé"
+msgstr "Not specified"
+
+msgid "Nos formations IA et Zoho : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."
+msgstr "Our AI and Zoho training: hands-on workshops, use cases from your industry, and follow-up until your team is self-sufficient. The price is tailored: we give it to you in writing, before we begin."
+
+msgid "nos réponses franches."
+msgstr "our straight answers."
+
+msgid "Nos solutions"
+msgstr "Our solutions"
+
+msgid "Notes de rencontre préparées"
+msgstr "Meeting notes prepared"
+
+msgid "Notre conviction est simple : les outils d'aujourd'hui — l'intelligence artificielle et les logiciels Zoho — permettent à n'importe quelle entreprise de reprendre le contrôle de sa gestion, sans armée de consultants ni budgets démesurés."
+msgstr "Our conviction is simple: today's tools — artificial intelligence and Zoho software — let any business take back control of its management, without an army of consultants or oversized budgets."
+
+msgid "Notre processus"
+msgstr "Our process"
+
+msgid "Nous joindre"
+msgstr "Reach us"
+
+msgid "nous ont fait confiance."
+msgstr "have trusted us."
+
+msgid "Nous sommes là pour"
+msgstr "We're here to"
+
+msgid "Nouveau"
+msgstr "New"
+
+msgid "Nouveaux"
+msgstr "New"
+
+msgid "nouvel onglet"
+msgstr "new tab"
+
+msgid "Nouvelle demande"
+msgstr "New request"
+
+msgid "Nouvelles automatisations chaque mois"
+msgstr "New automations every month"
+
+msgid "novembre"
+msgstr "November"
+
+msgid "octobre"
+msgstr "October"
+
+msgid "offre de stage"
+msgstr "internship opportunity"
+
+msgid "On avance une étape à la fois. On choisit avec vous une seule chose qui vous fera gagner du temps, on la met en place, et on vous montre comment l'utiliser. Le reste viendra quand vous serez prêt."
+msgstr "We move one step at a time. We choose with you one thing that will save you time, we set it up, and we show you how to use it. The rest will come when you're ready."
+
+msgid "On choisit avec vous un premier usage simple, et on vous forme."
+msgstr "We choose a first simple use with you, and we train you."
+
+msgid "On choisit l’outil avec vous et on le configure pour votre façon de travailler."
+msgstr "We choose the tool with you and set it up for the way you work."
+
+msgid "on choisit les bons, on les règle selon votre façon de travailler et on forme votre équipe pour qu'elle en garde le contrôle."
+msgstr "we choose the right ones, set them up for the way you work and train your team so they stay in control."
+
+msgid "On commence petit : un premier pas, à votre rythme."
+msgstr "We start small: a first step, at your own pace."
+
+msgid "On commence petit."
+msgstr "We start small."
+
+msgid "On commence souvent petit : un premier pas, un prix clair, puis on décide de la suite ensemble."
+msgstr "We often start small: a first step, a clear price, then we decide what comes next together."
+
+msgid "On configure les accès selon la Loi 25 et on vous explique clairement où vos données sont hébergées et qui y a accès."
+msgstr "We set up access in line with Law 25 and explain clearly where your data is hosted and who can access it."
+
+msgid "On continue avec vous. Votre équipe est formée jusqu'à l'autonomie, et on reste disponibles pour le support, l'optimisation et l'ajout de nouvelles fonctions ou tâches automatiques à mesure que votre entreprise évolue."
+msgstr "We keep going with you. Your team is trained until they're self-sufficient, and we stay available for support, optimization and adding new features or automated tasks as your business evolves."
+
+msgid "On discute de votre projet, des délais, du budget approximatif et des prochaines étapes si on décide de collaborer."
+msgstr "We talk about your project, timelines, the approximate budget and the next steps if we decide to work together."
+
+msgid "On écoute ce qui vous gruge. Vous restez libre de la suite."
+msgstr "We listen to what wears you down. What comes next is up to you."
+
+msgid "On forme vos équipes à travailler concrètement avec l'IA. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite."
+msgstr "We train your teams to work with AI in practical ways. Hands-on workshops, examples from your industry, so you're self-sufficient afterwards."
+
+msgid "On forme vos équipes à travailler concrètement avec Zoho. Ateliers pratiques, exemples tirés de votre métier, pour être autonome ensuite."
+msgstr "We train your teams to work with Zoho in practical ways. Hands-on workshops, examples from your industry, so you're self-sufficient afterwards."
+
+msgid "On forme votre équipe jusqu'à l'autonomie, puis on reste disponibles pour optimiser et faire évoluer vos outils."
+msgstr "We train your team until they're self-sufficient, then we stay available to optimize and evolve your tools."
+
+msgid "On installe Claude ou ChatGPT pour votre équipe, prêts à l'emploi, ou on bâtit un assistant IA (un programme qui travaille pour vous) branché sur vos outils : il prépare les réponses à vos clients, trie vos documents et suit vos demandes. Vous validez ce qui part."
+msgstr "We install Claude or ChatGPT for your team, ready to use, or we build an AI assistant (a program that works for you) connected to your tools: it prepares replies to your clients, sorts your documents and tracks your requests. You approve what goes out."
+
+msgid "On installe et configure Zoho directement chez vous : transfert de vos données, réglages selon votre façon de travailler, connexions avec vos outils existants."
+msgstr "We install and set up Zoho directly at your business: transfer of your data, settings for the way you work, connections with your existing tools."
+
+msgid "On installe et règle pour votre équipe des outils d'IA comme Claude ou ChatGPT. Et on bâtit sur mesure des assistants et des tâches automatiques qui fonctionnent avec vos outils actuels."
+msgstr "We install and set up AI tools like Claude or ChatGPT for your team. And we build custom assistants and automated tasks that work with your current tools."
+
+msgid "On installe et règle Zoho chez vous : clients, factures, soutien, infolettres. Tout au même endroit, au lieu d'éparpillé dans plusieurs outils."
+msgstr "We install and set up Zoho for you: clients, invoices, support, newsletters. Everything in one place, instead of scattered across several tools."
+
+msgid "On installe un assistant IA (comme ChatGPT ou Claude) et on le règle pour votre entreprise : courriels, soumissions, textes."
+msgstr "We install an AI assistant (like ChatGPT or Claude) and set it up for your business: emails, quotes, texts."
+
+msgid "On installe Zoho, ou on bâtit votre CRM sur mesure, pour vos clients et vos factures. Un seul endroit, au lieu de cinq."
+msgstr "We install Zoho, or build your custom CRM, for your clients and your invoices. One place, instead of five."
+
+msgid "On part de ce que vous avez. Si votre logiciel actuel fait l'affaire, on le garde et on le relie à vos autres outils. S'il vous manque des choses, on peut installer Zoho, ou vous bâtir un outil maison sur mesure. On choisit ensemble, selon votre façon de travailler et votre budget."
+msgstr "We start from what you have. If your current software does the job, we keep it and connect it to your other tools. If something is missing, we can install Zoho, or build you a custom in-house tool. We choose together, based on the way you work and your budget."
+
+msgid "On part de ce que vous avez. Zoho, Claude, votre logiciel actuel ou un outil bâti pour vous : on choisit avec vous ce qui sert votre métier."
+msgstr "We start from what you have. Zoho, Claude, your current software or a tool built for you: we choose with you what serves your business."
+
+msgid "On peut configurer un assistant IA pour votre entreprise et vous montrer comment vous en servir. C'est sur mesure : on en discute lors d'un appel gratuit de 30 minutes."
+msgstr "We can set up an AI assistant for your business and show you how to use it. It's tailored: we'll talk it over on a free 30-minute call."
+
+msgid "On peut mettre en place Zoho pour vos clients et vos factures, tout au même endroit. C'est sur mesure : on en discute lors d'un appel gratuit de 30 minutes."
+msgstr "We can set up Zoho for your clients and your invoices, all in one place. It's tailored: we'll talk it over on a free 30-minute call."
+
+msgid "On peut vous aider de quatre façons : rendre vos tâches automatiques, créer un assistant IA, installer Zoho pour vos clients et vos factures, ou vous former. Qu'est-ce qui vous intéresse ?"
+msgstr "We can help in four ways: make your tasks automatic, create an AI assistant, install Zoho for your clients and invoices, or train you. What interests you?"
+
+msgid "On regarde comment vous travaillez et on repère où l'IA et Zoho vous feront gagner du temps."
+msgstr "We look at how you work and spot where AI and Zoho will save you time."
+
+msgid "On regarde comment vous travaillez, on repère où l'IA vous fait gagner du temps, et on vous accompagne pas à pas pour l'adopter."
+msgstr "We look at how you work, spot where AI saves you time, and support you step by step as you adopt it."
+
+msgid "On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."
+msgstr "We look at how you work, then first automate the tasks that eat up the most of your time. The price is tailored: we give it to you in writing, before we begin."
+
+msgid "On repère trois tâches qui reviennent souvent : courriels, soumissions, résumés. On les simplifie avec l’IA."
+msgstr "We spot three tasks that come up often: emails, quotes, summaries. We simplify them with AI."
+
+msgid "On reste après"
+msgstr "We stay afterwards"
+
+msgid "On revient vers vous sous 24h ouvrables."
+msgstr "We'll get back to you within 24 business hours."
+
+msgid "On vous aide à utiliser l'IA dans votre quotidien, que vous soyez seul ou en équipe. D'abord comprendre, ensuite essayer, puis bâtir ensemble des façons de faire qui vous sauvent du temps."
+msgstr "We help you use AI in your daily work, whether you're on your own or in a team. First understand, then try, then build together ways of working that save you time."
+
+msgid "On vous apprend à vous en servir seul, sans dépendre de nous."
+msgstr "We teach you to use it on your own, without depending on us."
+
+msgid "On vous montre comment."
+msgstr "We show you how."
+
+msgid "On vous montre l’essentiel, avec vos vrais clients. Vous repartez à l’aise."
+msgstr "We show you the essentials, with your real clients. You leave feeling comfortable."
+
+msgid "On vous revient sous 24h ouvrables."
+msgstr "We'll get back to you within 24 business hours."
+
+msgid "Optimisation continue de Zoho"
+msgstr "Ongoing Zoho optimization"
+
+msgid "Oui — c'est même là que les gains sont les plus rapides : réponses aux courriels, relances clients, traitement de documents, soumissions, rapports. On commence par regarder comment vous travaillez pour repérer les tâches qui vous grugent le plus de temps, puis on automatise celles-là en premier."
+msgstr "Yes — that's even where the gains come fastest: email replies, client follow-ups, document handling, quotes, reports. We start by looking at how you work to spot the tasks that eat up the most of your time, then we automate those first."
+
+msgid "Oui. C'est justement pour vous. On s'occupe de la partie technique, et on vous explique le reste en mots simples. Si vous savez envoyer un courriel, vous êtes capable. On avance à votre rythme, et on reste là si vous bloquez."
+msgstr "Yes. It's exactly for you. We take care of the technical part, and we explain the rest in plain words. If you can send an email, you can do this. We go at your pace, and we're there if you get stuck."
+
+msgid "Oui. On tient compte de vos obligations dès le départ : la conformité de votre secteur (par exemple l'AMF en finance) et la Loi 25 pour les renseignements personnels de vos clients. Ce qui engage votre jugement professionnel — un conseil, une réponse personnalisée, une note au dossier — n'est jamais envoyé sans votre validation. Vous décidez de ce qui peut partir seul, comme un simple rappel de rendez-vous."
+msgstr "Yes. We take your obligations into account from the start: the compliance rules of your sector (for example the AMF in finance) and Law 25 for your clients' personal information. Anything that involves your professional judgment — advice, a personalized answer, a note in a file — is never sent without your approval. You decide what can go out on its own, like a simple appointment reminder."
+
+msgid "Outils internes"
+msgstr "Internal tools"
+
+msgid "Ouvrir l'assistant"
+msgstr "Open the assistant"
+
+msgid "Page d'accueil du site {nom}"
+msgstr "Home page of the {nom} website"
+
+msgid "Pages claires"
+msgstr "Clear pages"
+
+msgid "Pages de destination"
+msgstr "Landing pages"
+
+msgid "Par où commencer ?"
+msgstr "Where to start?"
+
+msgid "Parcours par rôle"
+msgstr "Role-based paths"
+
+msgid "Parfait ! Quel type de projet avez-vous en tête ?"
+msgstr "Perfect! What kind of project do you have in mind?"
+
+msgid "Parler de Zoho"
+msgstr "Talk about Zoho"
+
+msgid "Parlons de"
+msgstr "Let's talk about"
+
+msgid "Parlons de votre projet."
+msgstr "Let's talk about your project."
+
+msgid "Partenaire"
+msgstr "Partner"
+
+msgid "Pas de surprise en cours de route : si quelque chose doit changer, on en parle avant, jamais après."
+msgstr "No surprises along the way: if something needs to change, we talk about it before, never after."
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Payée"
+msgstr "Paid"
+
+msgid "Physio, chiro, esthétique, massothérapie"
+msgstr "Physio, chiropractic, aesthetics, massage therapy"
+
+msgid "Plan étape par étape"
+msgstr "Step-by-step plan"
+
+msgid "Plans personnalisés à votre réalité"
+msgstr "Plans tailored to your reality"
+
+msgid "Politique de confidentialité"
+msgstr "Privacy policy"
+
+msgid "Populaire"
+msgstr "Popular"
+
+msgid "Portrait de vos façons de faire"
+msgstr "A picture of how you work"
+
+msgid "Pour accompagner vos clients, pas pour courir après les papiers."
+msgstr "To support your clients, not to chase paperwork."
+
+msgid "Pour analyser et conseiller, plutôt que trier des reçus."
+msgstr "To analyze and advise, rather than sort receipts."
+
+msgid "Pour conseiller vos clients, au lieu de remplir des formulaires."
+msgstr "To advise your clients, instead of filling out forms."
+
+msgid "Pour être avec vos clients et votre équipe, plutôt que derrière un écran."
+msgstr "To be with your clients and your team, rather than behind a screen."
+
+msgid "Pour être sur le chantier le jour, et à la maison le soir."
+msgstr "To be on the job site by day, and at home in the evening."
+
+msgid "Pour faire progresser l'IA et Zoho chaque mois."
+msgstr "To keep improving AI and Zoho every month."
+
+msgid "Pour garder vos automatisations en santé."
+msgstr "To keep your automations healthy."
+
+msgid "Pour les professionnels, les travailleurs autonomes et les PME du Québec"
+msgstr "For professionals, the self-employed and small businesses in Quebec"
+
+msgid "Pour les visites et les gens, pas pour la paperasse."
+msgstr "For the visits and the people, not the paperwork."
+
+msgid "Pour un accompagnement continu, trois niveaux — le bon dépend de votre situation, on le choisit ensemble."
+msgstr "For ongoing support, three levels — the right one depends on your situation, and we choose it together."
+
+msgid "Pour une équipe à la réception qui a enfin le temps d'accueillir."
+msgstr "For a front-desk team that finally has time to welcome people."
+
+msgid "Pour vos clients"
+msgstr "For your clients"
+
+msgid "pour votre entreprise."
+msgstr "for your business."
+
+msgid "Pour votre équipe"
+msgstr "For your team"
+
+msgid "Pour vous consacrer à vos soins, pas à votre agenda."
+msgstr "To focus on your care, not on your schedule."
+
+msgid "Pour vous ou votre équipe"
+msgstr "For you or your team"
+
+msgid "Pour vous seul ou votre équipe"
+msgstr "For you alone or your team"
+
+msgid "pour vous."
+msgstr "for you."
+
+msgid "Pourquoi nous"
+msgstr "Why us"
+
+msgid "Pourquoi Zoho plutôt qu'un autre outil ?"
+msgstr "Why Zoho rather than another tool?"
+
+msgid "Premier pas"
+msgstr "First step"
+
+msgid "Premiers usages guidés"
+msgstr "Guided first uses"
+
+msgid "Prêt à"
+msgstr "Ready to"
+
+msgid "Prise de rendez-vous"
+msgstr "Appointment booking"
+
+msgid "Prise de rendez-vous en ligne"
+msgstr "Online appointment booking"
+
+msgid "Prix"
+msgstr "Pricing"
+
+msgid "Prochaine étape"
+msgstr "Next step"
+
+msgid "Projets"
+msgstr "Projects"
+
+msgid "qu'on a bâtis."
+msgstr "we've built."
+
+msgid "Quand un client cherche votre métier, il demande à Google, mais aussi à ChatGPT, Claude ou Perplexity. On rend votre site clair pour les deux : des réponses aux vraies questions de vos clients, une fiche d'entreprise et des informations que les machines savent lire."
+msgstr "When a client looks for your trade, they ask Google, but also ChatGPT, Claude or Perplexity. We make your website clear for both: answers to your clients' real questions, a business profile and information that machines can read."
+
+msgid "Que se passe-t-il après l'implantation ?"
+msgstr "What happens after the implementation?"
+
+msgid "Québec · Canada"
+msgstr "Quebec · Canada"
+
+msgid "Questions de vos clients"
+msgstr "Your clients' questions"
+
+msgid "Qui sommes-nous"
+msgstr "Who we are"
+
+msgid "Rappel automatique"
+msgstr "Automatic reminder"
+
+msgid "Rappeler demain"
+msgstr "Call back tomorrow"
+
+msgid "Rappels"
+msgstr "Reminders"
+
+msgid "Rappels automatiques"
+msgstr "Automatic reminders"
+
+msgid "Rappels de paiement"
+msgstr "Payment reminders"
+
+msgid "Rappels de rendez-vous"
+msgstr "Appointment reminders"
+
+msgid "Rappels de suivi"
+msgstr "Follow-up reminders"
+
+msgid "Rappels et formulaires envoyés tout seuls"
+msgstr "Reminders and forms sent automatically"
+
+msgid "rappels et relances préparés pour vous"
+msgstr "reminders and follow-ups prepared for you"
+
+msgid "Rapport mensuel simple"
+msgstr "Simple monthly report"
+
+msgid "Rapports"
+msgstr "Reports"
+
+msgid "RDV confirmé"
+msgstr "Appointment confirmed"
+
+msgid "Réalisations"
+msgstr "Our work"
+
+msgid "Référencement SEO et AEO"
+msgstr "SEO and AEO optimization"
+
+msgid "Réglages et transfert de données"
+msgstr "Settings and data transfer"
+
+msgid "Réglages pour votre entreprise"
+msgstr "Settings for your business"
+
+msgid "Relance envoyée"
+msgstr "Follow-up sent"
+
+msgid "Relances"
+msgstr "Follow-ups"
+
+msgid "Relances automatiques"
+msgstr "Automatic follow-ups"
+
+msgid "Relances de paiement"
+msgstr "Payment follow-ups"
+
+msgid "Relances des pièces manquantes"
+msgstr "Follow-ups for missing documents"
+
+msgid "Reliée à vos outils"
+msgstr "Connected to your tools"
+
+msgid "Reliées à vos outils."
+msgstr "Connected to your tools."
+
+msgid "Rencontre mensuelle de suivi"
+msgstr "Monthly follow-up meeting"
+
+msgid "Rendez-vous"
+msgstr "Appointments"
+
+msgid "Réponse sous 24h, du lundi au vendredi. Pour les urgences, privilégiez le téléphone."
+msgstr "Reply within 24 hours, Monday to Friday. For emergencies, please call."
+
+msgid "Réponses aux courriels"
+msgstr "Email replies"
+
+msgid "Réponses aux demandes"
+msgstr "Replies to inquiries"
+
+msgid "Réponses aux questions courantes"
+msgstr "Answers to common questions"
+
+msgid "Réservations et commandes"
+msgstr "Bookings and orders"
+
+msgid "Réservations et rappels sans quitter vos soins"
+msgstr "Bookings and reminders without leaving your patient care"
+
+msgid "Réservations, commandes et courriels sous contrôle"
+msgstr "Bookings, orders and emails under control"
+
+msgid "Réserver ce créneau"
+msgstr "Book this time slot"
+
+msgid "Réserver mon appel gratuit"
+msgstr "Book my free call"
+
+msgid "Réservez un appel découverte gratuit de 30 minutes avec Vie Solution Web : automatisation, IA et implantation Zoho pour votre entreprise."
+msgstr "Book a free 30-minute discovery call with Vie Solution Web: automation, AI and Zoho implementation for your business."
+
+msgid "Réservez votre appel pour continuer"
+msgstr "Book your call to continue"
+
+msgid "Résumés de documents"
+msgstr "Document summaries"
+
+msgid "Sam"
+msgstr "Sat"
+
+msgid "Sans engagement · gratuit"
+msgstr "No commitment · free"
+
+msgid "Sécurité et Loi 25"
+msgstr "Security and Law 25"
+
+msgid "selon votre situation"
+msgstr "based on your situation"
+
+msgid "SEO (Google)"
+msgstr "SEO (Google)"
+
+msgid "septembre"
+msgstr "September"
+
+msgid "Service client"
+msgstr "Customer service"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Seulement si vous le voulez, et seulement pour l'accueil : un assistant peut répondre aux questions fréquentes, prendre un rendez-vous ou un message. Pour tout le reste, c'est à vous qu'ils parlent : l'outil prépare le travail (un brouillon de réponse, un rappel, un résumé de dossier), vous relisez, vous ajustez, vous envoyez."
+msgstr "Only if you want it, and only for the front desk: an assistant can answer common questions, book an appointment or take a message. For everything else, they speak to you: the tool prepares the work (a draft reply, a reminder, a file summary), you review it, adjust it and send it."
+
+msgid "Si vous servez des clients, on regarde ensemble ce qui vous gruge et ce qu'on peut améliorer. Cochez ce qui vous ressemble."
+msgstr "If you serve clients, let's look together at what wears you down and what we can improve. Check what sounds like you."
+
+msgid "Simple, du début"
+msgstr "Simple, from the start"
+
+msgid "simplifier la vie."
+msgstr "make life simpler."
+
+msgid "simplifier votre travail"
+msgstr "simplify your work"
+
+msgid "Site"
+msgstr "Website"
+
+msgid "Site ou application web"
+msgstr "Website or web application"
+
+msgid "Sites et applications web"
+msgstr "Websites and web applications"
+
+msgid "Sites vitrines"
+msgstr "Showcase websites"
+
+msgid "Sites vitrines, pages de destination et applications web pour PME et travailleurs autonomes québécois, reliés à vos outils : formulaires, rendez-vous, carnet de clients."
+msgstr "Showcase websites, landing pages and web applications for Quebec small businesses and self-employed professionals, connected to your tools: forms, appointments, client book."
+
+msgid "Soumission"
+msgstr "Quote"
+
+msgid "Soumissions"
+msgstr "Quotes"
+
+msgid "Soumissions plus rapides"
+msgstr "Faster quotes"
+
+msgid "Soumissions plus rapides, relances qui ne se perdent plus"
+msgstr "Faster quotes, follow-ups that no longer get lost"
+
+msgid "Soutien après le démarrage"
+msgstr "Support after launch"
+
+msgid "Statistiques"
+msgstr "Statistics"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Suivi après la formation"
+msgstr "Follow-up after the training"
+
+msgid "Suivi après la visite"
+msgstr "Follow-up after the visit"
+
+msgid "Suivi automatique"
+msgstr "Automatic follow-up"
+
+msgid "Suivi des acheteurs et vendeurs"
+msgstr "Follow-up with buyers and sellers"
+
+msgid "Suivi des chantiers"
+msgstr "Job site tracking"
+
+msgid "Suivi des demandes"
+msgstr "Request tracking"
+
+msgid "Suivi des dossiers"
+msgstr "File tracking"
+
+msgid "Suivis annuels et conformité, sans y passer vos soirées"
+msgstr "Annual follow-ups and compliance, without giving up your evenings"
+
+msgid "Support continu"
+msgstr "Ongoing support"
+
+msgid "Support courriel prioritaire"
+msgstr "Priority email support"
+
+msgid "Sur mesure"
+msgstr "Tailored"
+
+msgid "Surveillance de vos automatisations"
+msgstr "Monitoring of your automations"
+
+msgid "Tableaux de suivi"
+msgstr "Tracking boards"
+
+msgid "Tâche créée pour 9 h"
+msgstr "Task created for 9 a.m."
+
+msgid "Tâches automatiques"
+msgstr "Automated tasks"
+
+msgid "Tâches automatiques (IA)"
+msgstr "Automated tasks (AI)"
+
+msgid "Tâches automatiques entre logiciels"
+msgstr "Automated tasks between software"
+
+msgid "Tâches automatiques, assistants IA, configuration Zoho : on avance par étapes, en validant chaque étape avec vous."
+msgstr "Automated tasks, AI assistants, Zoho setup: we move forward in steps, checking each step with you."
+
+msgid "Tâches qui s'enchaînent seules"
+msgstr "Tasks that chain together on their own"
+
+msgid "Taxes du Québec configurées"
+msgstr "Quebec taxes set up"
+
+msgid "Téléphone"
+msgstr "Phone"
+
+msgid "Téléphone (facultatif)"
+msgstr "Phone (optional)"
+
+msgid "Témoignages"
+msgstr "Testimonials"
+
+msgid "Temps de réponse"
+msgstr "Response time"
+
+msgid "Tous droits réservés"
+msgstr "All rights reserved"
+
+msgid "Tous les métiers"
+msgstr "All industries"
+
+msgid "Tous les métiers →"
+msgstr "All industries →"
+
+msgid "Tous les services →"
+msgstr "All services →"
+
+msgid "Tous vos clients au même endroit, dans un carnet de clients en ligne."
+msgstr "All your clients in one place, in an online client book."
+
+msgid "Tous vos clients, vos soumissions et vos suivis au même endroit."
+msgstr "All your clients, quotes and follow-ups in one place."
+
+msgid "Tout dépend de la taille de votre entreprise et du nombre de modules. Une implantation de base (CRM + facturation) se fait généralement en 2 à 4 semaines ; une installation complète avec tâches automatiques et transfert de vos données peut prendre 6 à 9 semaines. On vous donne un échéancier clair dès le départ."
+msgstr "It all depends on the size of your business and the number of modules. A basic implementation (CRM + invoicing) generally takes 2 to 4 weeks; a full installation with automated tasks and transfer of your data can take 6 to 9 weeks. We give you a clear timeline from the start."
+
+msgid "Tout est suivi"
+msgstr "Everything is tracked"
+
+msgid "Tout le forfait Croissance"
+msgstr "Everything in the Growth plan"
+
+msgid "Tout le forfait Essentiel"
+msgstr "Everything in the Essential plan"
+
+msgid "Toute votre gestion,"
+msgstr "All your management,"
+
+msgid "Toutes ? On commence par la plus pressante, une étape à la fois."
+msgstr "All of them? We start with the most pressing one, one step at a time."
+
+msgid "Toutes nos réalisations"
+msgstr "All our work"
+
+msgid "Transfert de vos données existantes"
+msgstr "Transfer of your existing data"
+
+msgid "Tri de documents"
+msgstr "Document sorting"
+
+msgid "Trois étapes,"
+msgstr "Three steps,"
+
+msgid "Trois exemples de ce qu'on configure pour vous : le suivi de vos clients, un tableau de bord clair, et des factures qui partent toutes seules. Illustrations avec des données d'exemple."
+msgstr "Three examples of what we set up for you: follow-up with your clients, a clear dashboard, and invoices that go out on their own. Illustrations use sample data."
+
+msgid "Trois façons d'être en ligne."
+msgstr "Three ways to be online."
+
+msgid "Trop de demandes : réessayez dans quelques minutes."
+msgstr "Too many requests: please try again in a few minutes."
+
+msgid "Trop de tentatives. Veuillez patienter quelques minutes."
+msgstr "Too many attempts. Please wait a few minutes."
+
+msgid "trouvé sur Google et par les IA"
+msgstr "found on Google and by AI"
+
+msgid "Tutorat individuel en ligne, du primaire au secondaire, partout au Québec."
+msgstr "One-on-one online tutoring, from elementary to high school, anywhere in Quebec."
+
+msgid "Type de projet"
+msgstr "Type of project"
+
+msgid "Un accompagnement"
+msgstr "Support that is"
+
+msgid "Un appel de 30 minutes"
+msgstr "A 30-minute call"
+
+msgid "Un appel découverte"
+msgstr "A free discovery call,"
+
+msgid "Un appel gratuit de 30 minutes"
+msgstr "A free 30-minute call"
+
+msgid "Un assistant de clavardage sur votre site, une prise de rendez-vous qui se fait toute seule, et un agent vocal qui répond au téléphone, prend les rendez-vous et les messages. Vos clients ont une réponse tout de suite."
+msgstr "A chat assistant on your website, appointment booking that happens on its own, and a voice agent that answers the phone, books appointments and takes messages. Your clients get an answer right away."
+
+msgid "Un assistant IA (clavardage client, assistant interne, tri de documents) dépend des outils à brancher : on le cadre ensemble lors d'un appel. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."
+msgstr "An AI assistant (client chat, internal assistant, document sorting) depends on the tools to connect: we scope it together on a call. The price is tailored: we give it to you in writing, before we begin."
+
+msgid "Un assistant IA bien réglé, des tâches qui se font toutes seules, et une formation pour être à l'aise. Trois façons d'utiliser l'IA dans votre quotidien. On s'occupe de la technique."
+msgstr "A well-set-up AI assistant, tasks that run on their own, and training so you feel at ease. Three ways to use AI in your daily work. We take care of the technical side."
+
+msgid "Un assistant IA prépare la réponse. Vous la relisez et l’envoyez."
+msgstr "An AI assistant prepares the reply. You review it and send it."
+
+msgid "Un carnet de clients léger, pensé pour les petites entreprises."
+msgstr "A light client book, designed for small businesses."
+
+msgid "Un irritant à"
+msgstr "Got a pain point to"
+
+msgid "Un outil fait pour votre façon de travailler"
+msgstr "A tool made for the way you work"
+
+msgid "Un outil ne vaut que s'il est utilisé. On forme votre équipe à travailler avec Zoho au quotidien, jusqu'à l'autonomie complète."
+msgstr "A tool is only worth it if it's used. We train your team to work with Zoho day to day, until they're fully self-sufficient."
+
+msgid "Un premier pas précis, ce qu’il comprend, et son prix. Vous prenez le temps de décider."
+msgstr "One specific first step, what it includes, and its price. You take your time to decide."
+
+msgid "Un premier pas suffit."
+msgstr "One first step is enough."
+
+msgid "Un premier pas,"
+msgstr "A first step,"
+
+msgid "Un premier pas, à votre rythme"
+msgstr "A first step, at your own pace"
+
+msgid "Un prix clair avant de commencer, sans frais cachés"
+msgstr "A clear price before we begin, no hidden fees"
+
+msgid "Un prix clair avant de commencer, sans frais cachés : on regarde votre situation, on propose un premier pas, vous décidez."
+msgstr "A clear price before we begin, no hidden fees: we look at your situation, suggest a first step, you decide."
+
+msgid "Un prix clair,"
+msgstr "A clear price,"
+
+msgid "Un rappel vous avertit, ou un courriel de relance est préparé pour vous."
+msgstr "A reminder alerts you, or a follow-up email is prepared for you."
+
+msgid "Un site à"
+msgstr "Want a website"
+
+msgid "Un site clair qui donne confiance : qui vous êtes, ce que vous faites, comment vous joindre."
+msgstr "A clear website that builds trust: who you are, what you do, how to reach you."
+
+msgid "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils : formulaires, rendez-vous, carnet de clients."
+msgstr "A clear website that builds trust, a page to launch an offer, or a web application for your clients and your team. Built for you and connected to your tools: forms, appointments, client book."
+
+msgid "Un site clair qui donne confiance, une page pour lancer une offre, ou une application web pour vos clients et votre équipe. Bâti pour vous et relié à vos outils."
+msgstr "A clear website that builds trust, a page to launch an offer, or a web application for your clients and your team. Built for you and connected to your tools."
+
+msgid "Un site et une administration sur mesure : demandes, séances et statistiques au même endroit."
+msgstr "A custom website and admin: inquiries, sessions and statistics in one place."
+
+msgid "Un site qui travaille"
+msgstr "A website that works"
+
+msgid "Un site qui travaille pour votre entreprise"
+msgstr "A website that works for your business"
+
+msgid "Un site, c'est aussi être"
+msgstr "A website is also about being"
+
+msgid "Un studio indépendant, basé au Québec, qui croit qu'une entreprise bien outillée appartient vraiment à ceux qui la font vivre."
+msgstr "An independent studio, based in Quebec, that believes a well-equipped business truly belongs to the people who keep it alive."
+
+msgid "Un studio québécois, à votre service."
+msgstr "A Quebec studio, at your service."
+
+msgid "Une application faite pour vous, sans tout programmer."
+msgstr "An app made for you, without programming everything."
+
+msgid "Une application web pour vos clients et votre équipe, bâtie pour vous et reliée à vos outils : formulaires, rendez-vous, carnet de clients."
+msgstr "A web application for your clients and your team, built for you and connected to your tools: forms, appointments, client book."
+
+msgid "Une autre question ? Écrivez-nous ou réservez un appel découverte — on répond sous 24h ouvrables."
+msgstr "Another question? Write to us or book a discovery call — we reply within 24 business hours."
+
+msgid "Une erreur est survenue. Veuillez réessayer."
+msgstr "An error occurred. Please try again."
+
+msgid "Une fois installé, votre journée tient sur un écran."
+msgstr "Once it's set up, your day fits on one screen."
+
+msgid "Une formation courte pour bien partir"
+msgstr "A short training to get off to a good start"
+
+msgid "Une formation pour être autonome"
+msgstr "Training so you can be self-sufficient"
+
+msgid "Une formation pratique, avec vos vrais dossiers, pour être à l’aise seul ensuite."
+msgstr "Hands-on training, with your real files, so you're comfortable on your own afterwards."
+
+msgid "Une implantation Zoho dépend des modules (CRM, Books, Desk, Campaigns…) et du nombre d'utilisateurs. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."
+msgstr "A Zoho implementation depends on the modules (CRM, Books, Desk, Campaigns…) and the number of users. The price is tailored: we give it to you in writing, before we begin."
+
+msgid "Une méthode simple et transparente : vous savez toujours où on s'en va, ce que ça coûte et ce que ça rapporte."
+msgstr "A simple, transparent method: you always know where we're headed, what it costs and what it brings in."
+
+msgid "Une offre, une page"
+msgstr "One offer, one page"
+
+msgid "Une page pour lancer une offre, avec un seul but : que la personne vous écrive ou prenne rendez-vous."
+msgstr "A page to launch an offer, with a single goal: getting the person to write to you or book an appointment."
+
+msgid "Une PME ou un travailleur autonome ? Si vous servez des clients, on regarde ensemble ce qui vous gruge."
+msgstr "A small business or self-employed? If you serve clients, let's look together at what wears you down."
+
+msgid "Une proposition écrite"
+msgstr "A written proposal"
+
+msgid "Une question sur le prix ? On y répond"
+msgstr "A question about pricing? We'll answer"
+
+msgid "Une réponse rapide à chaque demande"
+msgstr "A quick reply to every inquiry"
+
+msgid "Une réponse tout de suite à vos clients"
+msgstr "An instant answer for your clients"
+
+msgid "Une seule ? On commence par celle-là. Un appel de 30 minutes suffit pour voir comment."
+msgstr "Just one? We start with that one. A 30-minute call is enough to see how."
+
+msgid "Une seule de ces phrases vous ressemble ? Un appel de 30 minutes suffit pour voir par où commencer."
+msgstr "Only one of these sounds like you? A 30-minute call is enough to see where to start."
+
+msgid "Une vie qui"
+msgstr "A life that"
+
+msgid "Une vie qui vous appartient"
+msgstr "A life that belongs to you"
+
+msgid "Une vie qui vous appartient, des clients mieux servis, plus vite."
+msgstr "A life that belongs to you, with clients served better and faster."
+
+msgid "Ven"
+msgstr "Fri"
+
+msgid "Ventes du mois"
+msgstr "Sales this month"
+
+msgid "Veuillez sélectionner un sujet"
+msgstr "Please select a topic"
+
+msgid "Vidéo de présentation de Vie Solution Web : avant, ce qu'on installe, après"
+msgstr "Vie Solution Web introduction video: before, what we set up, after"
+
+msgid "Vie Solution Web — IA, automatisation & Zoho · Québec"
+msgstr "Vie Solution Web — AI, automation & Zoho · Quebec"
+
+msgid "Vie Solution Web : un studio québécois indépendant qui aide PME et travailleurs autonomes à reprendre le contrôle de leur gestion grâce à l'IA et à Zoho."
+msgstr "Vie Solution Web: an independent Quebec studio that helps small businesses and self-employed professionals take back control of their management with AI and Zoho."
+
+msgid "Voici ce qui change."
+msgstr "Here's what changes."
+
+msgid "Voir comment on aide : {metier}"
+msgstr "See how we help: {metier}"
+
+msgid "Voir comment on établit un prix"
+msgstr "See how we set a price"
+
+msgid "Voir l'IA"
+msgstr "See AI"
+
+msgid "Voir l'offre de stage"
+msgstr "See the internship opportunity"
+
+msgid "Voir le calendrier"
+msgstr "See the calendar"
+
+msgid "Voir le référencement"
+msgstr "See search optimization"
+
+msgid "Voir les services"
+msgstr "See the services"
+
+msgid "Voir nos réalisations"
+msgstr "See our work"
+
+msgid "Voir par où commencer →"
+msgstr "See where to start →"
+
+msgid "Voir Zoho"
+msgstr "See Zoho"
+
+msgid "Vos besoins d’abord"
+msgstr "Your needs first"
+
+msgid "Vos chiffres du jour, sans fichier Excel à mettre à jour."
+msgstr "Your numbers for the day, with no Excel file to update."
+
+msgid "Vos chiffres se mettent à jour seuls, sur un seul écran."
+msgstr "Your numbers update on their own, on a single screen."
+
+msgid "Vos clients ont une réponse rapide, une réservation confirmée et une bonne raison de revenir."
+msgstr "Your clients get a quick answer, a confirmed booking and a good reason to come back."
+
+msgid "Vos clients reçoivent leur soumission plus vite et savent où en est leur chantier."
+msgstr "Your clients get their quote faster and know where their project stands."
+
+msgid "Vos clients réservent facilement, reçoivent leur rappel et savent comment se préparer à leur rendez-vous."
+msgstr "Your clients book easily, get their reminder and know how to prepare for their appointment."
+
+msgid "Vos clients savent ce qu'il manque, l'envoient au bon endroit et ont des nouvelles de leur dossier."
+msgstr "Your clients know what's missing, send it to the right place and hear back about their file."
+
+msgid "Vos clients savent exactement quoi fournir, et leur dossier est complet du premier coup."
+msgstr "Your clients know exactly what to provide, and their file is complete the first time."
+
+msgid "Vos clients sont notés un peu partout : un cahier, un fichier Excel, votre téléphone."
+msgstr "Your clients are noted down all over the place: a notebook, an Excel file, your phone."
+
+msgid "Vos clients, étape par étape : chacun sait qui rappeler aujourd'hui."
+msgstr "Your clients, step by step: everyone knows who to call back today."
+
+msgid "Vos clients, vos factures, votre soutien client, vos infolettres : on installe Zoho chez vous, on le règle selon votre façon de travailler et on vous forme jusqu'à ce que vous soyez à l'aise."
+msgstr "Your clients, your invoices, your customer support, your newsletters: we install Zoho for you, set it up for the way you work and train you until you're comfortable."
+
+msgid "Vos clients, vos ventes et vos suivis au même endroit."
+msgstr "Your clients, your sales and your follow-ups in one place."
+
+msgid "Vos données vous appartiennent"
+msgstr "Your data belongs to you"
+
+msgid "Vos données vous appartiennent. On configure les accès et les consentements selon les bonnes pratiques et les exigences québécoises (Loi 25), et on vous explique clairement où vos données sont hébergées et qui y a accès."
+msgstr "Your data belongs to you. We set up access and consents following best practices and Quebec requirements (Law 25), and we explain clearly where your data is hosted and who can access it."
+
+msgid "Vos employés : congés, horaires et dossiers."
+msgstr "Your employees: time off, schedules and files."
+
+msgid "Vos factures, vos dépenses et votre comptabilité."
+msgstr "Your invoices, your expenses and your accounting."
+
+msgid "Vos infolettres et vos courriels à toute votre clientèle."
+msgstr "Your newsletters and emails to all your clients."
+
+msgid "Vos journées, libérées des tâches répétitives. On regarde comment vous travaillez, puis on fait en sorte que les relances, les rapports et les copier-coller se fassent tout seuls."
+msgstr "Your days, freed from repetitive tasks. We look at how you work, then make sure follow-ups, reports and copy-pasting happen on their own."
+
+msgid "Vos logiciels qui se parlent, tout seuls."
+msgstr "Your software that talks to each other, on its own."
+
+msgid "Vos notes et vos suivis restent organisés dans le respect de vos obligations de conformité (AMF) et de la Loi 25. Vous validez tout."
+msgstr "Your notes and follow-ups stay organized in line with your compliance obligations (AMF) and Law 25. You approve everything."
+
+msgid "Vos patients reçoivent leur rappel à temps et remplissent leur formulaire avant d'arriver."
+msgstr "Your patients get their reminder on time and fill out their form before they arrive."
+
+msgid "Vos projets, vos tâches et vos échéances."
+msgstr "Your projects, your tasks and your deadlines."
+
+msgid "Vos questions,"
+msgstr "Your questions,"
+
+msgid "Vos trois premières tâches simplifiées"
+msgstr "Your first three tasks, simplified"
+
+msgid "Votre appel gratuit"
+msgstr "Your free call"
+
+msgid "Votre assistant IA, bien réglé"
+msgstr "Your AI assistant, well set up"
+
+msgid "Votre carnet de clients (Zoho CRM)"
+msgstr "Your client book (Zoho CRM)"
+
+msgid "Votre courriel et l'heure choisie sont transmis à Google Agenda pour créer l'invitation et le lien Meet."
+msgstr "Your email and the time you chose are passed to Google Calendar to create the invitation and the Meet link."
+
+msgid "Votre courriel semble invalide."
+msgstr "Your email looks invalid."
+
+msgid "Votre département techno externalisé."
+msgstr "Your outsourced tech department."
+
+msgid "Votre équipe à l’aise avec l’IA, en français"
+msgstr "Your team comfortable with AI, in French"
+
+msgid "Votre équipe autonome dans Zoho, en français"
+msgstr "Your team self-sufficient in Zoho, in French"
+
+msgid "Votre équipe est formée jusqu’à l’autonomie, en français et sans jargon. Ensuite, on reste disponibles pour faire évoluer vos outils."
+msgstr "Your team is trained until they're self-sufficient, in French and without jargon. Afterwards, we stay available to help your tools evolve."
+
+msgid "Votre façon de travailler vous est propre. Si aucun logiciel tout fait ne lui convient, on vous bâtit le vôtre : un carnet de clients maison, un formulaire, un tableau de suivi. Simple, à votre image, et relié à vos outils actuels."
+msgstr "The way you work is your own. If no ready-made software fits, we build you your own: an in-house client book, a form, a tracking board. Simple, in your style, and connected to your current tools."
+
+msgid "Votre facturation (Zoho Books)"
+msgstr "Your invoicing (Zoho Books)"
+
+msgid "Votre gestion, centralisée."
+msgstr "Your management, centralized."
+
+msgid "Votre inventaire et vos commandes, à jour."
+msgstr "Your inventory and your orders, up to date."
+
+msgid "Votre métier"
+msgstr "Your industry"
+
+msgid "Votre nom est requis."
+msgstr "Your name is required."
+
+msgid "votre projet."
+msgstr "your project."
+
+msgid "Votre question"
+msgstr "Your question"
+
+msgid "Votre question…"
+msgstr "Your question…"
+
+msgid "Votre site est relié à vos outils : formulaires, rendez-vous, carnet de clients. Chaque information entre une seule fois."
+msgstr "Your website is connected to your tools: forms, appointments, client book. Each piece of information is entered only once."
+
+msgid "vous appartient,"
+msgstr "belongs to you,"
+
+msgid "Vous avez un irritant à automatiser, une gestion éparpillée à centraliser, une équipe à former ? Parlons-en pendant un appel découverte gratuit."
+msgstr "Have something to automate, scattered management to centralize, a team to train? Let's talk about it on a free discovery call."
+
+msgid "Vous entendez parler de l'IA, mais vous ne savez pas par où commencer."
+msgstr "You keep hearing about AI, but you don't know where to start."
+
+msgid "Vous êtes aux études en informatique, en IA ou en administration ? Découvrez notre"
+msgstr "Are you studying computer science, AI or business administration? Discover our"
+
+msgid "Vous êtes bon dans votre métier, mais l'administration vous gruge. Choisissez votre métier, cochez ce qui vous ressemble : on commence là."
+msgstr "You're good at what you do, but the admin wears you down. Choose your industry, check what sounds like you: we start there."
+
+msgid "Vous êtes client ? Laissez un avis"
+msgstr "Are you a client? Leave a review"
+
+msgid "Vous faites vos factures le soir ou la fin de semaine."
+msgstr "You do your invoices in the evening or on weekends."
+
+msgid "Vous gardez le dernier mot"
+msgstr "You have the final say"
+
+msgid "vous gruge."
+msgstr "wearing you down."
+
+msgid "Vous oubliez parfois de relancer une soumission ou un paiement."
+msgstr "You sometimes forget to follow up on a quote or a payment."
+
+msgid "Vous parlez à une IA qui répond à partir de notre site. Nous ne conservons pas la conversation ; n'y écrivez pas de renseignements sensibles."
+msgstr "You are talking to an AI that answers based on our website. We do not keep the conversation; do not write any sensitive information in it."
+
+msgid "Vous refaites le même rapport chaque mois."
+msgstr "You redo the same report every month."
+
+msgid "Vous répondez aux mêmes questions par courriel, encore et encore."
+msgstr "You answer the same questions by email, over and over."
+
+msgid "vous ressemblent. Bonne nouvelle : on peut commencer par une seule."
+msgstr "sound like you. Good news: we can start with just one."
+
+msgid "Vous voulez un logiciel de gestion, mais vous avez peur d’un gros projet compliqué."
+msgstr "You want management software, but you're afraid of a big, complicated project."
+
+msgid "Vous vous reconnaissez ?"
+msgstr "Do you recognize yourself?"
+
+msgid "Vous vous reconnaissez aussi ? Cochez"
+msgstr "Do you recognize yourself too? Check"
+
+msgid "Web et visibilité"
+msgstr "Web and visibility"
+
+msgid "Zoho"
+msgstr "Zoho"
+
+msgid "Zoho couvre la gestion complète d'une entreprise (CRM, comptabilité, soutien client, marketing, RH) au même endroit, à une fraction du prix des grandes suites. Pour une PME québécoise, c'est souvent le meilleur rapport puissance-prix — et tout est relié, donc plus facile à automatiser."
+msgstr "Zoho covers a business's complete management (CRM, accounting, customer support, marketing, HR) in one place, at a fraction of the price of the big suites. For a Quebec small business, it's often the best value for the power — and everything is connected, so it's easier to automate."
+
+msgid "Zoho CRM (clients)"
+msgstr "Zoho CRM (clients)"
+
+msgid "Zoho fait les logiciels. Nous, on les fait marcher chez vous :"
+msgstr "Zoho makes the software. We make it work for you:"
+
+msgid "Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme."
+msgstr "Zoho brings your clients, invoices, customer support and newsletters together in one place. We install it, set it up for the way you work and train you."
+
+msgid "Zoho, implanté chez vous."
+msgstr "Zoho, set up for you."
+
+msgid "Zoho, simplement"
+msgstr "Zoho, simply"

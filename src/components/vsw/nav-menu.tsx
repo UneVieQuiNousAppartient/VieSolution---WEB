@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from './icon';
 import type { NavLinkItem, PilierNav, ServiceNavItem } from './nav';
 import { APPEL } from './appel';
+import { lienLangue, t, type Lang } from '@/lib/i18n';
 
 const PANEL_ID = 'nav-menu-panel';
 
@@ -13,7 +14,8 @@ const PANEL_ID = 'nav-menu-panel';
  * Fermeture : bouton, touche Échap, clic sur un lien. Défilement du corps bloqué quand ouvert ;
  * le focus revient au bouton à la fermeture. Style : vsw.css (« pme-accessible — premium »).
  */
-export function NavMenu({ links, piliers, metiers }: {
+export function NavMenu({ lang = 'fr', links, piliers, metiers }: {
+  lang?: Lang;
   links: readonly NavLinkItem[];
   piliers: readonly PilierNav[];
   metiers: readonly ServiceNavItem[];
@@ -58,7 +60,7 @@ export function NavMenu({ links, piliers, metiers }: {
         ref={btnRef}
         type="button"
         className="nav-menu-btn"
-        aria-label="Menu"
+        aria-label={t(lang, "Menu")}
         aria-expanded={open}
         aria-controls={PANEL_ID}
         onClick={() => setOpen((o) => !o)}
@@ -79,12 +81,12 @@ export function NavMenu({ links, piliers, metiers }: {
               aria-controls="nav-menu-services"
               onClick={() => setSousMenu((m) => (m === 'services' ? null : 'services'))}
             >
-              Services <span aria-hidden="true">{sousMenu === 'services' ? '▴' : '▾'}</span>
+              {t(lang, "Services")} <span aria-hidden="true">{sousMenu === 'services' ? '▴' : '▾'}</span>
             </button>
             <ul id="nav-menu-services" className="nav-menu-sous" hidden={sousMenu !== 'services'}>
               {piliers.map((p) => (
                 <li key={p.pilier}>
-                  <p className="nav-menu-pilier">{p.pilier}</p>
+                  <p className="nav-menu-pilier">{t(lang, p.pilier)}</p>
                   <ul>
                     {p.services.map((s) => (
                       <li key={s.href}>
@@ -95,7 +97,7 @@ export function NavMenu({ links, piliers, metiers }: {
                 </li>
               ))}
               <li>
-                <Link href="/services" onClick={close}><strong>Tous les services →</strong></Link>
+                <Link href="/services" onClick={close}><strong>{t(lang, "Tous les services →")}</strong></Link>
               </li>
             </ul>
           </li>
@@ -107,7 +109,7 @@ export function NavMenu({ links, piliers, metiers }: {
               aria-controls="nav-menu-metiers"
               onClick={() => setSousMenu((m) => (m === 'metiers' ? null : 'metiers'))}
             >
-              Métiers <span aria-hidden="true">{sousMenu === 'metiers' ? '▴' : '▾'}</span>
+              {t(lang, "Métiers")} <span aria-hidden="true">{sousMenu === 'metiers' ? '▴' : '▾'}</span>
             </button>
             <ul id="nav-menu-metiers" className="nav-menu-sous" hidden={sousMenu !== 'metiers'}>
               {metiers.map((m) => (
@@ -116,7 +118,7 @@ export function NavMenu({ links, piliers, metiers }: {
                 </li>
               ))}
               <li>
-                <Link href="/metiers" onClick={close}><strong>Tous les métiers →</strong></Link>
+                <Link href="/metiers" onClick={close}><strong>{t(lang, "Tous les métiers →")}</strong></Link>
               </li>
             </ul>
           </li>
@@ -128,8 +130,8 @@ export function NavMenu({ links, piliers, metiers }: {
             </li>
           ))}
         </ul>
-        <Link href={APPEL.href} className="btn btn-primary btn-lg nav-menu-cta" onClick={close}>
-          {APPEL.court} <Icon name="arrow" size={14} />
+        <Link href={lienLangue(lang, APPEL.href)} className="btn btn-primary btn-lg nav-menu-cta" onClick={close}>
+          {t(lang, APPEL.court)} <Icon name="arrow" size={14} />
         </Link>
       </div>
     </>
