@@ -14,10 +14,11 @@ import { empreinteCourriel, motifExact } from './conservation';
 
 /**
  * Formulaires d'origine du site (contact_requests, chatbot_leads, estimateur_requests, audit_requests) :
- * tables SANS préfixe du projet Supabase partagé avec CSF. Règle du projet : ne jamais y toucher sans
- * confirmation. Laissé à false tant que Camille n'a pas confirmé que CSF n'y écrit jamais (2026-10-24).
+ * tables sans préfixe, mais propres au site de Vie Solution Web. Vérifié le 2026-10-24 : leur seul
+ * déclencheur et la seule fonction SQL qui les lit sont ceux du CRM (trg_vsw_intake, fn_vsw_lead_intake ; vérifié dans la base de production) ; le site y écrit (actions.ts, /api/rdv/reserver) ;
+ * Camille confirme que CSF a ses propres tables (« on avait différencié »). Exception écrite dans CLAUDE.md.
  */
-export const EFFACER_FORMULAIRES_SITE = false;
+export const EFFACER_FORMULAIRES_SITE = true;
 
 /** Lignes d'une table dont la colonne courriel est exactement cette adresse (ILIKE échappé, puis filtre exact). */
 async function idsParCourriel(db: SupabaseClient, table: string, colonne: string, courriel: string) {

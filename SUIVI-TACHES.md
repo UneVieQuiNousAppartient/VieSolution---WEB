@@ -1077,5 +1077,7 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Coût réel** : ≈ 400 k (session ≈ 170 k, `qa-agent` ≈ 85 k, `securite` ≈ 125 k + 90 k du premier passage combiné).
 
-**Non fait dans ce round** : effacement des formulaires d'origine (`contact_requests`, `chatbot_leads`, `estimateur_requests`, `audit_requests`) — tables sans préfixe du projet partagé avec CSF : `EFFACER_FORMULAIRES_SITE = false` tant que Camille n'a pas confirmé que CSF n'y écrit jamais ; anciennes adresses après un changement de courriel ; `vsw_faq_suggestions.email` (table inutilisée) ; notifications anciennes au titre sans adresse (à supprimer à la main si besoin) ; poser `UNSUBSCRIBE_SECRET` en production et ne plus le changer (l'empreinte en dépend) — **à faire par Camille**. Site en anglais : étape 1 à planifier (plan court avant le code).
+**Mise à jour du 2026-10-24** : formulaires d'origine — Camille : « on avait différencié » (CSF a ses propres tables) ; vérifié en base : le seul déclencheur et la seule fonction sur `contact_requests`, `chatbot_leads`, `estimateur_requests`, `audit_requests` sont ceux du CRM → `EFFACER_FORMULAIRES_SITE = true`, exception écrite dans `CLAUDE.md`.
+
+**Non fait dans ce round** : anciennes adresses après un changement de courriel ; `vsw_faq_suggestions.email` (table inutilisée) ; notifications anciennes au titre sans adresse (à supprimer à la main si besoin) ; poser `UNSUBSCRIBE_SECRET` en production et ne plus le changer (l'empreinte en dépend) — **à faire par Camille**. Site en anglais : étape 1 à planifier (plan court avant le code).
 

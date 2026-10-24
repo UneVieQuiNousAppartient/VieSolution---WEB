@@ -40,6 +40,9 @@ Les anciennes URLs sont redirigées en 308 dans `next.config.ts`.
   `vsw-lead-system.sql` et `setup-crm-complet.sql`, conservés pour historique).
   ⚠️ Le projet Supabase est PARTAGÉ avec la plateforme CSF : ne JAMAIS toucher aux
   tables sans préfixe (`leads`, `settings`, `bookings`… appartiennent à CSF).
+  Exception (vérifiée et confirmée par Camille le 2026-10-24) : `contact_requests`, `chatbot_leads`,
+  `estimateur_requests`, `audit_requests` sont les formulaires du site (seul déclencheur : `trg_vsw_intake`) ;
+  le site y écrit, et l'effacement Loi 25 (`src/lib/crm/effacement.ts`) y supprime les lignes de la personne.
 - Flux : formulaires du site → triggers `fn_vsw_lead_intake` → `vsw_leads` (dédup
   par courriel) + tâche « Rappeler » (dans l'heure, ou 9 h le lendemain) → passage horaire
   `/api/cron/tick` (Vercel Cron, `vercel.json`, Bearer `CRON_SECRET`) → moteur
