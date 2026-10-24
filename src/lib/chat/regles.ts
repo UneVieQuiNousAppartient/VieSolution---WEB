@@ -10,6 +10,9 @@
 // La demande de rendez-vous n'est jamais envoyée par l'IA : elle la PROPOSE, le visiteur la relit et
 // clique « Envoyer ». La validation ci-dessous s'applique aux deux bouts (navigateur et serveur).
 
+// Anglais : phrase(…) marque un message affiché dans la bulle, traduit à l'affichage par t(lang, …) (sans import : fichier lu par les tests).
+const phrase = (fr: string) => fr;
+
 /** Limites d'une conversation (le navigateur garde l'historique ; le serveur le revérifie). */
 export const LIMITES = {
   /** Messages du visiteur par conversation. Au-delà : on propose l'appel. */
@@ -140,10 +143,10 @@ export function validerDemandeRdv(brut: unknown): { ok: true; demande: DemandeRd
     moment: champ('moment'),
     besoin: champ('besoin'),
   };
-  if (demande.nom.length < 2 || demande.nom.length > 80) return { ok: false, erreur: 'Votre nom est requis.' };
-  if (demande.courriel.length > 254 || !COURRIEL.test(demande.courriel)) return { ok: false, erreur: 'Votre courriel semble invalide.' };
-  if (demande.moment.length > 120) return { ok: false, erreur: 'Le moment souhaité est trop long.' };
-  if (demande.besoin.length > 500) return { ok: false, erreur: 'La description est trop longue.' };
+  if (demande.nom.length < 2 || demande.nom.length > 80) return { ok: false, erreur: phrase("Votre nom est requis.") };
+  if (demande.courriel.length > 254 || !COURRIEL.test(demande.courriel)) return { ok: false, erreur: phrase("Votre courriel semble invalide.") };
+  if (demande.moment.length > 120) return { ok: false, erreur: phrase("Le moment souhaité est trop long.") };
+  if (demande.besoin.length > 500) return { ok: false, erreur: phrase("La description est trop longue.") };
   return { ok: true, demande };
 }
 

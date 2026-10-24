@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-24** — dernière section : 54.
+**Dernière mise à jour : 2026-10-24** — dernière section : 55.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1081,3 +1081,19 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 
 **Non fait dans ce round** : anciennes adresses après un changement de courriel ; `vsw_faq_suggestions.email` (table inutilisée) ; notifications anciennes au titre sans adresse (à supprimer à la main si besoin) ; poser `UNSUBSCRIBE_SECRET` en production et ne plus le changer (l'empreinte en dépend) — **à faire par Camille**. Site en anglais : étape 1 à planifier (plan court avant le code).
 
+
+## 55. 🔄 Site en anglais, étape 1 : huit pages sous /en et bouton FR | EN (2026-10-24)
+
+**Contexte / demande** : Camille : anglais « maintenant comme mais khi », « Par étapes », étape 1 ≈ 800 k, puis « Oui » au plan (français à la racine, anglais sous /en, bouton FR | EN, 8 pages avec leurs formulaires, anglais canadien chaleureux, relu par Camille sur l'aperçu ; courriels automatiques, admin, Blog et métiers restent en français).
+
+**Ce qui a été fait** :
+- Même principe que KHI (la phrase française est la clé, traductions dans un fichier PO lisible dans Poedit), **sans les bibliothèques Lingui** : `scripts/i18n.mjs` (extract / compile / check, sans dépendance), `src/i18n/en.po` (740 phrases) compilé dans `src/i18n/en.ts`, `src/lib/i18n-regles.ts` (pur, `tests/i18n.test.mjs`, 5 tests) et `src/lib/i18n.ts` (`t(lang, "…")`, `phrase("…")`, `lienLangue`). `npm run verify` lance `i18n.mjs check`.
+- Pages déplacées dans `src/app/(fr)/` (adresses inchangées) ; enveloppe commune `src/components/vsw/racine.tsx` ; `src/app/en/` : `/en`, `/en/ia`, `/en/zoho`, `/en/sites-web`, `/en/devis`, `/en/a-propos`, `/en/contact`, `/en/rdv` ; contenu partagé dans `src/components/vsw/pages/*.tsx`. 404 commune `src/app/global-not-found.tsx` (`experimental.globalNotFound`). hreflang fr-CA / en-CA et plan du site avec les pages anglaises.
+- Bouton FR | EN (`nav-langue.tsx`) dans la barre, sur ordinateur et téléphone : même page dans l'autre langue, sinon l'accueil de l'autre langue. Menu, pied de page, barre d'appel, bulle de clavardage (interface seulement), formulaires (libellés et messages d'erreur, y compris les refus du serveur de /rdv) traduits ; les valeurs envoyées au CRM restent en français.
+- **Accessible par** : le bouton FR | EN de chaque page en français, et les liens internes des pages anglaises.
+
+**Vérification technique** : `npm run verify` vert (149 tests). Texte rendu des 8 pages françaises comparé caractère par caractère à la production : identique (seul ajout : FR | EN). Aucune phrase française sur les 8 pages anglaises. Bouton testé sur ordinateur et à 390 px ; captures. `qa-agent` (Opus) VERT ; `securite` (Opus) VERT ; leurs remarques corrigées (refus du serveur de /rdv en anglais, chemin du script avec lien symbolique ou accents). **À relire par Camille** : tout l'anglais, sur l'aperçu de la PR, avant de fusionner.
+
+**Coût réel** : ≈ 735 k (session ≈ 150 k, 2 agents d'enveloppement ≈ 245 k, traduction Sonnet ≈ 165 k, `qa-agent` ≈ 100 k, `securite` ≈ 75 k).
+
+**Non fait dans ce round** : heures au format « 14 h 30 » sur /en/rdv ; fiche JSON-LD et mots-clés de l'entreprise encore en français sur /en ; réponses de l'IA de la bulle en français ; courriels (accusés, relances) seulement en français ; pages hors étape 1 (services, métiers, blog, réalisations, avis, emplois, pages légales) seulement en français. Étape 2 à décider par Camille.

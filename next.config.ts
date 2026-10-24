@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Deux mises en page racines (français, anglais) : la 404 d'une adresse inconnue est app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   // L'onglet « Statistiques » lit les titres des articles du Blog pendant l'exécution.
   outputFileTracingIncludes: { '/api/admin/stats': ['./src/content/blog/**'] },
   async redirects() {

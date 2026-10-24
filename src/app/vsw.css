@@ -4781,3 +4781,12 @@ body:has(.adm-page) .chat-panel { display: none; }
 .legal-colonne p { margin: 0 0 8px; }
 .legal-colonne ul { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 6px; }
 .legal-colonne a { color: var(--accent); }
+
+/* Bouton FR | EN de la barre (nav-langue.tsx, étape 1 de l'anglais, 2026-10-24) */
+.nav-langue { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; font-family: var(--font-mono); font-size: 13px; color: var(--fg-3); }
+.nav-langue a { color: var(--fg-1); text-decoration: none; padding: 10px 4px; }
+.nav-langue a:hover { color: var(--fg-0); text-decoration: underline; }
+.nav-langue [aria-current] { color: var(--fg-0); font-weight: 600; }
+@media (max-width: 640px) {
+  .nav-langue { margin-left: auto; margin-right: 8px; }
+}

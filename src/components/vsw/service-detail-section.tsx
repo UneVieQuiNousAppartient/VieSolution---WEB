@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Icon } from './icon';
+import { lienLangue, t, type Lang } from '@/lib/i18n';
 
 export type Pilier = { titre: string; desc: string; items: string[] };
 
@@ -14,13 +15,14 @@ type Props = {
   bandeau: ReactNode;
   boutonLibelle: string;
   boutonLien: string;
+  lang?: Lang;
 };
 
 /*
  * Section « trois volets » des pages de service (sites web, CRM sur mesure, référencement) :
  * même gabarit visuel que la section IA (.ai-wrap / .ai-pillars / .ai-banner), textes en props.
  */
-export function ServiceDetailSection({ id, eyebrow, titre, accroche, intro, piliers, bandeau, boutonLibelle, boutonLien }: Props) {
+export function ServiceDetailSection({ id, eyebrow, titre, accroche, intro, piliers, bandeau, boutonLibelle, boutonLien, lang = 'fr' }: Props) {
   return (
     <section id={id} className="section">
       <div className="container">
@@ -39,7 +41,7 @@ export function ServiceDetailSection({ id, eyebrow, titre, accroche, intro, pili
           <div className="ai-pillars">
             {piliers.map((p, i) => (
               <div className="ai-pillar" key={p.titre}>
-                <div className="ai-pillar-num">{String(i + 1).padStart(2, '0')} · Volet</div>
+                <div className="ai-pillar-num">{t(lang, "{num} · Volet", { num: String(i + 1).padStart(2, '0') })}</div>
                 <h3>{p.titre}</h3>
                 <p>{p.desc}</p>
                 <ul>
@@ -52,7 +54,7 @@ export function ServiceDetailSection({ id, eyebrow, titre, accroche, intro, pili
           </div>
           <div className="ai-banner">
             <div className="ai-banner-text">{bandeau}</div>
-            <Link href={boutonLien} className="btn btn-primary btn-lg">
+            <Link href={lienLangue(lang, boutonLien)} className="btn btn-primary btn-lg">
               {boutonLibelle} <Icon name="arrow" size={14} />
             </Link>
           </div>

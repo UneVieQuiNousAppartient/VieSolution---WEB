@@ -5,11 +5,12 @@ import { Icon } from './icon';
 import { heureLisible, parJour, type Creneau } from '@/lib/agenda';
 import { submitContactRequest } from '@/lib/supabase/actions';
 import { checkRateLimit } from '@/lib/utils/security';
+import { lienLangue, phrase, t, type Lang } from '@/lib/i18n';
 
-const DOW = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+const DOW = [phrase("Dim"), phrase("Lun"), phrase("Mar"), phrase("Mer"), phrase("Jeu"), phrase("Ven"), phrase("Sam")];
 const MONTHS = [
-  'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-  'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+  phrase("janvier"), phrase("février"), phrase("mars"), phrase("avril"), phrase("mai"), phrase("juin"),
+  phrase("juillet"), phrase("août"), phrase("septembre"), phrase("octobre"), phrase("novembre"), phrase("décembre"),
 ];
 const SLOTS = ['09:00', '10:00', '11:00', '13:30', '14:30', '15:30', '16:30'];
 
@@ -28,7 +29,7 @@ type Cell = {
   muted?: boolean;
 };
 
-export function Booking({ showHead = true }: { showHead?: boolean }) {
+export function Booking({ showHead = true, lang = 'fr' }: { showHead?: boolean; lang?: Lang }) {
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -88,13 +89,22 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
     setViewYear(y);
   };
 
-  const selectedLabel = selected && (slot || choix)
-    ? `${DOW[selected.getDay()]} ${selected.getDate()} ${MONTHS[selected.getMonth()]} ${selected.getFullYear()} · ${choix ? heureLisible(choix.debut) : slot}`
+  // Créneau choisi en mots : en français pour le message envoyé au CRM, dans la langue de la page pour l'affichage.
+  const libelleCreneau = (l: Lang) => selected && (slot || choix)
+    ? t(l, "{jour} {date} {mois} {annee} · {heure}", {
+        jour: t(l, DOW[selected.getDay()]),
+        date: selected.getDate(),
+        mois: t(l, MONTHS[selected.getMonth()]),
+        annee: selected.getFullYear(),
+        heure: (choix ? heureLisible(choix.debut) : slot) ?? '',
+      })
     : null;
+  const selectedLabel = libelleCreneau('fr');
+  const selectedLabelAffiche = libelleCreneau(lang);
 
   const reserver = async () => {
     if (!choix || !nom.trim() || !email.trim()) {
-      setError('Indiquez votre nom et votre courriel pour réserver.');
+      setError(t(lang, "Indiquez votre nom et votre courriel pour réserver."));
       return;
     }
     setError('');
@@ -107,11 +117,11 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
       });
       const j = (await r.json().catch(() => ({}))) as { error?: string; quand?: string };
       if (r.status === 409) { setChoix(null); chargerCreneaux(); }
-      if (!r.ok) throw new Error(j.error || 'La réservation n’a pas pu être faite.');
-      setQuand(j.quand || selectedLabel || '');
+      if (!r.ok) throw new Error(j.error ? t(lang, j.error) : t(lang, "La réservation n’a pas pu être faite."));
+      setQuand(lang === 'fr' ? j.quand || selectedLabel || '' : selectedLabelAffiche || j.quand || '');
       setConfirmed(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue. Veuillez réessayer.');
+      setError(err instanceof Error ? err.message : t(lang, "Une erreur est survenue. Veuillez réessayer."));
     } finally {
       setSending(false);
     }
@@ -119,11 +129,11 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
 
   const confirm = async () => {
     if (!selected || !slot || !nom.trim() || !email.trim()) {
-      setError('Indiquez votre nom et votre courriel pour confirmer.');
+      setError(t(lang, "Indiquez votre nom et votre courriel pour confirmer."));
       return;
     }
     if (!checkRateLimit('rdv', 3, 300000)) {
-      setError('Trop de tentatives. Veuillez patienter quelques minutes.');
+      setError(t(lang, "Trop de tentatives. Veuillez patienter quelques minutes."));
       return;
     }
     try {
@@ -138,7 +148,7 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
       });
       setConfirmed(true);
     } catch {
-      setError('Une erreur est survenue. Veuillez réessayer.');
+      setError(t(lang, "Une erreur est survenue. Veuillez réessayer."));
     } finally {
       setSending(false);
     }
@@ -150,49 +160,46 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
         {showHead && (
           <div className="section-head reveal">
             <div>
-              <div className="eyebrow">Votre appel gratuit</div>
-              <h2>Un appel découverte<br />gratuit, {duree} minutes.</h2>
+              <div className="eyebrow">{t(lang, "Votre appel gratuit")}</div>
+              <h2>{t(lang, "Un appel découverte")}<br />{t(lang, "gratuit, {n} minutes.", { n: duree })}</h2>
             </div>
             <p className="desc">
-              Échangeons sur votre projet, vos objectifs et votre contexte. Sans engagement,
-              en visio ou par téléphone. Vous repartez avec une vision claire des prochaines
-              étapes.
+              {t(lang, "Échangeons sur votre projet, vos objectifs et votre contexte. Sans engagement, en visio ou par téléphone. Vous repartez avec une vision claire des prochaines étapes.")}
             </p>
           </div>
         )}
 
         <div className="booking reveal">
           <div className="booking-left">
-            <div className="eyebrow">Appel découverte</div>
-            <h3>{duree} min avec Vie Solution Web</h3>
+            <div className="eyebrow">{t(lang, "Appel découverte")}</div>
+            <h3>{t(lang, "{n} min avec Vie Solution Web", { n: duree })}</h3>
             <p>
-              On discute de votre projet, des délais, du budget approximatif et des
-              prochaines étapes si on décide de collaborer.
+              {t(lang, "On discute de votre projet, des délais, du budget approximatif et des prochaines étapes si on décide de collaborer.")}
             </p>
             <div className="booking-meta">
-              <div className="row"><Icon name="clock" size={16} /> {duree} minutes</div>
-              <div className="row"><Icon name="vid" size={16} /> {mode === 'google' ? 'Google Meet (lien envoyé par courriel)' : 'Google Meet ou téléphone'}</div>
-              <div className="row"><Icon name="calendar" size={16} /> {mode === 'google' ? 'Les créneaux libres de notre agenda (heure de Montréal)' : 'Lun-Ven, 9h-17h (HE)'}</div>
-              <div className="row"><Icon name="check" size={16} /> Sans engagement · gratuit</div>
+              <div className="row"><Icon name="clock" size={16} /> {t(lang, "{n} minutes", { n: duree })}</div>
+              <div className="row"><Icon name="vid" size={16} /> {mode === 'google' ? t(lang, "Google Meet (lien envoyé par courriel)") : t(lang, "Google Meet ou téléphone")}</div>
+              <div className="row"><Icon name="calendar" size={16} /> {mode === 'google' ? t(lang, "Les créneaux libres de notre agenda (heure de Montréal)") : t(lang, "Lun-Ven, 9h-17h (HE)")}</div>
+              <div className="row"><Icon name="check" size={16} /> {t(lang, "Sans engagement · gratuit")}</div>
             </div>
-            {selectedLabel && !confirmed && (
-              <div className="booking-selected">✓ Créneau choisi : {selectedLabel}</div>
+            {selectedLabelAffiche && !confirmed && (
+              <div className="booking-selected">{t(lang, "✓ Créneau choisi : {creneau}", { creneau: selectedLabelAffiche })}</div>
             )}
           </div>
           <div className="booking-right">
             <div className="cal-header">
-              <h4>{MONTHS[viewMonth]} {viewYear}</h4>
+              <h4>{t(lang, MONTHS[viewMonth])} {viewYear}</h4>
               <div className="cal-nav">
-                <button type="button" aria-label="Mois précédent" onClick={() => nav(-1)}>
+                <button type="button" aria-label={t(lang, "Mois précédent")} onClick={() => nav(-1)}>
                   <Icon name="chev-l" size={14} />
                 </button>
-                <button type="button" aria-label="Mois suivant" onClick={() => nav(1)}>
+                <button type="button" aria-label={t(lang, "Mois suivant")} onClick={() => nav(1)}>
                   <Icon name="chev-r" size={14} />
                 </button>
               </div>
             </div>
             <div className="cal-grid">
-              {DOW.map((d) => <div key={d} className="cal-dow">{d}</div>)}
+              {DOW.map((d) => <div key={d} className="cal-dow">{t(lang, d)}</div>)}
               {cells.map((c, i) => (
                 <div
                   key={i}
@@ -210,9 +217,9 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
               ))}
             </div>
 
-            {mode === 'chargement' && <p className="booking-etat">Chargement des créneaux libres…</p>}
+            {mode === 'chargement' && <p className="booking-etat">{t(lang, "Chargement des créneaux libres…")}</p>}
             {mode === 'google' && creneaux.length === 0 && (
-              <p className="booking-etat">Aucun créneau libre pour le moment. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243.</p>
+              <p className="booking-etat">{t(lang, "Aucun créneau libre pour le moment. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243.")}</p>
             )}
             {mode === 'google' && error && !confirmed && (
               <p role="alert" style={{ color: 'var(--danger)', fontSize: 14, margin: '16px 0 0' }}>{error}</p>
@@ -245,19 +252,19 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
               <div style={{ marginTop: 24 }}>
                 <div className="form-row">
                   <div className="form-field">
-                    <label>Nom complet</label>
+                    <label>{t(lang, "Nom complet")}</label>
                     <input
                       type="text"
-                      placeholder="Jean Tremblay"
+                      placeholder={t(lang, "Jean Tremblay")}
                       value={nom}
                       onChange={(e) => setNom(e.target.value)}
                     />
                   </div>
                   <div className="form-field">
-                    <label>Courriel</label>
+                    <label>{t(lang, "Courriel")}</label>
                     <input
                       type="email"
-                      placeholder="jean@exemple.ca"
+                      placeholder={t(lang, "jean@exemple.ca")}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -266,11 +273,11 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
                 {mode === 'google' && (
                   <div className="form-row">
                     <div className="form-field">
-                      <label>Téléphone <small>(facultatif)</small></label>
+                      <label>{t(lang, "Téléphone")} <small>{t(lang, "(facultatif)")}</small></label>
                       <input type="tel" placeholder="438 555-0123" value={telephone} onChange={(e) => setTelephone(e.target.value)} />
                     </div>
                     <div className="form-field">
-                      <label>De quoi voulez-vous parler ? <small>(facultatif)</small></label>
+                      <label>{t(lang, "De quoi voulez-vous parler ?")} <small>{t(lang, "(facultatif)")}</small></label>
                       <input type="text" maxLength={500} value={sujet} onChange={(e) => setSujet(e.target.value)} />
                     </div>
                   </div>
@@ -281,8 +288,8 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
                 )}
                 {mode === 'google' && (
                   <p className="booking-etat booking-loi25">
-                    Votre courriel et l&apos;heure choisie sont transmis à Google Agenda pour créer l&apos;invitation et le lien Meet.{' '}
-                    <a href="/politique-confidentialite">Politique de confidentialité</a>
+                    {t(lang, "Votre courriel et l'heure choisie sont transmis à Google Agenda pour créer l'invitation et le lien Meet.")}{' '}
+                    <a href={lienLangue(lang, '/politique-confidentialite')}>{t(lang, "Politique de confidentialité")}</a>
                   </p>
                 )}
                 <button
@@ -292,19 +299,18 @@ export function Booking({ showHead = true }: { showHead?: boolean }) {
                   disabled={sending}
                   onClick={mode === 'google' ? reserver : confirm}
                 >
-                  {sending ? 'Envoi…' : mode === 'google' ? 'Réserver ce créneau' : 'Demander ce créneau'} <Icon name="arrow" size={14} />
+                  {sending ? t(lang, "Envoi…") : mode === 'google' ? t(lang, "Réserver ce créneau") : t(lang, "Demander ce créneau")} <Icon name="arrow" size={14} />
                 </button>
               </div>
             )}
             {confirmed && mode === 'google' && (
               <div className="booking-confirm" role="status">
-                <Icon name="check" size={16} /> C&apos;est réservé : {quand}. L&apos;invitation avec le lien Google Meet arrive dans votre courriel. Au plaisir de vous parler !
+                <Icon name="check" size={16} /> {t(lang, "C'est réservé : {quand}. L'invitation avec le lien Google Meet arrive dans votre courriel. Au plaisir de vous parler !", { quand })}
               </div>
             )}
             {confirmed && mode !== 'google' && (
               <div className="booking-confirm">
-                <Icon name="check" size={16} /> Demande envoyée ! On confirme votre créneau
-                par courriel sous 24h ouvrables.
+                <Icon name="check" size={16} /> {t(lang, "Demande envoyée ! On confirme votre créneau par courriel sous 24h ouvrables.")}
               </div>
             )}
           </div>

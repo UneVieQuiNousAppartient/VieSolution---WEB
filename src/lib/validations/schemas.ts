@@ -1,12 +1,15 @@
 import { z } from 'zod';
+import { phrase } from '@/lib/i18n-regles';
+
+// phrase(…) : messages du formulaire de contact du site (src/components/vsw/contact.tsx), traduits à l'affichage par t(lang, …).
 
 export const contactSchema = z.object({
-  nom: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
-  email: z.string().email('Adresse e-mail invalide'),
+  nom: z.string().min(2, phrase("Le nom doit contenir au moins 2 caractères")),
+  email: z.string().email(phrase("Adresse e-mail invalide")),
   telephone: z.string().optional(),
   entreprise: z.string().optional(),
-  sujet: z.string().min(1, 'Veuillez sélectionner un sujet'),
-  message: z.string().min(10, 'Le message doit contenir au moins 10 caractères'),
+  sujet: z.string().min(1, phrase("Veuillez sélectionner un sujet")),
+  message: z.string().min(10, phrase("Le message doit contenir au moins 10 caractères")),
 });
 
 export const auditSchema = z.object({

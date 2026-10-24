@@ -8,6 +8,7 @@
 // fermeraient la réservation pour la journée). L'invitation Google a un texte fixe (agenda.ts).
 import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import { phrase } from '@/lib/i18n-regles';
 import { getAdminClient, hasServiceKey } from '@/lib/supabase/admin';
 import { compterEssai } from '@/lib/admin/mfa-store';
 import { cleIp } from '@/lib/chat/regles';
@@ -17,11 +18,12 @@ import { creerRendezVous, etatConnexion, googleConfigure, periodesOccupees } fro
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+// Messages relevés pour l'anglais (phrase) : /en/rdv les traduit à l'affichage (booking.tsx).
 const refus = (error: string, status = 400) => NextResponse.json({ error }, { status });
-const PRIS = 'Ce créneau vient d’être pris. Choisissez-en un autre.';
+const PRIS = phrase("Ce créneau vient d’être pris. Choisissez-en un autre.");
 
 export async function POST(req: NextRequest) {
-  if (!hasServiceKey() || !googleConfigure() || !process.env.CRON_SECRET) return refus('La réservation en ligne est indisponible. Écrivez-nous à info@viesolutionweb.ca.', 503);
+  if (!hasServiceKey() || !googleConfigure() || !process.env.CRON_SECRET) return refus(phrase("La réservation en ligne est indisponible. Écrivez-nous à info@viesolutionweb.ca."), 503);
   const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   if (body && typeof body.site === 'string' && body.site.trim()) return NextResponse.json({ ok: true });
   const v = validerReservation(body);
@@ -32,11 +34,11 @@ export async function POST(req: NextRequest) {
   const ip = createHash('sha256').update(`${process.env.CRON_SECRET}:rdv:${adresse}`).digest('hex').slice(0, 32);
   const db = getAdminClient();
   try {
-    const trop = () => refus('Beaucoup de réservations aujourd’hui. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243.', 429);
+    const trop = () => refus(phrase("Beaucoup de réservations aujourd’hui. Écrivez-nous à info@viesolutionweb.ca ou appelez le (438) 506-5243."), 429);
     if ((await compterEssai(db, `rdv_j:${ip}`, 86_400)) > 3) return trop();
 
     const e = await etatConnexion(db);
-    if (!e.connecte) return refus('La réservation en ligne est indisponible. Écrivez-nous à info@viesolutionweb.ca.', 503);
+    if (!e.connecte) return refus(phrase("La réservation en ligne est indisponible. Écrivez-nous à info@viesolutionweb.ca."), 503);
     const maintenant = new Date();
     const occupes = await periodesOccupees(db, maintenant, new Date(maintenant.getTime() + (e.reglages.horizonJours + 1) * 86_400_000), true);
     const libres = creneauxLibres(e.reglages, occupes, maintenant);
@@ -63,6 +65,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, quand, meet: Boolean(rdv.meet) });
   } catch (err) {
     console.error('[rdv] réservation :', err instanceof Error ? err.message : err);
-    return refus('La réservation n’a pas pu être faite. Réessayez dans quelques minutes, ou écrivez-nous à info@viesolutionweb.ca.', 500);
+    return refus(phrase("La réservation n’a pas pu être faite. Réessayez dans quelques minutes, ou écrivez-nous à info@viesolutionweb.ca."), 500);
   }
 }

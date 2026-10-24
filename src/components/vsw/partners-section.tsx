@@ -1,3 +1,5 @@
+import { phrase, t, type Lang } from '@/lib/i18n';
+
 type Partner = {
   name: string;
   url: string; // vide = pas de lien (adresse à confirmer)
@@ -14,7 +16,7 @@ const PARTNERS: Partner[] = [
     url: 'https://lesjusnaturelsbens.com/',
     logo: '/partenaires/les-jus-naturels-bens.svg',
     hasLogo: true,
-    description: 'Jus naturels artisanaux de Marieville, en ligne et dans les marchés publics.',
+    description: phrase("Jus naturels artisanaux de Marieville, en ligne et dans les marchés publics."),
   },
   {
     // Nom, adresse et description relevés sur viesolution.ca le 2026-10-17.
@@ -23,7 +25,7 @@ const PARTNERS: Partner[] = [
     logo: '/partenaires/viesolution.svg',
     logoClair: '/partenaires/viesolution-fonce.svg',
     hasLogo: true,
-    description: 'Éducation financière indépendante pour les familles du Québec (Longueuil).',
+    description: phrase("Éducation financière indépendante pour les familles du Québec (Longueuil)."),
   },
   {
     // Nom, adresse et description relevés sur khisuccesacademique.com le 2026-10-17 (lien fourni par Camille).
@@ -32,11 +34,11 @@ const PARTNERS: Partner[] = [
     logo: '/partenaires/khi-succes-academique.png',
     logoClair: '/partenaires/khi-succes-academique-fonce.png',
     hasLogo: true,
-    description: 'Tutorat individuel en ligne, du primaire au secondaire, partout au Québec.',
+    description: phrase("Tutorat individuel en ligne, du primaire au secondaire, partout au Québec."),
   },
 ];
 
-function PartnerContent({ p }: { p: Partner }) {
+function PartnerContent({ p, lang }: { p: Partner; lang: Lang }) {
   return (
     <>
       <div className="partner-logo">
@@ -53,23 +55,22 @@ function PartnerContent({ p }: { p: Partner }) {
           <span className="partner-name">{p.name}</span>
         )}
       </div>
-      <p className="partner-desc">{p.description}</p>
+      <p className="partner-desc">{t(lang, p.description)}</p>
     </>
   );
 }
 
-export function PartnersSection() {
+export function PartnersSection({ lang = 'fr' }: { lang?: Lang }) {
   return (
     <section id="partenaires" className="section section--band">
       <div className="container">
         <div className="section-head reveal">
           <div>
-            <div className="eyebrow">{'Ils nous font confiance'}</div>
-            <h2>Des entreprises d&apos;ici<br />nous ont fait confiance.</h2>
+            <div className="eyebrow">{t(lang, "Ils nous font confiance")}</div>
+            <h2>{t(lang, "Des entreprises d'ici")}<br />{t(lang, "nous ont fait confiance.")}</h2>
           </div>
           <p className="desc">
-            Des projets réels, livrés à des entreprises québécoises. Cliquez sur un logo pour
-            visiter leur site.
+            {t(lang, "Des projets réels, livrés à des entreprises québécoises. Cliquez sur un logo pour visiter leur site.")}
           </p>
         </div>
         <div className="partners-grid reveal">
@@ -81,13 +82,13 @@ export function PartnersSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="partner-card"
-                aria-label={`${p.name} (nouvel onglet)`}
+                aria-label={t(lang, "{nom} (nouvel onglet)", { nom: p.name })}
               >
-                <PartnerContent p={p} />
+                <PartnerContent p={p} lang={lang} />
               </a>
             ) : (
               <div key={p.name} className="partner-card">
-                <PartnerContent p={p} />
+                <PartnerContent p={p} lang={lang} />
               </div>
             ),
           )}

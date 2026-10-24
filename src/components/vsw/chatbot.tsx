@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Icon } from './icon';
 import { submitContactRequest } from '@/lib/supabase/actions';
+import { lienLangue, phrase, t, type Lang } from '@/lib/i18n';
 import { LIMITES, messagePourCrm, validerDemandeRdv, type DemandeRdv, type MessageChat } from '@/lib/chat/regles';
 
 /*
@@ -19,111 +20,112 @@ type Chip = { text: string; next?: string; action?: 'goto-rdv' | 'goto-devis' | 
 type Node = { bot: string; chips?: Chip[] };
 type Msg = { from: 'bot' | 'user'; text: string; chips?: Chip[]; proposition?: DemandeRdv; envoi?: 'en-cours' | 'fait' | 'corrige' };
 
-const ACCUEIL_IA =
-  "Bonjour 👋 Je suis l'assistant IA de Vie Solution Web. Posez-moi vos questions sur nos services, ou choisissez une option. Je peux aussi transmettre une demande de rendez-vous.";
-const CHIP_RDV: Chip = { text: 'Réserver mon appel gratuit', action: 'goto-rdv' };
+const ACCUEIL_IA = phrase(
+  "Bonjour 👋 Je suis l'assistant IA de Vie Solution Web. Posez-moi vos questions sur nos services, ou choisissez une option. Je peux aussi transmettre une demande de rendez-vous.",
+);
+const CHIP_RDV: Chip = { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' };
 
 /* Aucun montant (décision de Camille, 2026-10-17) : le prix est sur mesure, donné par écrit. */
 const BOT_FLOW: Record<string, Node> = {
   start: {
-    bot: "Bonjour 👋 Je suis l'assistant de Vie Solution Web. Comment puis-je vous aider aujourd'hui ?",
+    bot: phrase("Bonjour 👋 Je suis l'assistant de Vie Solution Web. Comment puis-je vous aider aujourd'hui ?"),
     chips: [
-      { text: 'Je ne sais pas par où commencer', next: 'debuter' },
-      { text: 'Combien ça coûte ?', next: 'estimer' },
-      { text: 'Voir les services', next: 'services' },
-      { text: 'Parler de Zoho', next: 'zoho' },
-      { text: 'Réserver mon appel gratuit', next: 'rdv' },
+      { text: phrase("Je ne sais pas par où commencer"), next: 'debuter' },
+      { text: phrase("Combien ça coûte ?"), next: 'estimer' },
+      { text: phrase("Voir les services"), next: 'services' },
+      { text: phrase("Parler de Zoho"), next: 'zoho' },
+      { text: phrase("Réserver mon appel gratuit"), next: 'rdv' },
     ],
   },
   debuter: {
-    bot: "Bonne nouvelle : c'est la question qu'on préfère ! 😊 Pas besoin d'être techno. On commence souvent par une seule chose. Qu'est-ce qui vous prend le plus de temps ?",
+    bot: phrase("Bonne nouvelle : c'est la question qu'on préfère ! 😊 Pas besoin d'être techno. On commence souvent par une seule chose. Qu'est-ce qui vous prend le plus de temps ?"),
     chips: [
-      { text: 'Mes factures et mes clients', next: 'debut-zoho' },
-      { text: 'Mes courriels et mes textes', next: 'debut-ia' },
-      { text: 'Je préfère en parler', action: 'goto-rdv' },
+      { text: phrase("Mes factures et mes clients"), next: 'debut-zoho' },
+      { text: phrase("Mes courriels et mes textes"), next: 'debut-ia' },
+      { text: phrase("Je préfère en parler"), action: 'goto-rdv' },
     ],
   },
   'debut-zoho': {
-    bot: 'On peut mettre en place Zoho pour vos clients et vos factures, tout au même endroit. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
+    bot: phrase("On peut mettre en place Zoho pour vos clients et vos factures, tout au même endroit. C'est sur mesure : on en discute lors d'un appel gratuit de 30 minutes."),
     chips: [
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
-      { text: 'Voir Zoho', action: 'goto-zoho' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
+      { text: phrase("Voir Zoho"), action: 'goto-zoho' },
     ],
   },
   'debut-ia': {
-    bot: 'On peut configurer un assistant IA pour votre entreprise et vous montrer comment vous en servir. C\'est sur mesure : on en discute lors d\'un appel gratuit de 30 minutes.',
+    bot: phrase("On peut configurer un assistant IA pour votre entreprise et vous montrer comment vous en servir. C'est sur mesure : on en discute lors d'un appel gratuit de 30 minutes."),
     chips: [
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
-      { text: 'Voir l\'IA', action: 'goto-ia' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
+      { text: phrase("Voir l'IA"), action: 'goto-ia' },
     ],
   },
   estimer: {
-    bot: 'Parfait ! Quel type de projet avez-vous en tête ?',
+    bot: phrase("Parfait ! Quel type de projet avez-vous en tête ?"),
     chips: [
-      { text: 'Tâches automatiques (IA)', next: 'auto' },
-      { text: 'Assistant IA sur mesure', next: 'agent' },
-      { text: 'Implantation Zoho', next: 'zoho-estim' },
-      { text: 'Formation', next: 'formation' },
+      { text: phrase("Tâches automatiques (IA)"), next: 'auto' },
+      { text: phrase("Assistant IA sur mesure"), next: 'agent' },
+      { text: phrase("Implantation Zoho"), next: 'zoho-estim' },
+      { text: phrase("Formation"), next: 'formation' },
     ],
   },
   auto: {
-    bot: "On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
+    bot: phrase("On regarde comment vous travaillez, puis on automatise d'abord les tâches qui vous grugent le plus de temps. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."),
     chips: [
-      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
+      { text: phrase("Voir comment on établit un prix"), action: 'goto-devis' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
     ],
   },
   agent: {
-    bot: "Un assistant IA (clavardage client, assistant interne, tri de documents) dépend des outils à brancher : on le cadre ensemble lors d'un appel. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
+    bot: phrase("Un assistant IA (clavardage client, assistant interne, tri de documents) dépend des outils à brancher : on le cadre ensemble lors d'un appel. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."),
     chips: [
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
-      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
+      { text: phrase("Voir comment on établit un prix"), action: 'goto-devis' },
     ],
   },
   'zoho-estim': {
-    bot: "Une implantation Zoho dépend des modules (CRM, Books, Desk, Campaigns…) et du nombre d'utilisateurs. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
+    bot: phrase("Une implantation Zoho dépend des modules (CRM, Books, Desk, Campaigns…) et du nombre d'utilisateurs. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."),
     chips: [
-      { text: 'Voir comment on établit un prix', action: 'goto-devis' },
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
+      { text: phrase("Voir comment on établit un prix"), action: 'goto-devis' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
     ],
   },
   formation: {
-    bot: "Nos formations IA et Zoho : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe. Le prix est sur mesure : on vous le donne par écrit, avant de commencer.",
-    chips: [{ text: 'Réserver mon appel gratuit', action: 'goto-rdv' }],
+    bot: phrase("Nos formations IA et Zoho : ateliers pratiques, cas d'usage de votre métier, et suivi jusqu'à l'autonomie de votre équipe. Le prix est sur mesure : on vous le donne par écrit, avant de commencer."),
+    chips: [{ text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' }],
   },
   services: {
-    bot: "On peut vous aider de quatre façons : rendre vos tâches automatiques, créer un assistant IA, installer Zoho pour vos clients et vos factures, ou vous former. Qu'est-ce qui vous intéresse ?",
+    bot: phrase("On peut vous aider de quatre façons : rendre vos tâches automatiques, créer un assistant IA, installer Zoho pour vos clients et vos factures, ou vous former. Qu'est-ce qui vous intéresse ?"),
     chips: [
-      { text: 'Tâches automatiques', next: 'auto' },
-      { text: 'Assistant IA', next: 'agent' },
-      { text: 'Zoho', next: 'zoho' },
-      { text: 'Formation', next: 'formation' },
+      { text: phrase("Tâches automatiques"), next: 'auto' },
+      { text: phrase("Assistant IA"), next: 'agent' },
+      { text: phrase("Zoho"), next: 'zoho' },
+      { text: phrase("Formation"), next: 'formation' },
     ],
   },
   zoho: {
-    bot: "Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme.",
+    bot: phrase("Zoho réunit vos clients, vos factures, votre soutien client et vos infolettres au même endroit. On l'installe, on le règle selon votre façon de travailler et on vous forme."),
     chips: [
-      { text: 'Combien ça coûte ?', next: 'zoho-estim' },
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
+      { text: phrase("Combien ça coûte ?"), next: 'zoho-estim' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
     ],
   },
   rdv: {
-    bot: "Excellente idée ! Je vous redirige vers notre calendrier pour choisir un créneau (appel de 30 min, gratuit).",
-    chips: [{ text: 'Voir le calendrier', action: 'goto-rdv' }],
+    bot: phrase("Excellente idée ! Je vous redirige vers notre calendrier pour choisir un créneau (appel de 30 min, gratuit)."),
+    chips: [{ text: phrase("Voir le calendrier"), action: 'goto-rdv' }],
   },
   fallback: {
-    bot: "Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à info@viesolutionweb.ca.",
+    bot: phrase("Bonne question ! Pour une réponse précise, le plus simple est d'en discuter de vive voix — l'appel découverte est gratuit — ou de nous écrire à info@viesolutionweb.ca."),
     chips: [
-      { text: 'Réserver mon appel gratuit', action: 'goto-rdv' },
-      { text: 'Combien ça coûte ?', action: 'goto-devis' },
+      { text: phrase("Réserver mon appel gratuit"), action: 'goto-rdv' },
+      { text: phrase("Combien ça coûte ?"), action: 'goto-devis' },
     ],
   },
 };
 
-export function VswChatbot() {
+export function VswChatbot({ lang = 'fr' }: { lang?: Lang }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { from: 'bot', text: BOT_FLOW.start.bot, chips: BOT_FLOW.start.chips },
+    { from: 'bot', text: t(lang, BOT_FLOW.start.bot), chips: BOT_FLOW.start.chips },
   ]);
   const [typing, setTyping] = useState(false);
   const [input, setInput] = useState('');
@@ -159,13 +161,13 @@ export function VswChatbot() {
         if (annule) return;
         const actif = j.actif === true;
         setIa(actif);
-        if (actif) setMessages((m) => (m.length === 1 ? [{ ...m[0], text: ACCUEIL_IA }] : m));
+        if (actif) setMessages((m) => (m.length === 1 ? [{ ...m[0], text: t(lang, ACCUEIL_IA) }] : m));
       })
       .catch(() => !annule && setIa(false));
     return () => {
       annule = true;
     };
-  }, [open, ia]);
+  }, [open, ia, lang]);
 
   const ajouter = (msg: Msg) => setMessages((m) => [...m, msg]);
   const modifier = (i: number, maj: Partial<Msg>) => setMessages((m) => m.map((x, j) => (j === i ? { ...x, ...maj } : x)));
@@ -176,19 +178,19 @@ export function VswChatbot() {
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      ajouter({ from: 'bot', text: node.bot, chips: node.chips });
+      ajouter({ from: 'bot', text: t(lang, node.bot), chips: node.chips });
     }, 700);
   };
 
   const goToPage = (path: string) => {
     setTimeout(() => {
       setOpen(false);
-      router.push(path);
+      router.push(lienLangue(lang, path));
     }, 400);
   };
 
   const handleChip = (chip: Chip) => {
-    ajouter({ from: 'user', text: chip.text });
+    ajouter({ from: 'user', text: t(lang, chip.text) });
     if (chip.next) {
       goToNode(chip.next);
     } else if (chip.action === 'goto-rdv') {
@@ -226,7 +228,7 @@ export function VswChatbot() {
     } catch {
       // L'IA ne répond pas : la bulle reprend ses réponses toutes faites, pour le reste de la visite.
       setIa(false);
-      ajouter({ from: 'bot', text: BOT_FLOW.fallback.bot, chips: BOT_FLOW.fallback.chips });
+      ajouter({ from: 'bot', text: t(lang, BOT_FLOW.fallback.bot), chips: BOT_FLOW.fallback.chips });
     } finally {
       setTyping(false);
     }
@@ -245,7 +247,7 @@ export function VswChatbot() {
   const envoyerDemande = async (i: number, p: DemandeRdv) => {
     const v = validerDemandeRdv(p);
     if (!v.ok) {
-      ajouter({ from: 'bot', text: `${v.erreur} Écrivez-moi la bonne information, et je refais le résumé.` });
+      ajouter({ from: 'bot', text: t(lang, "{erreur} Écrivez-moi la bonne information, et je refais le résumé.", { erreur: t(lang, v.erreur) }) });
       return;
     }
     modifier(i, { envoi: 'en-cours' });
@@ -259,16 +261,16 @@ export function VswChatbot() {
       });
       modifier(i, { envoi: 'fait' });
       champRef.current?.focus();
-      ajouter({ from: 'bot', text: 'Demande envoyée, merci ! On confirme votre rendez-vous par courriel sous 24 h ouvrables.' });
+      ajouter({ from: 'bot', text: t(lang, "Demande envoyée, merci ! On confirme votre rendez-vous par courriel sous 24 h ouvrables.") });
     } catch {
       modifier(i, { envoi: undefined });
-      ajouter({ from: 'bot', text: "L'envoi n'a pas fonctionné. Réessayez, ou choisissez votre heure dans le calendrier.", chips: [CHIP_RDV] });
+      ajouter({ from: 'bot', text: t(lang, "L'envoi n'a pas fonctionné. Réessayez, ou choisissez votre heure dans le calendrier."), chips: [CHIP_RDV] });
     }
   };
 
   const corriger = (i: number) => {
     modifier(i, { envoi: 'corrige' });
-    ajouter({ from: 'bot', text: "D'accord ! Écrivez-moi ce qu'il faut corriger." });
+    ajouter({ from: 'bot', text: t(lang, "D'accord ! Écrivez-moi ce qu'il faut corriger.") });
   };
 
   return (
@@ -276,25 +278,24 @@ export function VswChatbot() {
       <button
         className={'chat-fab' + (open ? ' open' : '')}
         onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Fermer l'assistant" : "Ouvrir l'assistant"}
+        aria-label={open ? t(lang, "Fermer l'assistant") : t(lang, "Ouvrir l'assistant")}
         aria-expanded={open}
       >
         <Icon name={open ? 'close' : 'chat'} size={22} />
       </button>
       {open && (
-        <div className="chat-panel" role="dialog" aria-label="Assistant Vie Solution">
+        <div className="chat-panel" role="dialog" aria-label={t(lang, "Assistant Vie Solution")}>
           <div className="chat-head">
             <div className="chat-avatar" aria-hidden="true">VS</div>
             <div style={{ flex: 1 }}>
-              <div className="name">Assistant Vie Solution</div>
-              <div className="status">{ia ? 'Assistant IA' : 'En ligne'}</div>
+              <div className="name">{t(lang, "Assistant Vie Solution")}</div>
+              <div className="status">{ia ? t(lang, "Assistant IA") : t(lang, "En ligne")}</div>
             </div>
           </div>
           {ia && (
             <p className="chat-avis">
-              Vous parlez à une IA qui répond à partir de notre site. Nous ne conservons pas la
-              conversation ; n&apos;y écrivez pas de renseignements sensibles.{' '}
-              <Link href="/politique-confidentialite">Confidentialité</Link>
+              {t(lang, "Vous parlez à une IA qui répond à partir de notre site. Nous ne conservons pas la conversation ; n'y écrivez pas de renseignements sensibles.")}{' '}
+              <Link href={lienLangue(lang, '/politique-confidentialite')}>{t(lang, "Confidentialité")}</Link>
             </p>
           )}
           <div className="chat-body" ref={bodyRef} aria-live="polite">
@@ -304,22 +305,21 @@ export function VswChatbot() {
                 {m.proposition && (
                   <div className="chat-rdv">
                     <dl>
-                      <dt>Nom</dt>
+                      <dt>{t(lang, "Nom")}</dt>
                       <dd>{m.proposition.nom}</dd>
-                      <dt>Courriel</dt>
+                      <dt>{t(lang, "Courriel")}</dt>
                       <dd>{m.proposition.courriel}</dd>
-                      <dt>Moment souhaité</dt>
-                      <dd>{m.proposition.moment || 'Non précisé'}</dd>
-                      <dt>Besoin</dt>
-                      <dd>{m.proposition.besoin || 'Non précisé'}</dd>
+                      <dt>{t(lang, "Moment souhaité")}</dt>
+                      <dd>{m.proposition.moment || t(lang, "Non précisé")}</dd>
+                      <dt>{t(lang, "Besoin")}</dt>
+                      <dd>{m.proposition.besoin || t(lang, "Non précisé")}</dd>
                     </dl>
                     {m.envoi === 'fait' ? (
-                      <p className="chat-rdv-etat"><Icon name="check" size={14} /> Demande envoyée</p>
+                      <p className="chat-rdv-etat"><Icon name="check" size={14} /> {t(lang, "Demande envoyée")}</p>
                     ) : m.envoi === 'corrige' ? null : (
                       <>
                         <p className="chat-rdv-note">
-                          En cliquant sur « Envoyer ma demande », vous acceptez que Vie Solution Web
-                          utilise ces renseignements pour vous recontacter.
+                          {t(lang, "En cliquant sur « Envoyer ma demande », vous acceptez que Vie Solution Web utilise ces renseignements pour vous recontacter.")}
                         </p>
                         <div className="chat-rdv-actions">
                           <button
@@ -328,10 +328,10 @@ export function VswChatbot() {
                             disabled={m.envoi === 'en-cours'}
                             onClick={() => m.proposition && envoyerDemande(i, m.proposition)}
                           >
-                            {m.envoi === 'en-cours' ? 'Envoi…' : 'Envoyer ma demande'}
+                            {m.envoi === 'en-cours' ? t(lang, "Envoi…") : t(lang, "Envoyer ma demande")}
                           </button>
                           <button type="button" className="chat-chip" disabled={m.envoi === 'en-cours'} onClick={() => corriger(i)}>
-                            Corriger
+                            {t(lang, "Corriger")}
                           </button>
                         </div>
                       </>
@@ -342,7 +342,7 @@ export function VswChatbot() {
                   <div className="chat-quick">
                     {m.chips.map((c, j) => (
                       <button key={j} className="chat-chip" disabled={typing} onClick={() => handleChip(c)}>
-                        {c.text}
+                        {t(lang, c.text)}
                       </button>
                     ))}
                   </div>
@@ -350,7 +350,7 @@ export function VswChatbot() {
               </Fragment>
             ))}
             {typing && (
-              <div className="typing" role="status" aria-label="L'assistant écrit"><span /><span /><span /></div>
+              <div className="typing" role="status" aria-label={t(lang, "L'assistant écrit")}><span /><span /><span /></div>
             )}
           </div>
           <form className="chat-input" onSubmit={handleSend}>
@@ -358,12 +358,12 @@ export function VswChatbot() {
               ref={champRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={fin ? 'Réservez votre appel pour continuer' : 'Votre question…'}
-              aria-label="Votre question"
+              placeholder={fin ? t(lang, "Réservez votre appel pour continuer") : t(lang, "Votre question…")}
+              aria-label={t(lang, "Votre question")}
               maxLength={LIMITES.caracteresParMessage}
               disabled={fin}
             />
-            <button type="submit" aria-label="Envoyer" disabled={fin || typing}>
+            <button type="submit" aria-label={t(lang, "Envoyer")} disabled={fin || typing}>
               <Icon name="send" size={16} />
             </button>
           </form>

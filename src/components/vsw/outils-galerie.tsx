@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { phrase } from '@/lib/i18n';
 
 /*
  * Galerie « À quoi ça ressemble » de /crm-sur-mesure (2026-10-22).
@@ -10,25 +11,25 @@ import Image from 'next/image';
 export const ECRANS = [
   {
     client: 'VieSolution',
-    titre: 'Aujourd’hui',
+    titre: phrase("Aujourd’hui"),
     desc: 'Les demandes à rappeler, les rendez-vous et les tâches du jour, sur un seul écran.',
     image: '/realisations/outils/viesolution-aujourdhui.webp',
   },
   {
     client: 'VieSolution',
-    titre: 'Leads',
+    titre: phrase("Leads"),
     desc: 'Toutes les demandes au même endroit, la fiche ouverte à côté : appeler, écrire, prendre un rendez-vous.',
     image: '/realisations/outils/viesolution-leads.webp',
   },
   {
     client: 'Khí Succès Académique',
-    titre: 'Accueil de l’administration',
+    titre: phrase("Accueil de l’administration"),
     desc: 'Les nouvelles demandes, les séances à venir et les candidatures de tuteurs.',
     image: '/realisations/outils/khi-accueil.webp',
   },
   {
     client: 'Khí Succès Académique',
-    titre: 'Statistiques',
+    titre: phrase("Statistiques"),
     desc: 'D’où viennent les demandes et combien deviennent des inscriptions.',
     image: '/realisations/outils/khi-statistiques.webp',
   },

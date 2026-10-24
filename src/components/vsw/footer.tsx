@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { LogoMark } from './logo-mark';
-import { PILIERS_NAV } from './nav';
+import { piliersNav } from './nav';
 import { APPEL } from './appel';
 import { Icon } from './icon';
 import { RESEAUX } from '@/lib/site';
+import { lienLangue, t, type Lang } from '@/lib/i18n';
 
 /* Pied de page premium (option A validée par Camille le 2026-10-22) : fond nuit (.section--nuit),
    colonnes par pilier depuis la refonte du 2026-10-23 (Stagiaires → page Emplois, Prix → Entreprise),
@@ -16,7 +17,8 @@ const ICONES: Record<(typeof RESEAUX)[number]['nom'], string> = {
     'M9.1 23.69v-7.98H6.63v-3.67H9.1v-1.58c0-4.09 1.85-5.98 5.86-5.98.4 0 .96.04 1.47.1.39.04.77.1 1.14.2v3.32a8.6 8.6 0 0 0-1.39-.05c-.7 0-1.26.1-1.67.31-.29.15-.52.36-.68.62-.26.42-.38 1-.38 1.75v1.3h3.92l-.39 2.1-.28 1.57h-3.25v8.24C19.4 23.24 24 18.18 24 12.04 24 5.42 18.63.04 12 .04S0 5.42 0 12.04c0 5.63 3.87 10.35 9.1 11.65z',
 };
 
-export function VswFooter() {
+export function VswFooter({ lang = 'fr' }: { lang?: Lang }) {
+  const L = (href: string) => lienLangue(lang, href);
   const reseaux = RESEAUX.filter((r) => r.url);
   return (
     <footer className="footer footer--premium section--nuit">
@@ -27,42 +29,42 @@ export function VswFooter() {
               <LogoMark />
               <div>Vie Solution Web</div>
             </div>
-            <p className="footer-slogan">Une vie qui vous appartient, des clients mieux servis, plus vite.</p>
+            <p className="footer-slogan">{t(lang, "Une vie qui vous appartient, des clients mieux servis, plus vite.")}</p>
             <p className="footer-desc">
-              Automatisation, IA, sites web et implantation Zoho pour les entreprises québécoises.
+              {t(lang, "Automatisation, IA, sites web et implantation Zoho pour les entreprises québécoises.")}
             </p>
-            <Link href={APPEL.href} className="btn btn-primary footer-appel">
-              {APPEL.libelle} <Icon name="arrow" size={14} />
+            <Link href={L(APPEL.href)} className="btn btn-primary footer-appel">
+              {t(lang, APPEL.libelle)} <Icon name="arrow" size={14} />
             </Link>
           </div>
-          {PILIERS_NAV.map((p) => (
+          {piliersNav(lang).map((p) => (
             <div key={p.pilier}>
-              <h5>{p.pilier}</h5>
+              <h5>{t(lang, p.pilier)}</h5>
               {p.services.map((sv) => (
                 <Link key={sv.href} href={sv.href}>{sv.label}</Link>
               ))}
             </div>
           ))}
           <div>
-            <h5>Entreprise</h5>
-            <Link href="/metiers">Métiers</Link>
-            <Link href="/realisations">Réalisations</Link>
-            <Link href="/devis">Prix</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/a-propos">À propos</Link>
-            <Link href="/emplois">Emplois</Link>
-            <Link href="/avis">Laisser un avis</Link>
-            <Link href="/contact">Contact</Link>
+            <h5>{t(lang, "Entreprise")}</h5>
+            <Link href={L('/metiers')}>{t(lang, "Métiers")}</Link>
+            <Link href={L('/realisations')}>{t(lang, "Réalisations")}</Link>
+            <Link href={L('/devis')}>{t(lang, "Prix")}</Link>
+            <Link href={L('/blog')}>{t(lang, "Blog")}</Link>
+            <Link href={L('/a-propos')}>{t(lang, "À propos")}</Link>
+            <Link href={L('/emplois')}>{t(lang, "Emplois")}</Link>
+            <Link href={L('/avis')}>{t(lang, "Laisser un avis")}</Link>
+            <Link href={L('/contact')}>{t(lang, "Contact")}</Link>
           </div>
           <div>
-            <h5>Nous joindre</h5>
+            <h5>{t(lang, "Nous joindre")}</h5>
             <a href="mailto:info@viesolutionweb.ca">info@viesolutionweb.ca</a>
             <a href="tel:+14385065243">(438) 506-5243</a>
             {reseaux.length > 0 && (
               <ul className="footer-reseaux">
                 {reseaux.map((r) => (
                   <li key={r.nom}>
-                    <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={`${r.nom} (nouvel onglet)`}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={`${r.nom} (${t(lang, "nouvel onglet")})`}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d={ICONES[r.nom]} />
                       </svg>
@@ -74,13 +76,13 @@ export function VswFooter() {
           </div>
         </div>
         <div className="footer-bottom">
-          <div>© 2026 Vie Solution Web · Tous droits réservés</div>
+          <div>© 2026 Vie Solution Web · {t(lang, "Tous droits réservés")}</div>
           <div>
-            <Link href="/politique-confidentialite">Politique de confidentialité</Link>
+            <Link href={L('/politique-confidentialite')}>{t(lang, "Politique de confidentialité")}</Link>
             {' · '}
-            <Link href="/conditions-utilisation">Conditions d&apos;utilisation</Link>
+            <Link href="/conditions-utilisation">{t(lang, "Conditions d'utilisation")}</Link>
             {' · '}
-            <Link href="/securite">Sécurité et Loi 25</Link>
+            <Link href={L('/securite')}>{t(lang, "Sécurité et Loi 25")}</Link>
           </div>
         </div>
         <p className="footer-geant" aria-hidden="true">Vie Solution Web</p>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { lienLangue, t, type Lang } from '@/lib/i18n';
 
 type Testimonial = { id: string; nom: string; metier: string | null; message: string; note: number };
 
@@ -10,7 +11,7 @@ type Testimonial = { id: string; nom: string; metier: string | null; message: st
  * prénom et initiale seulement). Remplace site_testimonials le 2026-10-23 (étape E). La section ne
  * s'affiche que s'il existe des témoignages publiés.
  */
-export function Testimonials() {
+export function Testimonials({ lang = 'fr' }: { lang?: Lang }) {
   const [items, setItems] = useState<Testimonial[]>([]);
 
   useEffect(() => {
@@ -33,26 +34,26 @@ export function Testimonials() {
       <div className="container">
         <div className="section-head reveal in">
           <div>
-            <div className="eyebrow">Témoignages</div>
-            <h2>Ils ont repris<br />le contrôle.</h2>
+            <div className="eyebrow">{t(lang, "Témoignages")}</div>
+            <h2>{t(lang, "Ils ont repris")}<br />{t(lang, "le contrôle.")}</h2>
           </div>
           <p className="desc">
-            Des entreprises québécoises qui travaillent déjà avec nous.{' '}
-            <Link href="/avis">Vous êtes client ? Laissez un avis <span aria-hidden="true">→</span></Link>
+            {t(lang, "Des entreprises québécoises qui travaillent déjà avec nous.")}{' '}
+            <Link href={lienLangue(lang, '/avis')}>{t(lang, "Vous êtes client ? Laissez un avis")} <span aria-hidden="true">→</span></Link>
           </p>
         </div>
         <div className="testimonials-grid">
-          {items.map((t) => (
-            <figure key={t.id} className="testimonial">
-              {t.note ? (
-                <div className="testimonial-stars" aria-label={`${t.note} sur 5`}>
-                  {'★'.repeat(t.note)}
+          {items.map((a) => (
+            <figure key={a.id} className="testimonial">
+              {a.note ? (
+                <div className="testimonial-stars" aria-label={t(lang, "{note} sur 5", { note: a.note })}>
+                  {'★'.repeat(a.note)}
                 </div>
               ) : null}
-              <blockquote>« {t.message} »</blockquote>
+              <blockquote>« {a.message} »</blockquote>
               <figcaption>
-                <strong>{t.nom}</strong>
-                {t.metier ? <span>{t.metier}</span> : null}
+                <strong>{a.nom}</strong>
+                {a.metier ? <span>{a.metier}</span> : null}
               </figcaption>
             </figure>
           ))}
