@@ -1,6 +1,6 @@
 # Suivi des tâches — Vie Solution Web
 
-**Dernière mise à jour : 2026-10-23** — dernière section : 52.
+**Dernière mise à jour : 2026-10-24** — dernière section : 53.
 
 Règle : `.claude/rules/suivi-taches.md`. Se consulte par `grep`, jamais en entier.
 
@@ -1050,4 +1050,17 @@ Après la PR : 2 alertes CodeQL (« stored XSS » sur les liens des articles, ve
 **Coût réel** : ≈ 330 k (session ≈ 140 k, `qa-agent` ≈ 95 k, `securite` ≈ 95 k).
 
 **Non fait dans ce round** : confirmation du courriel avant de créer le rendez-vous (proposée par `securite`, change le parcours du client : décision de Camille) ; texte de l'accusé de réception des rendez-vous (« je vous confirme l'heure sous 24 h ouvrables ») à ajuster maintenant que Google confirme tout de suite (texte à approuver par Camille) ; évaluation des facteurs relatifs à la vie privée pour Google (hors Québec) **[à confirmer par Camille]** ; annulation ou déplacement d'un rendez-vous depuis le site (Google l'offre dans l'invitation) ; plusieurs agendas ; aperçu Vercel (« Preview ») : la redirection Google est celle de viesolutionweb.ca, la connexion se fait en production. **À faire par Camille** : le pas-à-pas Google Cloud, puis « Connecter Google Agenda » dans l'admin (onglet Rendez-vous), puis une réservation d'essai.
+
+## 53. ✅ Suites de l'étape C : accusé des rendez-vous, adresse des ateliers, brouillon d'évaluation Loi 25 (2026-10-24)
+
+**Contexte / demande** : réponses de Camille : paragraphe Google de la politique « va avec la recommandation » (accepté tel quel) ; nouvel accusé des rendez-vous « vas y » ; évaluation Loi 25 « recommande moi », puis « vas y » ; adresse des ateliers « 40 rue de l'eglise Longueuil J4k 1H9 » ; captures Zoho « prendre des images zoho en ligne » (déconseillé, voir plus bas).
+
+**Ce qui a été fait** :
+- Gabarit `accuse_rdv` mis à jour en base (objet « Votre appel découverte est bien noté » ; texte valable avec ou sans Google : invitation Meet déjà reçue si l'heure a été choisie dans le calendrier, sinon confirmation sous 24 h ouvrables), recopié dans `supabase/setup-crm-vsw.sql`.
+- Onglet Événements : l'adresse « 40, rue de l'Église, Longueuil (Québec) J4K 1H9 » (lieu affiché « Longueuil ») se remplit d'office pour un atelier en personne ; accent et majuscules du code postal ajoutés, signalés à Camille.
+- `docs/loi25/EFVP-fournisseurs.md` : brouillon d'évaluation des facteurs relatifs à la vie privée pour les fournisseurs hors Québec (Vercel, Resend, Google, Anthropic, Cloudflare ; Supabase est au Canada, ca-central-1, vérifié). Points `[à confirmer]` à vérifier par Camille avant signature.
+
+**Vérification technique** : `tsc` et `eslint` du fichier modifié ; mise à jour du gabarit relue en base.
+
+**Non fait dans ce round** : captures Zoho — prendre des images sur Internet est déconseillé (visuels de Zoho, encadrés par ses règles de marque pour partenaires) ; options proposées : illustrations dessinées (recommandé), captures de son propre compte, visuels officiels demandés à Zoho — en attente du choix de Camille. Site en anglais et page « Sécurité et Loi 25 » : en attente de sa réponse. Constat de l'évaluation : aucune durée de conservation appliquée par le CRM et pas de bouton de suppression d'une fiche — à décider.
 
